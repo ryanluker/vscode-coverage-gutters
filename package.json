@@ -3,21 +3,26 @@
     "displayName": "Coverage Gutters",
     "description": "test coverage gutters for visual studio code",
     "version": "0.0.1",
+    "license": "MIT",
+    "repository": {
+        "url": "https://github.com/ryanluker/vscode-coverage-gutters"
+    },
     "publisher": "ryanluker",
     "engines": {
         "vscode": "^1.5.0"
     },
     "categories": [
+        "Linters",
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.displayCoverage"
     ],
     "main": "./out/src/extension",
     "contributes": {
         "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
+            "command": "extension.displayCoverage",
+            "title": "Coverage Gutters: Display File Coverage"
         }]
     },
     "scripts": {
@@ -32,5 +37,8 @@
         "mocha": "^2.3.3",
         "@types/node": "^6.0.40",
         "@types/mocha": "^2.2.32"
+    },
+    "dependencies": {
+        "lcov-parse": "0.0.10"
     }
 }
