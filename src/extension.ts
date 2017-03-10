@@ -1,18 +1,18 @@
 'use strict';
 
 import * as vscode from "vscode";
-import * as parse from "lcov-parse";
+import {Gutters} from "./gutters";
+
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("Loaded coverage-gutters!");
 
+    let gutters = new Gutters(vscode.workspace.rootPath);
+
     let disposable = vscode.commands.registerCommand("extension.displayCoverage", () => {
-        //instantiate new gutters object
+        gutters.displayCoverageForFile(vscode.window.activeTextEditor.document.fileName);
     });
 
     context.subscriptions.push(disposable);
-}
-
-export function deactivate() {
-    //remove coverage indicators
+    context.subscriptions.push(gutters);
 }
