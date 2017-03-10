@@ -54,7 +54,7 @@ export class Gutters {
                     return section.file === relativePath
                 });
 
-                if(!section) return resolve();
+                if(!section) return reject(new Error("No coverage for file!"));
                 return resolve(section.lines.details);
             });
         });

@@ -12,4 +12,12 @@ suite("Gutters Tests", () => {
         assert.equal(gutters.getWorkspacePath(), "fakepath");
         assert.equal(gutters.getLcovPath(), "fakepath/coverage/lcov.info");
     });
+
+    test("Should error when given a fake path to find lcov for", () => {
+        let gutters = new Gutters("fakepath2");
+
+        gutters.displayCoverageForFile("fakepath3").then(() => {
+            assert.equal(true, false);
+        });
+    });
 });
