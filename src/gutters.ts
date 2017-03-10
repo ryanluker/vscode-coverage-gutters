@@ -17,7 +17,7 @@ export class Gutters {
         console.log(file);
     }
 
-    removeIndicators() {
+    dispose() {
         //unrender coverage indicators
     }
 }
