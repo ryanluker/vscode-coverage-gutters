@@ -16,13 +16,38 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.displayCoverage"
+        "onCommand:extension.displayCoverage",
+        "onCommand:extension.removeCoverage"
     ],
     "main": "./out/src/extension",
     "contributes": {
+        "configuration": {
+            "title": "coverage-gutters",
+            "properties": {
+                "coverage-gutters.lcovname": {
+                    "type": "string",
+                    "default": "lcov.info",
+                    "description": "name of your lcov file"
+                },
+                "coverage-gutters.highlightlight": {
+                    "type": "string",
+                    "default": "lightgreen",
+                    "description": "light themed highlight for code coverage"
+                },
+                "coverage-gutters.highlightdark": {
+                    "type": "string",
+                    "default": "darkgreen",
+                    "description": "dark themed highlight for code coverage"
+                }
+            }
+        },
         "commands": [{
             "command": "extension.displayCoverage",
             "title": "Coverage Gutters: Display File Coverage"
+        },
+        {
+            "command": "extension.removeCoverage",
+            "title": "Coverage Gutters: Remove File Coverage"
         }]
     },
     "scripts": {

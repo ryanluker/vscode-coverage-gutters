@@ -1,57 +1,87 @@
 'use strict';
 
+import * as vscode from "vscode";
 import * as parse from "lcov-parse";
 import {readFile} from "fs";
 
 export class Gutters {
-    private indicators: Object[];
-    private lcovFile: string;
-    private workspacePath: string;
-    private lcovPath: string;
+    private lcovFileName: string;
+    private coverageDecorationType: vscode.TextEditorDecorationType;
+    private coverageLightBackgroundColour: string;
+    private coverageDarkBackgroundColour: string;
 
-    constructor(workspacePath: string) {
-        this.indicators = [];
-        this.workspacePath = workspacePath;
-        this.lcovPath = this.workspacePath + "/coverage/lcov.info";
+    constructor() {
+        const config = vscode.workspace.getConfiguration("coverage-gutters");
+        this.lcovFileName = (config.get("lcovname") ? config.get("lcovname") : "lcov.info") as string;
+        this.coverageLightBackgroundColour = (config.get("highlightlight") ? config.get("highlightlight") : "lightgreen") as string;
+        this.coverageDarkBackgroundColour = (config.get("highlightdark") ? config.get("highlightdark") : "darkgreen") as string;
+
+        this.coverageDecorationType = vscode.window.createTextEditorDecorationType({
+            isWholeLine: true,
+            light: {
+                backgroundColor: this.coverageLightBackgroundColour
+            },
+            dark: {
+                backgroundColor: this.coverageDarkBackgroundColour
+            }
+        });
     }
 
-    public async displayCoverageForFile(file: string) {
-        let lcovFile = await this.loadLcov();
-        let coveredLines = await this.findFileAndExtractCoverage(lcovFile, file);
+    public async displayCoverageForActiveFile() {
+        try {
+            const activeFile = vscode.window.activeTextEditor.document.fileName;
+            const lcovPath = await this.findLcov();
+            const lcovFile = await this.loadLcov(lcovPath);
+            const coveredLines = await this.extractCoverage(lcovFile, activeFile);
+            await this.renderIndicators(coveredLines);
+        } catch(e) {
+            console.log(e);
+        }
     }
 
     public dispose() {
-        //unrender coverage indicators
+        vscode.window.activeTextEditor.setDecorations(this.coverageDecorationType, []);
     }
 
-    public getLcovPath(): string {
-        return this.lcovPath;
+    private findLcov(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            vscode.workspace.findFiles("**/" + this.lcovFileName, "**/node_modules/**", 1)
+                .then((uriLcov) => {
+                    if(!uriLcov.length) return reject(new Error("Could not find a lcov file!"));
+                    return resolve(uriLcov[0].fsPath);
+                });
+        });
     }
 
-    public getWorkspacePath(): string {
-        return this.workspacePath;
+    private renderIndicators(lines: Detail[]): Promise<Function> {
+        return new Promise((resolve, reject) => {
+            let renderLines = [];
+            lines.forEach((detail) => {
+                if(detail.hit > 0) {
+                    renderLines.push(new vscode.Range(detail.line - 1, 0, detail.line - 1, 0));
+                }
+            });
+            vscode.window.activeTextEditor.setDecorations(this.coverageDecorationType, renderLines);
+            return resolve();
+        });
     }
 
-    public getIndicators(): Object[] {
-        return this.indicators;
-    }
-
-    private loadLcov() {
+    private loadLcov(lcovPath: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            readFile(this.lcovPath, (err, data) => {
+            readFile(lcovPath, (err, data) => {
                 if(err) return reject(err);
                 return resolve(data.toString());
             });
         });
     }
 
-    private findFileAndExtractCoverage(lcovFile: string, file: string): Promise<Array<Detail>> {
+    private extractCoverage(lcovFile: string, file: string): Promise<Array<Detail>> {
         return new Promise<Array<Detail>>((resolve, reject) => {
             parse(lcovFile, (err, data) => {
                 if(err) return reject(err);
                 let section = data.find((section) => {
-                    const relativePath = file.split(this.workspacePath)[1];
-                    return section.file === relativePath
+                    //prevent hazardous casing mishaps
+                    return section.file.toLocaleLowerCase() === file.toLocaleLowerCase();
                 });
 
                 if(!section) return reject(new Error("No coverage for file!"));
