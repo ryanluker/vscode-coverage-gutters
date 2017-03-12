@@ -47,12 +47,12 @@
                 },
                 "coverage-gutters.highlightlight": {
                     "type": "string",
-                    "default": "lightgreen",
+                    "default": "rgba(150, 245, 55, 0.75)",
                     "description": "light themed highlight for code coverage"
                 },
                 "coverage-gutters.highlightdark": {
                     "type": "string",
-                    "default": "darkgreen",
+                    "default": "rgba(102, 153, 51, 0.75)",
                     "description": "dark themed highlight for code coverage"
                 }
             }
