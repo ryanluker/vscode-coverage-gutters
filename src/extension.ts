@@ -3,10 +3,7 @@
 import * as vscode from "vscode";
 import {Gutters} from "./gutters";
 
-
 export function activate(context: vscode.ExtensionContext) {
-    console.log("Loaded coverage-gutters!");
-
     let gutters = new Gutters();
 
     let display = vscode.commands.registerCommand("extension.displayCoverage", () => {
@@ -20,4 +17,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(remove);
     context.subscriptions.push(display);
     context.subscriptions.push(gutters);
+
+    console.log("Loaded coverage-gutters!");
 }
