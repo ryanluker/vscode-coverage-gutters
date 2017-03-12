@@ -2,7 +2,7 @@
     "name": "vscode-coverage-gutters",
     "displayName": "Coverage Gutters",
     "description": "Display lcov test coverage for visual studio code",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -48,14 +48,16 @@
                 }
             }
         },
-        "commands": [{
-            "command": "extension.displayCoverage",
-            "title": "Coverage Gutters: Display File Coverage"
-        },
-        {
-            "command": "extension.removeCoverage",
-            "title": "Coverage Gutters: Remove File Coverage"
-        }]
+        "commands": [
+            {
+                "command": "extension.displayCoverage",
+                "title": "Coverage Gutters: Display File Coverage"
+            },
+            {
+                "command": "extension.removeCoverage",
+                "title": "Coverage Gutters: Remove File Coverage"
+            }
+        ]
     },
     "scripts": {
         "test": "node ./node_modules/vscode/bin/test",
