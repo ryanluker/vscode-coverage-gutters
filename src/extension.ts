@@ -9,10 +9,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     let gutters = new Gutters(vscode.workspace.rootPath);
 
-    let disposable = vscode.commands.registerCommand("extension.displayCoverage", () => {
+    let display = vscode.commands.registerCommand("extension.displayCoverage", () => {
         gutters.displayCoverageForFile(vscode.window.activeTextEditor.document.fileName);
     });
 
-    context.subscriptions.push(disposable);
+    let remove = vscode.commands.registerCommand("extension.removeCoverage", () => {
+        gutters.dispose();
+    });
+
+    context.subscriptions.push(remove);
+    context.subscriptions.push(display);
     context.subscriptions.push(gutters);
 }

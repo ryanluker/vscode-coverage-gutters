@@ -16,13 +16,18 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.displayCoverage"
+        "onCommand:extension.displayCoverage",
+        "onCommand:extension.removeCoverage"
     ],
     "main": "./out/src/extension",
     "contributes": {
         "commands": [{
             "command": "extension.displayCoverage",
             "title": "Coverage Gutters: Display File Coverage"
+        },
+        {
+            "command": "extension.removeCoverage",
+            "title": "Coverage Gutters: Remove File Coverage"
         }]
     },
     "scripts": {
