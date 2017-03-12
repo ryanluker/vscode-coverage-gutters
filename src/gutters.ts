@@ -5,19 +5,26 @@ import * as parse from "lcov-parse";
 import {readFile} from "fs";
 
 export class Gutters {
-    private coverageDecorationType = vscode.window.createTextEditorDecorationType({
-        isWholeLine: true,
-        light: {
-            backgroundColor: 'lightgreen',
-
-        },
-        dark: {
-            backgroundColor: 'darkgreen'
-        }
-    });
+    private lcovFileName: string;
+    private coverageDecorationType: vscode.TextEditorDecorationType;
+    private coverageLightBackgroundColour: string;
+    private coverageDarkBackgroundColour: string;
 
     constructor() {
+        const config = vscode.workspace.getConfiguration("coverage-gutters");
+        this.lcovFileName = (config.get("lcovname") ? config.get("lcovname") : "lcov.info") as string;
+        this.coverageLightBackgroundColour = (config.get("highlightlight") ? config.get("highlightlight") : "lightgreen") as string;
+        this.coverageDarkBackgroundColour = (config.get("highlightdark") ? config.get("highlightdark") : "darkgreen") as string;
 
+        this.coverageDecorationType = vscode.window.createTextEditorDecorationType({
+            isWholeLine: true,
+            light: {
+                backgroundColor: this.coverageLightBackgroundColour
+            },
+            dark: {
+                backgroundColor: this.coverageDarkBackgroundColour
+            }
+        });
     }
 
     public async displayCoverageForActiveFile() {
@@ -38,7 +45,7 @@ export class Gutters {
 
     private findLcov(): Promise<string> {
         return new Promise((resolve, reject) => {
-            vscode.workspace.findFiles("**/lcov.info", "**/node_modules/**", 1)
+            vscode.workspace.findFiles("**/" + this.lcovFileName, "**/node_modules/**", 1)
                 .then((uriLcov) => {
                     if(!uriLcov.length) return reject(new Error("Could not find a lcov file!"));
                     return resolve(uriLcov[0].fsPath);
