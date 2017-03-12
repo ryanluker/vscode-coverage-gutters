@@ -13,8 +13,12 @@ export class Gutters {
     constructor() {
         const config = vscode.workspace.getConfiguration("coverage-gutters");
         this.lcovFileName = (config.get("lcovname") ? config.get("lcovname") : "lcov.info") as string;
-        this.coverageLightBackgroundColour = (config.get("highlightlight") ? config.get("highlightlight") : "lightgreen") as string;
-        this.coverageDarkBackgroundColour = (config.get("highlightdark") ? config.get("highlightdark") : "darkgreen") as string;
+        this.coverageLightBackgroundColour = (
+            config.get("highlightlight") ? config.get("highlightlight") : "rgba(150, 245, 55, 0.75)"
+        ) as string;
+        this.coverageDarkBackgroundColour = (
+            config.get("highlightdark") ? config.get("highlightdark") : "rgba(102, 153, 51, 0.75)"
+        ) as string;
 
         this.coverageDecorationType = vscode.window.createTextEditorDecorationType({
             isWholeLine: true,
