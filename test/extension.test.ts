@@ -6,11 +6,7 @@ import * as vscode from "vscode";
 import * as myExtension from "../src/extension";
 
 suite("Extension Tests", () => {
-    test("Should activate and have subscriptions length of 3", () => {
-        let ctx: vscode.ExtensionContext = <any>{
-            subscriptions: []
-        };
-        myExtension.activate(ctx);
-        assert.equal(ctx.subscriptions.length, 3);
+    test("Should activate on vscode open", () => {
+        assert.equal(vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters").isActive, true);
     });
 });
