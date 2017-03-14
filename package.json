@@ -55,7 +55,7 @@
                 },
                 "coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "description": "enable or disable the removeCoverage command in the editor/context menu"
                 }
             }
