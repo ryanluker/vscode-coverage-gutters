@@ -12,6 +12,17 @@ export class Gutters {
 
     constructor() {
         const config = vscode.workspace.getConfiguration("coverage-gutters");
+
+        //Customizable UI configurations
+        const configsCustom = Object.keys(config.get("customizable"));
+        for(let element of configsCustom) {
+            vscode.commands.executeCommand(
+                "setContext",
+                "config.coverage-gutters.customizable." + element,
+                vscode.workspace.getConfiguration("coverage-gutters.customizable").get(element));
+        }
+
+        //Basic configurations
         this.lcovFileName = config.get("lcovname") as string;
         this.coverageLightBackgroundColour = config.get("highlightlight") as string;
         this.coverageDarkBackgroundColour = config.get("highlightdark") as string;
