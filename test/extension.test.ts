@@ -6,11 +6,15 @@ import * as vscode from "vscode";
 import * as myExtension from "../src/extension";
 
 suite("Extension Tests", () => {
-    test("Should activate and have subscriptions length of 3", () => {
+    test("Should activate on vscode open and produce error on sequential activates", () => {
         let ctx: vscode.ExtensionContext = <any>{
             subscriptions: []
         };
-        myExtension.activate(ctx);
-        assert.equal(ctx.subscriptions.length, 3);
+
+        try{
+            myExtension.activate(ctx);
+        } catch(e) {
+            assert.equal("command with id already exists", e.message);
+        }
     });
 });
