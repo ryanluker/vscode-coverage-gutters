@@ -16,7 +16,7 @@
     "bugs": "https://github.com/ryanluker/vscode-coverage-gutters/issues",
     "publisher": "ryanluker",
     "engines": {
-        "vscode": "^1.5.0"
+        "vscode": "^1.9.0"
     },
     "categories": [
         "Other"
@@ -27,10 +27,6 @@
         "lcov",
         "vscode",
         "extension"
-    ],
-    "activationEvents": [
-        "onCommand:extension.displayCoverage",
-        "onCommand:extension.removeCoverage"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -44,13 +40,23 @@
                 },
                 "coverage-gutters.highlightlight": {
                     "type": "string",
-                    "default": "rgba(150, 245, 55, 0.75)",
+                    "default": "rgba(166, 220, 142, 0.75)",
                     "description": "light themed highlight for code coverage"
                 },
                 "coverage-gutters.highlightdark": {
                     "type": "string",
-                    "default": "rgba(102, 153, 51, 0.75)",
+                    "default": "rgba(36, 56, 27, 0.75)",
                     "description": "dark themed highlight for code coverage"
+                },
+                "coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "enable or disable the displayCoverage command in the editor/context menu"
+                },
+                "coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "enable or disable the removeCoverage command in the editor/context menu"
                 }
             }
         },
@@ -63,8 +69,25 @@
                 "command": "extension.removeCoverage",
                 "title": "Coverage Gutters: Remove File Coverage"
             }
-        ]
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "when": "config.coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled",
+                    "command": "extension.displayCoverage",
+                    "group": "Coverage-Gutters@1"
+                },
+                {
+                    "when": "config.coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled",
+                    "command": "extension.removeCoverage",
+                    "group": "Coverage-Gutters@2"
+                }
+            ]
+        }
     },
+    "activationEvents": [
+        "*"
+    ],
     "scripts": {
         "test": "node ./node_modules/vscode/bin/test",
         "vscode:prepublish": "tsc -p ./",
