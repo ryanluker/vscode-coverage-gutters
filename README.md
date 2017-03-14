@@ -14,9 +14,9 @@
 - macos, linux or windows
 
 ## Extension Settings
-All the settings have sane defaults but they are open to modification
-|Setting|Description
-|-------|-----------
+
+|Setting | Description
+|--------|------------
 |`coverage-gutters.lcovname`|Allows specification of a custom lcov file name
 |`coverage-gutters.highlightlight`|Changes the highlight for light themes
 |`coverage-gutters.highlightdark`|Changes the Highlight for dark themes
