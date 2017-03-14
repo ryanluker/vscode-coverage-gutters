@@ -15,9 +15,13 @@
 
 ## Extension Settings
 All the settings have sane defaults but they are open to modification
-- coverage-gutters.lcovname
-- coverage-gutters.highlightlight
-- coverage-gutters.highlightdark
+|Setting|Description
+|-------|-----------
+|`coverage-gutters.lcovname`|Allows specification of a custom lcov file name
+|`coverage-gutters.highlightlight`|Changes the highlight for light themes
+|`coverage-gutters.highlightdark`|Changes the Highlight for dark themes
+|`coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
+|`coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 
 Some examples for the highlight colour are as follows:
 - rgba(102, 153, 51, 0.75) <- recommended syntax based on vscode.d.ts
@@ -39,4 +43,4 @@ Some examples for the highlight colour are as follows:
 
 -----------------------------------------------------------------------------------------------------------
 
-<div>Icon originally made by <a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+<div>Icon made by <a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
