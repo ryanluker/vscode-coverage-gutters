@@ -35,11 +35,12 @@ Some examples for the highlight colour are as follows:
 - none ( just missing functionality :) )
 
 ## Release Notes
+### [Changelog](CHANGELOG.mb)
 
-### 0.1.0
-- display and remove lcov line coverage using commands
-- modify highlight colour using workspace settings
-- modify lcov name using workspace settings
+## Contribution Guidelines
+- test backed code changes
+- bug fixes always welcome :)
+- new feature proposals go through a github issue
 
 -----------------------------------------------------------------------------------------------------------
 
