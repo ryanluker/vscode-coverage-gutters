@@ -6,7 +6,7 @@ import * as vscode from "vscode";
 import * as myExtension from "../src/extension";
 
 suite("Extension Tests", function() {
-    test("Should activate have subscriptions of length 3", function(done) {
+    test("Should activate have subscriptions of length 3 on macos or error on linxu / windows", function(done) {
         let ctx: vscode.ExtensionContext = <any>{
             subscriptions: []
         };

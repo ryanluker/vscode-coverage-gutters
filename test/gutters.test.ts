@@ -15,4 +15,9 @@ suite("Gutters Tests", function() {
             return done();
         }
     });
+
+    test("Should be able to dispose on a gutters object", function(done) {
+        const gutters = new Gutters();
+        return done(gutters.dispose());
+    });
 });
