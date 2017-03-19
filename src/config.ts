@@ -12,8 +12,8 @@ export class Config {
     private executeCommand;
     private workspaceConfig
 
-    private lcovFileName;
-    private coverageDecorationType;
+    private lcovFileName: string;
+    private coverageDecorationType: TextEditorDecorationType;
 
     constructor(
         createTextEditorDecorationType,
