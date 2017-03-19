@@ -10,7 +10,7 @@
 ![Coverage Gutters features reel](images/coverage-gutters-features.gif)
 
 ## Requirements
-- vscode 1.5.0 and up
+- vscode 1.9.0 and up
 - macos, linux or windows
 
 ## Extension Settings

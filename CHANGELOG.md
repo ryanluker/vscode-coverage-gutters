@@ -1,4 +1,3 @@
-
 ### 0.2.0
 - true gutter indicators
 - contribution doc
