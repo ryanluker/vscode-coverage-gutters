@@ -6,7 +6,7 @@ import * as vscode from "vscode";
 import {Indicators} from "../src/indicators";
 
 suite("Indicators Tests", function() {
-    test("Constructor should setup properly", function(done) {
+    test("Constructor should setup properly", function() {
 
     });
 });

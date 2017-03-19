@@ -6,7 +6,7 @@ import * as vscode from "vscode";
 import {Lcov} from "../src/lcov";
 
 suite("Lcov Tests", function() {
-    test("Constructor should setup properly", function(done) {
+    test("Constructor should setup properly", function() {
 
     });
 });
