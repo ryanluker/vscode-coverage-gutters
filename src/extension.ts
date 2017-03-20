@@ -4,7 +4,7 @@ import * as vscode from "vscode";
 import {Gutters} from "./gutters";
 
 export function activate(context: vscode.ExtensionContext) {
-    let gutters = new Gutters();
+    let gutters = new Gutters(context);
 
     let display = vscode.commands.registerCommand("extension.displayCoverage", () => {
         gutters.displayCoverageForActiveFile();

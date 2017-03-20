@@ -4,13 +4,16 @@
 
 ## Features
 - simple line coverage rendering using lcov
-- workspace settings to change the lcov name and highlight colours
+
+![Coverage Gutters features context](images/coverage-gutters-features-context.gif)
+
+- workspace settings to customize the features to your liking
 - colour compatibility with light and dark themes
 
-![Coverage Gutters features reel](images/coverage-gutters-features.gif)
+![Coverage Gutters features basic](images/coverage-gutters-features-basic.gif)
 
 ## Requirements
-- vscode 1.5.0 and up
+- vscode 1.9.0 and up
 - macos, linux or windows
 
 ## Extension Settings
@@ -20,6 +23,8 @@
 |`coverage-gutters.lcovname`|Allows specification of a custom lcov file name
 |`coverage-gutters.highlightlight`|Changes the highlight for light themes
 |`coverage-gutters.highlightdark`|Changes the Highlight for dark themes
+|`coverage-gutters.gutterIconPathDark`|Relative path to an icon in the extension for dark themes
+|`coverage-gutters.gutterIconPathLight`|Relative path to an icon in the extension for light themes
 |`coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 
@@ -35,11 +40,13 @@ Some examples for the highlight colour are as follows:
 - none ( just missing functionality :) )
 
 ## Release Notes
+### [Changelog](CHANGELOG.mb)
 
-### 0.1.0
-- display and remove lcov line coverage using commands
-- modify highlight colour using workspace settings
-- modify lcov name using workspace settings
+## Contribution Guidelines
+- test backed code changes
+- new code matches existing style
+- bug fixes always welcome :)
+- new feature proposals go through a github issue
 
 -----------------------------------------------------------------------------------------------------------
 
