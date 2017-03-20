@@ -17,7 +17,8 @@ suite("Lcov Tests", function() {
                     }
                 },
                 function(){},
-                function(path: string){});
+                function(path: string){}
+            );
             return done();
         } catch(e) {
             assert.equal(1,2);
@@ -25,7 +26,7 @@ suite("Lcov Tests", function() {
         }
     });
 
-    test("#find: Should return error if no file found for lcovFileName", async function(done) {
+    test("#find: Should return error if no file found for lcovFileName", function(done) {
         const lcov = new Lcov(
             {
                 lcovFileName: "test.ts",
@@ -42,20 +43,21 @@ suite("Lcov Tests", function() {
                     return resolve([]);
                 });
             },
-            function(path: string){});
+            function(path: string){}
+        );
 
-        try {
-            await lcov.find();
-        } catch(error) {
-            if(error.name === "AssertionError") return done(error);
-            if(error.message === "Could not find a lcov file!") return done();
-            return done(error);
-        }
-
-        return done(new Error("Expected error did not fire!"));
+        lcov.find()
+            .then(function() {
+                return done(new Error("Expected error did not fire!"));
+            })
+            .catch(function(error) {
+                if(error.name === "AssertionError") return done(error);
+                if(error.message === "Could not find a lcov file!") return done();
+                return done(error);
+            });
     });
 
-    test("#find: Should return a file system path", async function(done) {
+    test("#find: Should return a file system path", function(done) {
         const lcov = new Lcov(
             {
                 lcovFileName: "test.ts",
@@ -72,18 +74,20 @@ suite("Lcov Tests", function() {
                     return resolve([{fsPath: "path/to/greatness/test.ts"}]);
                 });
             },
-            function(path: string){});
+            function(path: string){}
+        );
 
-        try {
-            const fsPath = await lcov.find();
-            assert.equal(fsPath, "path/to/greatness/test.ts");
-            return done();
-        } catch(error) {
-            return done(error);
-        }
+        lcov.find()
+            .then(function(fsPath) {
+                assert.equal(fsPath, "path/to/greatness/test.ts");
+                return done();
+            })
+            .catch(function(error) {
+                return done(error);
+            });
     });
 
-    test("#load: Should reject when readFile returns an error", async function(done) {
+    test("#load: Should reject when readFile returns an error", function(done) {
         const lcov = new Lcov(
             {
                 lcovFileName: "test.ts",
@@ -96,19 +100,21 @@ suite("Lcov Tests", function() {
             function(path: string, cb) {
                 assert.equal(path, "pathtofile");
                 return cb(new Error("could not read from fs"));
-            });
+            }
+        );
 
-        try {
-            await lcov.load("pathtofile");
-            return done(new Error("Expected error did not fire!"));
-        } catch(error) {
-            if(error.name === "AssertionError") return done(error);
-            if(error.message === "could not read from fs") return done();
-            return done(error);
-        }
+        lcov.load("pathtofile")
+            .then(function() {
+                return done(new Error("Expected error did not fire!"));
+            })
+            .catch(function(error) {
+                if(error.name === "AssertionError") return done(error);
+                if(error.message === "could not read from fs") return done();
+                return done(error);
+            });
     });
 
-    test("#load: Should return a data string", async function(done) {
+    test("#load: Should return a data string", function(done) {
         const lcov = new Lcov(
             {
                 lcovFileName: "test.ts",
@@ -121,14 +127,16 @@ suite("Lcov Tests", function() {
             function(path: string, cb) {
                 assert.equal(path, "pathtofile");
                 return cb(null, "lcovhere");
-            });
+            }
+        );
 
-        try {
-            const dataString = await lcov.load("pathtofile");
-            assert.equal(dataString, "lcovhere");
-            return done();
-        } catch(error) {
-            return done(error);
-        }
+        lcov.load("pathtofile")
+            .then(function(dataString) {
+                assert.equal(dataString, "lcovhere");
+                return done();
+            })
+            .catch(function(error) {
+                return done(error);
+            });
     });
 });
