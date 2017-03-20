@@ -48,6 +48,16 @@
                     "default": "rgba(36, 56, 27, 0.75)",
                     "description": "dark themed highlight for code coverage"
                 },
+                "coverage-gutters.gutterIconPathDark": {
+                    "type": "string",
+                    "default": "./images/gutter-icon-dark.svg",
+                    "description": "path to an icon (svg, png, etc) for displaying in the gutter for dark themes"
+                },
+                "coverage-gutters.gutterIconPathLight": {
+                    "type": "string",
+                    "default": "./images/gutter-icon-light.svg",
+                    "description": "path to an icon (svg, png, etc) for displaying in the gutter for light themes"
+                },
                 "coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled": {
                     "type": "boolean",
                     "default": true,

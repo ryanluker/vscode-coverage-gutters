@@ -1,34 +1,40 @@
 'use strict';
 
-import {TextEditorDecorationType} from "vscode";
+import {TextEditorDecorationType, ExtensionContext} from "vscode";
 
 export interface configStore {
     lcovFileName: string,
-    coverageDecorationType: TextEditorDecorationType
+    coverageDecorationType: TextEditorDecorationType,
+    gutterDecorationType: TextEditorDecorationType
 }
 
 export class Config {
     private createTextEditorDecorationType;
     private executeCommand;
-    private workspaceConfig
+    private workspaceConfig;
+    private context: ExtensionContext;
 
     private lcovFileName: string;
     private coverageDecorationType: TextEditorDecorationType;
+    private gutterDecorationType: TextEditorDecorationType;
 
     constructor(
         createTextEditorDecorationType,
         executeCommand,
-        workspaceConfig
+        workspaceConfig,
+        context: ExtensionContext
     ) {
         this.createTextEditorDecorationType = createTextEditorDecorationType;
         this.executeCommand = executeCommand;
         this.workspaceConfig = workspaceConfig;
+        this.context = context;
     }
 
     public get(): configStore {
         return {
             lcovFileName: this.lcovFileName,
-            coverageDecorationType: this.coverageDecorationType
+            coverageDecorationType: this.coverageDecorationType,
+            gutterDecorationType: this.gutterDecorationType
         }
     }
 
@@ -48,6 +54,8 @@ export class Config {
         this.lcovFileName = rootConfig.get("lcovname") as string;
         const coverageLightBackgroundColour = rootConfig.get("highlightlight") as string;
         const coverageDarkBackgroundColour = rootConfig.get("highlightdark") as string;
+        const gutterIconPathDark = rootConfig.get("gutterIconPathDark") as string;
+        const gutterIconPathLight = rootConfig.get("gutterIconPathLight") as string;
 
         this.coverageDecorationType = this.createTextEditorDecorationType({
             isWholeLine: true,
@@ -56,6 +64,15 @@ export class Config {
             },
             dark: {
                 backgroundColor: coverageDarkBackgroundColour
+            }
+        });
+
+        this.gutterDecorationType = this.createTextEditorDecorationType({
+            light: {
+                gutterIconPath: this.context.asAbsolutePath(gutterIconPathLight)
+            },
+            dark: {
+                gutterIconPath: this.context.asAbsolutePath(gutterIconPathDark)
             }
         });
 

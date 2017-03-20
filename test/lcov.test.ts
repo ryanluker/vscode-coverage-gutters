@@ -14,6 +14,10 @@ suite("Lcov Tests", function() {
                     coverageDecorationType: {
                         key: "testKey",
                         dispose() {}
+                    },
+                    gutterDecorationType: {
+                        key: "testKey2",
+                        dispose() {}
                     }
                 },
                 function(){},
@@ -32,6 +36,10 @@ suite("Lcov Tests", function() {
                 lcovFileName: "test.ts",
                 coverageDecorationType: {
                     key: "testKey",
+                    dispose() {}
+                },
+                gutterDecorationType: {
+                    key: "testKey2",
                     dispose() {}
                 }
             },
@@ -64,6 +72,10 @@ suite("Lcov Tests", function() {
                 coverageDecorationType: {
                     key: "testKey",
                     dispose() {}
+                },
+                gutterDecorationType: {
+                    key: "testKey2",
+                    dispose() {}
                 }
             },
             function(path, exclude, filesToFind) {
@@ -94,6 +106,10 @@ suite("Lcov Tests", function() {
                 coverageDecorationType: {
                     key: "testKey",
                     dispose() {}
+                },
+                gutterDecorationType: {
+                    key: "testKey2",
+                    dispose() {}
                 }
             },
             function(path, exclude, filesToFind) {},
@@ -120,6 +136,10 @@ suite("Lcov Tests", function() {
                 lcovFileName: "test.ts",
                 coverageDecorationType: {
                     key: "testKey",
+                    dispose() {}
+                },
+                gutterDecorationType: {
+                    key: "testKey2",
                     dispose() {}
                 }
             },

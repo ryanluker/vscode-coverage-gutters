@@ -29,6 +29,7 @@ export class Indicators implements indicators{
                 }
             });
             this.setDecorations(this.configStore.coverageDecorationType, renderLines);
+            this.setDecorations(this.configStore.gutterDecorationType, renderLines);
             return resolve();
         });
     }

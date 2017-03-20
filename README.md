@@ -20,6 +20,8 @@
 |`coverage-gutters.lcovname`|Allows specification of a custom lcov file name
 |`coverage-gutters.highlightlight`|Changes the highlight for light themes
 |`coverage-gutters.highlightdark`|Changes the Highlight for dark themes
+|`coverage-gutters.gutterIconPathDark`|Relative path to an icon in the extension for dark themes
+|`coverage-gutters.gutterIconPathLight`|Relative path to an icon in the extension for light themes
 |`coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 
@@ -39,6 +41,7 @@ Some examples for the highlight colour are as follows:
 
 ## Contribution Guidelines
 - test backed code changes
+- new code matches existing style
 - bug fixes always welcome :)
 - new feature proposals go through a github issue
 

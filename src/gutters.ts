@@ -9,7 +9,7 @@ import {
 } from "./wrappers/vscode";
 import {readFile} from "./wrappers/fs";
 import {lcovParse} from "./wrappers/lcov-parse";
-import {Range, window} from "vscode";
+import {Range, window, ExtensionContext} from "vscode";
 
 import {Lcov, lcov} from "./lcov";
 import {Indicators, indicators} from "./indicators";
@@ -20,8 +20,13 @@ export class Gutters {
     private lcov: lcov;
     private indicators: indicators;
 
-    constructor() {
-        this.configStore = new Config(createTextEditorDecorationType, executeCommand, getConfiguration).setup();
+    constructor(context: ExtensionContext) {
+        this.configStore = new Config(
+            createTextEditorDecorationType,
+            executeCommand,
+            getConfiguration,
+            context
+        ).setup();
         this.lcov = new Lcov(this.configStore, findFiles, readFile);
         this.indicators = new Indicators(this.configStore, lcovParse, setDecorations);
     }
@@ -40,5 +45,6 @@ export class Gutters {
 
     public dispose() {
         setDecorations(this.configStore.coverageDecorationType, []);
+        setDecorations(this.configStore.gutterDecorationType, []);
     }
 }
