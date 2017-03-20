@@ -4,10 +4,13 @@
 
 ## Features
 - simple line coverage rendering using lcov
-- workspace settings to change the lcov name and highlight colours
+
+![Coverage Gutters features context](images/coverage-gutters-features-context.gif)
+
+- workspace settings to customize the features to your liking
 - colour compatibility with light and dark themes
 
-![Coverage Gutters features reel](images/coverage-gutters-features.gif)
+![Coverage Gutters features basic](images/coverage-gutters-features-basic.gif)
 
 ## Requirements
 - vscode 1.9.0 and up
