@@ -2,12 +2,15 @@
 
 import * as assert from "assert";
 
-import * as vscode from "vscode";
+import {vscode} from "../src/wrappers/vscode";
+import {fs} from "../src/wrappers/fs";
 import {Lcov} from "../src/lcov";
 
 suite("Lcov Tests", function() {
     test("Constructor should setup properly", function(done) {
         try {
+            const vscodeImpl = new vscode();
+            const fsImpl = new fs();
             const lcov = new Lcov(
                 {
                     lcovFileName: "test.ts",
@@ -20,8 +23,8 @@ suite("Lcov Tests", function() {
                         dispose() {}
                     }
                 },
-                function(){},
-                function(path: string){}
+                vscodeImpl,
+                fsImpl
             );
             return done();
         } catch(e) {
@@ -31,6 +34,17 @@ suite("Lcov Tests", function() {
     });
 
     test("#find: Should return error if no file found for lcovFileName", function(done) {
+        const vscodeImpl = new vscode();
+        const fsImpl = new fs();
+
+        vscodeImpl.findFiles = function(path, exclude, filesToFind) {
+            assert.equal(path, "**/test.ts");
+            assert.equal(exclude, "**/node_modules/**");
+            assert.equal(filesToFind, 1);
+            return new Promise(function(resolve, reject) {
+                return resolve([]);
+            });
+        };
         const lcov = new Lcov(
             {
                 lcovFileName: "test.ts",
@@ -43,15 +57,8 @@ suite("Lcov Tests", function() {
                     dispose() {}
                 }
             },
-            function(path, exclude, filesToFind) {
-                assert.equal(path, "**/test.ts");
-                assert.equal(exclude, "**/node_modules/**");
-                assert.equal(filesToFind, 1);
-                return new Promise(function(resolve, reject) {
-                    return resolve([]);
-                });
-            },
-            function(path: string){}
+            vscodeImpl,
+            fsImpl
         );
 
         lcov.find()
@@ -66,6 +73,17 @@ suite("Lcov Tests", function() {
     });
 
     test("#find: Should return a file system path", function(done) {
+        const vscodeImpl = new vscode();
+        const fsImpl = new fs();
+
+        vscodeImpl.findFiles = function(path, exclude, filesToFind) {
+            assert.equal(path, "**/test.ts");
+            assert.equal(exclude, "**/node_modules/**");
+            assert.equal(filesToFind, 1);
+            return new Promise(function(resolve, reject) {
+                return resolve([{fsPath: "path/to/greatness/test.ts"}]);
+            });
+        };
         const lcov = new Lcov(
             {
                 lcovFileName: "test.ts",
@@ -78,15 +96,8 @@ suite("Lcov Tests", function() {
                     dispose() {}
                 }
             },
-            function(path, exclude, filesToFind) {
-                assert.equal(path, "**/test.ts");
-                assert.equal(exclude, "**/node_modules/**");
-                assert.equal(filesToFind, 1);
-                return new Promise(function(resolve, reject) {
-                    return resolve([{fsPath: "path/to/greatness/test.ts"}]);
-                });
-            },
-            function(path: string){}
+            vscodeImpl,
+            fsImpl
         );
 
         lcov.find()
@@ -100,6 +111,14 @@ suite("Lcov Tests", function() {
     });
 
     test("#load: Should reject when readFile returns an error", function(done) {
+        const vscodeImpl = new vscode();
+        const fsImpl = new fs();
+
+        fsImpl.readFile = function(path: string, cb) {
+            assert.equal(path, "pathtofile");
+            const error: NodeJS.ErrnoException = new Error("could not read from fs");
+            return cb(error, null);
+        };
         const lcov = new Lcov(
             {
                 lcovFileName: "test.ts",
@@ -112,11 +131,8 @@ suite("Lcov Tests", function() {
                     dispose() {}
                 }
             },
-            function(path, exclude, filesToFind) {},
-            function(path: string, cb) {
-                assert.equal(path, "pathtofile");
-                return cb(new Error("could not read from fs"));
-            }
+            vscodeImpl,
+            fsImpl
         );
 
         lcov.load("pathtofile")
@@ -131,6 +147,13 @@ suite("Lcov Tests", function() {
     });
 
     test("#load: Should return a data string", function(done) {
+        const vscodeImpl = new vscode();
+        const fsImpl = new fs();
+
+        fsImpl.readFile = function(path: string, cb) {
+            assert.equal(path, "pathtofile");
+            return cb(null, new Buffer("lcovhere"));
+        };
         const lcov = new Lcov(
             {
                 lcovFileName: "test.ts",
@@ -143,11 +166,8 @@ suite("Lcov Tests", function() {
                     dispose() {}
                 }
             },
-            function(path, exclude, filesToFind) {},
-            function(path: string, cb) {
-                assert.equal(path, "pathtofile");
-                return cb(null, "lcovhere");
-            }
+            vscodeImpl,
+            fsImpl
         );
 
         lcov.load("pathtofile")
