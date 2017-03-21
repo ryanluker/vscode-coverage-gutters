@@ -40,7 +40,7 @@ Some examples for the highlight colour are as follows:
 - none ( just missing functionality :) )
 
 ## Release Notes
-### [Changelog](CHANGELOG.mb)
+### [Changelog](https://github.com/ryanluker/vscode-coverage-gutters/releases)
 
 ## Contribution Guidelines
 - test backed code changes
