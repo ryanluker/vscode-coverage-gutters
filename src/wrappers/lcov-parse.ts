@@ -1,7 +1,13 @@
 "use strict";
 
-import {LcovSection, source} from "lcov-parse";
+import {LcovSection, source as sourceLcovParse} from "lcov-parse";
 
-export function lcovParse(file: string, cb: (err: Error, data: Array<LcovSection>) => void): void {
-    return source(file, cb);
+export interface LcovParseInterface {
+    source(file: string, cb: (err: Error, data: Array<LcovSection>) => void): void
+}
+
+export class lcovParse implements LcovParseInterface {
+    public source(file: string, cb: (err: Error, data: Array<LcovSection>) => void): void {
+        return sourceLcovParse(file, cb);
+    }
 }
