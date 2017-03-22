@@ -7,22 +7,25 @@ import {fs} from "../src/wrappers/fs";
 import {Lcov} from "../src/lcov";
 
 suite("Lcov Tests", function() {
+    const fakeConfig = {
+        lcovFileName: "test.ts",
+        coverageDecorationType: {
+            key: "testKey",
+            dispose() {}
+        },
+        gutterDecorationType: {
+            key: "testKey2",
+            dispose() {}
+        },
+        altSfCompare: true
+    };
+
     test("Constructor should setup properly", function(done) {
         try {
             const vscodeImpl = new vscode();
             const fsImpl = new fs();
             const lcov = new Lcov(
-                {
-                    lcovFileName: "test.ts",
-                    coverageDecorationType: {
-                        key: "testKey",
-                        dispose() {}
-                    },
-                    gutterDecorationType: {
-                        key: "testKey2",
-                        dispose() {}
-                    }
-                },
+                fakeConfig,
                 vscodeImpl,
                 fsImpl
             );
@@ -46,17 +49,7 @@ suite("Lcov Tests", function() {
             });
         };
         const lcov = new Lcov(
-            {
-                lcovFileName: "test.ts",
-                coverageDecorationType: {
-                    key: "testKey",
-                    dispose() {}
-                },
-                gutterDecorationType: {
-                    key: "testKey2",
-                    dispose() {}
-                }
-            },
+            fakeConfig,
             vscodeImpl,
             fsImpl
         );
@@ -85,17 +78,7 @@ suite("Lcov Tests", function() {
             });
         };
         const lcov = new Lcov(
-            {
-                lcovFileName: "test.ts",
-                coverageDecorationType: {
-                    key: "testKey",
-                    dispose() {}
-                },
-                gutterDecorationType: {
-                    key: "testKey2",
-                    dispose() {}
-                }
-            },
+            fakeConfig,
             vscodeImpl,
             fsImpl
         );
@@ -120,17 +103,7 @@ suite("Lcov Tests", function() {
             return cb(error, null);
         };
         const lcov = new Lcov(
-            {
-                lcovFileName: "test.ts",
-                coverageDecorationType: {
-                    key: "testKey",
-                    dispose() {}
-                },
-                gutterDecorationType: {
-                    key: "testKey2",
-                    dispose() {}
-                }
-            },
+            fakeConfig,
             vscodeImpl,
             fsImpl
         );
@@ -155,17 +128,7 @@ suite("Lcov Tests", function() {
             return cb(null, new Buffer("lcovhere"));
         };
         const lcov = new Lcov(
-            {
-                lcovFileName: "test.ts",
-                coverageDecorationType: {
-                    key: "testKey",
-                    dispose() {}
-                },
-                gutterDecorationType: {
-                    key: "testKey2",
-                    dispose() {}
-                }
-            },
+            fakeConfig,
             vscodeImpl,
             fsImpl
         );

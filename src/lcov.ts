@@ -4,8 +4,8 @@ import {VscodeInterface} from "./wrappers/vscode";
 import {FsInterface} from "./wrappers/fs";
 
 export interface lcov {
-    find(): Promise<string>,
-    load(lcovPath: string): Promise<string>
+    find(): Promise<string>;
+    load(lcovPath: string): Promise<string>;
 }
 
 export class Lcov implements lcov {

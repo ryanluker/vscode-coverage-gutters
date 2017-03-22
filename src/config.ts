@@ -3,9 +3,10 @@ import {VscodeInterface} from "./wrappers/vscode";
 import {TextEditorDecorationType, ExtensionContext} from "vscode";
 
 export interface configStore {
-    lcovFileName: string,
-    coverageDecorationType: TextEditorDecorationType,
-    gutterDecorationType: TextEditorDecorationType
+    lcovFileName: string;
+    coverageDecorationType: TextEditorDecorationType;
+    gutterDecorationType: TextEditorDecorationType;
+    altSfCompare: boolean;
 }
 
 export class Config {
@@ -15,6 +16,7 @@ export class Config {
     private lcovFileName: string;
     private coverageDecorationType: TextEditorDecorationType;
     private gutterDecorationType: TextEditorDecorationType;
+    private altSfCompare: boolean;
 
     constructor(vscode: VscodeInterface, context: ExtensionContext) {
         this.vscode = vscode;
@@ -25,7 +27,8 @@ export class Config {
         return {
             lcovFileName: this.lcovFileName,
             coverageDecorationType: this.coverageDecorationType,
-            gutterDecorationType: this.gutterDecorationType
+            gutterDecorationType: this.gutterDecorationType,
+            altSfCompare: this.altSfCompare
         }
     }
 
@@ -43,6 +46,9 @@ export class Config {
         //Basic configurations
         const rootConfig = this.vscode.getConfiguration("coverage-gutters");
         this.lcovFileName = rootConfig.get("lcovname") as string;
+
+        this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
+
         const coverageLightBackgroundColour = rootConfig.get("highlightlight") as string;
         const coverageDarkBackgroundColour = rootConfig.get("highlightdark") as string;
         const gutterIconPathDark = rootConfig.get("gutterIconPathDark") as string;

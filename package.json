@@ -38,6 +38,11 @@
                     "default": "lcov.info",
                     "description": "name of your lcov file"
                 },
+                "coverage-gutters.altSfCompare": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "uses an alternative methods of comparing source file paths"
+                },
                 "coverage-gutters.highlightlight": {
                     "type": "string",
                     "default": "rgba(166, 220, 142, 0.75)",
