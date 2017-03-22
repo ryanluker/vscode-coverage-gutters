@@ -19,6 +19,7 @@ export interface VscodeInterface {
     executeCommand(command: string, ...rest: any[]): Thenable<{}>;
     findFiles(include: string, exclude: string, maxResults?: number, token?: CancellationToken): Thenable<Uri[]>;
     getConfiguration(section?: string): WorkspaceConfiguration;
+    getRootPath(): string;
 }
 
 export class vscode implements VscodeInterface {
@@ -40,5 +41,9 @@ export class vscode implements VscodeInterface {
 
     public getConfiguration(section?: string): WorkspaceConfiguration {
         return workspace.getConfiguration(section);
+    }
+
+    public getRootPath(): string {
+        return workspace.rootPath;
     }
 }

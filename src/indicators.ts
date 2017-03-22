@@ -4,7 +4,7 @@ import {configStore} from "./config";
 import {LcovParseInterface} from "./wrappers/lcov-parse";
 import {VscodeInterface} from "./wrappers/vscode";
 
-import {Range, workspace} from "vscode";
+import {Range} from "vscode";
 import {Detail} from "lcov-parse";
 
 export interface indicators {
@@ -60,7 +60,7 @@ export class Indicators implements indicators{
             //consider windows and linux file paths
             const sourceFile = lcovFile.split(/[\\\/]/).reverse();
             const openFile = file.split(/[\\\/]/).reverse();
-            const folderName = workspace.rootPath.split(/[\\\/]/).reverse()[0];
+            const folderName = this.vscode.getRootPath().split(/[\\\/]/).reverse()[0];
             let match = true;
             let index = 0;
 
