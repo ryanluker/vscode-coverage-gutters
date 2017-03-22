@@ -3,7 +3,7 @@
 import {LcovSection, source as sourceLcovParse} from "lcov-parse";
 
 export interface LcovParseInterface {
-    source(file: string, cb: (err: Error, data: Array<LcovSection>) => void): void
+    source(file: string, cb: (err: Error, data: Array<LcovSection>) => void): void;
 }
 
 export class lcovParse implements LcovParseInterface {

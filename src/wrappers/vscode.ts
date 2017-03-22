@@ -14,11 +14,11 @@ import {
 } from "vscode"
 
 export interface VscodeInterface {
-    createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType,
-    setDecorations(decorationType: TextEditorDecorationType, rangesOrOptions: Range[] | DecorationOptions[]): void,
-    executeCommand(command: string, ...rest: any[]): Thenable<{}>,
-    findFiles(include: string, exclude: string, maxResults?: number, token?: CancellationToken): Thenable<Uri[]>,
-    getConfiguration(section?: string): WorkspaceConfiguration
+    createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType;
+    setDecorations(decorationType: TextEditorDecorationType, rangesOrOptions: Range[] | DecorationOptions[]): void;
+    executeCommand(command: string, ...rest: any[]): Thenable<{}>;
+    findFiles(include: string, exclude: string, maxResults?: number, token?: CancellationToken): Thenable<Uri[]>;
+    getConfiguration(section?: string): WorkspaceConfiguration;
 }
 
 export class vscode implements VscodeInterface {
