@@ -4,12 +4,12 @@ import {configStore} from "./config";
 import {LcovParseInterface} from "./wrappers/lcov-parse";
 import {VscodeInterface} from "./wrappers/vscode";
 
-import {Range} from "vscode";
+import {Range, workspace} from "vscode";
 import {Detail} from "lcov-parse";
 
 export interface indicators {
-    render(lines: Array<Detail>): Promise<string>,
-    extract(lcovFile: string, file: string): Promise<Array<Detail>>
+    render(lines: Array<Detail>): Promise<string>;
+    extract(lcovFile: string, file: string): Promise<Array<Detail>>;
 }
 
 export class Indicators implements indicators{
@@ -46,13 +46,38 @@ export class Indicators implements indicators{
             this.parse.source(lcovFile, (err, data) => {
                 if(err) return reject(err);
                 let section = data.find((section) => {
-                    //prevent hazardous casing mishaps
-                    return section.file.toLocaleLowerCase() === file.toLocaleLowerCase();
+                    return this.compareFilePaths(section.file, file);
                 });
 
                 if(!section) return reject(new Error("No coverage for file!"));
                 return resolve(section.lines.details);
             });
         });
+    }
+
+    private compareFilePaths(lcovFile: string, file: string): boolean {
+        if(this.configStore.altSfCompare) {
+            //consider windows and linux file paths
+            const sourceFile = lcovFile.split(/[\\\/]/).reverse();
+            const openFile = file.split(/[\\\/]/).reverse();
+            const folderName = workspace.rootPath.split(/[\\\/]/).reverse()[0];
+            let match = true;
+            let index = 0;
+
+            //work backwards from the file folder leaf to folder node
+            do {
+                if(sourceFile[index] === openFile[index]) {
+                    index++;
+                } else {
+                    match = false;
+                    break;
+                }
+            } while(folderName !== openFile[index]);
+
+            return match;
+        } else {
+            //prevent hazardous casing mishaps
+            return lcovFile.toLocaleLowerCase() === file.toLocaleLowerCase();
+        }
     }
 }

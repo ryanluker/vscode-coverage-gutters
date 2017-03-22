@@ -46,7 +46,6 @@ export class Config {
         //Basic configurations
         const rootConfig = this.vscode.getConfiguration("coverage-gutters");
         this.lcovFileName = rootConfig.get("lcovname") as string;
-
         this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
 
         const coverageLightBackgroundColour = rootConfig.get("highlightlight") as string;
