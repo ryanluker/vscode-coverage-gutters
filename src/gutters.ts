@@ -1,19 +1,17 @@
 'use strict';
 
-import {
-    createTextEditorDecorationType,
-    executeCommand,
-    getConfiguration,
-    setDecorations,
-    findFiles
-} from "./wrappers/vscode";
-import {readFile} from "./wrappers/fs";
+import {vscode} from "./wrappers/vscode";
+import {fs} from "./wrappers/fs";
 import {lcovParse} from "./wrappers/lcov-parse";
-import {Range, window, ExtensionContext} from "vscode";
+import {ExtensionContext, window} from "vscode";
 
 import {Lcov, lcov} from "./lcov";
 import {Indicators, indicators} from "./indicators";
 import {Config, configStore} from "./config";
+
+const vscodeImpl = new vscode();
+const fsImpl = new fs();
+const parseImpl = new lcovParse();
 
 export class Gutters {
     private configStore: configStore;
@@ -21,14 +19,9 @@ export class Gutters {
     private indicators: indicators;
 
     constructor(context: ExtensionContext) {
-        this.configStore = new Config(
-            createTextEditorDecorationType,
-            executeCommand,
-            getConfiguration,
-            context
-        ).setup();
-        this.lcov = new Lcov(this.configStore, findFiles, readFile);
-        this.indicators = new Indicators(this.configStore, lcovParse, setDecorations);
+        this.configStore = new Config(vscodeImpl, context).setup();
+        this.lcov = new Lcov(this.configStore, vscodeImpl, fsImpl);
+        this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
     }
 
     public async displayCoverageForActiveFile() {
@@ -44,7 +37,7 @@ export class Gutters {
     }
 
     public dispose() {
-        setDecorations(this.configStore.coverageDecorationType, []);
-        setDecorations(this.configStore.gutterDecorationType, []);
+        vscodeImpl.setDecorations(this.configStore.coverageDecorationType, []);
+        vscodeImpl.setDecorations(this.configStore.gutterDecorationType, []);
     }
 }

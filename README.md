@@ -21,6 +21,7 @@
 |Setting | Description
 |--------|------------
 |`coverage-gutters.lcovname`|Allows specification of a custom lcov file name
+|`coverage-gutters.altSfCompare`|Uses a relative method of comparing lcov source file paths
 |`coverage-gutters.highlightlight`|Changes the highlight for light themes
 |`coverage-gutters.highlightdark`|Changes the Highlight for dark themes
 |`coverage-gutters.gutterIconPathDark`|Relative path to an icon in the extension for dark themes
@@ -40,7 +41,7 @@ Some examples for the highlight colour are as follows:
 - none ( just missing functionality :) )
 
 ## Release Notes
-### [Changelog](CHANGELOG.mb)
+### [Changelog](https://github.com/ryanluker/vscode-coverage-gutters/releases)
 
 ## Contribution Guidelines
 - test backed code changes
