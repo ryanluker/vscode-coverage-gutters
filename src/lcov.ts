@@ -1,22 +1,21 @@
-'use strict';
-import {configStore} from "./config";
-import {VscodeInterface} from "./wrappers/vscode";
-import {FsInterface} from "./wrappers/fs";
+import {ConfigStore} from "./config";
+import {InterfaceFs} from "./wrappers/fs";
+import {InterfaceVscode} from "./wrappers/vscode";
 
-export interface lcov {
+export interface InterfaceLcov {
     find(): Promise<string>;
     load(lcovPath: string): Promise<string>;
 }
 
-export class Lcov implements lcov {
-    private configStore: configStore;
-    private vscode: VscodeInterface;
-    private fs: FsInterface;
+export class Lcov implements InterfaceLcov {
+    private configStore: ConfigStore;
+    private vscode: InterfaceVscode;
+    private fs: InterfaceFs;
 
     constructor(
-        configStore: configStore,
-        vscode: VscodeInterface,
-        fs: FsInterface
+        configStore: ConfigStore,
+        vscode: InterfaceVscode,
+        fs: InterfaceFs,
     ) {
         this.configStore = configStore;
         this.vscode = vscode;
@@ -27,7 +26,7 @@ export class Lcov implements lcov {
         return new Promise((resolve, reject) => {
             this.vscode.findFiles("**/" + this.configStore.lcovFileName, "**/node_modules/**", 1)
                 .then((uriLcov) => {
-                    if(!uriLcov.length) return reject(new Error("Could not find a lcov file!"));
+                    if (!uriLcov.length) { return reject(new Error("Could not find a lcov file!")); }
                     return resolve(uriLcov[0].fsPath);
                 });
         });
@@ -36,7 +35,7 @@ export class Lcov implements lcov {
     public load(lcovPath: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             this.fs.readFile(lcovPath, (err, data) => {
-                if(err) return reject(err);
+                if (err) { return reject(err); }
                 return resolve(data.toString());
             });
         });

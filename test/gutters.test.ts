@@ -8,15 +8,15 @@ import {Gutters} from "../src/gutters";
 suite("Gutters Tests", function() {
     test("Should setup gutters based on config values with no errors", function(done) {
         try {
-            let ctx: vscode.ExtensionContext = <any>{
-                subscriptions: [],
-                asAbsolutePath: function() {
+            let ctx: vscode.ExtensionContext = <any> {
+                asAbsolutePath() {
                     return "test";
-                }
+                },
+                subscriptions: [],
             };
             const gutters = new Gutters(ctx);
             return done();
-        } catch(e) {
+        } catch (e) {
             return done(e);
         }
     });

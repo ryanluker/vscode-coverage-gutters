@@ -1,22 +1,20 @@
-'use strict';
-
-import {vscode} from "./wrappers/vscode";
-import {fs} from "./wrappers/fs";
-import {lcovParse} from "./wrappers/lcov-parse";
 import {ExtensionContext, window} from "vscode";
+import {Fs} from "./wrappers/fs";
+import {LcovParse} from "./wrappers/lcov-parse";
+import {Vscode} from "./wrappers/vscode";
 
-import {Lcov, lcov} from "./lcov";
-import {Indicators, indicators} from "./indicators";
-import {Config, configStore} from "./config";
+import {Config, ConfigStore} from "./config";
+import {Indicators, InterfaceIndicators} from "./indicators";
+import {InterfaceLcov, Lcov} from "./lcov";
 
-const vscodeImpl = new vscode();
-const fsImpl = new fs();
-const parseImpl = new lcovParse();
+const vscodeImpl = new Vscode();
+const fsImpl = new Fs();
+const parseImpl = new LcovParse();
 
 export class Gutters {
-    private configStore: configStore;
-    private lcov: lcov;
-    private indicators: indicators;
+    private configStore: ConfigStore;
+    private lcov: InterfaceLcov;
+    private indicators: InterfaceIndicators;
 
     constructor(context: ExtensionContext) {
         this.configStore = new Config(vscodeImpl, context).setup();
@@ -31,8 +29,8 @@ export class Gutters {
             const lcovFile = await this.lcov.load(lcovPath);
             const coveredLines = await this.indicators.extract(lcovFile, activeFile);
             await this.indicators.render(coveredLines);
-        } catch(e) {
-            console.log(e);
+        } catch (e) {
+            console.error(e);
         }
     }
 

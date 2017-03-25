@@ -1,5 +1,3 @@
-'use strict';
-
 import * as vscode from "vscode";
 import {Gutters} from "./gutters";
 
@@ -17,6 +15,4 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(remove);
     context.subscriptions.push(display);
     context.subscriptions.push(gutters);
-
-    console.log("Loaded coverage-gutters!");
 }

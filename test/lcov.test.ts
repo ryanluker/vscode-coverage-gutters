@@ -2,43 +2,43 @@
 
 import * as assert from "assert";
 
-import {vscode} from "../src/wrappers/vscode";
-import {fs} from "../src/wrappers/fs";
 import {Lcov} from "../src/lcov";
+import {Fs} from "../src/wrappers/fs";
+import {Vscode} from "../src/wrappers/vscode";
 
 suite("Lcov Tests", function() {
     const fakeConfig = {
-        lcovFileName: "test.ts",
+        altSfCompare: true,
         coverageDecorationType: {
             key: "testKey",
-            dispose() {}
+            dispose() {},
         },
         gutterDecorationType: {
             key: "testKey2",
-            dispose() {}
+            dispose() {},
         },
-        altSfCompare: true
+        lcovFileName: "test.ts",
     };
 
     test("Constructor should setup properly", function(done) {
         try {
-            const vscodeImpl = new vscode();
-            const fsImpl = new fs();
+            const vscodeImpl = new Vscode();
+            const fsImpl = new Fs();
             const lcov = new Lcov(
                 fakeConfig,
                 vscodeImpl,
-                fsImpl
+                fsImpl,
             );
             return done();
-        } catch(e) {
-            assert.equal(1,2);
+        } catch (e) {
+            assert.equal(1, 2);
             return done();
         }
     });
 
     test("#find: Should return error if no file found for lcovFileName", function(done) {
-        const vscodeImpl = new vscode();
-        const fsImpl = new fs();
+        const vscodeImpl = new Vscode();
+        const fsImpl = new Fs();
 
         vscodeImpl.findFiles = function(path, exclude, filesToFind) {
             assert.equal(path, "**/test.ts");
@@ -51,7 +51,7 @@ suite("Lcov Tests", function() {
         const lcov = new Lcov(
             fakeConfig,
             vscodeImpl,
-            fsImpl
+            fsImpl,
         );
 
         lcov.find()
@@ -59,15 +59,15 @@ suite("Lcov Tests", function() {
                 return done(new Error("Expected error did not fire!"));
             })
             .catch(function(error) {
-                if(error.name === "AssertionError") return done(error);
-                if(error.message === "Could not find a lcov file!") return done();
+                if (error.name === "AssertionError") { return done(error); }
+                if (error.message === "Could not find a lcov file!") { return done(); }
                 return done(error);
             });
     });
 
     test("#find: Should return a file system path", function(done) {
-        const vscodeImpl = new vscode();
-        const fsImpl = new fs();
+        const vscodeImpl = new Vscode();
+        const fsImpl = new Fs();
 
         vscodeImpl.findFiles = function(path, exclude, filesToFind) {
             assert.equal(path, "**/test.ts");
@@ -80,7 +80,7 @@ suite("Lcov Tests", function() {
         const lcov = new Lcov(
             fakeConfig,
             vscodeImpl,
-            fsImpl
+            fsImpl,
         );
 
         lcov.find()
@@ -94,8 +94,8 @@ suite("Lcov Tests", function() {
     });
 
     test("#load: Should reject when readFile returns an error", function(done) {
-        const vscodeImpl = new vscode();
-        const fsImpl = new fs();
+        const vscodeImpl = new Vscode();
+        const fsImpl = new Fs();
 
         fsImpl.readFile = function(path: string, cb) {
             assert.equal(path, "pathtofile");
@@ -105,7 +105,7 @@ suite("Lcov Tests", function() {
         const lcov = new Lcov(
             fakeConfig,
             vscodeImpl,
-            fsImpl
+            fsImpl,
         );
 
         lcov.load("pathtofile")
@@ -113,15 +113,15 @@ suite("Lcov Tests", function() {
                 return done(new Error("Expected error did not fire!"));
             })
             .catch(function(error) {
-                if(error.name === "AssertionError") return done(error);
-                if(error.message === "could not read from fs") return done();
+                if (error.name === "AssertionError") { return done(error); }
+                if (error.message === "could not read from fs") { return done(); }
                 return done(error);
             });
     });
 
     test("#load: Should return a data string", function(done) {
-        const vscodeImpl = new vscode();
-        const fsImpl = new fs();
+        const vscodeImpl = new Vscode();
+        const fsImpl = new Fs();
 
         fsImpl.readFile = function(path: string, cb) {
             assert.equal(path, "pathtofile");
@@ -130,7 +130,7 @@ suite("Lcov Tests", function() {
         const lcov = new Lcov(
             fakeConfig,
             vscodeImpl,
-            fsImpl
+            fsImpl,
         );
 
         lcov.load("pathtofile")

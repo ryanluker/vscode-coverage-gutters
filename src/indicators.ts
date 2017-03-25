@@ -1,26 +1,24 @@
-"use strict";
+import {ConfigStore} from "./config";
+import {InterfaceLcovParse} from "./wrappers/lcov-parse";
+import {InterfaceVscode} from "./wrappers/vscode";
 
-import {configStore} from "./config";
-import {LcovParseInterface} from "./wrappers/lcov-parse";
-import {VscodeInterface} from "./wrappers/vscode";
-
-import {Range} from "vscode";
 import {Detail} from "lcov-parse";
+import {Range} from "vscode";
 
-export interface indicators {
-    render(lines: Array<Detail>): Promise<string>;
-    extract(lcovFile: string, file: string): Promise<Array<Detail>>;
+export interface InterfaceIndicators {
+    render(lines: Detail[]): Promise<string>;
+    extract(lcovFile: string, file: string): Promise<Detail[]>;
 }
 
-export class Indicators implements indicators{
-    private parse: LcovParseInterface;
-    private vscode: VscodeInterface;
-    private configStore: configStore;
+export class Indicators implements InterfaceIndicators {
+    private parse: InterfaceLcovParse;
+    private vscode: InterfaceVscode;
+    private configStore: ConfigStore;
 
     constructor(
-        parse: LcovParseInterface,
-        vscode: VscodeInterface,
-        configStore: configStore
+        parse: InterfaceLcovParse,
+        vscode: InterfaceVscode,
+        configStore: ConfigStore,
     ) {
         this.parse = parse;
         this.vscode = vscode;
@@ -31,7 +29,7 @@ export class Indicators implements indicators{
         return new Promise<string>((resolve, reject) => {
             let renderLines = [];
             lines.forEach((detail) => {
-                if(detail.hit > 0) {
+                if (detail.hit > 0) {
                     renderLines.push(new Range(detail.line - 1, 0, detail.line - 1, 0));
                 }
             });
@@ -41,42 +39,42 @@ export class Indicators implements indicators{
         });
     }
 
-    public extract(lcovFile: string, file: string): Promise<Array<Detail>> {
-        return new Promise<Array<Detail>>((resolve, reject) => {
+    public extract(lcovFile: string, file: string): Promise<Detail[]> {
+        return new Promise<Detail[]>((resolve, reject) => {
             this.parse.source(lcovFile, (err, data) => {
-                if(err) return reject(err);
-                let section = data.find((section) => {
-                    return this.compareFilePaths(section.file, file);
+                if (err) { return reject(err); }
+                let section = data.find((lcovSection) => {
+                    return this.compareFilePaths(lcovSection.file, file);
                 });
 
-                if(!section) return reject(new Error("No coverage for file!"));
+                if (!section) { return reject(new Error("No coverage for file!")); }
                 return resolve(section.lines.details);
             });
         });
     }
 
     private compareFilePaths(lcovFile: string, file: string): boolean {
-        if(this.configStore.altSfCompare) {
-            //consider windows and linux file paths
+        if (this.configStore.altSfCompare) {
+            // consider windows and linux file paths
             const sourceFile = lcovFile.split(/[\\\/]/).reverse();
             const openFile = file.split(/[\\\/]/).reverse();
             const folderName = this.vscode.getRootPath().split(/[\\\/]/).reverse()[0];
             let match = true;
             let index = 0;
 
-            //work backwards from the file folder leaf to folder node
+            // work backwards from the file folder leaf to folder node
             do {
-                if(sourceFile[index] === openFile[index]) {
+                if (sourceFile[index] === openFile[index]) {
                     index++;
                 } else {
                     match = false;
                     break;
                 }
-            } while(folderName !== openFile[index]);
+            } while (folderName !== openFile[index]);
 
             return match;
         } else {
-            //prevent hazardous casing mishaps
+            // prevent hazardous casing mishaps
             return lcovFile.toLocaleLowerCase() === file.toLocaleLowerCase();
         }
     }

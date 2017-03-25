@@ -1,19 +1,17 @@
-"use strict";
-
 import {
-    window,
-    commands,
-    workspace,
-    DecorationRenderOptions,
-    TextEditorDecorationType,
-    WorkspaceConfiguration,
-    Range,
-    DecorationOptions,
     CancellationToken,
-    Uri
-} from "vscode"
+    commands,
+    DecorationOptions,
+    DecorationRenderOptions,
+    Range,
+    TextEditorDecorationType,
+    Uri,
+    window,
+    workspace,
+    WorkspaceConfiguration,
+} from "vscode";
 
-export interface VscodeInterface {
+export interface InterfaceVscode {
     createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType;
     setDecorations(decorationType: TextEditorDecorationType, rangesOrOptions: Range[] | DecorationOptions[]): void;
     executeCommand(command: string, ...rest: any[]): Thenable<{}>;
@@ -22,7 +20,7 @@ export interface VscodeInterface {
     getRootPath(): string;
 }
 
-export class vscode implements VscodeInterface {
+export class Vscode implements InterfaceVscode {
     public createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType {
         return window.createTextEditorDecorationType(options);
     }
@@ -35,7 +33,11 @@ export class vscode implements VscodeInterface {
         return commands.executeCommand(command, rest);
     }
 
-    public findFiles(include: string, exclude: string, maxResults?: number, token?: CancellationToken): Thenable<Uri[]> {
+    public findFiles(
+        include: string,
+        exclude: string, maxResults?: number,
+        token?: CancellationToken,
+    ): Thenable<Uri[]> {
         return workspace.findFiles(include, exclude, maxResults, token);
     }
 
