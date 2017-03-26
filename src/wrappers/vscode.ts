@@ -3,6 +3,7 @@ import {
     commands,
     DecorationOptions,
     DecorationRenderOptions,
+    FileSystemWatcher,
     Range,
     TextEditorDecorationType,
     Uri,
@@ -18,6 +19,7 @@ export interface InterfaceVscode {
     findFiles(include: string, exclude: string, maxResults?: number, token?: CancellationToken): Thenable<Uri[]>;
     getConfiguration(section?: string): WorkspaceConfiguration;
     getRootPath(): string;
+    watchFile(filePattern: string): FileSystemWatcher;
 }
 
 export class Vscode implements InterfaceVscode {
@@ -47,5 +49,9 @@ export class Vscode implements InterfaceVscode {
 
     public getRootPath(): string {
         return workspace.rootPath;
+    }
+
+    public watchFile(filePattern: string): FileSystemWatcher {
+        return workspace.createFileSystemWatcher(filePattern);
     }
 }

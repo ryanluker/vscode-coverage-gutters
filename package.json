@@ -68,6 +68,11 @@
                     "default": true,
                     "description": "enable or disable the displayCoverage command in the editor/context menu"
                 },
+                "coverage-gutters.customizable.menus-editor-context-displayCoverageAndWatch-enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "enable or disable the displayCoverageAndWatch command in the editor/context menu"
+                },
                 "coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled": {
                     "type": "boolean",
                     "default": true,
@@ -79,6 +84,10 @@
             {
                 "command": "extension.displayCoverage",
                 "title": "Coverage Gutters: Display File Coverage"
+            },
+            {
+                "command": "extension.displayCoverageAndWatch",
+                "title": "Coverage Gutters: Display File Coverage and Watch Lcov"
             },
             {
                 "command": "extension.removeCoverage",
@@ -93,9 +102,14 @@
                     "group": "Coverage-Gutters@1"
                 },
                 {
+                    "when": "config.coverage-gutters.customizable.menus-editor-context-displayCoverageAndWatch-enabled",
+                    "command": "extension.displayCoverageAndWatch",
+                    "group": "Coverage-Gutters@2"
+                },
+                {
                     "when": "config.coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled",
                     "command": "extension.removeCoverage",
-                    "group": "Coverage-Gutters@2"
+                    "group": "Coverage-Gutters@3"
                 }
             ]
         }

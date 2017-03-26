@@ -20,7 +20,7 @@ suite("Extension Tests", function() {
             return done();
         }
 
-        assert.equal(ctx.subscriptions.length, 3);
+        assert.equal(ctx.subscriptions.length, 4);
         return done();
     });
 });
