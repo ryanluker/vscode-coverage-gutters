@@ -75,6 +75,10 @@ export class Gutters {
         });
     }
 
+    public getTextEditors(): TextEditor[] {
+        return this.textEditors;
+    }
+
     private async loadAndRenderCoverage(textEditor: TextEditor, lcovPath: string): Promise<void> {
         const lcovFile = await this.lcov.load(lcovPath);
         const file = textEditor.document.fileName;
