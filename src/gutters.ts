@@ -63,20 +63,22 @@ export class Gutters {
     public removeCoverageForActiveFile() {
         const activeEditor = window.activeTextEditor;
         this.textEditors = this.textEditors.filter((editor) => editor !== activeEditor);
-        activeEditor.setDecorations(this.configStore.coverageDecorationType, []);
-        activeEditor.setDecorations(this.configStore.gutterDecorationType, []);
+        this.removeDecorationsForTextEditor(activeEditor);
     }
 
     public dispose() {
         this.fileWatcher.dispose();
-        this.textEditors.forEach(function(editor) {
-            editor.setDecorations(this.configStore.coverageDecorationType, []);
-            editor.setDecorations(this.configStore.gutterDecorationType, []);
-        });
+        this.textEditors.forEach(this.removeDecorationsForTextEditor);
     }
 
     public getTextEditors(): TextEditor[] {
         return this.textEditors;
+    }
+
+    private removeDecorationsForTextEditor(editor: TextEditor) {
+        if (!editor) { return; }
+        editor.setDecorations(this.configStore.coverageDecorationType, []);
+        editor.setDecorations(this.configStore.gutterDecorationType, []);
     }
 
     private async loadAndRenderCoverage(textEditor: TextEditor, lcovPath: string): Promise<void> {
