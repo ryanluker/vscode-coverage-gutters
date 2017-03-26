@@ -8,16 +8,16 @@ export function activate(context: vscode.ExtensionContext) {
         gutters.displayCoverageForActiveFile();
     });
 
-    let displayAndWatch = vscode.commands.registerCommand("extension.displayCoverageAndWatch", () => {
-        gutters.displayCoverageForActiveFileAndWatch();
+    let watchLcovFile = vscode.commands.registerCommand("extension.watchLcovFile", () => {
+        gutters.watchLcovFile();
     });
 
     let remove = vscode.commands.registerCommand("extension.removeCoverage", () => {
-        gutters.dispose();
+        gutters.removeCoverageForActiveFile();
     });
 
     context.subscriptions.push(remove);
     context.subscriptions.push(display);
-    context.subscriptions.push(displayAndWatch);
+    context.subscriptions.push(watchLcovFile);
     context.subscriptions.push(gutters);
 }

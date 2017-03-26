@@ -68,10 +68,10 @@
                     "default": true,
                     "description": "enable or disable the displayCoverage command in the editor/context menu"
                 },
-                "coverage-gutters.customizable.menus-editor-context-displayCoverageAndWatch-enabled": {
+                "coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled": {
                     "type": "boolean",
                     "default": true,
-                    "description": "enable or disable the displayCoverageAndWatch command in the editor/context menu"
+                    "description": "enable or disable the watchLcovFile command in the editor/context menu"
                 },
                 "coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled": {
                     "type": "boolean",
@@ -86,8 +86,8 @@
                 "title": "Coverage Gutters: Display File Coverage"
             },
             {
-                "command": "extension.displayCoverageAndWatch",
-                "title": "Coverage Gutters: Display File Coverage and Watch Lcov"
+                "command": "extension.watchLcovFile",
+                "title": "Coverage Gutters: Watch Lcov and Render Changes"
             },
             {
                 "command": "extension.removeCoverage",
@@ -102,8 +102,8 @@
                     "group": "Coverage-Gutters@1"
                 },
                 {
-                    "when": "config.coverage-gutters.customizable.menus-editor-context-displayCoverageAndWatch-enabled",
-                    "command": "extension.displayCoverageAndWatch",
+                    "when": "config.coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled",
+                    "command": "extension.watchLcovFile",
                     "group": "Coverage-Gutters@2"
                 },
                 {

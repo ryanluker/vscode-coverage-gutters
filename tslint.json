@@ -3,9 +3,6 @@
     "rules": {
         "no-empty": false,
         "only-arrow-functions": [false],
-        "no-console": [
-            true,
-            "log"
-        ]
+        "no-console": [false, "log", "error"]
     }
 }

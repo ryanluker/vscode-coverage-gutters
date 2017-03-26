@@ -6,7 +6,6 @@ import {Detail} from "lcov-parse";
 import {Range, TextEditor} from "vscode";
 
 export interface InterfaceIndicators {
-    render(lines: Detail[]): Promise<string>;
     renderToTextEditor(lines: Detail[], textEditor: TextEditor): Promise<string>;
     extract(lcovFile: string, file: string): Promise<Detail[]>;
 }
@@ -24,20 +23,6 @@ export class Indicators implements InterfaceIndicators {
         this.parse = parse;
         this.vscode = vscode;
         this.configStore = configStore;
-    }
-
-    public render(lines: Detail[]): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            let renderLines = [];
-            lines.forEach((detail) => {
-                if (detail.hit > 0) {
-                    renderLines.push(new Range(detail.line - 1, 0, detail.line - 1, 0));
-                }
-            });
-            this.vscode.setDecorations(this.configStore.coverageDecorationType, renderLines);
-            this.vscode.setDecorations(this.configStore.gutterDecorationType, renderLines);
-            return resolve();
-        });
     }
 
     public renderToTextEditor(lines: Detail[], textEditor: TextEditor): Promise<string> {
