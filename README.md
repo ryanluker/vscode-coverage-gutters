@@ -27,6 +27,7 @@
 |`coverage-gutters.gutterIconPathDark`|Relative path to an icon in the extension for dark themes
 |`coverage-gutters.gutterIconPathLight`|Relative path to an icon in the extension for light themes
 |`coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
+|`coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 
 Some examples for the highlight colour are as follows:
@@ -38,7 +39,7 @@ Some examples for the highlight colour are as follows:
 <a>https://developer.mozilla.org/en/docs/Web/CSS/background-color#Syntax</a>
 
 ## Known Issues
-- none ( just missing functionality :) )
+- can only reliably handle one lcov file per workspace [#35](https://github.com/ryanluker/vscode-coverage-gutters/issues/35)
 
 ## Release Notes
 ### [Changelog](https://github.com/ryanluker/vscode-coverage-gutters/releases)
