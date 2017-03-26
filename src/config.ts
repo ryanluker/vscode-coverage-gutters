@@ -1,16 +1,15 @@
-'use strict';
-import {VscodeInterface} from "./wrappers/vscode";
-import {TextEditorDecorationType, ExtensionContext} from "vscode";
+import {ExtensionContext, TextEditorDecorationType} from "vscode";
+import {InterfaceVscode} from "./wrappers/vscode";
 
-export interface configStore {
+export type ConfigStore = {
     lcovFileName: string;
     coverageDecorationType: TextEditorDecorationType;
     gutterDecorationType: TextEditorDecorationType;
     altSfCompare: boolean;
-}
+};
 
 export class Config {
-    private vscode: VscodeInterface;
+    private vscode: InterfaceVscode;
     private context: ExtensionContext;
 
     private lcovFileName: string;
@@ -18,32 +17,32 @@ export class Config {
     private gutterDecorationType: TextEditorDecorationType;
     private altSfCompare: boolean;
 
-    constructor(vscode: VscodeInterface, context: ExtensionContext) {
+    constructor(vscode: InterfaceVscode, context: ExtensionContext) {
         this.vscode = vscode;
         this.context = context;
     }
 
-    public get(): configStore {
+    public get(): ConfigStore {
         return {
-            lcovFileName: this.lcovFileName,
+            altSfCompare: this.altSfCompare,
             coverageDecorationType: this.coverageDecorationType,
             gutterDecorationType: this.gutterDecorationType,
-            altSfCompare: this.altSfCompare
-        }
+            lcovFileName: this.lcovFileName,
+        };
     }
 
-    public setup(): configStore {
-        //Customizable UI configurations
+    public setup(): ConfigStore {
+        // Customizable UI configurations
         const rootCustomConfig = this.vscode.getConfiguration("coverage-gutters.customizable");
         const configsCustom = Object.keys(rootCustomConfig);
-        for(let element of configsCustom) {
+        for (let element of configsCustom) {
             this.vscode.executeCommand(
                 "setContext",
                 "config.coverage-gutters.customizable." + element,
                 rootCustomConfig.get(element));
         }
 
-        //Basic configurations
+        // Basic configurations
         const rootConfig = this.vscode.getConfiguration("coverage-gutters");
         this.lcovFileName = rootConfig.get("lcovname") as string;
         this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
@@ -54,22 +53,22 @@ export class Config {
         const gutterIconPathLight = rootConfig.get("gutterIconPathLight") as string;
 
         this.coverageDecorationType = this.vscode.createTextEditorDecorationType({
+            dark: {
+                backgroundColor: coverageDarkBackgroundColour,
+            },
             isWholeLine: true,
             light: {
-                backgroundColor: coverageLightBackgroundColour
+                backgroundColor: coverageLightBackgroundColour,
             },
-            dark: {
-                backgroundColor: coverageDarkBackgroundColour
-            }
         });
 
         this.gutterDecorationType = this.vscode.createTextEditorDecorationType({
-            light: {
-                gutterIconPath: this.context.asAbsolutePath(gutterIconPathLight)
-            },
             dark: {
-                gutterIconPath: this.context.asAbsolutePath(gutterIconPathDark)
-            }
+                gutterIconPath: this.context.asAbsolutePath(gutterIconPathDark),
+            },
+            light: {
+                gutterIconPath: this.context.asAbsolutePath(gutterIconPathLight),
+            },
         });
 
         return this.get();

@@ -3,3 +3,4 @@ node_modules
 .vscode-test
 coverage
 debug.log
+npm-debug.log

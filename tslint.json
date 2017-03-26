@@ -1,0 +1,8 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "no-empty": false,
+        "only-arrow-functions": [false],
+        "no-console": [false, "log", "error"]
+    }
+}

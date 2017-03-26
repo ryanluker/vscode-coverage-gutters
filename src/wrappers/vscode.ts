@@ -1,41 +1,39 @@
-"use strict";
-
 import {
-    window,
-    commands,
-    workspace,
-    DecorationRenderOptions,
-    TextEditorDecorationType,
-    WorkspaceConfiguration,
-    Range,
-    DecorationOptions,
     CancellationToken,
-    Uri
-} from "vscode"
+    commands,
+    DecorationRenderOptions,
+    FileSystemWatcher,
+    Range,
+    TextEditorDecorationType,
+    Uri,
+    window,
+    workspace,
+    WorkspaceConfiguration,
+} from "vscode";
 
-export interface VscodeInterface {
+export interface InterfaceVscode {
     createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType;
-    setDecorations(decorationType: TextEditorDecorationType, rangesOrOptions: Range[] | DecorationOptions[]): void;
     executeCommand(command: string, ...rest: any[]): Thenable<{}>;
     findFiles(include: string, exclude: string, maxResults?: number, token?: CancellationToken): Thenable<Uri[]>;
     getConfiguration(section?: string): WorkspaceConfiguration;
     getRootPath(): string;
+    watchFile(filePattern: string): FileSystemWatcher;
 }
 
-export class vscode implements VscodeInterface {
+export class Vscode implements InterfaceVscode {
     public createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType {
         return window.createTextEditorDecorationType(options);
-    }
-
-    public setDecorations(decorationType: TextEditorDecorationType, rangesOrOptions: Range[] | DecorationOptions[]) {
-        return window.activeTextEditor.setDecorations(decorationType, rangesOrOptions);
     }
 
     public executeCommand(command: string, ...rest: any[]): Thenable<{}> {
         return commands.executeCommand(command, rest);
     }
 
-    public findFiles(include: string, exclude: string, maxResults?: number, token?: CancellationToken): Thenable<Uri[]> {
+    public findFiles(
+        include: string,
+        exclude: string, maxResults?: number,
+        token?: CancellationToken,
+    ): Thenable<Uri[]> {
         return workspace.findFiles(include, exclude, maxResults, token);
     }
 
@@ -45,5 +43,9 @@ export class vscode implements VscodeInterface {
 
     public getRootPath(): string {
         return workspace.rootPath;
+    }
+
+    public watchFile(filePattern: string): FileSystemWatcher {
+        return workspace.createFileSystemWatcher(filePattern);
     }
 }

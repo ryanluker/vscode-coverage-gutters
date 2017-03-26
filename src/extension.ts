@@ -1,5 +1,3 @@
-'use strict';
-
 import * as vscode from "vscode";
 import {Gutters} from "./gutters";
 
@@ -10,13 +8,16 @@ export function activate(context: vscode.ExtensionContext) {
         gutters.displayCoverageForActiveFile();
     });
 
+    let watchLcovFile = vscode.commands.registerCommand("extension.watchLcovFile", () => {
+        gutters.watchLcovFile();
+    });
+
     let remove = vscode.commands.registerCommand("extension.removeCoverage", () => {
-        gutters.dispose();
+        gutters.removeCoverageForActiveFile();
     });
 
     context.subscriptions.push(remove);
     context.subscriptions.push(display);
+    context.subscriptions.push(watchLcovFile);
     context.subscriptions.push(gutters);
-
-    console.log("Loaded coverage-gutters!");
 }

@@ -1,43 +1,90 @@
-'use strict';
+import {
+    ExtensionContext,
+    FileSystemWatcher,
+    TextEditor,
+    window,
+} from "vscode";
+import {Fs} from "./wrappers/fs";
+import {LcovParse} from "./wrappers/lcov-parse";
+import {Vscode} from "./wrappers/vscode";
 
-import {vscode} from "./wrappers/vscode";
-import {fs} from "./wrappers/fs";
-import {lcovParse} from "./wrappers/lcov-parse";
-import {ExtensionContext, window} from "vscode";
+import {Config, ConfigStore} from "./config";
+import {Indicators, InterfaceIndicators} from "./indicators";
+import {InterfaceLcov, Lcov} from "./lcov";
 
-import {Lcov, lcov} from "./lcov";
-import {Indicators, indicators} from "./indicators";
-import {Config, configStore} from "./config";
-
-const vscodeImpl = new vscode();
-const fsImpl = new fs();
-const parseImpl = new lcovParse();
+const vscodeImpl = new Vscode();
+const fsImpl = new Fs();
+const parseImpl = new LcovParse();
 
 export class Gutters {
-    private configStore: configStore;
-    private lcov: lcov;
-    private indicators: indicators;
+    private configStore: ConfigStore;
+    private fileWatcher: FileSystemWatcher;
+    private lcov: InterfaceLcov;
+    private indicators: InterfaceIndicators;
+    private textEditors: TextEditor[];
 
     constructor(context: ExtensionContext) {
         this.configStore = new Config(vscodeImpl, context).setup();
         this.lcov = new Lcov(this.configStore, vscodeImpl, fsImpl);
         this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
+        this.textEditors = [];
     }
 
     public async displayCoverageForActiveFile() {
+        const textEditor = window.activeTextEditor;
+        this.textEditors.push(textEditor);
         try {
-            const activeFile = window.activeTextEditor.document.fileName;
             const lcovPath = await this.lcov.find();
-            const lcovFile = await this.lcov.load(lcovPath);
-            const coveredLines = await this.indicators.extract(lcovFile, activeFile);
-            await this.indicators.render(coveredLines);
-        } catch(e) {
+            await this.loadAndRenderCoverage(textEditor, lcovPath);
+        } catch (e) {
             console.log(e);
         }
     }
 
+    /**
+     * Watch the lcov file and iterate over textEditors when changes occur
+     */
+    public async watchLcovFile() {
+        if (this.fileWatcher) { return; }
+
+        try {
+            const lcovPath = await this.lcov.find();
+            this.fileWatcher = vscodeImpl.watchFile(lcovPath);
+            this.fileWatcher.onDidChange(async (event) => {
+                this.textEditors.forEach(async (editor) => {
+                    this.loadAndRenderCoverage(editor, lcovPath);
+                });
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    public removeCoverageForActiveFile() {
+        const activeEditor = window.activeTextEditor;
+        this.textEditors = this.textEditors.filter((editor) => editor !== activeEditor);
+        this.removeDecorationsForTextEditor(activeEditor);
+    }
+
     public dispose() {
-        vscodeImpl.setDecorations(this.configStore.coverageDecorationType, []);
-        vscodeImpl.setDecorations(this.configStore.gutterDecorationType, []);
+        this.fileWatcher.dispose();
+        this.textEditors.forEach(this.removeDecorationsForTextEditor);
+    }
+
+    public getTextEditors(): TextEditor[] {
+        return this.textEditors;
+    }
+
+    private removeDecorationsForTextEditor(editor: TextEditor) {
+        if (!editor) { return; }
+        editor.setDecorations(this.configStore.coverageDecorationType, []);
+        editor.setDecorations(this.configStore.gutterDecorationType, []);
+    }
+
+    private async loadAndRenderCoverage(textEditor: TextEditor, lcovPath: string): Promise<void> {
+        const lcovFile = await this.lcov.load(lcovPath);
+        const file = textEditor.document.fileName;
+        const coveredLines = await this.indicators.extract(lcovFile, file);
+        await this.indicators.renderToTextEditor(coveredLines, textEditor);
     }
 }

@@ -2,51 +2,51 @@
 
 import * as assert from "assert";
 
-import {vscode} from "../src/wrappers/vscode";
-import {lcovParse} from "../src/wrappers/lcov-parse";
-import {Indicators} from "../src/indicators";
+import {Indicators} from "../../src/indicators";
+import {LcovParse} from "../../src/wrappers/lcov-parse";
+import {Vscode} from "../../src/wrappers/vscode";
 
 suite("Indicators Tests", function() {
     const fakeConfig = {
-        lcovFileName: "test.ts",
+        altSfCompare: false,
         coverageDecorationType: {
             key: "testKey",
-            dispose() {}
+            dispose() {},
         },
         gutterDecorationType: {
             key: "testKey2",
-            dispose() {}
+            dispose() {},
         },
-        altSfCompare: false
+        lcovFileName: "test.ts",
     };
 
     test("Constructor should setup properly", function(done) {
         try {
-            const vscodeImpl = new vscode();
-            const parseImpl = new lcovParse();
+            const vscodeImpl = new Vscode();
+            const parseImpl = new LcovParse();
             const indicators = new Indicators(
                 parseImpl,
                 vscodeImpl,
-                fakeConfig
+                fakeConfig,
             );
             return done();
-        } catch(e) {
-            assert.equal(1,2);
+        } catch (e) {
+            assert.equal(1, 2);
             return done();
         }
     });
 
     test("#extract: should find a matching file with absolute match mode", function(done) {
         fakeConfig.altSfCompare = false;
-        const vscodeImpl = new vscode();
-        const parseImpl = new lcovParse();
+        const vscodeImpl = new Vscode();
+        const parseImpl = new LcovParse();
 
         const fakeLcov = "TN:\nSF:c:\/dev\/vscode-coverage-gutters\/example\/test-coverage.js\nDA:1,1\nend_of_record";
         const fakeFile = "c:\/dev\/vscode-coverage-gutters\/example\/test-coverage.js";
         const indicators = new Indicators(
             parseImpl,
             vscodeImpl,
-            fakeConfig
+            fakeConfig,
         );
 
         indicators.extract(fakeLcov, fakeFile)
@@ -61,15 +61,16 @@ suite("Indicators Tests", function() {
 
     test("#extract: should find a matching file with relative match mode", function(done) {
         fakeConfig.altSfCompare = true;
-        const vscodeImpl = new vscode();
+        const vscodeImpl = new Vscode();
         vscodeImpl.getRootPath = function() { return "vscode-coverage-gutters"; };
-        const parseImpl = new lcovParse();
+        const parseImpl = new LcovParse();
+        // tslint:disable-next-line:max-line-length
         const fakeLinuxLcov = "TN:\nSF:/mnt/c/dev/vscode-coverage-gutters/example/test-coverage.js\nDA:1,1\nend_of_record";
         const fakeFile = "c:\/dev\/vscode-coverage-gutters\/example\/test-coverage.js";
         const indicators = new Indicators(
             parseImpl,
             vscodeImpl,
-            fakeConfig
+            fakeConfig,
         );
 
         indicators.extract(fakeLinuxLcov, fakeFile)
