@@ -1,3 +1,6 @@
+environment:
+  - CODE_TESTS_PATH=out/test/integration
+
 install:
   - ps: Install-Product node 6.6.0 x64
 
