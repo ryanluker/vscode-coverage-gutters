@@ -9,7 +9,7 @@ os:
   - linux
 
 env:
-  - CODE_TESTS_PATH=out/test/integration
+  - CODE_TESTS_PATH=./out/test/integration
 
 before_install:
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
