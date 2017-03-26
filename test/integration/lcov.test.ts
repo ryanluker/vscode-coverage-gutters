@@ -2,9 +2,9 @@
 
 import * as assert from "assert";
 
-import {Lcov} from "../src/lcov";
-import {Fs} from "../src/wrappers/fs";
-import {Vscode} from "../src/wrappers/vscode";
+import {Lcov} from "../../src/lcov";
+import {Fs} from "../../src/wrappers/fs";
+import {Vscode} from "../../src/wrappers/vscode";
 
 suite("Lcov Tests", function() {
     const fakeConfig = {

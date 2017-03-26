@@ -2,9 +2,9 @@
 
 import * as assert from "assert";
 
-import {Indicators} from "../src/indicators";
-import {LcovParse} from "../src/wrappers/lcov-parse";
-import {Vscode} from "../src/wrappers/vscode";
+import {Indicators} from "../../src/indicators";
+import {LcovParse} from "../../src/wrappers/lcov-parse";
+import {Vscode} from "../../src/wrappers/vscode";
 
 suite("Indicators Tests", function() {
     const fakeConfig = {

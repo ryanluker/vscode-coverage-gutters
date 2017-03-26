@@ -37,7 +37,7 @@ export class Gutters {
             const lcovPath = await this.lcov.find();
             await this.loadAndRenderCoverage(textEditor, lcovPath);
         } catch (e) {
-            console.error(e);
+            console.log(e);
         }
     }
 
@@ -56,7 +56,7 @@ export class Gutters {
                 });
             });
         } catch (e) {
-            console.error(e);
+            console.log(e);
         }
     }
 
