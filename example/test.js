@@ -5,7 +5,7 @@ const testFunc = require('./test-coverage').test;
 
 describe('test func', function() {
     it('should show coverage on line 8', function() {
-        var num = testFunc(3);
+        var num = testFunc(4);
         assert(num==="null");
     });
 
