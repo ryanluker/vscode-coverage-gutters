@@ -5,6 +5,7 @@ import * as myExtension from "../../src/extension";
 
 suite("Extension Tests", function() {
     test("Should not active a second extension instance", function(done) {
+        this.timeout(12000);
         let ctx: vscode.ExtensionContext = <any> {
             asAbsolutePath() {
                 return "test";
