@@ -9,15 +9,15 @@ import {Vscode} from "../../src/wrappers/vscode";
 suite("Indicators Tests", function() {
     const fakeConfig = {
         altSfCompare: false,
-        coverageDecorationType: {
+        fullCoverageDecorationType: {
             key: "testKey",
             dispose() {},
         },
-        gutterDecorationType: {
-            key: "testKey2",
+        lcovFileName: "test.ts",
+        partialCoverageDecorationType: {
+            key: "testKey3",
             dispose() {},
         },
-        lcovFileName: "test.ts",
     };
 
     test("Constructor should setup properly", function(done) {

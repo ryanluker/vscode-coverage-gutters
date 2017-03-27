@@ -33,8 +33,7 @@ export class Indicators implements InterfaceIndicators {
                     renderLines.push(new Range(detail.line - 1, 0, detail.line - 1, 0));
                 }
             });
-            textEditor.setDecorations(this.configStore.coverageDecorationType, renderLines);
-            textEditor.setDecorations(this.configStore.gutterDecorationType, renderLines);
+            textEditor.setDecorations(this.configStore.fullCoverageDecorationType, renderLines);
             return resolve();
         });
     }

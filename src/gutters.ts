@@ -77,8 +77,7 @@ export class Gutters {
 
     private removeDecorationsForTextEditor(editor: TextEditor) {
         if (!editor) { return; }
-        editor.setDecorations(this.configStore.coverageDecorationType, []);
-        editor.setDecorations(this.configStore.gutterDecorationType, []);
+        editor.setDecorations(this.configStore.fullCoverageDecorationType, []);
     }
 
     private async loadAndRenderCoverage(textEditor: TextEditor, lcovPath: string): Promise<void> {
