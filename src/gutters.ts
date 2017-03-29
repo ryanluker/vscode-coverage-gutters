@@ -32,7 +32,7 @@ export class Gutters {
 
     public async displayCoverageForActiveFile() {
         const textEditor = window.activeTextEditor;
-        this.textEditors.push(textEditor);
+        this.addTextEditorToCache(textEditor);
         try {
             const lcovPath = await this.lcov.find();
             await this.loadAndRenderCoverage(textEditor, lcovPath);
@@ -52,7 +52,12 @@ export class Gutters {
             this.fileWatcher = vscodeImpl.watchFile(lcovPath);
             this.fileWatcher.onDidChange(async (event) => {
                 this.textEditors.forEach(async (editor) => {
-                    this.loadAndRenderCoverage(editor, lcovPath);
+                    if (!editor.document) {
+                        // editor can no longer display coverage, remove from cache
+                        this.removeTextEditorFromCache(editor);
+                    } else {
+                        this.loadAndRenderCoverage(editor, lcovPath);
+                    }
                 });
             });
         } catch (e) {
@@ -62,7 +67,7 @@ export class Gutters {
 
     public removeCoverageForActiveFile() {
         const activeEditor = window.activeTextEditor;
-        this.textEditors = this.textEditors.filter((editor) => editor !== activeEditor);
+        this.removeTextEditorFromCache(activeEditor);
         this.removeDecorationsForTextEditor(activeEditor);
     }
 
@@ -75,9 +80,21 @@ export class Gutters {
         return this.textEditors;
     }
 
+    private addTextEditorToCache(editor: TextEditor) {
+        // keep textEditors a unique array by removing existing editors
+        this.textEditors = this.textEditors.filter((cache) => cache !== editor);
+        this.textEditors.push(editor);
+    }
+
+    private removeTextEditorFromCache(editor: TextEditor) {
+        this.textEditors = this.textEditors.filter((cache) => cache !== editor);
+    }
+
     private removeDecorationsForTextEditor(editor: TextEditor) {
         if (!editor) { return; }
         editor.setDecorations(this.configStore.fullCoverageDecorationType, []);
+        editor.setDecorations(this.configStore.partialCoverageDecorationType, []);
+        editor.setDecorations(this.configStore.noCoverageDecorationType, []);
     }
 
     private async loadAndRenderCoverage(textEditor: TextEditor, lcovPath: string): Promise<void> {
