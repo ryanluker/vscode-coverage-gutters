@@ -8,12 +8,16 @@ import {Vscode} from "../../src/wrappers/vscode";
 
 suite("Lcov Tests", function() {
     const fakeConfig = {
-        altSfCompare: true,
+        altSfCompare: false,
         fullCoverageDecorationType: {
             key: "testKey",
             dispose() {},
         },
         lcovFileName: "test.ts",
+        noCoverageDecorationType: {
+            key: "testKey4",
+            dispose() {},
+        },
         partialCoverageDecorationType: {
             key: "testKey3",
             dispose() {},

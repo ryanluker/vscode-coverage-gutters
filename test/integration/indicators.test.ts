@@ -14,6 +14,10 @@ suite("Indicators Tests", function() {
             dispose() {},
         },
         lcovFileName: "test.ts",
+        noCoverageDecorationType: {
+            key: "testKey4",
+            dispose() {},
+        },
         partialCoverageDecorationType: {
             key: "testKey3",
             dispose() {},
@@ -51,7 +55,7 @@ suite("Indicators Tests", function() {
 
         indicators.extract(fakeLcov, fakeFile)
             .then(function(data) {
-                assert.equal(data.length, 1);
+                assert.equal(data.lines.details.length, 1);
                 return done();
             })
             .catch(function(error) {
@@ -75,7 +79,7 @@ suite("Indicators Tests", function() {
 
         indicators.extract(fakeLinuxLcov, fakeFile)
             .then(function(data) {
-                assert.equal(data.length, 1);
+                assert.equal(data.lines.details.length, 1);
                 return done();
             })
             .catch(function(error) {
