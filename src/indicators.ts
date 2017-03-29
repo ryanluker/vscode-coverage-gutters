@@ -2,13 +2,19 @@ import {ConfigStore} from "./config";
 import {InterfaceLcovParse} from "./wrappers/lcov-parse";
 import {InterfaceVscode} from "./wrappers/vscode";
 
-import {Detail} from "lcov-parse";
+import {LcovSection} from "lcov-parse";
 import {Range, TextEditor} from "vscode";
 
 export interface InterfaceIndicators {
-    renderToTextEditor(lines: Detail[], textEditor: TextEditor): Promise<string>;
-    extract(lcovFile: string, file: string): Promise<Detail[]>;
+    renderToTextEditor(lines: LcovSection, textEditor: TextEditor): Promise<string>;
+    extract(lcovFile: string, file: string): Promise<LcovSection>;
 }
+
+type CoverageLines = {
+    full: Range[];
+    partial: Range[];
+    none: Range[];
+};
 
 export class Indicators implements InterfaceIndicators {
     private parse: InterfaceLcovParse;
@@ -25,21 +31,25 @@ export class Indicators implements InterfaceIndicators {
         this.configStore = configStore;
     }
 
-    public renderToTextEditor(lines: Detail[], textEditor: TextEditor): Promise<string> {
+    public renderToTextEditor(section: LcovSection, textEditor: TextEditor): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            let renderLines = [];
-            lines.forEach((detail) => {
-                if (detail.hit > 0) {
-                    renderLines.push(new Range(detail.line - 1, 0, detail.line - 1, 0));
-                }
-            });
-            textEditor.setDecorations(this.configStore.fullCoverageDecorationType, renderLines);
+            let coverageLines: CoverageLines = {
+                full: [],
+                none: [],
+                partial: [],
+            };
+
+            this.filterCoverage(section, coverageLines);
+
+            textEditor.setDecorations(this.configStore.fullCoverageDecorationType, coverageLines.full);
+            textEditor.setDecorations(this.configStore.noCoverageDecorationType, coverageLines.none);
+            textEditor.setDecorations(this.configStore.partialCoverageDecorationType, coverageLines.partial);
             return resolve();
         });
     }
 
-    public extract(lcovFile: string, file: string): Promise<Detail[]> {
-        return new Promise<Detail[]>((resolve, reject) => {
+    public extract(lcovFile: string, file: string): Promise<LcovSection> {
+        return new Promise<LcovSection>((resolve, reject) => {
             this.parse.source(lcovFile, (err, data) => {
                 if (err) { return reject(err); }
                 let section = data.find((lcovSection) => {
@@ -47,9 +57,30 @@ export class Indicators implements InterfaceIndicators {
                 });
 
                 if (!section) { return reject(new Error("No coverage for file!")); }
-                return resolve(section.lines.details);
+                return resolve(section);
             });
         });
+    }
+
+    private filterCoverage(section: LcovSection, coverageLines: CoverageLines): CoverageLines {
+        section.branches.details.forEach((detail) => {
+            if (detail.branch === 0 && detail.taken === 0) {
+                coverageLines.partial.push(new Range(detail.line - 1, 0, detail.line - 1, 0));
+            } // if taken is > 0 then line is considered covered
+        });
+        section.lines.details.forEach((detail) => {
+            if (detail.hit > 0) {
+                const fullRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
+
+                // if there is already a partial for this line, do not add another
+                if (!coverageLines.partial.find((range) => range.isEqual(fullRange))) {
+                    coverageLines.full.push(fullRange);
+                }
+            } else {
+                coverageLines.none.push(new Range(detail.line - 1, 0, detail.line - 1, 0));
+            }
+        });
+        return coverageLines;
     }
 
     private compareFilePaths(lcovFile: string, file: string): boolean {
