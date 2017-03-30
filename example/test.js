@@ -10,12 +10,17 @@ describe('test func', function() {
     });
 
     it('should show coverage on line 6', function() {
-        var num = testFunc(2);
-        assert(num===false);
-    });
-
-    it('should show  coverage on line 9', function() {
         var num = testFunc(4);
         assert(num==="reallyNull");
+    });
+
+    it('should show coverage on line 9', function() {
+        var num = testFunc(6);
+        assert(num==="wap");
+    });
+
+    it('should show coverage on line 9 x2', function() {
+        var num = testFunc(5);
+        assert(num==="woop");
     });
 });
