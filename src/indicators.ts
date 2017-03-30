@@ -10,7 +10,7 @@ export interface InterfaceIndicators {
     extract(lcovFile: string, file: string): Promise<LcovSection>;
 }
 
-type CoverageLines = {
+export type CoverageLines = {
     full: Range[];
     partial: Range[];
     none: Range[];
@@ -40,10 +40,8 @@ export class Indicators implements InterfaceIndicators {
             };
 
             this.filterCoverage(section, coverageLines);
+            this.setDecorationsForEditor(textEditor, coverageLines);
 
-            textEditor.setDecorations(this.configStore.fullCoverageDecorationType, coverageLines.full);
-            textEditor.setDecorations(this.configStore.noCoverageDecorationType, coverageLines.none);
-            textEditor.setDecorations(this.configStore.partialCoverageDecorationType, coverageLines.partial);
             return resolve();
         });
     }
@@ -62,22 +60,35 @@ export class Indicators implements InterfaceIndicators {
         });
     }
 
+    private setDecorationsForEditor(editor: TextEditor, coverage: CoverageLines) {
+        // remove coverage first to prevent graphical conflicts
+        editor.setDecorations(this.configStore.fullCoverageDecorationType, []);
+        editor.setDecorations(this.configStore.noCoverageDecorationType, []);
+        editor.setDecorations(this.configStore.partialCoverageDecorationType, []);
+
+        editor.setDecorations(this.configStore.fullCoverageDecorationType, coverage.full);
+        editor.setDecorations(this.configStore.noCoverageDecorationType, coverage.none);
+        editor.setDecorations(this.configStore.partialCoverageDecorationType, coverage.partial);
+    }
+
     private filterCoverage(section: LcovSection, coverageLines: CoverageLines): CoverageLines {
+        section.lines.details.forEach((detail) => {
+            const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
+            if (detail.hit > 0) {
+                coverageLines.full.push(lineRange);
+            } else {
+                coverageLines.none.push(lineRange);
+            }
+        });
+
         section.branches.details.forEach((detail) => {
             if (detail.branch === 0 && detail.taken === 0) {
-                coverageLines.partial.push(new Range(detail.line - 1, 0, detail.line - 1, 0));
-            } // if taken is > 0 then line is considered covered
-        });
-        section.lines.details.forEach((detail) => {
-            if (detail.hit > 0) {
-                const fullRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
-
-                // if there is already a partial for this line, do not add another
-                if (!coverageLines.partial.find((range) => range.isEqual(fullRange))) {
-                    coverageLines.full.push(fullRange);
+                const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
+                if (coverageLines.full.find((range) => range.isEqual(partialRange))) {
+                    // remove full converage if partial is a better match
+                    coverageLines.full = coverageLines.full.filter((range) => !range.isEqual(partialRange));
+                    coverageLines.partial.push(partialRange);
                 }
-            } else {
-                coverageLines.none.push(new Range(detail.line - 1, 0, detail.line - 1, 0));
             }
         });
         return coverageLines;
