@@ -1,3 +1,12 @@
+### 0.3.0
+- added lcov watch functionality
+- added enhanced lcov coverage (full, partial and none options)
+
+### 0.2.1
+- added option to use relative path comparison
+- fixed changelog link
+- increase test coverage
+
 ### 0.2.0
 - true gutter indicators
 - contribution doc
