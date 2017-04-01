@@ -96,6 +96,135 @@ suite("Indicators Tests", function() {
             });
     });
 
+    test("#renderToTextEditor: should remove full coverage if partial on same line", function(done) {
+        let callsToSetDecorations = 0;
+
+        const vscodeImpl = new Vscode();
+        const parseImpl = new LcovParse();
+        const indicators = new Indicators(
+            parseImpl,
+            vscodeImpl,
+            fakeConfig,
+        );
+
+        const fakeSection: LcovSection = {
+            branches: {
+                details: [{
+                    block: 0,
+                    branch: 0,
+                    line: 10,
+                    taken: 0,
+                }],
+                found: 1,
+                hit: 1,
+            },
+            file: "test",
+            functions: {
+                details: [],
+                found: 1,
+                hit: 1,
+            },
+            lines: {
+                details: [{
+                    hit: 1,
+                    line: 10,
+                }],
+                found: 1,
+                hit: 1,
+            },
+        };
+
+        const fakeTextEditor: any = {
+            setDecorations(decorType, ranges) {
+                callsToSetDecorations++;
+                switch (callsToSetDecorations) {
+                    case 4: {
+                        assert.equal(ranges.length, 0);
+                        return;
+                    }
+                    case 6: {
+                        assert.equal(ranges.length, 1);
+                        return;
+                    }
+                    default:
+                        return;
+                }
+            },
+        };
+
+        indicators.renderToTextEditor(fakeSection, fakeTextEditor)
+            .then(function() {
+                return done();
+            })
+            .catch(function(error) {
+                return done(error);
+            });
+    });
+
+    test("#renderToTextEditor: should render full coverage and no coverage", function(done) {
+        let callsToSetDecorations = 0;
+
+        const vscodeImpl = new Vscode();
+        const parseImpl = new LcovParse();
+        const indicators = new Indicators(
+            parseImpl,
+            vscodeImpl,
+            fakeConfig,
+        );
+
+        const fakeSection: LcovSection = {
+            branches: {
+                details: [],
+                found: 1,
+                hit: 1,
+            },
+            file: "test",
+            functions: {
+                details: [],
+                found: 1,
+                hit: 1,
+            },
+            lines: {
+                details: [{
+                    hit: 1,
+                    line: 10,
+                }, {
+                    hit: 0,
+                    line: 5,
+                }],
+                found: 1,
+                hit: 1,
+            },
+        };
+
+        const fakeTextEditor: any = {
+            setDecorations(decorType, ranges) {
+                callsToSetDecorations++;
+                switch (callsToSetDecorations) {
+                    case 4: {
+                        assert.equal(ranges.length, 1);
+                        return;
+                    }
+                    case 5: {
+                        assert.equal(ranges.length, 1);
+                        return;
+                    }
+                    default:
+                        return;
+                }
+            },
+        };
+
+        indicators.renderToTextEditor(fakeSection, fakeTextEditor)
+            .then(function() {
+                return done();
+            })
+            .catch(function(error) {
+                return done(error);
+            });
+    });
+
+
     test("#extract: should find a matching file with absolute match mode", function(done) {
         fakeConfig.altSfCompare = false;
         const vscodeImpl = new Vscode();
