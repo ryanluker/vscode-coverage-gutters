@@ -1,7 +1,7 @@
 import * as assert from "assert";
 
 import * as vscode from "vscode";
-import * as myExtension from "../../src/extension";
+import * as myExtension from "../src/extension";
 
 suite("Extension Tests", function() {
     test("Should not active a second extension instance", function(done) {

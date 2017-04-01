@@ -1,10 +1,12 @@
 "use strict";
 
 import * as assert from "assert";
+import {BranchDetail, LcovSection} from "lcov-parse";
+import {TextEditor} from "vscode";
 
-import {Indicators} from "../../src/indicators";
-import {LcovParse} from "../../src/wrappers/lcov-parse";
-import {Vscode} from "../../src/wrappers/vscode";
+import {Indicators} from "../src/indicators";
+import {LcovParse} from "../src/wrappers/lcov-parse";
+import {Vscode} from "../src/wrappers/vscode";
 
 suite("Indicators Tests", function() {
     const fakeConfig = {
@@ -38,6 +40,60 @@ suite("Indicators Tests", function() {
             assert.equal(1, 2);
             return done();
         }
+    });
+
+    test("#renderToTextEditor: should set basic coverage", function(done) {
+        let callsToSetDecorations = 0;
+
+        const vscodeImpl = new Vscode();
+        const parseImpl = new LcovParse();
+        const indicators = new Indicators(
+            parseImpl,
+            vscodeImpl,
+            fakeConfig,
+        );
+
+        const fakeSection: LcovSection = {
+            branches: {
+                details: [],
+                found: 1,
+                hit: 1,
+            },
+            file: "test",
+            functions: {
+                details: [],
+                found: 1,
+                hit: 1,
+            },
+            lines: {
+                details: [{
+                    hit: 1,
+                    line: 10,
+                }],
+                found: 1,
+                hit: 1,
+            },
+        };
+
+        const fakeTextEditor: any = {
+            setDecorations(decorType, ranges) {
+                callsToSetDecorations++;
+                if (callsToSetDecorations !== 4) {
+                    return;
+                } else {
+                    assert.equal(ranges.length, 1);
+                    return;
+                }
+            },
+        };
+
+        indicators.renderToTextEditor(fakeSection, fakeTextEditor)
+            .then(function() {
+                return done();
+            })
+            .catch(function(error) {
+                return done(error);
+            });
     });
 
     test("#extract: should find a matching file with absolute match mode", function(done) {

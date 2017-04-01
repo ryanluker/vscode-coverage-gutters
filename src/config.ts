@@ -14,7 +14,7 @@ export interface InterfaceConfig {
     setup(): ConfigStore;
 }
 
-export class Config {
+export class Config implements InterfaceConfig {
     private vscode: InterfaceVscode;
     private context: ExtensionContext;
 
