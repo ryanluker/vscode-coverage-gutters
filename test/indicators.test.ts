@@ -224,7 +224,6 @@ suite("Indicators Tests", function() {
             });
     });
 
-
     test("#extract: should find a matching file with absolute match mode", function(done) {
         fakeConfig.altSfCompare = false;
         const vscodeImpl = new Vscode();
