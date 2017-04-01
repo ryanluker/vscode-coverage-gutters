@@ -1,1 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" x="0px" y="0px" viewBox="0 0 48 48" class="icon icons8-Checkmark" ><polygon fill="#24381B" points="40.6,12.1 17,35.7 7.4,26.1 4.6,29 17,41.3 43.4,14.9 "></polygon></svg>
+<svg width="32" height="48" viewPort="0 0 32 48"
+    xmlns="http://www.w3.org/2000/svg">
+  <polygon points="16,0 32,0 32,48 16,48" fill="#24381B"/>
+</svg>

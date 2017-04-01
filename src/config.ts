@@ -1,20 +1,27 @@
-import {ExtensionContext, TextEditorDecorationType} from "vscode";
+import {ExtensionContext, OverviewRulerLane, TextEditorDecorationType} from "vscode";
 import {InterfaceVscode} from "./wrappers/vscode";
 
 export type ConfigStore = {
     lcovFileName: string;
-    coverageDecorationType: TextEditorDecorationType;
-    gutterDecorationType: TextEditorDecorationType;
+    fullCoverageDecorationType: TextEditorDecorationType;
+    partialCoverageDecorationType: TextEditorDecorationType;
+    noCoverageDecorationType: TextEditorDecorationType;
     altSfCompare: boolean;
 };
 
-export class Config {
+export interface InterfaceConfig {
+    get(): ConfigStore;
+    setup(): ConfigStore;
+}
+
+export class Config implements InterfaceConfig {
     private vscode: InterfaceVscode;
     private context: ExtensionContext;
 
     private lcovFileName: string;
-    private coverageDecorationType: TextEditorDecorationType;
-    private gutterDecorationType: TextEditorDecorationType;
+    private fullCoverageDecorationType: TextEditorDecorationType;
+    private partialCoverageDecorationType: TextEditorDecorationType;
+    private noCoverageDecorationType: TextEditorDecorationType;
     private altSfCompare: boolean;
 
     constructor(vscode: InterfaceVscode, context: ExtensionContext) {
@@ -25,9 +32,10 @@ export class Config {
     public get(): ConfigStore {
         return {
             altSfCompare: this.altSfCompare,
-            coverageDecorationType: this.coverageDecorationType,
-            gutterDecorationType: this.gutterDecorationType,
+            fullCoverageDecorationType: this.fullCoverageDecorationType,
             lcovFileName: this.lcovFileName,
+            noCoverageDecorationType: this.noCoverageDecorationType,
+            partialCoverageDecorationType: this.partialCoverageDecorationType,
         };
     }
 
@@ -47,28 +55,63 @@ export class Config {
         this.lcovFileName = rootConfig.get("lcovname") as string;
         this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
 
+        // Themes and icons
         const coverageLightBackgroundColour = rootConfig.get("highlightlight") as string;
         const coverageDarkBackgroundColour = rootConfig.get("highlightdark") as string;
+        const partialCoverageLightBackgroundColour = rootConfig.get("partialHighlightLight") as string;
+        const partialCoverageDarkBackgroundColour = rootConfig.get("partialHighlightDark") as string;
+        const noCoverageLightBackgroundColour = rootConfig.get("noHighlightLight") as string;
+        const noCoverageDarkBackgroundColour = rootConfig.get("noHighlightDark") as string;
         const gutterIconPathDark = rootConfig.get("gutterIconPathDark") as string;
         const gutterIconPathLight = rootConfig.get("gutterIconPathLight") as string;
+        const partialGutterIconPathDark = rootConfig.get("partialGutterIconPathDark") as string;
+        const partialGutterIconPathLight = rootConfig.get("partialGutterIconPathLight") as string;
+        const noGutterIconPathDark = rootConfig.get("noGutterIconPathDark") as string;
+        const noGutterIconPathLight = rootConfig.get("noGutterIconPathLight") as string;
 
-        this.coverageDecorationType = this.vscode.createTextEditorDecorationType({
+        this.fullCoverageDecorationType = this.vscode.createTextEditorDecorationType({
             dark: {
                 backgroundColor: coverageDarkBackgroundColour,
+                gutterIconPath: this.context.asAbsolutePath(gutterIconPathDark),
+                overviewRulerColor: coverageDarkBackgroundColour,
             },
             isWholeLine: true,
             light: {
                 backgroundColor: coverageLightBackgroundColour,
+                gutterIconPath: this.context.asAbsolutePath(gutterIconPathLight),
+                overviewRulerColor: coverageLightBackgroundColour,
             },
+            overviewRulerLane: OverviewRulerLane.Full,
         });
 
-        this.gutterDecorationType = this.vscode.createTextEditorDecorationType({
+        this.partialCoverageDecorationType = this.vscode.createTextEditorDecorationType({
             dark: {
-                gutterIconPath: this.context.asAbsolutePath(gutterIconPathDark),
+                backgroundColor: partialCoverageDarkBackgroundColour,
+                gutterIconPath: this.context.asAbsolutePath(partialGutterIconPathDark),
+                overviewRulerColor: partialCoverageDarkBackgroundColour,
             },
+            isWholeLine: true,
             light: {
-                gutterIconPath: this.context.asAbsolutePath(gutterIconPathLight),
+                backgroundColor: partialCoverageLightBackgroundColour,
+                gutterIconPath: this.context.asAbsolutePath(partialGutterIconPathLight),
+                overviewRulerColor: partialCoverageLightBackgroundColour,
             },
+            overviewRulerLane: OverviewRulerLane.Full,
+        });
+
+        this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType({
+            dark: {
+                backgroundColor: noCoverageDarkBackgroundColour,
+                gutterIconPath: this.context.asAbsolutePath(noGutterIconPathDark),
+                overviewRulerColor: noCoverageDarkBackgroundColour,
+            },
+            isWholeLine: true,
+            light: {
+                backgroundColor: noCoverageLightBackgroundColour,
+                gutterIconPath: this.context.asAbsolutePath(noGutterIconPathLight),
+                overviewRulerColor: noCoverageLightBackgroundColour,
+            },
+            overviewRulerLane: OverviewRulerLane.Full,
         });
 
         return this.get();

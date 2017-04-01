@@ -2,22 +2,26 @@
 
 import * as assert from "assert";
 
-import {Lcov} from "../../src/lcov";
-import {Fs} from "../../src/wrappers/fs";
-import {Vscode} from "../../src/wrappers/vscode";
+import {Lcov} from "../src/lcov";
+import {Fs} from "../src/wrappers/fs";
+import {Vscode} from "../src/wrappers/vscode";
 
 suite("Lcov Tests", function() {
     const fakeConfig = {
-        altSfCompare: true,
-        coverageDecorationType: {
+        altSfCompare: false,
+        fullCoverageDecorationType: {
             key: "testKey",
             dispose() {},
         },
-        gutterDecorationType: {
-            key: "testKey2",
+        lcovFileName: "test.ts",
+        noCoverageDecorationType: {
+            key: "testKey4",
             dispose() {},
         },
-        lcovFileName: "test.ts",
+        partialCoverageDecorationType: {
+            key: "testKey3",
+            dispose() {},
+        },
     };
 
     test("Constructor should setup properly", function(done) {
