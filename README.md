@@ -37,6 +37,9 @@
 |`coverage-gutters.partialGutterIconPathLight`|Relative path to an icon (partial coverage) in the extension for light themes
 |`coverage-gutters.noGutterIconPathDark`|Relative path to an icon (no coverage) in the extension for dark themes
 |`coverage-gutters.noGutterIconPathLight`|Relative path to an icon (no coverage) in the extension for light themes
+|`coverage-gutters.showLineCoverage`|Show or hide the line coverage
+|`coverage-gutters.showRulerCoverage`|Show or hide the ruler coverage
+|`coverage-gutters.showGutterCoverage`|Show or hide the gutter coverage
 |`coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa

@@ -1,4 +1,9 @@
-import {ExtensionContext, OverviewRulerLane, TextEditorDecorationType} from "vscode";
+import {
+    DecorationRenderOptions,
+    ExtensionContext,
+    OverviewRulerLane,
+    TextEditorDecorationType,
+} from "vscode";
 import {InterfaceVscode} from "./wrappers/vscode";
 
 export type ConfigStore = {
@@ -68,51 +73,60 @@ export class Config implements InterfaceConfig {
         const partialGutterIconPathLight = rootConfig.get("partialGutterIconPathLight") as string;
         const noGutterIconPathDark = rootConfig.get("noGutterIconPathDark") as string;
         const noGutterIconPathLight = rootConfig.get("noGutterIconPathLight") as string;
+        const showGutterCoverage = rootConfig.get("showGutterCoverage") as string;
+        const showLineCoverage = rootConfig.get("showLineCoverage") as string;
+        const showRulerCoverage = rootConfig.get("showRulerCoverage") as string;
 
-        this.fullCoverageDecorationType = this.vscode.createTextEditorDecorationType({
+        const fullDecoration: DecorationRenderOptions = {
             dark: {
-                backgroundColor: coverageDarkBackgroundColour,
-                gutterIconPath: this.context.asAbsolutePath(gutterIconPathDark),
-                overviewRulerColor: coverageDarkBackgroundColour,
+                backgroundColor: showLineCoverage ? coverageDarkBackgroundColour : "",
+                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(gutterIconPathDark) : "",
+                overviewRulerColor: showRulerCoverage ? coverageDarkBackgroundColour : "",
             },
             isWholeLine: true,
             light: {
-                backgroundColor: coverageLightBackgroundColour,
-                gutterIconPath: this.context.asAbsolutePath(gutterIconPathLight),
-                overviewRulerColor: coverageLightBackgroundColour,
+                backgroundColor: showLineCoverage ? coverageLightBackgroundColour : "",
+                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(gutterIconPathLight) : "",
+                overviewRulerColor: showRulerCoverage ? coverageLightBackgroundColour : "",
             },
             overviewRulerLane: OverviewRulerLane.Full,
-        });
+        };
 
-        this.partialCoverageDecorationType = this.vscode.createTextEditorDecorationType({
+        this.fullCoverageDecorationType = this.vscode.createTextEditorDecorationType(fullDecoration);
+
+        const partialDecoration: DecorationRenderOptions = {
             dark: {
-                backgroundColor: partialCoverageDarkBackgroundColour,
-                gutterIconPath: this.context.asAbsolutePath(partialGutterIconPathDark),
-                overviewRulerColor: partialCoverageDarkBackgroundColour,
+                backgroundColor: showLineCoverage ? partialCoverageDarkBackgroundColour : "",
+                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(partialGutterIconPathDark) : "",
+                overviewRulerColor: showRulerCoverage ? partialCoverageDarkBackgroundColour : "",
             },
             isWholeLine: true,
             light: {
-                backgroundColor: partialCoverageLightBackgroundColour,
-                gutterIconPath: this.context.asAbsolutePath(partialGutterIconPathLight),
-                overviewRulerColor: partialCoverageLightBackgroundColour,
+                backgroundColor: showLineCoverage ? partialCoverageLightBackgroundColour : "",
+                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(partialGutterIconPathLight) : "",
+                overviewRulerColor: showRulerCoverage ? partialCoverageLightBackgroundColour : "",
             },
             overviewRulerLane: OverviewRulerLane.Full,
-        });
+        };
 
-        this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType({
+        this.partialCoverageDecorationType = this.vscode.createTextEditorDecorationType(partialDecoration);
+
+        const noDecoration: DecorationRenderOptions = {
             dark: {
-                backgroundColor: noCoverageDarkBackgroundColour,
-                gutterIconPath: this.context.asAbsolutePath(noGutterIconPathDark),
-                overviewRulerColor: noCoverageDarkBackgroundColour,
+                backgroundColor: showLineCoverage ? noCoverageDarkBackgroundColour : "",
+                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(noGutterIconPathDark) : "",
+                overviewRulerColor: showRulerCoverage ? noCoverageDarkBackgroundColour : "",
             },
             isWholeLine: true,
             light: {
-                backgroundColor: noCoverageLightBackgroundColour,
-                gutterIconPath: this.context.asAbsolutePath(noGutterIconPathLight),
-                overviewRulerColor: noCoverageLightBackgroundColour,
+                backgroundColor: showLineCoverage ? noCoverageLightBackgroundColour : "",
+                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(noGutterIconPathLight) : "",
+                overviewRulerColor: showRulerCoverage ? noCoverageLightBackgroundColour : "",
             },
             overviewRulerLane: OverviewRulerLane.Full,
-        });
+        };
+
+        this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType(noDecoration);
 
         return this.get();
     }
