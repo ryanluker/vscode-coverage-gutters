@@ -3,14 +3,17 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8vb8t787frcqtrm7?svg=true)](https://ci.appveyor.com/project/ryanluker/vscode-coverage-gutters)
 
 ## Features
-- simple line coverage rendering using lcov
+- lcov file watch option to keep tabs on your changing coverage
 
-![Coverage Gutters features context](images/coverage-gutters-features-context.gif)
+![Coverage Gutters features options](images/coverage-gutters-features-1.gif)
 
+- lcov displayed in full, partial and uncovered options
+
+![Coverage Gutters features options](images/coverage-gutters-features-2.png)
+
+- relative lcov file resolution option for those with complex file paths
 - workspace settings to customize the features to your liking
 - colour compatibility with light and dark themes
-
-![Coverage Gutters features basic](images/coverage-gutters-features-basic.gif)
 
 ## Requirements
 - vscode 1.9.0 and up
@@ -23,9 +26,17 @@
 |`coverage-gutters.lcovname`|Allows specification of a custom lcov file name
 |`coverage-gutters.altSfCompare`|Uses a relative method of comparing lcov source file paths
 |`coverage-gutters.highlightlight`|Changes the highlight for light themes
-|`coverage-gutters.highlightdark`|Changes the Highlight for dark themes
+|`coverage-gutters.highlightdark`|Changes the highlight for dark themes
+|`coverage-gutters.partialHighlightLight`|Changes the partial highlight for light themes
+|`coverage-gutters.partialHighlightDark`|Changes the partial highlight for dark themes
+|`coverage-gutters.noHighlightLight`|Changes the uncovered highlight for light themes
+|`coverage-gutters.noHighlightDark`|Changes the uncovered highlight for dark themes
 |`coverage-gutters.gutterIconPathDark`|Relative path to an icon in the extension for dark themes
 |`coverage-gutters.gutterIconPathLight`|Relative path to an icon in the extension for light themes
+|`coverage-gutters.partialGutterIconPathDark`|Relative path to an icon (partial coverage) in the extension for dark themes
+|`coverage-gutters.partialGutterIconPathLight`|Relative path to an icon (partial coverage) in the extension for light themes
+|`coverage-gutters.noGutterIconPathDark`|Relative path to an icon (no coverage) in the extension for dark themes
+|`coverage-gutters.noGutterIconPathLight`|Relative path to an icon (no coverage) in the extension for light themes
 |`coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
@@ -46,7 +57,7 @@ Some examples for the highlight colour are as follows:
 
 ## Contribution Guidelines
 - test backed code changes
-- new code matches existing style
+- new code matches existing style (enforced via tslint)
 - bug fixes always welcome :)
 - new feature proposals go through a github issue
 
