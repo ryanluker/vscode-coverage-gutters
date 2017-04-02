@@ -103,6 +103,21 @@
                     "default": "./images/no-gutter-icon-dark.svg",
                     "description": "path to an icon (svg, png, etc) for displaying in the gutter for no coverage"
                 },
+                "coverage-gutters.showLineCoverage": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "show or hide the line coverage"
+                },
+                "coverage-gutters.showRulerCoverage": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "show or hide the ruler coverage"
+                },
+                "coverage-gutters.showGutterCoverage": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "show or hide the gutter coverage"
+                },
                 "coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled": {
                     "type": "boolean",
                     "default": true,
