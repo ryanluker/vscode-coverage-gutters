@@ -9,7 +9,7 @@
 
 - lcov displayed in full, partial and uncovered options
 
-![Coverage Gutters features options](images/coverage-gutters-features-2.png)
+![Coverage Gutters features options](images/coverage-gutters-features-2.PNG)
 
 - relative lcov file resolution option for those with complex file paths
 - workspace settings to customize the features to your liking
