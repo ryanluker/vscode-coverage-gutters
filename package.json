@@ -117,6 +117,21 @@
                     "type": "boolean",
                     "default": true,
                     "description": "enable or disable the removeCoverage command in the editor/context menu"
+                },
+                "coverage-gutters.customizable.keybindings-displayCoverage-enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "enable or disable the keybinding shortcut for enabling coverage on the active file"
+                },
+                "coverage-gutters.customizable.keybindings-watchLcovFile-enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "enable or disable the keybinding shortcut for watching the lcov file"
+                },
+                "coverage-gutters.customizable.keybindings-removeCoverage-enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "enable or disable the keybinding shortcut for removing the coverage on the active file"
                 }
             }
         },
@@ -132,6 +147,26 @@
             {
                 "command": "extension.removeCoverage",
                 "title": "Coverage Gutters: Remove File Coverage"
+            }
+        ],
+        "keybindings":[
+            {
+                "command": "extension.displayCoverage",
+                "key": "ctrl+shift+7",
+                "mac": "shift+cmd+7",
+                "when": "config.coverage-gutters.customizable.keybindings-displayCoverage-enabled"
+            },
+            {
+                "command": "extension.watchLcovFile",
+                "key": "ctrl+shift+8",
+                "mac": "shift+cmd+8",
+                "when": "config.coverage-gutters.customizable.keybindings-watchLcovFile-enabled"
+            },
+            {
+                "command": "extension.removeCoverage",
+                "key": "ctrl+shift+9",
+                "mac": "shift+cmd+9",
+                "when": "config.coverage-gutters.customizable.keybindings-removeCoverage-enabled"
             }
         ],
         "menus": {
