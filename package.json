@@ -65,7 +65,7 @@
                 },
                 "coverage-gutters.noHighlightLight": {
                     "type": "string",
-                    "default": "rgba(220, 213, 143, 0.75)",
+                    "default": "rgba(220, 143, 143, 0.75)",
                     "description": "light theme partial highlight for code coverage"
                 },
                 "coverage-gutters.noHighlightDark": {
