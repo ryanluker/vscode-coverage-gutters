@@ -40,6 +40,9 @@
 |`coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
+|`coverage-gutters.customizable.keybindings-displayCoverage-enabled`|Setting this to false will remove the shortcut and vice versa
+|`coverage-gutters.customizable.keybindings-watchLcovFile-enabled`|Setting this to false will remove the shortcut and vice versa
+|`coverage-gutters.customizable.keybindings-removeCoverage-enabled`|Setting this to false will remove the shortcut and vice versa
 
 Some examples for the highlight colour are as follows:
 - rgba(102, 153, 51, 0.75) <- recommended syntax based on vscode.d.ts
