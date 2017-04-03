@@ -56,7 +56,7 @@ Some examples for the highlight colour are as follows:
 <a>https://developer.mozilla.org/en/docs/Web/CSS/background-color#Syntax</a>
 
 ## Known Issues
-- can only reliably handle one lcov file per workspace [#35](https://github.com/ryanluker/vscode-coverage-gutters/issues/35)
+### [Open Bugs](https://github.com/ryanluker/vscode-coverage-gutters/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
 ## Release Notes
 ### [Changelog](https://github.com/ryanluker/vscode-coverage-gutters/releases)
