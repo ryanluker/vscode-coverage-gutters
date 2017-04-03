@@ -40,6 +40,34 @@ suite("Lcov Tests", function() {
         }
     });
 
+    test("#find: Should return error if more then one file found for lcovFileName", function(done) {
+        const vscodeImpl = new Vscode();
+        const fsImpl = new Fs();
+
+        vscodeImpl.findFiles = function(path, exclude) {
+            assert.equal(path, "**/test.ts");
+            assert.equal(exclude, "**/node_modules/**");
+            return new Promise(function(resolve, reject) {
+                return resolve([1, 2]);
+            });
+        };
+        const lcov = new Lcov(
+            fakeConfig,
+            vscodeImpl,
+            fsImpl,
+        );
+
+        lcov.find()
+            .then(function() {
+                return done(new Error("Expected error did not fire!"));
+            })
+            .catch(function(error) {
+                if (error.name === "AssertionError") { return done(error); }
+                if (error === "More then one lcov file found!") { return done(); }
+                return done(error);
+            });
+    });
+
     test("#find: Should return error if no file found for lcovFileName", function(done) {
         const vscodeImpl = new Vscode();
         const fsImpl = new Fs();
@@ -47,7 +75,6 @@ suite("Lcov Tests", function() {
         vscodeImpl.findFiles = function(path, exclude, filesToFind) {
             assert.equal(path, "**/test.ts");
             assert.equal(exclude, "**/node_modules/**");
-            assert.equal(filesToFind, 1);
             return new Promise(function(resolve, reject) {
                 return resolve([]);
             });
@@ -76,7 +103,6 @@ suite("Lcov Tests", function() {
         vscodeImpl.findFiles = function(path, exclude, filesToFind) {
             assert.equal(path, "**/test.ts");
             assert.equal(exclude, "**/node_modules/**");
-            assert.equal(filesToFind, 1);
             return new Promise(function(resolve, reject) {
                 return resolve([{fsPath: "path/to/greatness/test.ts"}]);
             });

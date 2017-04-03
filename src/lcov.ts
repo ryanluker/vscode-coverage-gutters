@@ -24,9 +24,10 @@ export class Lcov implements InterfaceLcov {
 
     public find(): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.vscode.findFiles("**/" + this.configStore.lcovFileName, "**/node_modules/**", 1)
+            this.vscode.findFiles("**/" + this.configStore.lcovFileName, "**/node_modules/**")
                 .then((uriLcov) => {
                     if (!uriLcov || !uriLcov.length) { return reject("Could not find a lcov file!"); }
+                    if (uriLcov.length > 1) { return reject("More then one lcov file found!"); }
                     return resolve(uriLcov[0].fsPath);
                 });
         });

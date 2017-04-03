@@ -36,8 +36,8 @@ export class Gutters {
         try {
             const lcovPath = await this.lcov.find();
             await this.loadAndRenderCoverage(textEditor, lcovPath);
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            this.handleError(error);
         }
     }
 
@@ -60,8 +60,8 @@ export class Gutters {
                     }
                 });
             });
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            this.handleError(error);
         }
     }
 
@@ -78,6 +78,11 @@ export class Gutters {
 
     public getTextEditors(): TextEditor[] {
         return this.textEditors;
+    }
+
+    private handleError(error: Error) {
+        const message = error.message ? error.message : error;
+        window.showErrorMessage(message.toString());
     }
 
     private addTextEditorToCache(editor: TextEditor) {
