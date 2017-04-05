@@ -221,9 +221,11 @@
         "mocha": "^2.3.3",
         "tslint": "^4.5.1",
         "@types/node": "^6.0.40",
-        "@types/mocha": "^2.2.32"
+        "@types/mocha": "^2.2.32",
+        "@types/request": "0.0.42"
     },
     "dependencies": {
-        "lcov-parse": "0.0.10"
+        "lcov-parse": "0.0.10",
+        "request": "2.81.0"
     }
 }
