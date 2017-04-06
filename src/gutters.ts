@@ -4,13 +4,15 @@ import {
     TextEditor,
     window,
 } from "vscode";
+
 import {Fs} from "./wrappers/fs";
 import {LcovParse} from "./wrappers/lcov-parse";
 import {Vscode} from "./wrappers/vscode";
 
 import {Config, ConfigStore} from "./config";
-import {Indicators, InterfaceIndicators} from "./indicators";
-import {InterfaceLcov, Lcov} from "./lcov";
+import {Indicators} from "./indicators";
+import {Lcov} from "./lcov";
+import {Reporter} from "./reporter";
 
 const vscodeImpl = new Vscode();
 const fsImpl = new Fs();
@@ -19,15 +21,18 @@ const parseImpl = new LcovParse();
 export class Gutters {
     private configStore: ConfigStore;
     private fileWatcher: FileSystemWatcher;
-    private lcov: InterfaceLcov;
-    private indicators: InterfaceIndicators;
+    private lcov: Lcov;
+    private indicators: Indicators;
+    private reporter: Reporter;
     private textEditors: TextEditor[];
 
-    constructor(context: ExtensionContext) {
+    constructor(context: ExtensionContext, reporter: Reporter) {
         this.configStore = new Config(vscodeImpl, context).setup();
         this.lcov = new Lcov(this.configStore, vscodeImpl, fsImpl);
         this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
+        this.reporter = reporter;
         this.textEditors = [];
+        this.reporter.sendEvent("user", "start");
     }
 
     public async displayCoverageForActiveFile() {
@@ -36,6 +41,7 @@ export class Gutters {
         try {
             const lcovPath = await this.lcov.find();
             await this.loadAndRenderCoverage(textEditor, lcovPath);
+            this.reporter.sendEvent("user", "display-coverage");
         } catch (error) {
             this.handleError(error);
         }
@@ -60,6 +66,7 @@ export class Gutters {
                     }
                 });
             });
+            this.reporter.sendEvent("user", "watch-lcov");
         } catch (error) {
             this.handleError(error);
         }
@@ -69,11 +76,13 @@ export class Gutters {
         const activeEditor = window.activeTextEditor;
         this.removeTextEditorFromCache(activeEditor);
         this.removeDecorationsForTextEditor(activeEditor);
+        this.reporter.sendEvent("user", "remove-coverage");
     }
 
     public dispose() {
         this.fileWatcher.dispose();
         this.textEditors.forEach(this.removeDecorationsForTextEditor);
+        this.reporter.sendEvent("cleanup", "dispose");
     }
 
     public getTextEditors(): TextEditor[] {
@@ -83,6 +92,7 @@ export class Gutters {
     private handleError(error: Error) {
         const message = error.message ? error.message : error;
         window.showErrorMessage(message.toString());
+        this.reporter.sendEvent("error", message.toString());
     }
 
     private addTextEditorToCache(editor: TextEditor) {

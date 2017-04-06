@@ -10,7 +10,7 @@ export interface InterfaceIndicators {
     extract(lcovFile: string, file: string): Promise<LcovSection>;
 }
 
-export type CoverageLines = {
+export interface CoverageLines {
     full: Range[];
     partial: Range[];
     none: Range[];
@@ -33,7 +33,7 @@ export class Indicators implements InterfaceIndicators {
 
     public renderToTextEditor(section: LcovSection, textEditor: TextEditor): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            let coverageLines: CoverageLines = {
+            const coverageLines: CoverageLines = {
                 full: [],
                 none: [],
                 partial: [],
@@ -50,7 +50,7 @@ export class Indicators implements InterfaceIndicators {
         return new Promise<LcovSection>((resolve, reject) => {
             this.parse.source(lcovFile, (err, data) => {
                 if (err) { return reject(err); }
-                let section = data.find((lcovSection) => {
+                const section = data.find((lcovSection) => {
                     return this.compareFilePaths(lcovSection.file, file);
                 });
 

@@ -6,7 +6,7 @@ import {
 } from "vscode";
 import {InterfaceVscode} from "./wrappers/vscode";
 
-export type ConfigStore = {
+export interface ConfigStore {
     lcovFileName: string;
     fullCoverageDecorationType: TextEditorDecorationType;
     partialCoverageDecorationType: TextEditorDecorationType;
@@ -14,12 +14,7 @@ export type ConfigStore = {
     altSfCompare: boolean;
 };
 
-export interface InterfaceConfig {
-    get(): ConfigStore;
-    setup(): ConfigStore;
-}
-
-export class Config implements InterfaceConfig {
+export class Config {
     private vscode: InterfaceVscode;
     private context: ExtensionContext;
 
@@ -48,7 +43,7 @@ export class Config implements InterfaceConfig {
         // Customizable UI configurations
         const rootCustomConfig = this.vscode.getConfiguration("coverage-gutters.customizable");
         const configsCustom = Object.keys(rootCustomConfig);
-        for (let element of configsCustom) {
+        for (const element of configsCustom) {
             this.vscode.executeCommand(
                 "setContext",
                 "config.coverage-gutters.customizable." + element,
