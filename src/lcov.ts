@@ -2,12 +2,7 @@ import {IConfigStore} from "./config";
 import {InterfaceFs} from "./wrappers/fs";
 import {InterfaceVscode} from "./wrappers/vscode";
 
-export interface InterfaceLcov {
-    find(): Promise<string>;
-    load(lcovPath: string): Promise<string>;
-}
-
-export class Lcov implements InterfaceLcov {
+export class Lcov {
     private configStore: IConfigStore;
     private vscode: InterfaceVscode;
     private fs: InterfaceFs;
