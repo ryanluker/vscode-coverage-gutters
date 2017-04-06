@@ -1,30 +1,25 @@
-import {ConfigStore} from "./config";
+import {IConfigStore} from "./config";
 import {InterfaceLcovParse} from "./wrappers/lcov-parse";
 import {InterfaceVscode} from "./wrappers/vscode";
 
 import {LcovSection} from "lcov-parse";
 import {Range, TextEditor} from "vscode";
 
-export interface InterfaceIndicators {
-    renderToTextEditor(lines: LcovSection, textEditor: TextEditor): Promise<string>;
-    extract(lcovFile: string, file: string): Promise<LcovSection>;
-}
-
-export interface CoverageLines {
+export interface ICoverageLines {
     full: Range[];
     partial: Range[];
     none: Range[];
-};
+}
 
-export class Indicators implements InterfaceIndicators {
+export class Indicators {
     private parse: InterfaceLcovParse;
     private vscode: InterfaceVscode;
-    private configStore: ConfigStore;
+    private configStore: IConfigStore;
 
     constructor(
         parse: InterfaceLcovParse,
         vscode: InterfaceVscode,
-        configStore: ConfigStore,
+        configStore: IConfigStore,
     ) {
         this.parse = parse;
         this.vscode = vscode;
@@ -33,7 +28,7 @@ export class Indicators implements InterfaceIndicators {
 
     public renderToTextEditor(section: LcovSection, textEditor: TextEditor): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            const coverageLines: CoverageLines = {
+            const coverageLines: ICoverageLines = {
                 full: [],
                 none: [],
                 partial: [],
@@ -60,7 +55,7 @@ export class Indicators implements InterfaceIndicators {
         });
     }
 
-    private setDecorationsForEditor(editor: TextEditor, coverage: CoverageLines) {
+    private setDecorationsForEditor(editor: TextEditor, coverage: ICoverageLines) {
         // remove coverage first to prevent graphical conflicts
         editor.setDecorations(this.configStore.fullCoverageDecorationType, []);
         editor.setDecorations(this.configStore.noCoverageDecorationType, []);
@@ -71,7 +66,7 @@ export class Indicators implements InterfaceIndicators {
         editor.setDecorations(this.configStore.partialCoverageDecorationType, coverage.partial);
     }
 
-    private filterCoverage(section: LcovSection, coverageLines: CoverageLines): CoverageLines {
+    private filterCoverage(section: LcovSection, coverageLines: ICoverageLines): ICoverageLines {
         section.lines.details.forEach((detail) => {
             const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
             if (detail.hit > 0) {

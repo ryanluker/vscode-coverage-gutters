@@ -6,13 +6,13 @@ import {
 } from "vscode";
 import {InterfaceVscode} from "./wrappers/vscode";
 
-export interface ConfigStore {
+export interface IConfigStore {
     lcovFileName: string;
     fullCoverageDecorationType: TextEditorDecorationType;
     partialCoverageDecorationType: TextEditorDecorationType;
     noCoverageDecorationType: TextEditorDecorationType;
     altSfCompare: boolean;
-};
+}
 
 export class Config {
     private vscode: InterfaceVscode;
@@ -29,7 +29,7 @@ export class Config {
         this.context = context;
     }
 
-    public get(): ConfigStore {
+    public get(): IConfigStore {
         return {
             altSfCompare: this.altSfCompare,
             fullCoverageDecorationType: this.fullCoverageDecorationType,
@@ -39,7 +39,7 @@ export class Config {
         };
     }
 
-    public setup(): ConfigStore {
+    public setup(): IConfigStore {
         // Customizable UI configurations
         const rootCustomConfig = this.vscode.getConfiguration("coverage-gutters.customizable");
         const configsCustom = Object.keys(rootCustomConfig);

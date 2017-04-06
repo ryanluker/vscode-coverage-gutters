@@ -9,7 +9,7 @@ import {Fs} from "./wrappers/fs";
 import {LcovParse} from "./wrappers/lcov-parse";
 import {Vscode} from "./wrappers/vscode";
 
-import {Config, ConfigStore} from "./config";
+import {Config, IConfigStore} from "./config";
 import {Indicators} from "./indicators";
 import {Lcov} from "./lcov";
 import {Reporter} from "./reporter";
@@ -19,7 +19,7 @@ const fsImpl = new Fs();
 const parseImpl = new LcovParse();
 
 export class Gutters {
-    private configStore: ConfigStore;
+    private configStore: IConfigStore;
     private fileWatcher: FileSystemWatcher;
     private lcov: Lcov;
     private indicators: Indicators;

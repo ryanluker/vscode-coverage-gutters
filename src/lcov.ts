@@ -1,4 +1,4 @@
-import {ConfigStore} from "./config";
+import {IConfigStore} from "./config";
 import {InterfaceFs} from "./wrappers/fs";
 import {InterfaceVscode} from "./wrappers/vscode";
 
@@ -8,12 +8,12 @@ export interface InterfaceLcov {
 }
 
 export class Lcov implements InterfaceLcov {
-    private configStore: ConfigStore;
+    private configStore: IConfigStore;
     private vscode: InterfaceVscode;
     private fs: InterfaceFs;
 
     constructor(
-        configStore: ConfigStore,
+        configStore: IConfigStore,
         vscode: InterfaceVscode,
         fs: InterfaceFs,
     ) {

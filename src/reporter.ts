@@ -1,15 +1,17 @@
 import {post} from "request";
 import {v4 as uuid} from "uuid";
 
-const GA_TRACKING_ID = "" //add before a release;
+const GA_TRACKING_ID = ""; // add before a release;
 const EXT_NAME = "vscode-coverage-gutters";
 const EXT_VERSION = "0.3.0";
 
 export class Reporter {
     private readonly cid: string;
+    private readonly optOut: boolean;
 
-    constructor() {
+    constructor(optOutMetrics: boolean) {
         this.cid = uuid();
+        this.optOut = optOutMetrics;
     }
 
     public sendEvent(
@@ -18,6 +20,7 @@ export class Reporter {
         label?: string,
         value?: number,
     ) {
+        if (this.optOut) { return; }
         const data = {
             an: EXT_NAME,
             av: EXT_VERSION,
