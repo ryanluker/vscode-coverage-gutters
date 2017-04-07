@@ -3,7 +3,7 @@ import {v4 as uuid} from "uuid";
 
 const GA_TRACKING_ID = ""; // add before a release;
 const EXT_NAME = "vscode-coverage-gutters";
-const EXT_VERSION = "0.3.0";
+const EXT_VERSION = "0.4.0";
 
 export class Reporter {
     private readonly cid: string;
