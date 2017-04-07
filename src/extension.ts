@@ -3,8 +3,8 @@ import {Gutters} from "./gutters";
 import {Reporter} from "./reporter";
 
 export function activate(context: vscode.ExtensionContext) {
-    const optOutMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
-    const reporter = new Reporter(optOutMetrics);
+    const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
+    const reporter = new Reporter(enableMetrics);
     const gutters = new Gutters(context, reporter);
 
     const display = vscode.commands.registerCommand("extension.displayCoverage", () => {

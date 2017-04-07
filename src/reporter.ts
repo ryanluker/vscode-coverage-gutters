@@ -7,11 +7,11 @@ const EXT_VERSION = "0.3.0";
 
 export class Reporter {
     private readonly cid: string;
-    private readonly optOut: boolean;
+    private readonly enableMetrics: boolean;
 
-    constructor(optOutMetrics: boolean) {
+    constructor(enableMetrics: boolean) {
         this.cid = uuid();
-        this.optOut = optOutMetrics;
+        this.enableMetrics = enableMetrics;
     }
 
     public sendEvent(
@@ -20,7 +20,7 @@ export class Reporter {
         label?: string,
         value?: number,
     ) {
-        if (this.optOut) { return; }
+        if (!this.enableMetrics) { return; }
         const data = {
             an: EXT_NAME,
             av: EXT_VERSION,

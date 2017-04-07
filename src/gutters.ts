@@ -27,7 +27,7 @@ export class Gutters {
     private textEditors: TextEditor[];
 
     constructor(context: ExtensionContext, reporter: Reporter) {
-        this.configStore = new Config(vscodeImpl, context).setup();
+        this.configStore = new Config(vscodeImpl, context, reporter).setup();
         this.lcov = new Lcov(this.configStore, vscodeImpl, fsImpl);
         this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
         this.reporter = reporter;

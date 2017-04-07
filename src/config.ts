@@ -3,7 +3,9 @@ import {
     ExtensionContext,
     OverviewRulerLane,
     TextEditorDecorationType,
+    WorkspaceConfiguration,
 } from "vscode";
+import {Reporter} from "./reporter";
 import {InterfaceVscode} from "./wrappers/vscode";
 
 export interface IConfigStore {
@@ -17,6 +19,7 @@ export interface IConfigStore {
 export class Config {
     private vscode: InterfaceVscode;
     private context: ExtensionContext;
+    private reporter: Reporter;
 
     private lcovFileName: string;
     private fullCoverageDecorationType: TextEditorDecorationType;
@@ -24,9 +27,10 @@ export class Config {
     private noCoverageDecorationType: TextEditorDecorationType;
     private altSfCompare: boolean;
 
-    constructor(vscode: InterfaceVscode, context: ExtensionContext) {
+    constructor(vscode: InterfaceVscode, context: ExtensionContext, reporter: Reporter) {
         this.vscode = vscode;
         this.context = context;
+        this.reporter = reporter;
     }
 
     public get(): IConfigStore {
@@ -40,8 +44,10 @@ export class Config {
     }
 
     public setup(): IConfigStore {
-        // Customizable UI configurations
         const rootCustomConfig = this.vscode.getConfiguration("coverage-gutters.customizable");
+        this.sendConfigMetrics(rootCustomConfig, "customConfig");
+
+        // Customizable UI configurations
         const configsCustom = Object.keys(rootCustomConfig);
         for (const element of configsCustom) {
             this.vscode.executeCommand(
@@ -50,8 +56,10 @@ export class Config {
                 rootCustomConfig.get(element));
         }
 
-        // Basic configurations
         const rootConfig = this.vscode.getConfiguration("coverage-gutters");
+        this.sendConfigMetrics(rootConfig, "config");
+
+        // Basic configurations
         this.lcovFileName = rootConfig.get("lcovname") as string;
         this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
 
@@ -124,5 +132,11 @@ export class Config {
         this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType(noDecoration);
 
         return this.get();
+    }
+
+    private sendConfigMetrics(config: WorkspaceConfiguration, category: string) {
+        Object.keys(config).forEach((configElement) => {
+            this.reporter.sendEvent(category, configElement, config.get(configElement) as string);
+        });
     }
 }
