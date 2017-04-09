@@ -1,6 +1,8 @@
+import {platform} from "os";
 import {Request} from "./wrappers/request";
 import {Uuid} from "./wrappers/uuid";
 
+const PLATFORM = platform();
 const GA_TRACKING_ID = ""; // add before a release;
 const EXT_NAME = "vscode-coverage-gutters";
 const EXT_VERSION = "0.4.0";
@@ -33,6 +35,7 @@ export class Reporter {
             ev: value,
             t: "event",
             tid: GA_TRACKING_ID,
+            ua: PLATFORM,
             v: "1",
         };
 
