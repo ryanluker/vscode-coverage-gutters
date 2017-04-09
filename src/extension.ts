@@ -1,18 +1,23 @@
 import * as vscode from "vscode";
 import {Gutters} from "./gutters";
+import {Reporter} from "./reporter";
+import {Request} from "./wrappers/request";
+import {Uuid} from "./wrappers/uuid";
 
 export function activate(context: vscode.ExtensionContext) {
-    let gutters = new Gutters(context);
+    const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
+    const reporter = new Reporter(new Request(), new Uuid(), enableMetrics);
+    const gutters = new Gutters(context, reporter);
 
-    let display = vscode.commands.registerCommand("extension.displayCoverage", () => {
+    const display = vscode.commands.registerCommand("extension.displayCoverage", () => {
         gutters.displayCoverageForActiveFile();
     });
 
-    let watchLcovFile = vscode.commands.registerCommand("extension.watchLcovFile", () => {
+    const watchLcovFile = vscode.commands.registerCommand("extension.watchLcovFile", () => {
         gutters.watchLcovFile();
     });
 
-    let remove = vscode.commands.registerCommand("extension.removeCoverage", () => {
+    const remove = vscode.commands.registerCommand("extension.removeCoverage", () => {
         gutters.removeCoverageForActiveFile();
     });
 

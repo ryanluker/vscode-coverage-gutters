@@ -3,25 +3,23 @@ import {
     ExtensionContext,
     OverviewRulerLane,
     TextEditorDecorationType,
+    WorkspaceConfiguration,
 } from "vscode";
+import {Reporter} from "./reporter";
 import {InterfaceVscode} from "./wrappers/vscode";
 
-export type ConfigStore = {
+export interface IConfigStore {
     lcovFileName: string;
     fullCoverageDecorationType: TextEditorDecorationType;
     partialCoverageDecorationType: TextEditorDecorationType;
     noCoverageDecorationType: TextEditorDecorationType;
     altSfCompare: boolean;
-};
-
-export interface InterfaceConfig {
-    get(): ConfigStore;
-    setup(): ConfigStore;
 }
 
-export class Config implements InterfaceConfig {
+export class Config {
     private vscode: InterfaceVscode;
     private context: ExtensionContext;
+    private reporter: Reporter;
 
     private lcovFileName: string;
     private fullCoverageDecorationType: TextEditorDecorationType;
@@ -29,12 +27,13 @@ export class Config implements InterfaceConfig {
     private noCoverageDecorationType: TextEditorDecorationType;
     private altSfCompare: boolean;
 
-    constructor(vscode: InterfaceVscode, context: ExtensionContext) {
+    constructor(vscode: InterfaceVscode, context: ExtensionContext, reporter: Reporter) {
         this.vscode = vscode;
         this.context = context;
+        this.reporter = reporter;
     }
 
-    public get(): ConfigStore {
+    public get(): IConfigStore {
         return {
             altSfCompare: this.altSfCompare,
             fullCoverageDecorationType: this.fullCoverageDecorationType,
@@ -44,19 +43,23 @@ export class Config implements InterfaceConfig {
         };
     }
 
-    public setup(): ConfigStore {
-        // Customizable UI configurations
+    public setup(): IConfigStore {
         const rootCustomConfig = this.vscode.getConfiguration("coverage-gutters.customizable");
+        this.sendConfigMetrics(rootCustomConfig, "customConfig");
+
+        // Customizable UI configurations
         const configsCustom = Object.keys(rootCustomConfig);
-        for (let element of configsCustom) {
+        for (const element of configsCustom) {
             this.vscode.executeCommand(
                 "setContext",
                 "config.coverage-gutters.customizable." + element,
                 rootCustomConfig.get(element));
         }
 
-        // Basic configurations
         const rootConfig = this.vscode.getConfiguration("coverage-gutters");
+        this.sendConfigMetrics(rootConfig, "config");
+
+        // Basic configurations
         this.lcovFileName = rootConfig.get("lcovname") as string;
         this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
 
@@ -129,5 +132,11 @@ export class Config implements InterfaceConfig {
         this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType(noDecoration);
 
         return this.get();
+    }
+
+    private sendConfigMetrics(config: WorkspaceConfiguration, category: string) {
+        Object.keys(config).forEach((configElement) => {
+            this.reporter.sendEvent(category, configElement, config.get(configElement) as string);
+        });
     }
 }

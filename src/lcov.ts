@@ -1,19 +1,14 @@
-import {ConfigStore} from "./config";
+import {IConfigStore} from "./config";
 import {InterfaceFs} from "./wrappers/fs";
 import {InterfaceVscode} from "./wrappers/vscode";
 
-export interface InterfaceLcov {
-    find(): Promise<string>;
-    load(lcovPath: string): Promise<string>;
-}
-
-export class Lcov implements InterfaceLcov {
-    private configStore: ConfigStore;
+export class Lcov {
+    private configStore: IConfigStore;
     private vscode: InterfaceVscode;
     private fs: InterfaceFs;
 
     constructor(
-        configStore: ConfigStore,
+        configStore: IConfigStore,
         vscode: InterfaceVscode,
         fs: InterfaceFs,
     ) {
