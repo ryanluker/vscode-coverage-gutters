@@ -1,5 +1,3 @@
-"use strict";
-
 import * as assert from "assert";
 import {BranchDetail, LcovSection} from "lcov-parse";
 import {TextEditor} from "vscode";
