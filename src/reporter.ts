@@ -1,5 +1,5 @@
-import {post} from "request";
-import {v4 as uuid} from "uuid";
+import {Uuid} from "./wrappers/uuid";
+import {Request} from "./wrappers/request";
 
 const GA_TRACKING_ID = ""; // add before a release;
 const EXT_NAME = "vscode-coverage-gutters";
@@ -8,9 +8,11 @@ const EXT_VERSION = "0.4.0";
 export class Reporter {
     private readonly cid: string;
     private readonly enableMetrics: boolean;
+    private readonly request: Request;
 
-    constructor(enableMetrics: boolean) {
-        this.cid = uuid();
+    constructor(request: Request, uuid: Uuid, enableMetrics: boolean) {
+        this.request = request;
+        this.cid = uuid.get();
         this.enableMetrics = enableMetrics;
     }
 
@@ -34,6 +36,6 @@ export class Reporter {
             v: "1",
         };
 
-        return post("https://www.google-analytics.com/collect", { form: data });
+        return this.request.post("https://www.google-analytics.com/collect", { form: data });
     }
 }
