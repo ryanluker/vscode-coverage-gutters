@@ -1,3 +1,10 @@
+### 0.4.0
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/4?closed=1)
+- added keybindings and shortcuts
+- added metrics
+- added options to display only gutter, line or ruler (or combo)
+- display errors and no coverage in message popup
+
 ### 0.3.0
 - added lcov watch functionality
 - added enhanced lcov coverage (full, partial and none options)
