@@ -1,5 +1,5 @@
-import {Uuid} from "./wrappers/uuid";
 import {Request} from "./wrappers/request";
+import {Uuid} from "./wrappers/uuid";
 
 const GA_TRACKING_ID = ""; // add before a release;
 const EXT_NAME = "vscode-coverage-gutters";

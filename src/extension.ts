@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import {Request} from "./wrappers/request";
-import {Uuid} from "./wrappers/uuid";
 import {Gutters} from "./gutters";
 import {Reporter} from "./reporter";
+import {Request} from "./wrappers/request";
+import {Uuid} from "./wrappers/uuid";
 
 export function activate(context: vscode.ExtensionContext) {
     const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
