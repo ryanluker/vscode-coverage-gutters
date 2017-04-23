@@ -2,6 +2,7 @@ import {
     ExtensionContext,
     FileSystemWatcher,
     TextEditor,
+    version,
     window,
 } from "vscode";
 
@@ -31,6 +32,7 @@ export class Gutters {
         this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
         this.reporter = reporter;
         this.reporter.sendEvent("user", "start");
+        this.reporter.sendEvent("user", "vscodeVersion", version);
     }
 
     public async displayCoverageForActiveFile() {
@@ -110,5 +112,6 @@ export class Gutters {
         const file = textEditor.document.fileName;
         const coveredLines = await this.indicators.extract(lcovFile, file);
         await this.indicators.renderToTextEditor(coveredLines, textEditor);
+        this.reporter.sendEvent("user", "loadAndRenderCoverage");
     }
 }
