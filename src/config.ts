@@ -45,7 +45,6 @@ export class Config {
 
     public setup(): IConfigStore {
         const rootCustomConfig = this.vscode.getConfiguration("coverage-gutters.customizable");
-        this.sendConfigMetrics(rootCustomConfig, "customConfig");
 
         // Customizable UI configurations
         const configsCustom = Object.keys(rootCustomConfig);
@@ -57,7 +56,6 @@ export class Config {
         }
 
         const rootConfig = this.vscode.getConfiguration("coverage-gutters");
-        this.sendConfigMetrics(rootConfig, "config");
 
         // Basic configurations
         this.lcovFileName = rootConfig.get("lcovname") as string;
@@ -132,11 +130,5 @@ export class Config {
         this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType(noDecoration);
 
         return this.get();
-    }
-
-    private sendConfigMetrics(config: WorkspaceConfiguration, category: string) {
-        Object.keys(config).forEach((configElement) => {
-            this.reporter.sendEvent(category, configElement, config.get(configElement) as string);
-        });
     }
 }
