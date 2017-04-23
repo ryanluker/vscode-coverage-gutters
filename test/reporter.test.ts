@@ -58,4 +58,25 @@ suite("Reporter Tests", function() {
         const reporter = new Reporter(fakeRequest, fakeUuid, true);
         reporter.sendEvent("test", "action");
     });
+
+    test("GA tracking id should be set by env variable", function() {
+        process.env.GA_TRACKING_ID = "123";
+
+        const fakeRequest = {
+            post(uri: string, options?: IOptions) {
+                // tslint:disable-next-line:no-string-literal
+                assert.equal(options.form["tid"], "123");
+                return;
+            },
+        };
+
+        const fakeUuid = {
+            get() {
+                return "fakeuuidhere";
+            },
+        };
+
+        const reporter = new Reporter(fakeRequest, fakeUuid, true);
+        reporter.sendEvent("test", "action");
+    });
 });

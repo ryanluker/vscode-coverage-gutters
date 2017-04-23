@@ -20,24 +20,21 @@ const parseImpl = new LcovParse();
 
 export class Gutters {
     private configStore: IConfigStore;
-    private fileWatcher: FileSystemWatcher;
+    private lcovWatcher: FileSystemWatcher;
     private lcov: Lcov;
     private indicators: Indicators;
     private reporter: Reporter;
-    private textEditors: TextEditor[];
 
     constructor(context: ExtensionContext, reporter: Reporter) {
         this.configStore = new Config(vscodeImpl, context, reporter).setup();
         this.lcov = new Lcov(this.configStore, vscodeImpl, fsImpl);
         this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
         this.reporter = reporter;
-        this.textEditors = [];
         this.reporter.sendEvent("user", "start");
     }
 
     public async displayCoverageForActiveFile() {
         const textEditor = window.activeTextEditor;
-        this.addTextEditorToCache(textEditor);
         try {
             const lcovPath = await this.lcov.find();
             await this.loadAndRenderCoverage(textEditor, lcovPath);
@@ -51,19 +48,14 @@ export class Gutters {
      * Watch the lcov file and iterate over textEditors when changes occur
      */
     public async watchLcovFile() {
-        if (this.fileWatcher) { return; }
+        if (this.lcovWatcher) { return; }
 
         try {
             const lcovPath = await this.lcov.find();
-            this.fileWatcher = vscodeImpl.watchFile(lcovPath);
-            this.fileWatcher.onDidChange(async (event) => {
-                this.textEditors.forEach(async (editor) => {
-                    if (!editor.document) {
-                        // editor can no longer display coverage, remove from cache
-                        this.removeTextEditorFromCache(editor);
-                    } else {
-                        this.loadAndRenderCoverage(editor, lcovPath);
-                    }
+            this.lcovWatcher = vscodeImpl.watchFile(lcovPath);
+            this.lcovWatcher.onDidChange(async (event) => {
+                window.visibleTextEditors.forEach(async (editor) => {
+                    await this.loadAndRenderCoverage(editor, lcovPath);
                 });
             });
             this.reporter.sendEvent("user", "watch-lcov");
@@ -72,37 +64,38 @@ export class Gutters {
         }
     }
 
+    /**
+     * Watch the visible editors and render coverage when changes occur
+     */
+    public async watchVisibleEditors() {
+        try {
+            const lcovPath = await this.lcov.find();
+            window.onDidChangeVisibleTextEditors(async (event) => {
+                window.visibleTextEditors.forEach(async (editor) => {
+                    await this.loadAndRenderCoverage(editor, lcovPath);
+                });
+            });
+            this.reporter.sendEvent("user", "watch-editors");
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
     public removeCoverageForActiveFile() {
         const activeEditor = window.activeTextEditor;
-        this.removeTextEditorFromCache(activeEditor);
         this.removeDecorationsForTextEditor(activeEditor);
         this.reporter.sendEvent("user", "remove-coverage");
     }
 
     public dispose() {
-        this.fileWatcher.dispose();
-        this.textEditors.forEach(this.removeDecorationsForTextEditor);
+        this.lcovWatcher.dispose();
         this.reporter.sendEvent("cleanup", "dispose");
-    }
-
-    public getTextEditors(): TextEditor[] {
-        return this.textEditors;
     }
 
     private handleError(error: Error) {
         const message = error.message ? error.message : error;
-        window.showErrorMessage(message.toString());
+        window.showWarningMessage(message.toString());
         this.reporter.sendEvent("error", message.toString());
-    }
-
-    private addTextEditorToCache(editor: TextEditor) {
-        // keep textEditors a unique array by removing existing editors
-        this.textEditors = this.textEditors.filter((cache) => cache !== editor);
-        this.textEditors.push(editor);
-    }
-
-    private removeTextEditorFromCache(editor: TextEditor) {
-        this.textEditors = this.textEditors.filter((cache) => cache !== editor);
     }
 
     private removeDecorationsForTextEditor(editor: TextEditor) {

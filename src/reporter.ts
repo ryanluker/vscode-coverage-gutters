@@ -1,16 +1,17 @@
 import {Request} from "./wrappers/request";
 import {Uuid} from "./wrappers/uuid";
 
-const GA_TRACKING_ID = process.env.GA_TRACKING_ID || "";
 const EXT_NAME = "vscode-coverage-gutters";
 const EXT_VERSION = "0.4.0";
 
 export class Reporter {
     private readonly cid: string;
     private readonly enableMetrics: boolean;
+    private readonly GA_TRACKING_ID: string;
     private readonly request: Request;
 
     constructor(request: Request, uuid: Uuid, enableMetrics: boolean) {
+        this.GA_TRACKING_ID = process.env.GA_TRACKING_ID || "";
         this.request = request;
         this.cid = uuid.get();
         this.enableMetrics = enableMetrics;
@@ -32,7 +33,7 @@ export class Reporter {
             el: label,
             ev: value,
             t: "event",
-            tid: GA_TRACKING_ID,
+            tid: this.GA_TRACKING_ID,
             v: "1",
         };
 
