@@ -1,3 +1,10 @@
+### 0.5.0
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/5?closed=1)
+- added file watch and render feature
+- added metrics for vscodeVersion
+- use environment variables for ga tracking id
+- cleanup tests
+
 ### 0.4.0
 [Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/4?closed=1)
 - added keybindings and shortcuts
