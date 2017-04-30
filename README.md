@@ -24,7 +24,7 @@
 |Setting | Description
 |--------|------------
 |`coverage-gutters.lcovname`|Allows specification of a custom lcov file name
-|`coverage-gutters.altSfCompare`|Uses a relative method of comparing lcov source file paths
+|`coverage-gutters.altSfCompare`|Uses a relative method of comparing lcov source file paths (default true)
 |`coverage-gutters.highlightlight`|Changes the highlight for light themes
 |`coverage-gutters.highlightdark`|Changes the highlight for dark themes
 |`coverage-gutters.partialHighlightLight`|Changes the partial highlight for light themes
