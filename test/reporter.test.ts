@@ -17,7 +17,7 @@ suite("Reporter Tests", function() {
             },
         };
 
-        const reporter = new Reporter(fakeRequest, fakeUuid, false);
+        const reporter = new Reporter(fakeRequest, fakeUuid, "", false);
         reporter.sendEvent("test", "action");
     });
 
@@ -36,7 +36,7 @@ suite("Reporter Tests", function() {
             },
         };
 
-        const reporter = new Reporter(fakeRequest, fakeUuid, true);
+        const reporter = new Reporter(fakeRequest, fakeUuid, "", true);
         reporter.sendEvent("test", "action");
     });
 
@@ -55,13 +55,11 @@ suite("Reporter Tests", function() {
             },
         };
 
-        const reporter = new Reporter(fakeRequest, fakeUuid, true);
+        const reporter = new Reporter(fakeRequest, fakeUuid, "", true);
         reporter.sendEvent("test", "action");
     });
 
     test("GA tracking id should be set by env variable", function() {
-        process.env.GA_TRACKING_ID = "123";
-
         const fakeRequest = {
             post(uri: string, options?: IOptions) {
                 // tslint:disable-next-line:no-string-literal
@@ -76,7 +74,7 @@ suite("Reporter Tests", function() {
             },
         };
 
-        const reporter = new Reporter(fakeRequest, fakeUuid, true);
+        const reporter = new Reporter(fakeRequest, fakeUuid, "123", true);
         reporter.sendEvent("test", "action");
     });
 });

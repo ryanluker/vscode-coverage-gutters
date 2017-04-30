@@ -6,7 +6,7 @@ import {Uuid} from "./wrappers/uuid";
 
 export function activate(context: vscode.ExtensionContext) {
     const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
-    const reporter = new Reporter(new Request(), new Uuid(), enableMetrics);
+    const reporter = new Reporter(new Request(), new Uuid(), "", enableMetrics);
     const gutters = new Gutters(context, reporter);
 
     const display = vscode.commands.registerCommand("extension.displayCoverage", () => {

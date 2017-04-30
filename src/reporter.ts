@@ -7,11 +7,11 @@ const EXT_VERSION = "0.5.0";
 export class Reporter {
     private readonly cid: string;
     private readonly enableMetrics: boolean;
-    private readonly GA_TRACKING_ID: string;
+    private readonly gaTrackingId: string;
     private readonly request: Request;
 
-    constructor(request: Request, uuid: Uuid, enableMetrics: boolean) {
-        this.GA_TRACKING_ID = process.env.GA_TRACKING_ID || "";
+    constructor(request: Request, uuid: Uuid, gaTrackingId: string, enableMetrics: boolean) {
+        this.gaTrackingId = gaTrackingId;
         this.request = request;
         this.cid = uuid.get();
         this.enableMetrics = enableMetrics;
@@ -33,7 +33,7 @@ export class Reporter {
             el: label,
             ev: value,
             t: "event",
-            tid: this.GA_TRACKING_ID,
+            tid: this.gaTrackingId,
             v: "1",
         };
 
