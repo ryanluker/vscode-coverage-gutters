@@ -1,4 +1,5 @@
 import {
+    Disposable,
     ExtensionContext,
     FileSystemWatcher,
     TextEditor,
@@ -22,6 +23,7 @@ const parseImpl = new LcovParse();
 export class Gutters {
     private configStore: IConfigStore;
     private lcovWatcher: FileSystemWatcher;
+    private editorWatcher: Disposable;
     private lcov: Lcov;
     private indicators: Indicators;
     private reporter: Reporter;
@@ -31,6 +33,7 @@ export class Gutters {
         this.lcov = new Lcov(this.configStore, vscodeImpl, fsImpl);
         this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
         this.reporter = reporter;
+        
         this.reporter.sendEvent("user", "start");
         this.reporter.sendEvent("user", "vscodeVersion", version);
     }
@@ -40,63 +43,55 @@ export class Gutters {
         try {
             const lcovPath = await this.lcov.find();
             await this.loadAndRenderCoverage(textEditor, lcovPath);
+
             this.reporter.sendEvent("user", "display-coverage");
         } catch (error) {
             this.handleError(error);
         }
     }
 
-    /**
-     * Watch the lcov file and iterate over textEditors when changes occur
-     */
-    public async watchLcovFile() {
-        if (this.lcovWatcher) { return; }
+    public async watchLcovAndVisibleEditors() {
+        if (this.lcovWatcher && this.editorWatcher) { return; }
 
         try {
             const lcovPath = await this.lcov.find();
             this.lcovWatcher = vscodeImpl.watchFile(lcovPath);
-            this.lcovWatcher.onDidChange(async (event) => {
-                window.visibleTextEditors.forEach(async (editor) => {
-                    await this.loadAndRenderCoverage(editor, lcovPath);
-                });
-            });
-            this.reporter.sendEvent("user", "watch-lcov");
+            this.lcovWatcher.onDidChange((event) => this.renderCoverageOnVisible(lcovPath));
+            this.editorWatcher = window.onDidChangeVisibleTextEditors((event) => this.renderCoverageOnVisible(lcovPath));
+
+            this.reporter.sendEvent("user", "watch-lcov-editors");
         } catch (error) {
             this.handleError(error);
         }
     }
 
-    /**
-     * Watch the visible editors and render coverage when changes occur
-     */
-    public async watchVisibleEditors() {
-        try {
-            const lcovPath = await this.lcov.find();
-            window.onDidChangeVisibleTextEditors(async (event) => {
-                window.visibleTextEditors.forEach(async (editor) => {
-                    await this.loadAndRenderCoverage(editor, lcovPath);
-                });
-            });
-            this.reporter.sendEvent("user", "watch-editors");
-        } catch (error) {
-            this.handleError(error);
-        }
+    public async removeWatch() {
+        this.lcovWatcher.dispose();
+        this.editorWatcher.dispose();
+        this.lcovWatcher = null;
+        this.editorWatcher = null;
+
+        this.reporter.sendEvent("user", "remove-watch");
     }
 
     public removeCoverageForActiveFile() {
         const activeEditor = window.activeTextEditor;
         this.removeDecorationsForTextEditor(activeEditor);
+
         this.reporter.sendEvent("user", "remove-coverage");
     }
 
     public dispose() {
         this.lcovWatcher.dispose();
+        this.editorWatcher.dispose();
+
         this.reporter.sendEvent("cleanup", "dispose");
     }
 
     private handleError(error: Error) {
         const message = error.message ? error.message : error;
         window.showWarningMessage(message.toString());
+
         this.reporter.sendEvent("error", message.toString());
     }
 
@@ -112,6 +107,13 @@ export class Gutters {
         const file = textEditor.document.fileName;
         const coveredLines = await this.indicators.extract(lcovFile, file);
         await this.indicators.renderToTextEditor(coveredLines, textEditor);
+
         this.reporter.sendEvent("user", "loadAndRenderCoverage");
+    }
+
+    private renderCoverageOnVisible(lcovPath: string) {
+        window.visibleTextEditors.forEach(async (editor) => {
+            await this.loadAndRenderCoverage(editor, lcovPath);
+        });
     }
 }

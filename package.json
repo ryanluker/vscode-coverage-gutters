@@ -123,15 +123,15 @@
           "default": true,
           "description": "enable or disable the displayCoverage command in the editor/context menu"
         },
-        "coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled": {
+        "coverage-gutters.customizable.menus-editor-context-watchLcovAndVisibleEditors-enabled": {
           "type": "boolean",
           "default": true,
-          "description": "enable or disable the watchLcovFile command in the editor/context menu"
+          "description": "enable or disable the watchLcovAndVisibleEditors command in the editor/context menu"
         },
-        "coverage-gutters.customizable.menus-editor-context-watchVisibleEditors-enabled": {
+        "coverage-gutters.customizable.menus-editor-context-removeWatch-enabled": {
           "type": "boolean",
           "default": true,
-          "description": "enable or disable the watchVisibleEditors command in the editor/context menu"
+          "description": "enable or disable the removeWatch command in the editor/context menu"
         },
         "coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled": {
           "type": "boolean",
@@ -143,15 +143,15 @@
           "default": true,
           "description": "enable or disable the keybinding shortcut for enabling coverage on the active file"
         },
-        "coverage-gutters.customizable.keybindings-watchLcovFile-enabled": {
+        "coverage-gutters.customizable.keybindings-watchLcovAndVisibleEditors-enabled": {
           "type": "boolean",
           "default": true,
-          "description": "enable or disable the keybinding shortcut for watching the lcov file"
+          "description": "enable or disable the keybinding shortcut for watching the lcov file and visible editors"
         },
-        "coverage-gutters.customizable.keybindings-watchVisibleEditors-enabled": {
+        "coverage-gutters.customizable.keybindings-removeWatch-enabled": {
           "type": "boolean",
           "default": true,
-          "description": "enable or disable the keybinding shortcut for watching visible editors"
+          "description": "enable or disable the keybinding shortcut for removing the watch on lcov and editors"
         },
         "coverage-gutters.customizable.keybindings-removeCoverage-enabled": {
           "type": "boolean",
@@ -166,12 +166,12 @@
         "title": "Coverage Gutters: Display File Coverage"
       },
       {
-        "command": "extension.watchLcovFile",
-        "title": "Coverage Gutters: Watch Lcov and Render Changes"
+        "command": "extension.watchLcovAndVisibleEditors",
+        "title": "Coverage Gutters: Watch Lcov File and Visible Editors"
       },
       {
-        "command": "extension.watchVisibleEditors",
-        "title": "Coverage Gutters: Watch Visible Editors and Render Coverage"
+        "command": "extension.removeWatch",
+        "title": "Coverage Gutters: Remove Lcov and Editor Watch"
       },
       {
         "command": "extension.removeCoverage",
@@ -186,16 +186,16 @@
         "when": "config.coverage-gutters.customizable.keybindings-displayCoverage-enabled"
       },
       {
-        "command": "extension.watchLcovFile",
+        "command": "extension.watchLcovAndVisibleEditors",
         "key": "ctrl+shift+8",
         "mac": "shift+cmd+8",
-        "when": "config.coverage-gutters.customizable.keybindings-watchLcovFile-enabled"
+        "when": "config.coverage-gutters.customizable.keybindings-watchLcovAndVisibleEditors-enabled"
       },
       {
-        "command": "extension.watchVisibleEditors",
+        "command": "extension.removeWatch",
         "key": "ctrl+shift+9",
         "mac": "shift+cmd+9",
-        "when": "config.coverage-gutters.customizable.keybindings-watchVisibleEditors-enabled"
+        "when": "config.coverage-gutters.customizable.keybindings-removeWatch-enabled"
       },
       {
         "command": "extension.removeCoverage",
@@ -212,13 +212,13 @@
           "group": "Coverage-Gutters@1"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled",
-          "command": "extension.watchLcovFile",
+          "when": "config.coverage-gutters.customizable.menus-editor-context-watchLcovAndVisibleEditors-enabled",
+          "command": "extension.watchLcovAndVisibleEditors",
           "group": "Coverage-Gutters@2"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-watchVisibleEditors-enabled",
-          "command": "extension.watchVisibleEditors",
+          "when": "config.coverage-gutters.customizable.menus-editor-context-removeWatch-enabled",
+          "command": "extension.removeWatch",
           "group": "Coverage-Gutters@3"
         },
         {
