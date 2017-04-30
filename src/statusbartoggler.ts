@@ -5,7 +5,7 @@ export class StatusBarToggler implements Disposable {
     public static readonly removeCommand = "extension.removeWatch";
     public static readonly watchText = "$(list-ordered) Watch Lcov and Editors";
     public static readonly removeText = "$(list-ordered) Remove Watch";
-    public static readonly toolTip = "Coverage Gutters: Watch and Remove Watch Helper";
+    public static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
     private statusBarItem: StatusBarItem;
 
     constructor() {
