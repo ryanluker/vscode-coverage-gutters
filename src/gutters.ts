@@ -1,6 +1,5 @@
 import {
     Disposable,
-    ExtensionContext,
     FileSystemWatcher,
     StatusBarItem,
     TextEditor,
@@ -8,19 +7,15 @@ import {
     window,
 } from "vscode";
 
-import {Fs} from "./wrappers/fs";
-import {LcovParse} from "./wrappers/lcov-parse";
 import {Vscode} from "./wrappers/vscode";
 
-import {Config, IConfigStore} from "./config";
+import {IConfigStore} from "./config";
 import {Indicators} from "./indicators";
 import {Lcov} from "./lcov";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 
 const vscodeImpl = new Vscode();
-const fsImpl = new Fs();
-const parseImpl = new LcovParse();
 
 export class Gutters {
     private configStore: IConfigStore;
@@ -32,10 +27,16 @@ export class Gutters {
     private reporter: Reporter;
     private statusBar: StatusBarToggler;
 
-    constructor(context: ExtensionContext, reporter: Reporter, statusBar: StatusBarToggler) {
-        this.configStore = new Config(vscodeImpl, context, reporter).setup();
-        this.lcov = new Lcov(this.configStore, vscodeImpl, fsImpl);
-        this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
+    constructor(
+        configStore: IConfigStore,
+        lcov: Lcov,
+        indicators: Indicators,
+        reporter: Reporter,
+        statusBar: StatusBarToggler,
+    ) {
+        this.configStore = configStore;
+        this.lcov = lcov;
+        this.indicators = indicators;
         this.statusBar = statusBar;
         this.reporter = reporter;
 

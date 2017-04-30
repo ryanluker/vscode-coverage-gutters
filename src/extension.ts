@@ -1,15 +1,28 @@
 import * as vscode from "vscode";
+import {Config} from "./config";
 import {Gutters} from "./gutters";
+import {Indicators} from "./indicators";
+import {Lcov} from "./lcov";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
+import {Fs} from "./wrappers/fs";
+import {LcovParse} from "./wrappers/lcov-parse";
 import {Request} from "./wrappers/request";
 import {Uuid} from "./wrappers/uuid";
+import {Vscode} from "./wrappers/vscode";
+
+const fsImpl = new Fs();
+const parseImpl = new LcovParse();
+const vscodeImpl = new Vscode();
 
 export function activate(context: vscode.ExtensionContext) {
     const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
     const reporter = new Reporter(new Request(), new Uuid(), "", enableMetrics);
     const statusBarToggler = new StatusBarToggler();
-    const gutters = new Gutters(context, reporter, statusBarToggler);
+    const configStore = new Config(vscodeImpl, context, reporter).get();
+    const lcov = new Lcov(configStore, vscodeImpl, fsImpl);
+    const indicators = new Indicators(parseImpl, vscodeImpl, configStore);
+    const gutters = new Gutters(configStore, lcov, indicators, reporter, statusBarToggler);
 
     const display = vscode.commands.registerCommand("extension.displayCoverage", () => {
         gutters.displayCoverageForActiveFile();

@@ -31,6 +31,7 @@ export class Config {
         this.vscode = vscode;
         this.context = context;
         this.reporter = reporter;
+        this.setup();
     }
 
     public get(): IConfigStore {
