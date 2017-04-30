@@ -2,6 +2,7 @@ import {
     Disposable,
     ExtensionContext,
     FileSystemWatcher,
+    StatusBarItem,
     TextEditor,
     version,
     window,
@@ -15,6 +16,7 @@ import {Config, IConfigStore} from "./config";
 import {Indicators} from "./indicators";
 import {Lcov} from "./lcov";
 import {Reporter} from "./reporter";
+import {StatusBarToggler} from "./statusbartoggler";
 
 const vscodeImpl = new Vscode();
 const fsImpl = new Fs();
@@ -24,14 +26,17 @@ export class Gutters {
     private configStore: IConfigStore;
     private lcovWatcher: FileSystemWatcher;
     private editorWatcher: Disposable;
+    private statusBarItem: StatusBarItem;
     private lcov: Lcov;
     private indicators: Indicators;
     private reporter: Reporter;
+    private statusBar: StatusBarToggler;
 
-    constructor(context: ExtensionContext, reporter: Reporter) {
+    constructor(context: ExtensionContext, reporter: Reporter, statusBar: StatusBarToggler) {
         this.configStore = new Config(vscodeImpl, context, reporter).setup();
         this.lcov = new Lcov(this.configStore, vscodeImpl, fsImpl);
         this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
+        this.statusBar = statusBar;
         this.reporter = reporter;
 
         this.reporter.sendEvent("user", "start");
@@ -59,6 +64,7 @@ export class Gutters {
             this.lcovWatcher.onDidChange((event) => this.renderCoverageOnVisible(lcovPath));
             this.editorWatcher = window.onDidChangeVisibleTextEditors(
                 (event) => this.renderCoverageOnVisible(lcovPath));
+            this.statusBar.toggle();
 
             this.reporter.sendEvent("user", "watch-lcov-editors");
         } catch (error) {
@@ -66,11 +72,12 @@ export class Gutters {
         }
     }
 
-    public async removeWatch() {
+    public removeWatch() {
         this.lcovWatcher.dispose();
         this.editorWatcher.dispose();
         this.lcovWatcher = null;
         this.editorWatcher = null;
+        this.statusBar.toggle();
 
         this.reporter.sendEvent("user", "remove-watch");
     }
@@ -85,6 +92,7 @@ export class Gutters {
     public dispose() {
         this.lcovWatcher.dispose();
         this.editorWatcher.dispose();
+        this.statusBar.dispose();
 
         this.reporter.sendEvent("cleanup", "dispose");
     }
