@@ -33,7 +33,7 @@ export class Gutters {
         this.lcov = new Lcov(this.configStore, vscodeImpl, fsImpl);
         this.indicators = new Indicators(parseImpl, vscodeImpl, this.configStore);
         this.reporter = reporter;
-        
+
         this.reporter.sendEvent("user", "start");
         this.reporter.sendEvent("user", "vscodeVersion", version);
     }
@@ -57,7 +57,8 @@ export class Gutters {
             const lcovPath = await this.lcov.find();
             this.lcovWatcher = vscodeImpl.watchFile(lcovPath);
             this.lcovWatcher.onDidChange((event) => this.renderCoverageOnVisible(lcovPath));
-            this.editorWatcher = window.onDidChangeVisibleTextEditors((event) => this.renderCoverageOnVisible(lcovPath));
+            this.editorWatcher = window.onDidChangeVisibleTextEditors(
+                (event) => this.renderCoverageOnVisible(lcovPath));
 
             this.reporter.sendEvent("user", "watch-lcov-editors");
         } catch (error) {
