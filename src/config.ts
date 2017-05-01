@@ -31,6 +31,7 @@ export class Config {
         this.vscode = vscode;
         this.context = context;
         this.reporter = reporter;
+        this.setup();
     }
 
     public get(): IConfigStore {
@@ -60,6 +61,8 @@ export class Config {
         // Basic configurations
         this.lcovFileName = rootConfig.get("lcovname") as string;
         this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
+        this.reporter.sendEvent("config", "lcovFileName", this.lcovFileName);
+        this.reporter.sendEvent("config", "altSfCompare", this.altSfCompare.toString());
 
         // Themes and icons
         const coverageLightBackgroundColour = rootConfig.get("highlightlight") as string;
