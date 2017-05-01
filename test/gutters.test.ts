@@ -8,8 +8,9 @@ import {Reporter} from "../src/reporter";
 import {StatusBarToggler} from "../src/statusbartoggler";
 
 suite("Gutters Tests", function() {
+    this.timeout(4000);
+
     test("Should setup gutters based on config values with no errors", function(done) {
-        this.timeout(12000);
         try {
             const reporter: Reporter = {
                 sendEvent() {
@@ -21,26 +22,57 @@ suite("Gutters Tests", function() {
                     return;
                 },
             } as any;
-            const lcov: Lcov = {
-                sendEvent() {
-                    return;
-                },
-            } as any;
-            const indicators: Indicators = {
-                sendEvent() {
-                    return;
-                },
-            } as any;
-            const configStore: IConfigStore = {
-                sendEvent() {
-                    return;
-                },
-            } as any;
+            const lcov: Lcov = {} as any;
+            const indicators: Indicators = {} as any;
+            const configStore: IConfigStore = {} as any;
 
             const gutters = new Gutters(configStore, lcov, indicators, reporter, statusbar);
             return done();
         } catch (e) {
             return done(e);
+        }
+    });
+
+    test("Should error when trying to render coverage on empty editor", async function() {
+        let sendEventTimes = 0;
+        try {
+            const reporter: Reporter = {
+                sendEvent(cat, action) {
+                    sendEventTimes++;
+                    return;
+                },
+            } as any;
+            const statusbar: StatusBarToggler = {
+                dispose() {
+                    return;
+                },
+            } as any;
+            const lcov: Lcov = {
+                find() {
+                    return Promise.resolve("tempPath");
+                },
+                load(path) {
+                    assert.equal(path, "tempPath");
+                    return Promise.resolve("filehere");
+                },
+            } as any;
+            const indicators: Indicators = {
+                extract(file) {
+                    assert.equal(file, "filehere");
+                    return Promise.resolve([1, 2, 3]);
+                },
+                renderToTextEditor(lines) {
+                    assert.equal(lines, [1, 2, 3]);
+                    return Promise.resolve();
+                },
+            } as any;
+            const configStore: IConfigStore = {} as any;
+
+            const gutters = new Gutters(configStore, lcov, indicators, reporter, statusbar);
+            await gutters.displayCoverageForActiveFile();
+            assert.equal(sendEventTimes, 3);
+        } catch (error) {
+            throw error;
         }
     });
 });

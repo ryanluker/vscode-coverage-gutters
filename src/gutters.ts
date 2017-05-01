@@ -105,14 +105,17 @@ export class Gutters {
         this.reporter.sendEvent("error", message.toString());
     }
 
-    private removeDecorationsForTextEditor(editor: TextEditor) {
-        if (!editor) { return; }
-        editor.setDecorations(this.configStore.fullCoverageDecorationType, []);
-        editor.setDecorations(this.configStore.partialCoverageDecorationType, []);
-        editor.setDecorations(this.configStore.noCoverageDecorationType, []);
+    private removeDecorationsForTextEditor(textEditor: TextEditor) {
+        if (!textEditor) { return; }
+
+        textEditor.setDecorations(this.configStore.fullCoverageDecorationType, []);
+        textEditor.setDecorations(this.configStore.partialCoverageDecorationType, []);
+        textEditor.setDecorations(this.configStore.noCoverageDecorationType, []);
     }
 
     private async loadAndRenderCoverage(textEditor: TextEditor, lcovPath: string): Promise<void> {
+        if (!textEditor) { throw new Error("textEditor must not be null"); }
+
         const lcovFile = await this.lcov.load(lcovPath);
         const file = textEditor.document.fileName;
         const coveredLines = await this.indicators.extract(lcovFile, file);
