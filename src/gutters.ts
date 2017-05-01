@@ -47,6 +47,7 @@ export class Gutters {
     public async displayCoverageForActiveFile() {
         const textEditor = window.activeTextEditor;
         try {
+            if (!textEditor) { return; }
             const lcovPath = await this.lcov.find();
             await this.loadAndRenderCoverage(textEditor, lcovPath);
 
@@ -107,15 +108,12 @@ export class Gutters {
 
     private removeDecorationsForTextEditor(textEditor: TextEditor) {
         if (!textEditor) { return; }
-
         textEditor.setDecorations(this.configStore.fullCoverageDecorationType, []);
         textEditor.setDecorations(this.configStore.partialCoverageDecorationType, []);
         textEditor.setDecorations(this.configStore.noCoverageDecorationType, []);
     }
 
     private async loadAndRenderCoverage(textEditor: TextEditor, lcovPath: string): Promise<void> {
-        if (!textEditor) { throw new Error("textEditor must not be null"); }
-
         const lcovFile = await this.lcov.load(lcovPath);
         const file = textEditor.document.fileName;
         const coveredLines = await this.indicators.extract(lcovFile, file);
@@ -126,6 +124,7 @@ export class Gutters {
 
     private renderCoverageOnVisible(lcovPath: string) {
         window.visibleTextEditors.forEach(async (editor) => {
+            if (!editor) { return; }
             await this.loadAndRenderCoverage(editor, lcovPath);
         });
     }
