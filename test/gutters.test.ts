@@ -33,7 +33,7 @@ suite("Gutters Tests", function() {
         }
     });
 
-    test("Should error when trying to render coverage on empty editor", async function() {
+    test("Should not error when trying to render coverage on empty editor", async function() {
         let sendEventTimes = 0;
         try {
             const reporter: Reporter = {
@@ -70,7 +70,7 @@ suite("Gutters Tests", function() {
 
             const gutters = new Gutters(configStore, lcov, indicators, reporter, statusbar);
             await gutters.displayCoverageForActiveFile();
-            assert.equal(sendEventTimes, 3);
+            assert.equal(sendEventTimes, 2);
         } catch (error) {
             throw error;
         }
