@@ -3,9 +3,9 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8vb8t787frcqtrm7?svg=true)](https://ci.appveyor.com/project/ryanluker/vscode-coverage-gutters)
 
 ## Features
-- lcov file watch option to keep tabs on your changing coverage
+- watch editors and lcov feature activated via status bar button or command
 
-![Coverage Gutters features options](images/coverage-gutters-features-1.gif)
+![Coverage Gutters features watch](images/coverage-gutters-features-3.gif)
 
 - lcov displayed in full, partial and uncovered options
 
