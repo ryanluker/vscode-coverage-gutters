@@ -40,6 +40,7 @@
 |`coverage-gutters.showLineCoverage`|Show or hide the line coverage
 |`coverage-gutters.showRulerCoverage`|Show or hide the ruler coverage
 |`coverage-gutters.showGutterCoverage`|Show or hide the gutter coverage
+|`coverage-gutters.customizable.status-bar-toggler-watchLcovAndVisibleEditors-enabled`|Setting this to false will remove the status bar item
 |`coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-watchVisibleEditors-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
