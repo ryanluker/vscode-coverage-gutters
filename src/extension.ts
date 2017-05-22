@@ -18,8 +18,8 @@ const vscodeImpl = new Vscode();
 export function activate(context: vscode.ExtensionContext) {
     const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
     const reporter = new Reporter(new Request(), new Uuid(), "", enableMetrics);
-    const statusBarToggler = new StatusBarToggler();
     const configStore = new Config(vscodeImpl, context, reporter).get();
+    const statusBarToggler = new StatusBarToggler(configStore);
     const lcov = new Lcov(configStore, vscodeImpl, fsImpl);
     const indicators = new Indicators(parseImpl, vscodeImpl, configStore);
     const gutters = new Gutters(configStore, lcov, indicators, reporter, statusBarToggler);

@@ -14,6 +14,7 @@ export interface IConfigStore {
     partialCoverageDecorationType: TextEditorDecorationType;
     noCoverageDecorationType: TextEditorDecorationType;
     altSfCompare: boolean;
+    showStatusBarToggler: boolean;
 }
 
 export class Config {
@@ -26,6 +27,7 @@ export class Config {
     private partialCoverageDecorationType: TextEditorDecorationType;
     private noCoverageDecorationType: TextEditorDecorationType;
     private altSfCompare: boolean;
+    private showStatusBarToggler: boolean;
 
     constructor(vscode: InterfaceVscode, context: ExtensionContext, reporter: Reporter) {
         this.vscode = vscode;
@@ -41,6 +43,7 @@ export class Config {
             lcovFileName: this.lcovFileName,
             noCoverageDecorationType: this.noCoverageDecorationType,
             partialCoverageDecorationType: this.partialCoverageDecorationType,
+            showStatusBarToggler: this.showStatusBarToggler,
         };
     }
 
@@ -61,6 +64,8 @@ export class Config {
         // Basic configurations
         this.lcovFileName = rootConfig.get("lcovname") as string;
         this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
+        const STATUS_BAR_TOGGLER = "status-bar-toggler-watchLcovAndVisibleEditors-enabled";
+        this.showStatusBarToggler = rootCustomConfig.get(STATUS_BAR_TOGGLER) as boolean;
         this.reporter.sendEvent("config", "lcovFileName", this.lcovFileName);
         this.reporter.sendEvent("config", "altSfCompare", this.altSfCompare.toString());
 

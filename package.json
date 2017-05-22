@@ -118,6 +118,11 @@
           "default": true,
           "description": "show or hide the gutter coverage"
         },
+        "coverage-gutters.customizable.status-bar-toggler-watchLcovAndVisibleEditors-enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable or disable the status bar item"
+        },
         "coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled": {
           "type": "boolean",
           "default": true,
@@ -238,6 +243,7 @@
     "test-ci": "npm run lint && npm test --silent",
     "vscode:prepublish": "tsc -p ./",
     "compile": "tsc -watch -p ./",
+    "build": "npm install && npm run lint && tsc -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {

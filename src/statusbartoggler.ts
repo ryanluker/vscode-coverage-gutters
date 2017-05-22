@@ -1,4 +1,5 @@
 import {Disposable, StatusBarItem, window} from "vscode";
+import {IConfigStore} from "./config";
 
 export class StatusBarToggler implements Disposable {
     public static readonly watchCommand = "extension.watchLcovAndVisibleEditors";
@@ -7,13 +8,15 @@ export class StatusBarToggler implements Disposable {
     public static readonly removeText = "$(list-ordered) Remove Watch";
     public static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
     private statusBarItem: StatusBarItem;
+    private configStore: IConfigStore;
 
-    constructor() {
+    constructor(configStore: IConfigStore) {
         this.statusBarItem = window.createStatusBarItem();
         this.statusBarItem.command = StatusBarToggler.watchCommand;
         this.statusBarItem.text = StatusBarToggler.watchText;
         this.statusBarItem.tooltip = StatusBarToggler.toolTip;
-        this.statusBarItem.show();
+        this.configStore = configStore;
+        if (this.configStore.showStatusBarToggler) { this.statusBarItem.show(); }
     }
 
     /**
