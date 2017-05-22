@@ -118,8 +118,6 @@ export class Gutters {
         const file = textEditor.document.fileName;
         const coveredLines = await this.indicators.extract(lcovFile, file);
         await this.indicators.renderToTextEditor(coveredLines, textEditor);
-
-        this.reporter.sendEvent("user", "loadAndRenderCoverage");
     }
 
     private renderCoverageOnVisible(lcovPath: string) {
