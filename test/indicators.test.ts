@@ -22,6 +22,7 @@ suite("Indicators Tests", function() {
             key: "testKey3",
             dispose() {},
         },
+        showStatusBarToggler: true,
     };
 
     test("Constructor should setup properly", function(done) {

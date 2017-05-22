@@ -70,7 +70,7 @@ suite("Gutters Tests", function() {
 
             const gutters = new Gutters(configStore, lcov, indicators, reporter, statusbar);
             await gutters.displayCoverageForActiveFile();
-            assert.equal(sendEventTimes, 2);
+            assert.equal(sendEventTimes, 3);
         } catch (error) {
             throw error;
         }
