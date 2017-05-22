@@ -15,7 +15,7 @@ describe('test func', function() {
     });
 
     it('should show coverage on line 9', function() {
-        var num = testFunc(6);
+        var num = testFunc(7);
         assert(num==="wap");
     });
 
