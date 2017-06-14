@@ -1,6 +1,7 @@
 import * as assert from "assert";
 import {Lcov} from "../src/lcov";
 import {Fs} from "../src/wrappers/fs";
+import {Glob} from "../src/wrappers/glob";
 import {Vscode} from "../src/wrappers/vscode";
 
 suite("Lcov Tests", function() {
@@ -24,10 +25,12 @@ suite("Lcov Tests", function() {
 
     test("Constructor should setup properly", function(done) {
         try {
+            const blobImpl = new Glob();
             const vscodeImpl = new Vscode();
             const fsImpl = new Fs();
             const lcov = new Lcov(
                 fakeConfig,
+                blobImpl,
                 vscodeImpl,
                 fsImpl,
             );
@@ -39,18 +42,18 @@ suite("Lcov Tests", function() {
     });
 
     test("#find: Should return error if more then one file found for lcovFileName", function(done) {
+        const globImpl = new Glob();
         const vscodeImpl = new Vscode();
         const fsImpl = new Fs();
 
-        vscodeImpl.findFiles = function(path, exclude) {
+        globImpl.find = function(path, options, cb) {
             assert.equal(path, "**/test.ts");
-            assert.equal(exclude, "**/node_modules/**");
-            return new Promise(function(resolve, reject) {
-                return resolve([1, 2]);
-            });
+            assert.equal(options.ignore, "**/node_modules/**");
+            return cb(null, ["1", "2"]);
         };
         const lcov = new Lcov(
             fakeConfig,
+            globImpl,
             vscodeImpl,
             fsImpl,
         );
@@ -67,18 +70,18 @@ suite("Lcov Tests", function() {
     });
 
     test("#find: Should return error if no file found for lcovFileName", function(done) {
+        const globImpl = new Glob();
         const vscodeImpl = new Vscode();
         const fsImpl = new Fs();
 
-        vscodeImpl.findFiles = function(path, exclude, filesToFind) {
+        globImpl.find = function(path, options, cb) {
             assert.equal(path, "**/test.ts");
-            assert.equal(exclude, "**/node_modules/**");
-            return new Promise(function(resolve, reject) {
-                return resolve([]);
-            });
+            assert.equal(options.ignore, "**/node_modules/**");
+            return cb(null, null);
         };
         const lcov = new Lcov(
             fakeConfig,
+            globImpl,
             vscodeImpl,
             fsImpl,
         );
@@ -96,17 +99,17 @@ suite("Lcov Tests", function() {
 
     test("#find: Should return a file system path", function(done) {
         const vscodeImpl = new Vscode();
+        const globImpl = new Glob();
         const fsImpl = new Fs();
 
-        vscodeImpl.findFiles = function(path, exclude, filesToFind) {
+        globImpl.find = function(path, options, cb) {
             assert.equal(path, "**/test.ts");
-            assert.equal(exclude, "**/node_modules/**");
-            return new Promise(function(resolve, reject) {
-                return resolve([{fsPath: "path/to/greatness/test.ts"}]);
-            });
+            assert.equal(options.ignore, "**/node_modules/**");
+            return cb(null, ["path/to/greatness/test.ts"]);
         };
         const lcov = new Lcov(
             fakeConfig,
+            globImpl,
             vscodeImpl,
             fsImpl,
         );
@@ -123,6 +126,7 @@ suite("Lcov Tests", function() {
 
     test("#load: Should reject when readFile returns an error", function(done) {
         const vscodeImpl = new Vscode();
+        const globImpl = new Glob();
         const fsImpl = new Fs();
 
         fsImpl.readFile = function(path: string, cb) {
@@ -132,6 +136,7 @@ suite("Lcov Tests", function() {
         };
         const lcov = new Lcov(
             fakeConfig,
+            globImpl,
             vscodeImpl,
             fsImpl,
         );
@@ -149,6 +154,7 @@ suite("Lcov Tests", function() {
 
     test("#load: Should return a data string", function(done) {
         const vscodeImpl = new Vscode();
+        const globImpl = new Glob();
         const fsImpl = new Fs();
 
         fsImpl.readFile = function(path: string, cb) {
@@ -157,6 +163,7 @@ suite("Lcov Tests", function() {
         };
         const lcov = new Lcov(
             fakeConfig,
+            globImpl,
             vscodeImpl,
             fsImpl,
         );
