@@ -247,16 +247,18 @@
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "typescript": "^2.2.2",
-    "vscode": "^1.1.0",
-    "mocha": "^2.3.3",
-    "tslint": "^5.0.0",
-    "@types/node": "^6.0.40",
-    "@types/mocha": "^2.2.32",
-    "@types/request": "0.0.42",
-    "@types/uuid": "2.0.29"
+    "@types/glob": "5.0.30",
+    "@types/mocha": "2.2.41",
+    "@types/node": "6.0.40",
+    "@types/request": "0.0.43",
+    "@types/uuid": "3.0.0",
+    "mocha": "2.3.3",
+    "tslint": "5.4.3",
+    "typescript": "2.3.4",
+    "vscode": "1.1.0"
   },
   "dependencies": {
+    "glob": "5.0.15",
     "lcov-parse": "0.0.10",
     "request": "2.81.0",
     "uuid": "3.0.1"
