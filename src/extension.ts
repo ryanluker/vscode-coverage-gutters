@@ -6,6 +6,7 @@ import {Lcov} from "./lcov";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 import {Fs} from "./wrappers/fs";
+import {Glob} from "./wrappers/glob";
 import {LcovParse} from "./wrappers/lcov-parse";
 import {Request} from "./wrappers/request";
 import {Uuid} from "./wrappers/uuid";
@@ -14,13 +15,14 @@ import {Vscode} from "./wrappers/vscode";
 const fsImpl = new Fs();
 const parseImpl = new LcovParse();
 const vscodeImpl = new Vscode();
+const globImpl = new Glob();
 
 export function activate(context: vscode.ExtensionContext) {
     const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
     const reporter = new Reporter(new Request(), new Uuid(), "", enableMetrics);
     const configStore = new Config(vscodeImpl, context, reporter).get();
     const statusBarToggler = new StatusBarToggler(configStore);
-    const lcov = new Lcov(configStore, vscodeImpl, fsImpl);
+    const lcov = new Lcov(configStore, globImpl, vscodeImpl, fsImpl);
     const indicators = new Indicators(parseImpl, vscodeImpl, configStore);
     const gutters = new Gutters(configStore, lcov, indicators, reporter, statusBarToggler);
 

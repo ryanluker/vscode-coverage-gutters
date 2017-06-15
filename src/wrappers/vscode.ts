@@ -5,7 +5,6 @@ import {
     FileSystemWatcher,
     Range,
     TextEditorDecorationType,
-    Uri,
     window,
     workspace,
     WorkspaceConfiguration,
@@ -14,7 +13,6 @@ import {
 export interface InterfaceVscode {
     createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType;
     executeCommand(command: string, ...rest: any[]): Thenable<{}>;
-    findFiles(include: string, exclude: string, maxResults?: number, token?: CancellationToken): Thenable<Uri[]>;
     getConfiguration(section?: string): WorkspaceConfiguration;
     getRootPath(): string;
     watchFile(filePattern: string): FileSystemWatcher;
@@ -27,14 +25,6 @@ export class Vscode implements InterfaceVscode {
 
     public executeCommand(command: string, ...rest: any[]): Thenable<{}> {
         return commands.executeCommand(command, rest);
-    }
-
-    public findFiles(
-        include: string,
-        exclude: string, maxResults?: number,
-        token?: CancellationToken,
-    ): Thenable<Uri[]> {
-        return workspace.findFiles(include, exclude, maxResults, token);
     }
 
     public getConfiguration(section?: string): WorkspaceConfiguration {
