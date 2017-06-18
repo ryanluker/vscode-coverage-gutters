@@ -60,8 +60,11 @@ export class Gutters {
     public async watchLcovAndVisibleEditors() {
         if (this.lcovWatcher && this.editorWatcher) { return; }
 
+        const textEditor = window.activeTextEditor;
         try {
             const lcovPath = await this.lcov.find();
+            await this.loadAndRenderCoverage(textEditor, lcovPath);
+
             this.lcovWatcher = vscodeImpl.watchFile(lcovPath);
             this.lcovWatcher.onDidChange((event) => this.renderCoverageOnVisible(lcovPath));
             this.editorWatcher = window.onDidChangeVisibleTextEditors(
@@ -75,13 +78,20 @@ export class Gutters {
     }
 
     public removeWatch() {
-        this.lcovWatcher.dispose();
-        this.editorWatcher.dispose();
-        this.lcovWatcher = null;
-        this.editorWatcher = null;
-        this.statusBar.toggle();
+        try {
+            this.lcovWatcher.dispose();
+            this.editorWatcher.dispose();
+            this.lcovWatcher = null;
+            this.editorWatcher = null;
+            this.statusBar.toggle();
+            this.removeCoverageForActiveFile();
 
-        this.reporter.sendEvent("user", "remove-watch");
+            this.reporter.sendEvent("user", "remove-watch");
+        } catch (error) {
+            if (error.message === "Cannot read property 'dispose' of undefined") { return ; }
+            if (error.message === "Cannot read property 'dispose' of null") { return ; }
+            this.handleError(error);
+        }
     }
 
     public removeCoverageForActiveFile() {
