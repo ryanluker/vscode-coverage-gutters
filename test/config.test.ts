@@ -15,7 +15,7 @@ suite("Config Tests", function() {
 
         getConfiguration: () => {
             return {
-                get: () => { return "123"; },
+                get: () => "123",
                 test1: "test1",
                 test2: "test2",
                 test3: "test3",
