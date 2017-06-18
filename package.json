@@ -105,12 +105,12 @@
         },
         "coverage-gutters.showLineCoverage": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "show or hide the line coverage"
         },
         "coverage-gutters.showRulerCoverage": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "show or hide the ruler coverage"
         },
         "coverage-gutters.showGutterCoverage": {
