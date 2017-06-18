@@ -85,6 +85,7 @@ export class Config {
         const showGutterCoverage = rootConfig.get("showGutterCoverage") as string;
         const showLineCoverage = rootConfig.get("showLineCoverage") as string;
         const showRulerCoverage = rootConfig.get("showRulerCoverage") as string;
+        this.reporter.sendEvent("config", "showGutterCoverage", showGutterCoverage);
         this.reporter.sendEvent("config", "showLineCoverage", showLineCoverage);
         this.reporter.sendEvent("config", "showRulerCoverage", showRulerCoverage);
 
