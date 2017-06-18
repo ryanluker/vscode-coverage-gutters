@@ -47,7 +47,7 @@ export class Config {
         };
     }
 
-    public setup(): IConfigStore {
+    public setup() {
         const rootCustomConfig = this.vscode.getConfiguration("coverage-gutters.customizable");
 
         // Customizable UI configurations
@@ -136,7 +136,5 @@ export class Config {
         };
 
         this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType(noDecoration);
-
-        return this.get();
     }
 }
