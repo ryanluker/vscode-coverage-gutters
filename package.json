@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/ryanluker/vscode-coverage-gutters"
   },
-  "icon": "images/icon.svg",
+  "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#24381b",
     "theme": "dark"
@@ -16,7 +16,7 @@
   "bugs": "https://github.com/ryanluker/vscode-coverage-gutters/issues",
   "publisher": "ryanluker",
   "engines": {
-    "vscode": "^1.11.0"
+    "vscode": "^1.14.0"
   },
   "categories": [
     "Other"

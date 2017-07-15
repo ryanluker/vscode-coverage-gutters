@@ -63,7 +63,10 @@ export class Gutters {
         const textEditor = window.activeTextEditor;
         try {
             const lcovPath = await this.lcov.find();
-            await this.loadAndRenderCoverage(textEditor, lcovPath);
+
+            // When we try to load the coverage when watch is actived we dont want to error
+            // if the active file has no coverage
+            this.loadAndRenderCoverage(textEditor, lcovPath).catch(() => {});
 
             this.lcovWatcher = vscodeImpl.watchFile(lcovPath);
             this.lcovWatcher.onDidChange((event) => this.renderCoverageOnVisible(lcovPath));
@@ -124,6 +127,7 @@ export class Gutters {
     }
 
     private async loadAndRenderCoverage(textEditor: TextEditor, lcovPath: string): Promise<void> {
+        if (!textEditor.document) { return ; }
         const lcovFile = await this.lcov.load(lcovPath);
         const file = textEditor.document.fileName;
         const coveredLines = await this.indicators.extract(lcovFile, file);

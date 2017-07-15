@@ -9,7 +9,6 @@ import {Fs} from "./wrappers/fs";
 import {Glob} from "./wrappers/glob";
 import {LcovParse} from "./wrappers/lcov-parse";
 import {Request} from "./wrappers/request";
-import {Uuid} from "./wrappers/uuid";
 import {Vscode} from "./wrappers/vscode";
 
 const fsImpl = new Fs();
@@ -19,7 +18,7 @@ const globImpl = new Glob();
 
 export function activate(context: vscode.ExtensionContext) {
     const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
-    const reporter = new Reporter(new Request(), new Uuid(), "", enableMetrics);
+    const reporter = new Reporter(new Request(), vscode.env.machineId, "", enableMetrics);
     const configStore = new Config(vscodeImpl, context, reporter).get();
     const statusBarToggler = new StatusBarToggler(configStore);
     const lcov = new Lcov(configStore, globImpl, vscodeImpl, fsImpl);
