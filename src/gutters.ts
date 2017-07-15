@@ -69,6 +69,7 @@ export class Gutters {
                 ViewColumn.One,
                 "Preview Lcov Report",
             );
+            this.reporter.sendEvent("user", "preview-lcov-report");
         } catch (error) {
             this.handleError(error);
         }
