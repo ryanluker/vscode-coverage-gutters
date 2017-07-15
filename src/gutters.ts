@@ -124,6 +124,7 @@ export class Gutters {
     }
 
     private async loadAndRenderCoverage(textEditor: TextEditor, lcovPath: string): Promise<void> {
+        if (!textEditor.document) { return ; }
         const lcovFile = await this.lcov.load(lcovPath);
         const file = textEditor.document.fileName;
         const coveredLines = await this.indicators.extract(lcovFile, file);
