@@ -25,7 +25,7 @@
 - colour compatibility with light and dark themes
 
 ## Requirements
-- vscode 1.11.x and up
+- vscode 1.14.x and up
 - macos, linux or windows
 
 ## Extension Settings
@@ -74,10 +74,7 @@ Some examples for the highlight colour are as follows:
 ### [Changelog](https://github.com/ryanluker/vscode-coverage-gutters/releases)
 
 ## Contribution Guidelines
-- test backed code changes
-- new code matches existing style (enforced via tslint)
-- bug fixes always welcome :)
-- new feature proposals go through a github issue
+### [Guidelines](/CONTRIBUTING.md)
 
 -----------------------------------------------------------------------------------------------------------
 
