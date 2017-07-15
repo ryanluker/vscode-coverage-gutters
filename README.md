@@ -20,6 +20,11 @@
 
 ![Coverage Gutters features options](images/coverage-gutters-features-2.PNG)
 
+- preview overall coverage
+
+![Coverage Gutters preview overall coverage](images/preview-lcov-1.PNG)
+
+- multi lcov info support via option picker
 - relative lcov file resolution option for those with complex file paths
 - workspace settings to customize the features to your liking
 - colour compatibility with light and dark themes
