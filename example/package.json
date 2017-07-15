@@ -4,7 +4,7 @@
   "description": "",
   "main": "test-coverage.js",
   "scripts": {
-    "test": "istanbul cover -x \"./test-coverage.js\" --report lcovonly ./node_modules/mocha/bin/_mocha -- -R spec test.js"
+    "test": "istanbul cover -x \"./test-coverage.js\" ./node_modules/mocha/bin/_mocha -- -R spec test.js"
   },
   "author": "",
   "license": "ISC",

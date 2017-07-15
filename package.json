@@ -123,6 +123,11 @@
           "default": true,
           "description": "enable or disable the status bar item"
         },
+        "coverage-gutters.customizable.menus-editor-context-previewLcovReport-enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable or disable the previewLcovReport command in the editor/context menu"
+        },
         "coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled": {
           "type": "boolean",
           "default": true,
@@ -142,6 +147,11 @@
           "type": "boolean",
           "default": true,
           "description": "enable or disable the removeCoverage command in the editor/context menu"
+        },
+        "coverage-gutters.customizable.keybindings-previewLcovReport-enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable or disable the keybinding shortcut for previewing the lcov report"
         },
         "coverage-gutters.customizable.keybindings-displayCoverage-enabled": {
           "type": "boolean",
@@ -167,6 +177,10 @@
     },
     "commands": [
       {
+        "command": "extension.previewLcovReport",
+        "title": "Coverage Gutters: Preview Lcov Report"
+      },
+      {
         "command": "extension.displayCoverage",
         "title": "Coverage Gutters: Display File Coverage"
       },
@@ -184,6 +198,12 @@
       }
     ],
     "keybindings": [
+      {
+        "command": "extension.previewLcovReport",
+        "key": "ctrl+shift+6",
+        "mac": "shift+cmd+6",
+        "when": "config.coverage-gutters.customizable.keybindings-previewLcovReport-enabled"
+      },
       {
         "command": "extension.displayCoverage",
         "key": "ctrl+shift+7",
@@ -212,24 +232,29 @@
     "menus": {
       "editor/context": [
         {
+          "when": "config.coverage-gutters.customizable.menus-editor-context-previewLcovReport-enabled",
+          "command": "extension.previewLcovReport",
+          "group": "Coverage-Gutters@1"
+        },
+        {
           "when": "config.coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled",
           "command": "extension.displayCoverage",
-          "group": "Coverage-Gutters@1"
+          "group": "Coverage-Gutters@2"
         },
         {
           "when": "config.coverage-gutters.customizable.menus-editor-context-watchLcovAndVisibleEditors-enabled",
           "command": "extension.watchLcovAndVisibleEditors",
-          "group": "Coverage-Gutters@2"
+          "group": "Coverage-Gutters@3"
         },
         {
           "when": "config.coverage-gutters.customizable.menus-editor-context-removeWatch-enabled",
           "command": "extension.removeWatch",
-          "group": "Coverage-Gutters@3"
+          "group": "Coverage-Gutters@4"
         },
         {
           "when": "config.coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled",
           "command": "extension.removeCoverage",
-          "group": "Coverage-Gutters@4"
+          "group": "Coverage-Gutters@5"
         }
       ]
     }
