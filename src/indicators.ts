@@ -42,6 +42,7 @@ export class Indicators {
     }
 
     public extract(lcovFile: string, file: string): Promise<LcovSection> {
+        if (lcovFile === "") { return Promise.reject("No coverage details inside lcov file!"); }
         return new Promise<LcovSection>((resolve, reject) => {
             this.parse.source(lcovFile, (err, data) => {
                 if (err) { return reject(err); }
