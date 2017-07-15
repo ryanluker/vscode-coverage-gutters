@@ -91,7 +91,7 @@ suite("Lcov Tests", function() {
             })
             .catch(function(error) {
                 if (error.name === "AssertionError") { return done(error); }
-                if (error === "Could not find a lcov file!") { return done(); }
+                if (error === "Could not find a Lcov File!") { return done(); }
                 return done(error);
             });
     });
