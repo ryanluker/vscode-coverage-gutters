@@ -21,15 +21,26 @@ export class Lcov {
         this.fs = fs;
     }
 
-    public find(): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
+    public findLcovs(): Promise<string[]> {
+        return new Promise<string[]>((resolve, reject) => {
             this.glob.find(
                 `**/${this.configStore.lcovFileName}`,
                 { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true },
                 (err, files) => {
-                    if (!files || !files.length) { return reject("Could not find a lcov file!"); }
-                    if (files.length > 1) { return reject("More then one lcov file found!"); }
-                    return resolve(files[0]);
+                    if (!files || !files.length) { return reject("Could not find a Lcov File!"); }
+                    return resolve(files);
+                });
+        });
+    }
+
+    public findReports(): Promise<string[]> {
+        return new Promise<string[]>((resolve, reject) => {
+            this.glob.find(
+                `**/coverage/**/index.html`,
+                { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true },
+                (err, files) => {
+                    if (!files || !files.length) { return reject("Could not find a Lcov Report file!"); }
+                    return resolve(files);
                 });
         });
     }

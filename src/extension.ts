@@ -23,7 +23,17 @@ export function activate(context: vscode.ExtensionContext) {
     const statusBarToggler = new StatusBarToggler(configStore);
     const lcov = new Lcov(configStore, globImpl, vscodeImpl, fsImpl);
     const indicators = new Indicators(parseImpl, vscodeImpl, configStore);
-    const gutters = new Gutters(configStore, lcov, indicators, reporter, statusBarToggler);
+    const gutters = new Gutters(
+        configStore,
+        lcov,
+        indicators,
+        reporter,
+        statusBarToggler,
+    );
+
+    const previewLcovReport = vscode.commands.registerCommand("extension.previewLcovReport", () => {
+        gutters.previewLcovReport();
+    });
 
     const display = vscode.commands.registerCommand("extension.displayCoverage", () => {
         gutters.displayCoverageForActiveFile();
@@ -41,6 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
         gutters.removeCoverageForActiveFile();
     });
 
+    context.subscriptions.push(previewLcovReport);
     context.subscriptions.push(remove);
     context.subscriptions.push(display);
     context.subscriptions.push(watch);

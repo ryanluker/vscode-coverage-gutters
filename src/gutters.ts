@@ -1,9 +1,12 @@
 import {
+    commands,
     Disposable,
     FileSystemWatcher,
     StatusBarItem,
     TextEditor,
+    Uri,
     version,
+    ViewColumn,
     window,
 } from "vscode";
 
@@ -44,13 +47,51 @@ export class Gutters {
         this.reporter.sendEvent("user", "vscodeVersion", version);
     }
 
+    public async previewLcovReport() {
+        try {
+            const lcovReports = await this.lcov.findReports();
+            let pickedReport: string;
+            if (lcovReports.length === 1) {
+                pickedReport = lcovReports[0];
+            } else {
+                this.reporter.sendEvent("user", "showQuickPickReport", `${lcovReports.length}`);
+                pickedReport = await window.showQuickPick(
+                    lcovReports,
+                    {placeHolder: "Choose a Lcov Report to preview."},
+                );
+            }
+
+            if (!pickedReport) { throw new Error("Could not show Lcov Report file!"); }
+            const reportUri = Uri.parse(`file:///${pickedReport}`);
+            await commands.executeCommand(
+                "vscode.previewHtml",
+                reportUri,
+                ViewColumn.One,
+                "Preview Lcov Report",
+            );
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
     public async displayCoverageForActiveFile() {
         const textEditor = window.activeTextEditor;
         try {
             if (!textEditor) { return; }
-            const lcovPath = await this.lcov.find();
-            await this.loadAndRenderCoverage(textEditor, lcovPath);
+            const lcovPaths = await this.lcov.findLcovs();
+            let pickedLcov: string;
+            if (lcovPaths.length === 1) {
+                pickedLcov = lcovPaths[0];
+            } else {
+                this.reporter.sendEvent("user", "showQuickPickLcov", `${lcovPaths.length}`);
+                pickedLcov = await window.showQuickPick(
+                    lcovPaths,
+                    {placeHolder: "Choose a Lcov File to use for coverage."},
+                );
+            }
+            if (!pickedLcov) { throw new Error("Could not show coverage for file!"); }
 
+            await this.loadAndRenderCoverage(textEditor, pickedLcov);
             this.reporter.sendEvent("user", "display-coverage");
         } catch (error) {
             this.handleError(error);
@@ -62,16 +103,28 @@ export class Gutters {
 
         const textEditor = window.activeTextEditor;
         try {
-            const lcovPath = await this.lcov.find();
+            const lcovPaths = await this.lcov.findLcovs();
+
+            let pickedLcov: string;
+            if (lcovPaths.length === 1) {
+                pickedLcov = lcovPaths[0];
+            } else {
+                this.reporter.sendEvent("user", "showQuickPick", `${lcovPaths.length}`);
+                pickedLcov = await window.showQuickPick(
+                    lcovPaths,
+                    {placeHolder: "Choose a Lcov to use for coverage."},
+                );
+            }
+            if (!pickedLcov) { throw new Error("Could not show coverage for file!"); }
 
             // When we try to load the coverage when watch is actived we dont want to error
             // if the active file has no coverage
-            this.loadAndRenderCoverage(textEditor, lcovPath).catch(() => {});
+            this.loadAndRenderCoverage(textEditor, pickedLcov).catch(() => {});
 
-            this.lcovWatcher = vscodeImpl.watchFile(lcovPath);
-            this.lcovWatcher.onDidChange((event) => this.renderCoverageOnVisible(lcovPath));
+            this.lcovWatcher = vscodeImpl.watchFile(pickedLcov);
+            this.lcovWatcher.onDidChange((event) => this.renderCoverageOnVisible(pickedLcov));
             this.editorWatcher = window.onDidChangeVisibleTextEditors(
-                (event) => this.renderCoverageOnVisible(lcovPath));
+                (event) => this.renderCoverageOnVisible(pickedLcov));
             this.statusBar.toggle();
 
             this.reporter.sendEvent("user", "watch-lcov-editors");
@@ -115,7 +168,6 @@ export class Gutters {
     private handleError(error: Error) {
         const message = error.message ? error.message : error;
         window.showWarningMessage(message.toString());
-
         this.reporter.sendEvent("error", message.toString());
     }
 
