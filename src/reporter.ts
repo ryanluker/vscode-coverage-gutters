@@ -1,8 +1,7 @@
 import {Request} from "./wrappers/request";
-import {Uuid} from "./wrappers/uuid";
 
 const EXT_NAME = "vscode-coverage-gutters";
-const EXT_VERSION = "1.0.0";
+const EXT_VERSION = "1.1.0";
 
 export class Reporter {
     private readonly cid: string;
@@ -10,10 +9,10 @@ export class Reporter {
     private readonly gaTrackingId: string;
     private readonly request: Request;
 
-    constructor(request: Request, uuid: Uuid, gaTrackingId: string, enableMetrics: boolean) {
+    constructor(request: Request, machineId: string, gaTrackingId: string, enableMetrics: boolean) {
         this.gaTrackingId = gaTrackingId;
         this.request = request;
-        this.cid = uuid.get();
+        this.cid = machineId;
         this.enableMetrics = enableMetrics;
     }
 

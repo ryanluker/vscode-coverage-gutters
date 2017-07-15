@@ -11,11 +11,7 @@ suite("Reporter Tests", function() {
             },
         };
 
-        const fakeUuid = {
-            get() {
-                return "fakeuuidhere";
-            },
-        };
+        const fakeUuid = "fakeuuidhere";
 
         const reporter = new Reporter(fakeRequest, fakeUuid, "", false);
         reporter.sendEvent("test", "action");
@@ -30,11 +26,7 @@ suite("Reporter Tests", function() {
             },
         };
 
-        const fakeUuid = {
-            get() {
-                return "fakeuuidhere";
-            },
-        };
+        const fakeUuid = "fakeuuidhere";
 
         const reporter = new Reporter(fakeRequest, fakeUuid, "", true);
         reporter.sendEvent("test", "action");
@@ -49,11 +41,7 @@ suite("Reporter Tests", function() {
             },
         };
 
-        const fakeUuid = {
-            get() {
-                return "fakeuuidhere";
-            },
-        };
+        const fakeUuid = "fakeuuidhere";
 
         const reporter = new Reporter(fakeRequest, fakeUuid, "", true);
         reporter.sendEvent("test", "action");
@@ -68,11 +56,7 @@ suite("Reporter Tests", function() {
             },
         };
 
-        const fakeUuid = {
-            get() {
-                return "fakeuuidhere";
-            },
-        };
+        const fakeUuid = "fakeuuidhere";
 
         const reporter = new Reporter(fakeRequest, fakeUuid, "123", true);
         reporter.sendEvent("test", "action");
