@@ -41,7 +41,7 @@ suite("Lcov Tests", function() {
         }
     });
 
-    test("#find: Should return error if more then one file found for lcovFileName", function(done) {
+    test("#find: Should not return error if more then one file found for lcovFileName", function(done) {
         const globImpl = new Glob();
         const vscodeImpl = new Vscode();
         const fsImpl = new Fs();
@@ -58,14 +58,13 @@ suite("Lcov Tests", function() {
             fsImpl,
         );
 
-        lcov.find()
-            .then(function() {
-                return done(new Error("Expected error did not fire!"));
+        lcov.findLcovs()
+            .then(function(files) {
+                assert.equal(files.length, 2);
+                return done();
             })
             .catch(function(error) {
-                if (error.name === "AssertionError") { return done(error); }
-                if (error === "More then one lcov file found!") { return done(); }
-                return done(error);
+                return done(new Error("unexpected error did fire!"));
             });
     });
 
@@ -86,13 +85,13 @@ suite("Lcov Tests", function() {
             fsImpl,
         );
 
-        lcov.find()
+        lcov.findLcovs()
             .then(function() {
                 return done(new Error("Expected error did not fire!"));
             })
             .catch(function(error) {
                 if (error.name === "AssertionError") { return done(error); }
-                if (error === "Could not find a lcov file!") { return done(); }
+                if (error === "Could not find a Lcov File!") { return done(); }
                 return done(error);
             });
     });
@@ -114,9 +113,9 @@ suite("Lcov Tests", function() {
             fsImpl,
         );
 
-        lcov.find()
-            .then(function(fsPath) {
-                assert.equal(fsPath, "path/to/greatness/test.ts");
+        lcov.findLcovs()
+            .then(function(fsPaths) {
+                assert.equal(fsPaths[0], "path/to/greatness/test.ts");
                 return done();
             })
             .catch(function(error) {
