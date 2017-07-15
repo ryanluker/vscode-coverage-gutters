@@ -20,7 +20,7 @@
 
 ![Coverage Gutters features options](images/coverage-gutters-features-2.PNG)
 
-- preview overall coverage
+- preview overall coverage inside vscode
 
 ![Coverage Gutters preview overall coverage](images/preview-lcov-1.PNG)
 
@@ -55,10 +55,12 @@
 |`coverage-gutters.showRulerCoverage`|Show or hide the ruler coverage
 |`coverage-gutters.showGutterCoverage`|Show or hide the gutter coverage
 |`coverage-gutters.customizable.status-bar-toggler-watchLcovAndVisibleEditors-enabled`|Setting this to false will remove the status bar item
+|`coverage-gutters.customizable.menus-editor-context-previewLcovReport-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-watchLcovFile-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-watchVisibleEditors-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
 |`coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled`|Setting this to false will remove the command from the editor context menu and vice versa
+|`coverage-gutters.customizable.keybindings-previewLcovReport-enabled`|Setting this to false will remove the shortcut and vice versa
 |`coverage-gutters.customizable.keybindings-displayCoverage-enabled`|Setting this to false will remove the shortcut and vice versa
 |`coverage-gutters.customizable.keybindings-watchLcovFile-enabled`|Setting this to false will remove the shortcut and vice versa
 |`coverage-gutters.customizable.keybindings-watchVisibleEditors-enabled`|Setting this to false will remove the shortcut and vice versa
