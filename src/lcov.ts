@@ -36,7 +36,7 @@ export class Lcov {
     public findReports(): Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
             this.glob.find(
-                `**/coverage/**/*.html`,
+                `**/coverage/**/index.html`,
                 { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true },
                 (err, files) => {
                     if (!files || !files.length) { return reject("Could not find a Lcov Report file!"); }

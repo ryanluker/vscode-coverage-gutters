@@ -62,7 +62,7 @@ export class Gutters {
             }
 
             if (!pickedReport) { throw new Error("Could not show Lcov Report file!"); }
-            const reportUri = Uri.parse(`file:///${pickedReport}`);
+            const reportUri = Uri.file(pickedReport.toString());
             await commands.executeCommand(
                 "vscode.previewHtml",
                 reportUri,
