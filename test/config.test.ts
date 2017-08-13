@@ -53,9 +53,7 @@ suite("Config Tests", function() {
             assert.equal("gutterIconPath" in options.dark, false);
             assert.equal("gutterIconPath" in options.light, false);
         };
-        fakeContext.asAbsolutePath = (options) => {
-            return "";
-        };
+        fakeContext.asAbsolutePath = (options) => "";
         const config = new Config(fakeVscode, fakeContext, fakeReport);
     });
 });
