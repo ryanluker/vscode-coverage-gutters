@@ -110,7 +110,7 @@ export class Gutters {
             if (lcovPaths.length === 1) {
                 pickedLcov = lcovPaths[0];
             } else {
-                this.reporter.sendEvent("user", "showQuickPick", `${lcovPaths.length}`);
+                this.reporter.sendEvent("user", "showQuickPickLcov", `${lcovPaths.length}`);
                 pickedLcov = await window.showQuickPick(
                     lcovPaths,
                     {placeHolder: "Choose a Lcov to use for coverage."},

@@ -104,8 +104,6 @@ export class Config {
             overviewRulerLane: OverviewRulerLane.Full,
         };
 
-        this.fullCoverageDecorationType = this.vscode.createTextEditorDecorationType(fullDecoration);
-
         const partialDecoration: DecorationRenderOptions = {
             dark: {
                 backgroundColor: showLineCoverage ? partialCoverageDarkBackgroundColour : "",
@@ -120,8 +118,6 @@ export class Config {
             },
             overviewRulerLane: OverviewRulerLane.Full,
         };
-
-        this.partialCoverageDecorationType = this.vscode.createTextEditorDecorationType(partialDecoration);
 
         const noDecoration: DecorationRenderOptions = {
             dark: {
@@ -138,6 +134,29 @@ export class Config {
             overviewRulerLane: OverviewRulerLane.Full,
         };
 
+        this.cleanupEmptyGutterIcons(fullDecoration, partialDecoration, noDecoration);
+
         this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType(noDecoration);
+        this.partialCoverageDecorationType = this.vscode.createTextEditorDecorationType(partialDecoration);
+        this.fullCoverageDecorationType = this.vscode.createTextEditorDecorationType(fullDecoration);
+    }
+
+    /**
+     * removes empty gutter icons to allow for break point usage
+     * @param full
+     * @param partial
+     * @param no
+     */
+    private cleanupEmptyGutterIcons(
+        full: DecorationRenderOptions,
+        partial: DecorationRenderOptions,
+        no: DecorationRenderOptions,
+    ): void {
+        if (!full.dark.gutterIconPath) { delete full.dark.gutterIconPath; }
+        if (!full.light.gutterIconPath) { delete full.light.gutterIconPath; }
+        if (!partial.dark.gutterIconPath) { delete partial.dark.gutterIconPath; }
+        if (!partial.light.gutterIconPath) { delete partial.light.gutterIconPath; }
+        if (!no.dark.gutterIconPath) { delete no.dark.gutterIconPath; }
+        if (!no.light.gutterIconPath) { delete no.light.gutterIconPath; }
     }
 }
