@@ -6,9 +6,6 @@
 [![Build Status](https://travis-ci.org/ryanluker/vscode-coverage-gutters.svg?branch=master)](https://travis-ci.org/ryanluker/vscode-coverage-gutters)
 [![Build status](https://ci.appveyor.com/api/projects/status/8vb8t787frcqtrm7?svg=true)](https://ci.appveyor.com/project/ryanluker/vscode-coverage-gutters)
 
-[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/ryanluker/vscode-coverage-gutters.svg)](https://isitmaintained.com/project/ryanluker/vscode-coverage-gutters "Average time to resolve an issue")
-[![Percentage of issues still open](https://isitmaintained.com/badge/open/ryanluker/vscode-coverage-gutters.svg)](https://isitmaintained.com/project/ryanluker/vscode-coverage-gutters "Percentage of issues still open")
-
 [![Buy me a coffee](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=XRWWCAZBYB9SG&lc=CA&item_name=vscode%2dcoverage%2dgutters&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHostedGuest)
 
 ## Features
@@ -18,11 +15,11 @@
 
 - lcov displayed in full, partial and uncovered options
 
-![Coverage Gutters features options](images/vs-gutters-preview-1.MP4)
+![Coverage Gutters features options](images/coverage-gutters-features-2.PNG)
 
 - preview overall coverage inside vscode
 
-![Coverage Gutters preview overall coverage](images/preview-lcov-1.PNG)
+![Coverage Gutters preview overall coverage](images/vs-gutters-preview-2.gif)
 
 - multi lcov info support via option picker
 - relative lcov file resolution option for those with complex file paths
