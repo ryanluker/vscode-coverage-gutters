@@ -25,7 +25,7 @@ suite("Config Tests", function() {
 
     const fakeContext: any = {
         asAbsolutePath: () => {
-            return ;
+            return "123";
         },
     };
 
@@ -46,5 +46,16 @@ suite("Config Tests", function() {
         const store = config.get();
         assert.notEqual(store.altSfCompare, null);
         assert.notEqual(store.lcovFileName, null);
+    });
+
+    test("Should remove gutter icons if path is blank, allows breakpoint usage", function() {
+        fakeVscode.createTextEditorDecorationType = (options) => {
+            assert.equal("gutterIconPath" in options.dark, false);
+            assert.equal("gutterIconPath" in options.light, false);
+        };
+        fakeContext.asAbsolutePath = (options) => {
+            return "";
+        };
+        const config = new Config(fakeVscode, fakeContext, fakeReport);
     });
 });
