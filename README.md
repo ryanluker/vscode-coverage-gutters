@@ -18,7 +18,7 @@
 
 - lcov displayed in full, partial and uncovered options
 
-![Coverage Gutters features options](images/coverage-gutters-features-2.PNG)
+![Coverage Gutters features options](images/vs-gutters-preview-1.MP4)
 
 - preview overall coverage inside vscode
 
