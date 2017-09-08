@@ -25,7 +25,7 @@ export class Lcov {
         return new Promise<string[]>((resolve, reject) => {
             this.glob.find(
                 `**/${this.configStore.lcovFileName}`,
-                { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true },
+                { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true, dot: true },
                 (err, files) => {
                     if (!files || !files.length) { return reject("Could not find a Lcov File!"); }
                     return resolve(files);
@@ -37,7 +37,7 @@ export class Lcov {
         return new Promise<string[]>((resolve, reject) => {
             this.glob.find(
                 `**/coverage/**/index.html`,
-                { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true },
+                { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true, dot: true },
                 (err, files) => {
                     if (!files || !files.length) { return reject("Could not find a Lcov Report file!"); }
                     return resolve(files);
