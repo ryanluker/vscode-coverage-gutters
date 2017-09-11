@@ -49,6 +49,7 @@ suite("Lcov Tests", function() {
         globImpl.find = function(path, options, cb) {
             assert.equal(path, "**/test.ts");
             assert.equal(options.ignore, "**/node_modules/**");
+            assert.equal(options.dot, true);
             return cb(null, ["1", "2"]);
         };
         const lcov = new Lcov(
