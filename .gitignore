@@ -1,6 +1,10 @@
 out
 node_modules
 .vscode-test
+.cache
 coverage
 debug.log
 npm-debug.log
+__pycache__
+.coverage
+cov.xml

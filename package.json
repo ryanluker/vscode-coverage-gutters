@@ -284,6 +284,7 @@
   "dependencies": {
     "glob": "5.0.15",
     "lcov-parse": "0.0.10",
+    "cobertura-parse": "1.0.4",
     "request": "2.81.0"
   }
 }
