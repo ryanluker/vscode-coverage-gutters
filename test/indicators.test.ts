@@ -1,9 +1,10 @@
 import * as assert from "assert";
-import {BranchDetail, LcovSection} from "lcov-parse";
+import {BranchDetail, Section} from "lcov-parse";
 import {TextEditor} from "vscode";
 
 import {Indicators} from "../src/indicators";
 import {LcovParse} from "../src/wrappers/lcov-parse";
+import {XmlParse} from "../src/wrappers/xml-parse";
 import {Vscode} from "../src/wrappers/vscode";
 
 suite("Indicators Tests", function() {
@@ -14,6 +15,7 @@ suite("Indicators Tests", function() {
             dispose() {},
         },
         lcovFileName: "test.ts",
+        xmlFileName: "test.xml",
         noCoverageDecorationType: {
             key: "testKey4",
             dispose() {},
@@ -29,7 +31,9 @@ suite("Indicators Tests", function() {
         try {
             const vscodeImpl = new Vscode();
             const parseImpl = new LcovParse();
+            const xmlImpl = new XmlParse();
             const indicators = new Indicators(
+                xmlImpl,
                 parseImpl,
                 vscodeImpl,
                 fakeConfig,
@@ -43,16 +47,18 @@ suite("Indicators Tests", function() {
 
     test("#renderToTextEditor: should set basic coverage", function(done) {
         let callsToSetDecorations = 0;
-
+        
         const vscodeImpl = new Vscode();
         const parseImpl = new LcovParse();
+        const xmlImpl = new XmlParse();
         const indicators = new Indicators(
+            xmlImpl,
             parseImpl,
             vscodeImpl,
             fakeConfig,
         );
 
-        const fakeSection: LcovSection = {
+        const fakeSection: Section = {
             branches: {
                 details: [],
                 found: 1,
@@ -100,13 +106,15 @@ suite("Indicators Tests", function() {
 
         const vscodeImpl = new Vscode();
         const parseImpl = new LcovParse();
+        const xmlImpl = new XmlParse();
         const indicators = new Indicators(
+            xmlImpl,
             parseImpl,
             vscodeImpl,
             fakeConfig,
         );
 
-        const fakeSection: LcovSection = {
+        const fakeSection: Section = {
             branches: {
                 details: [{
                     block: 0,
@@ -165,13 +173,15 @@ suite("Indicators Tests", function() {
 
         const vscodeImpl = new Vscode();
         const parseImpl = new LcovParse();
+        const xmlImpl = new XmlParse();
         const indicators = new Indicators(
+            xmlImpl,
             parseImpl,
             vscodeImpl,
             fakeConfig,
         );
 
-        const fakeSection: LcovSection = {
+        const fakeSection: Section = {
             branches: {
                 details: [],
                 found: 1,
@@ -225,18 +235,20 @@ suite("Indicators Tests", function() {
 
     test("#extract: should find a matching file with absolute match mode", function(done) {
         fakeConfig.altSfCompare = false;
-        const vscodeImpl = new Vscode();
-        const parseImpl = new LcovParse();
 
         const fakeLcov = "TN:\nSF:c:\/dev\/vscode-coverage-gutters\/example\/test-coverage.js\nDA:1,1\nend_of_record";
         const fakeFile = "c:\/dev\/vscode-coverage-gutters\/example\/test-coverage.js";
+        const vscodeImpl = new Vscode();
+        const parseImpl = new LcovParse();
+        const xmlImpl = new XmlParse();
         const indicators = new Indicators(
+            xmlImpl,
             parseImpl,
             vscodeImpl,
             fakeConfig,
         );
 
-        indicators.extract(fakeLcov, fakeFile)
+        indicators.extractCoverage(fakeLcov, fakeFile)
             .then(function(data) {
                 assert.equal(data.lines.details.length, 1);
                 return done();
@@ -254,13 +266,14 @@ suite("Indicators Tests", function() {
         // tslint:disable-next-line:max-line-length
         const fakeLinuxLcov = "TN:\nSF:/mnt/c/dev/vscode-coverage-gutters/example/test-coverage.js\nDA:1,1\nend_of_record";
         const fakeFile = "c:\/dev\/vscode-coverage-gutters\/example\/test-coverage.js";
+        const xmlImpl = new XmlParse();
         const indicators = new Indicators(
+            xmlImpl,
             parseImpl,
             vscodeImpl,
             fakeConfig,
         );
-
-        indicators.extract(fakeLinuxLcov, fakeFile)
+        indicators.extractCoverage(fakeLinuxLcov, fakeFile)
             .then(function(data) {
                 assert.equal(data.lines.details.length, 1);
                 return done();

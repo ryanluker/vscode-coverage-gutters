@@ -1,7 +1,7 @@
 ### 0.6.0
 [Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/6?closed=1)
 - added statusbar action button
-- combined watch editors and watch lcov into one command
+- combined watch editors and watch coverage into one command
 - added a remove watchers command
 - refactored gutters to use dependency injection
 - cleanup tests and add new ones

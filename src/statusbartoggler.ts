@@ -2,9 +2,9 @@ import {Disposable, StatusBarItem, window} from "vscode";
 import {IConfigStore} from "./config";
 
 export class StatusBarToggler implements Disposable {
-    private static readonly watchCommand = "extension.watchLcovAndVisibleEditors";
+    private static readonly watchCommand = "extension.watchCoverageAndVisibleEditors";
     private static readonly removeCommand = "extension.removeWatch";
-    private static readonly watchText = "$(list-ordered) Watch Lcov and Editors";
+    private static readonly watchText = "$(list-ordered) Watch";
     private static readonly removeText = "$(list-ordered) Remove Watch";
     private static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
     private statusBarItem: StatusBarItem;

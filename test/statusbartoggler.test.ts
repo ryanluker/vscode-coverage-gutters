@@ -11,6 +11,7 @@ suite("Status Bar Toggler Tests", function() {
             dispose() {},
         },
         lcovFileName: "test.ts",
+        xmlFileName: "test.xml",
         noCoverageDecorationType: {
             key: "testKey4",
             dispose() {},
