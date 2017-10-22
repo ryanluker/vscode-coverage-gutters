@@ -282,4 +282,29 @@ suite("Indicators Tests", function() {
                 return done(error);
             });
     });
+
+    test("#extract: should find a matching file using xml coverage generated in linux", function(done) {
+        fakeConfig.altSfCompare = true;
+        const vscodeImpl = new Vscode();
+        vscodeImpl.getRootPath = function() { return "vscode-coverage-gutters"; };
+        const parseImpl = new LcovParse();
+        // tslint:disable-next-line:max-line-length
+        const fakeLinuxXML = '<?xml version="1.0" ?><coverage branch-rate="0" line-rate="0.625" timestamp="1508710464400" version="4.2"><sources><source>/c/dev/vscode-coverage-gutters/example/python</source></sources><packages><package branch-rate="0" complexity="0" line-rate="0.625" name="files"><classes><class branch-rate="0" complexity="0" filename="files/test_sample.py" line-rate="0.625" name="test_sample.py"><methods/><lines><line hits="1" number="4"/><line hits="1" number="6"/><line hits="1" number="7"/><line hits="0" number="8"/><line hits="0" number="9"/><line hits="0" number="11"/><line hits="1" number="13"/><line hits="1" number="15"/></lines></class></classes></package></packages></coverage>';
+        const fakeFile = "c:\/dev\/vscode-coverage-gutters\/example\/python\/files\/test_sample.py";
+        const xmlImpl = new XmlParse();
+        const indicators = new Indicators(
+            xmlImpl,
+            parseImpl,
+            vscodeImpl,
+            fakeConfig,
+        );
+        indicators.extractCoverage(fakeLinuxXML, fakeFile)
+            .then(function(data) {
+                assert.equal(data.lines.details.length, 8);
+                return done();
+            })
+            .catch(function(error) {
+                return done(error);
+            });
+    });
 });
