@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import {Config} from "./config";
+import {Coverage} from "./coverage";
 import {Gutters} from "./gutters";
 import {Indicators} from "./indicators";
-import {Lcov} from "./lcov";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 import {Fs} from "./wrappers/fs";
@@ -10,9 +10,11 @@ import {Glob} from "./wrappers/glob";
 import {LcovParse} from "./wrappers/lcov-parse";
 import {Request} from "./wrappers/request";
 import {Vscode} from "./wrappers/vscode";
+import {XmlParse} from "./wrappers/xml-parse";
 
 const fsImpl = new Fs();
-const parseImpl = new LcovParse();
+const xmlParseImpl = new XmlParse();
+const lcovParseImpl = new LcovParse();
 const vscodeImpl = new Vscode();
 const globImpl = new Glob();
 
@@ -21,26 +23,26 @@ export function activate(context: vscode.ExtensionContext) {
     const reporter = new Reporter(new Request(), vscode.env.machineId, "", enableMetrics);
     const configStore = new Config(vscodeImpl, context, reporter).get();
     const statusBarToggler = new StatusBarToggler(configStore);
-    const lcov = new Lcov(configStore, globImpl, vscodeImpl, fsImpl);
-    const indicators = new Indicators(parseImpl, vscodeImpl, configStore);
+    const coverage = new Coverage(configStore, globImpl, vscodeImpl, fsImpl);
+    const indicators = new Indicators(xmlParseImpl, lcovParseImpl, vscodeImpl, configStore);
     const gutters = new Gutters(
         configStore,
-        lcov,
+        coverage,
         indicators,
         reporter,
         statusBarToggler,
     );
 
-    const previewLcovReport = vscode.commands.registerCommand("extension.previewLcovReport", () => {
-        gutters.previewLcovReport();
+    const previewCoverageReport = vscode.commands.registerCommand("extension.previewCoverageReport", () => {
+        gutters.previewCoverageReport();
     });
 
     const display = vscode.commands.registerCommand("extension.displayCoverage", () => {
         gutters.displayCoverageForActiveFile();
     });
 
-    const watch = vscode.commands.registerCommand("extension.watchLcovAndVisibleEditors", () => {
-        gutters.watchLcovAndVisibleEditors();
+    const watch = vscode.commands.registerCommand("extension.watchCoverageAndVisibleEditors", () => {
+        gutters.watchCoverageAndVisibleEditors();
     });
 
     const removeWatch = vscode.commands.registerCommand("extension.removeWatch", () => {
@@ -51,7 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
         gutters.removeCoverageForActiveFile();
     });
 
-    context.subscriptions.push(previewLcovReport);
+    context.subscriptions.push(previewCoverageReport);
     context.subscriptions.push(remove);
     context.subscriptions.push(display);
     context.subscriptions.push(watch);

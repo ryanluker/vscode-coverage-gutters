@@ -1,7 +1,38 @@
+### 1.1.3
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/11?closed=1)
+- fix bug where dots in file path would prevent lcov finding
+
+### 1.1.2
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/10?closed=1)
+- fix bug regarding break points and coverage extension
+- cleanup preview feature media
+- cleanup analytics event naming
+
+### 1.1.1
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/9?closed=1)
+- fixed a critical issue with the lcov report preview for unix type systems
+
+### 1.1.0
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/8?closed=1)
+- allow multiple lcov files and choose between them with a picker
+- preview lcov report html files inside vscode
+- cleanup outstanding errors and bugs (parse string, document undefined)
+- update readme info
+- update readme badges
+
+### 1.0.0
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/7?closed=1)
+- cleanup readme and add a buy me a coffee button (donate)
+- updated dark theme colours and icons
+- show gutters only show option on by default, added metrics for learning
+- added more test coverage to config component
+- added customization option for the status bar toggler
+- fixed a bug related to excluding files in vscode and having the extension not be able to find the lcov file
+
 ### 0.6.0
 [Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/6?closed=1)
 - added statusbar action button
-- combined watch editors and watch lcov into one command
+- combined watch editors and watch coverage into one command
 - added a remove watchers command
 - refactored gutters to use dependency injection
 - cleanup tests and add new ones

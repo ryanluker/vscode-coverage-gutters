@@ -1,9 +1,9 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
 import {IConfigStore} from "../src/config";
+import {Coverage} from "../src/coverage";
 import {Gutters} from "../src/gutters";
 import {Indicators} from "../src/indicators";
-import {Lcov} from "../src/lcov";
 import {Reporter} from "../src/reporter";
 import {StatusBarToggler} from "../src/statusbartoggler";
 
@@ -22,11 +22,11 @@ suite("Gutters Tests", function() {
                     return;
                 },
             } as any;
-            const lcov: Lcov = {} as any;
+            const coverage: Coverage = {} as any;
             const indicators: Indicators = {} as any;
             const configStore: IConfigStore = {} as any;
 
-            const gutters = new Gutters(configStore, lcov, indicators, reporter, statusbar);
+            const gutters = new Gutters(configStore, coverage, indicators, reporter, statusbar);
             return done();
         } catch (e) {
             return done(e);
@@ -45,7 +45,7 @@ suite("Gutters Tests", function() {
                     return;
                 },
             } as any;
-            const lcov: Lcov = {
+            const coverage: Coverage = {
                 find() {
                     return Promise.resolve("tempPath");
                 },
@@ -66,7 +66,7 @@ suite("Gutters Tests", function() {
             } as any;
             const configStore: IConfigStore = {} as any;
 
-            const gutters = new Gutters(configStore, lcov, indicators, reporter, statusbar);
+            const gutters = new Gutters(configStore, coverage, indicators, reporter, statusbar);
             await gutters.displayCoverageForActiveFile();
         } catch (error) {
             throw error;

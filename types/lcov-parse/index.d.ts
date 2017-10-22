@@ -1,5 +1,5 @@
 declare namespace parse {
-    function source(str: string, cb: (err: Error, data: Array<LcovSection>) => void): void
+    function source(str: string, cb: (err: Error, data: Array<Section>) => void): void
 
     interface LineDetail {
         hit: number,
@@ -37,8 +37,8 @@ declare namespace parse {
         found: number
     }
 
-    interface LcovSection {
-        branches: Branches,
+    interface Section {
+        branches?: Branches,
         file: string,
         functions: Functions,
         lines: Lines

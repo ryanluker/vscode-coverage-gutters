@@ -10,6 +10,7 @@ import {InterfaceVscode} from "./wrappers/vscode";
 
 export interface IConfigStore {
     lcovFileName: string;
+    xmlFileName: string;
     fullCoverageDecorationType: TextEditorDecorationType;
     partialCoverageDecorationType: TextEditorDecorationType;
     noCoverageDecorationType: TextEditorDecorationType;
@@ -23,6 +24,7 @@ export class Config {
     private reporter: Reporter;
 
     private lcovFileName: string;
+    private xmlFileName: string;
     private fullCoverageDecorationType: TextEditorDecorationType;
     private partialCoverageDecorationType: TextEditorDecorationType;
     private noCoverageDecorationType: TextEditorDecorationType;
@@ -44,6 +46,7 @@ export class Config {
             noCoverageDecorationType: this.noCoverageDecorationType,
             partialCoverageDecorationType: this.partialCoverageDecorationType,
             showStatusBarToggler: this.showStatusBarToggler,
+            xmlFileName: this.xmlFileName,
         };
     }
 
@@ -63,10 +66,12 @@ export class Config {
 
         // Basic configurations
         this.lcovFileName = rootConfig.get("lcovname") as string;
+        this.xmlFileName = rootConfig.get("xmlname") as string;
         this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
-        const STATUS_BAR_TOGGLER = "status-bar-toggler-watchLcovAndVisibleEditors-enabled";
+        const STATUS_BAR_TOGGLER = "status-bar-toggler-watchCoverageAndVisibleEditors-enabled";
         this.showStatusBarToggler = rootCustomConfig.get(STATUS_BAR_TOGGLER) as boolean;
         this.reporter.sendEvent("config", "lcovFileName", this.lcovFileName);
+        this.reporter.sendEvent("config", "xmlFileName", this.xmlFileName);
         this.reporter.sendEvent("config", "altSfCompare", this.altSfCompare.toString());
 
         // Themes and icons

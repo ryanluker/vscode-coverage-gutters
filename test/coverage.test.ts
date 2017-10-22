@@ -1,10 +1,10 @@
 import * as assert from "assert";
-import {Lcov} from "../src/lcov";
+import {Coverage} from "../src/coverage";
 import {Fs} from "../src/wrappers/fs";
 import {Glob} from "../src/wrappers/glob";
 import {Vscode} from "../src/wrappers/vscode";
 
-suite("Lcov Tests", function() {
+suite("Coverage Tests", function() {
     const fakeConfig = {
         altSfCompare: false,
         fullCoverageDecorationType: {
@@ -21,6 +21,7 @@ suite("Lcov Tests", function() {
             dispose() {},
         },
         showStatusBarToggler: true,
+        xmlFileName: "test.xml",
     };
 
     test("Constructor should setup properly", function(done) {
@@ -28,7 +29,7 @@ suite("Lcov Tests", function() {
             const blobImpl = new Glob();
             const vscodeImpl = new Vscode();
             const fsImpl = new Fs();
-            const lcov = new Lcov(
+            const coverage = new Coverage(
                 fakeConfig,
                 blobImpl,
                 vscodeImpl,
@@ -47,19 +48,18 @@ suite("Lcov Tests", function() {
         const fsImpl = new Fs();
 
         globImpl.find = function(path, options, cb) {
-            assert.equal(path, "**/test.ts");
+            if (path.includes("xml")) { return cb(null, []); }
             assert.equal(options.ignore, "**/node_modules/**");
             assert.equal(options.dot, true);
             return cb(null, ["1", "2"]);
         };
-        const lcov = new Lcov(
+        const coverage = new Coverage(
             fakeConfig,
             globImpl,
             vscodeImpl,
             fsImpl,
         );
-
-        lcov.findLcovs()
+        coverage.findCoverageFiles()
             .then(function(files) {
                 assert.equal(files.length, 2);
                 return done();
@@ -69,30 +69,29 @@ suite("Lcov Tests", function() {
             });
     });
 
-    test("#find: Should return error if no file found for lcovFileName", function(done) {
+    test("#find: Should return error if no file found for lcovFileName or xmlFileName", function(done) {
         const globImpl = new Glob();
         const vscodeImpl = new Vscode();
         const fsImpl = new Fs();
 
         globImpl.find = function(path, options, cb) {
-            assert.equal(path, "**/test.ts");
             assert.equal(options.ignore, "**/node_modules/**");
             return cb(null, null);
         };
-        const lcov = new Lcov(
+        const coverage = new Coverage(
             fakeConfig,
             globImpl,
             vscodeImpl,
             fsImpl,
         );
 
-        lcov.findLcovs()
+        coverage.findCoverageFiles()
             .then(function() {
                 return done(new Error("Expected error did not fire!"));
             })
             .catch(function(error) {
                 if (error.name === "AssertionError") { return done(error); }
-                if (error === "Could not find a Lcov File!") { return done(); }
+                if (error.message === "Could not find a Coverage file!") { return done(); }
                 return done(error);
             });
     });
@@ -103,18 +102,17 @@ suite("Lcov Tests", function() {
         const fsImpl = new Fs();
 
         globImpl.find = function(path, options, cb) {
-            assert.equal(path, "**/test.ts");
             assert.equal(options.ignore, "**/node_modules/**");
             return cb(null, ["path/to/greatness/test.ts"]);
         };
-        const lcov = new Lcov(
+        const coverage = new Coverage(
             fakeConfig,
             globImpl,
             vscodeImpl,
             fsImpl,
         );
 
-        lcov.findLcovs()
+        coverage.findCoverageFiles()
             .then(function(fsPaths) {
                 assert.equal(fsPaths[0], "path/to/greatness/test.ts");
                 return done();
@@ -134,14 +132,14 @@ suite("Lcov Tests", function() {
             const error: NodeJS.ErrnoException = new Error("could not read from fs");
             return cb(error, null);
         };
-        const lcov = new Lcov(
+        const coverage = new Coverage(
             fakeConfig,
             globImpl,
             vscodeImpl,
             fsImpl,
         );
 
-        lcov.load("pathtofile")
+        coverage.load("pathtofile")
             .then(function() {
                 return done(new Error("Expected error did not fire!"));
             })
@@ -161,14 +159,14 @@ suite("Lcov Tests", function() {
             assert.equal(path, "pathtofile");
             return cb(null, new Buffer("lcovhere"));
         };
-        const lcov = new Lcov(
+        const coverage = new Coverage(
             fakeConfig,
             globImpl,
             vscodeImpl,
             fsImpl,
         );
 
-        lcov.load("pathtofile")
+        coverage.load("pathtofile")
             .then(function(dataString) {
                 assert.equal(dataString, "lcovhere");
                 return done();
