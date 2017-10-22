@@ -185,6 +185,7 @@ export class Gutters {
         const file = textEditor.document.fileName;
         const coveredLines = await this.indicators.extractCoverage(coverageFile, file);
         await this.indicators.renderToTextEditor(coveredLines, textEditor);
+        this.reporter.sendEvent("user", "coverageFileType", coverageFile.includes("<?xml") ? "xml" : "info");
     }
 
     private renderCoverageOnVisible(coveragePath: string) {

@@ -60,9 +60,10 @@ export class Indicators {
             this.xmlParse.parseContent(xmlFile, (err, data) => {
                 if (err) { return reject(err); }
                 const section = data.find((lcovSection) => {
-                    const rootFolder = this.vscode.getRootPath().split(/[\\\/]/).reverse()[0];
-                    const coverageFile = `${rootFolder}/${lcovSection.file}`;
-                    return this.compareFilePaths(coverageFile, file);
+                    // consider windows and linux file paths
+                    const cleanFile = file.replace(/[\\\/]/g, "");
+                    const cleanLcovFileSection = lcovSection.file.replace(/[\\\/]/g, "");
+                    return cleanFile.includes(cleanLcovFileSection);
                 });
 
                 if (!section) { return reject(new Error("No coverage for file!")); }
