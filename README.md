@@ -9,11 +9,11 @@
 [![Buy me a coffee](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=XRWWCAZBYB9SG&lc=CA&item_name=vscode%2dcoverage%2dgutters&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHostedGuest)
 
 ## Features
-- watch editors and lcov feature activated via status bar button or command
+- watch editors and coverage files feature activated via status bar button or command
 
 ![Coverage Gutters features watch](images/coverage-gutters-features-3.gif)
 
-- lcov displayed in full, partial and uncovered options
+- lcov displayed in full, partial and uncovered options (can consume xml or info file types)
 
 ![Coverage Gutters features options](images/coverage-gutters-features-2.PNG)
 
@@ -21,8 +21,8 @@
 
 ![Coverage Gutters preview overall coverage](images/vs-gutters-preview-2.gif)
 
-- multi lcov info support via option picker
-- relative lcov file resolution option for those with complex file paths
+- multi coverage file support via option picker
+- relative coverage file resolution option for those with complex file paths
 - workspace settings to customize the features to your liking
 - colour compatibility with light and dark themes
 
