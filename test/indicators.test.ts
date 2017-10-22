@@ -4,8 +4,8 @@ import {TextEditor} from "vscode";
 
 import {Indicators} from "../src/indicators";
 import {LcovParse} from "../src/wrappers/lcov-parse";
-import {XmlParse} from "../src/wrappers/xml-parse";
 import {Vscode} from "../src/wrappers/vscode";
+import {XmlParse} from "../src/wrappers/xml-parse";
 
 suite("Indicators Tests", function() {
     const fakeConfig = {
@@ -15,7 +15,6 @@ suite("Indicators Tests", function() {
             dispose() {},
         },
         lcovFileName: "test.ts",
-        xmlFileName: "test.xml",
         noCoverageDecorationType: {
             key: "testKey4",
             dispose() {},
@@ -25,6 +24,7 @@ suite("Indicators Tests", function() {
             dispose() {},
         },
         showStatusBarToggler: true,
+        xmlFileName: "test.xml",
     };
 
     test("Constructor should setup properly", function(done) {
@@ -47,7 +47,7 @@ suite("Indicators Tests", function() {
 
     test("#renderToTextEditor: should set basic coverage", function(done) {
         let callsToSetDecorations = 0;
-        
+
         const vscodeImpl = new Vscode();
         const parseImpl = new LcovParse();
         const xmlImpl = new XmlParse();

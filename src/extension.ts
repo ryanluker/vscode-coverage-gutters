@@ -1,16 +1,16 @@
 import * as vscode from "vscode";
 import {Config} from "./config";
+import {Coverage} from "./coverage";
 import {Gutters} from "./gutters";
 import {Indicators} from "./indicators";
-import {Coverage} from "./coverage";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 import {Fs} from "./wrappers/fs";
 import {Glob} from "./wrappers/glob";
-import {XmlParse} from "./wrappers/xml-parse";
 import {LcovParse} from "./wrappers/lcov-parse";
 import {Request} from "./wrappers/request";
 import {Vscode} from "./wrappers/vscode";
+import {XmlParse} from "./wrappers/xml-parse";
 
 const fsImpl = new Fs();
 const xmlParseImpl = new XmlParse();

@@ -12,7 +12,6 @@ suite("Coverage Tests", function() {
             dispose() {},
         },
         lcovFileName: "test.ts",
-        xmlFileName: "test.xml",
         noCoverageDecorationType: {
             key: "testKey4",
             dispose() {},
@@ -22,6 +21,7 @@ suite("Coverage Tests", function() {
             dispose() {},
         },
         showStatusBarToggler: true,
+        xmlFileName: "test.xml",
     };
 
     test("Constructor should setup properly", function(done) {
@@ -33,7 +33,7 @@ suite("Coverage Tests", function() {
                 fakeConfig,
                 blobImpl,
                 vscodeImpl,
-                fsImpl
+                fsImpl,
             );
             return done();
         } catch (e) {
@@ -48,7 +48,7 @@ suite("Coverage Tests", function() {
         const fsImpl = new Fs();
 
         globImpl.find = function(path, options, cb) {
-            if (path.includes("xml")) return cb(null, []);
+            if (path.includes("xml")) { return cb(null, []); }
             assert.equal(options.ignore, "**/node_modules/**");
             assert.equal(options.dot, true);
             return cb(null, ["1", "2"]);
@@ -57,7 +57,7 @@ suite("Coverage Tests", function() {
             fakeConfig,
             globImpl,
             vscodeImpl,
-            fsImpl
+            fsImpl,
         );
         coverage.findCoverageFiles()
             .then(function(files) {
@@ -82,7 +82,7 @@ suite("Coverage Tests", function() {
             fakeConfig,
             globImpl,
             vscodeImpl,
-            fsImpl
+            fsImpl,
         );
 
         coverage.findCoverageFiles()
@@ -109,7 +109,7 @@ suite("Coverage Tests", function() {
             fakeConfig,
             globImpl,
             vscodeImpl,
-            fsImpl
+            fsImpl,
         );
 
         coverage.findCoverageFiles()
@@ -136,7 +136,7 @@ suite("Coverage Tests", function() {
             fakeConfig,
             globImpl,
             vscodeImpl,
-            fsImpl
+            fsImpl,
         );
 
         coverage.load("pathtofile")
@@ -163,7 +163,7 @@ suite("Coverage Tests", function() {
             fakeConfig,
             globImpl,
             vscodeImpl,
-            fsImpl
+            fsImpl,
         );
 
         coverage.load("pathtofile")

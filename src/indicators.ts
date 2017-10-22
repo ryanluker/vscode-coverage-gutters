@@ -1,11 +1,11 @@
 import {IConfigStore} from "./config";
-import {InterfaceXmlParse} from "./wrappers/xml-parse";
 import {InterfaceLcovParse} from "./wrappers/lcov-parse";
 import {InterfaceVscode} from "./wrappers/vscode";
+import {InterfaceXmlParse} from "./wrappers/xml-parse";
 
 import {Section} from "lcov-parse";
-import {Range, TextEditor} from "vscode";
 import {extname} from "path";
+import {Range, TextEditor} from "vscode";
 
 export interface ICoverageLines {
     full: Range[];
@@ -47,7 +47,7 @@ export class Indicators {
     }
 
     public async extractCoverage(coverageFile: string, file: string): Promise<Section> {
-        if(coverageFile.includes("<?xml")) {
+        if (coverageFile.includes("<?xml")) {
             return this.xmlExtract(coverageFile, file);
         } else {
             return this.lcovExtract(coverageFile, file);
@@ -61,7 +61,7 @@ export class Indicators {
                 if (err) { return reject(err); }
                 const section = data.find((lcovSection) => {
                     const rootFolder = this.vscode.getRootPath().split(/[\\\/]/).reverse()[0];
-                    const coverageFile = `${rootFolder}/${lcovSection.file}`
+                    const coverageFile = `${rootFolder}/${lcovSection.file}`;
                     return this.compareFilePaths(coverageFile, file);
                 });
 

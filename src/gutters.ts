@@ -13,8 +13,8 @@ import {
 import {Vscode} from "./wrappers/vscode";
 
 import {IConfigStore} from "./config";
-import {Indicators} from "./indicators";
 import {Coverage} from "./coverage";
+import {Indicators} from "./indicators";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 

@@ -11,7 +11,6 @@ suite("Status Bar Toggler Tests", function() {
             dispose() {},
         },
         lcovFileName: "test.ts",
-        xmlFileName: "test.xml",
         noCoverageDecorationType: {
             key: "testKey4",
             dispose() {},
@@ -21,6 +20,7 @@ suite("Status Bar Toggler Tests", function() {
             dispose() {},
         },
         showStatusBarToggler: false,
+        xmlFileName: "test.xml",
     };
 
     test("Should toggle showStatusBarToggler command and message", function() {

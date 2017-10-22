@@ -1,9 +1,9 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
 import {IConfigStore} from "../src/config";
+import {Coverage} from "../src/coverage";
 import {Gutters} from "../src/gutters";
 import {Indicators} from "../src/indicators";
-import {Coverage} from "../src/coverage";
 import {Reporter} from "../src/reporter";
 import {StatusBarToggler} from "../src/statusbartoggler";
 

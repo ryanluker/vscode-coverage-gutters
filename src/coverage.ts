@@ -13,7 +13,7 @@ export class Coverage {
         configStore: IConfigStore,
         glob: InterfaceGlob,
         vscode: InterfaceVscode,
-        fs: InterfaceFs
+        fs: InterfaceFs,
     ) {
         this.configStore = configStore;
         this.glob = glob;
@@ -27,7 +27,7 @@ export class Coverage {
 
         const files = [].concat(lcovFiles, xmlFiles);
         if (!files.length) { throw new Error("Could not find a Coverage file!"); }
-        return files
+        return files;
     }
 
     public findReports(): Promise<string[]> {

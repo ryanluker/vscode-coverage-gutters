@@ -43,10 +43,10 @@ export class Config {
             altSfCompare: this.altSfCompare,
             fullCoverageDecorationType: this.fullCoverageDecorationType,
             lcovFileName: this.lcovFileName,
-            xmlFileName: this.xmlFileName,
             noCoverageDecorationType: this.noCoverageDecorationType,
             partialCoverageDecorationType: this.partialCoverageDecorationType,
             showStatusBarToggler: this.showStatusBarToggler,
+            xmlFileName: this.xmlFileName,
         };
     }
 
