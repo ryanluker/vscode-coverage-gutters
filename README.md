@@ -9,7 +9,7 @@
 [![[Donate]](https://img.shields.io/badge/%20donate%20-%20paypal%20-blue.svg)](https://www.paypal.me/ryanluker/)
 
 ## Features
-- watch editors and coverage files feature activated via status bar button or command
+- watch editors and coverage files via status bar button or command
 
 ![Coverage Gutters features watch](images/coverage-gutters-features-3.gif)
 
