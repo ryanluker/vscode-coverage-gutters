@@ -1,3 +1,6 @@
+import {basename} from "path";
+import {QuickPickItem} from "vscode";
+
 import {IConfigStore} from "./config";
 import {InterfaceFs} from "./wrappers/fs";
 import {InterfaceGlob} from "./wrappers/glob";
@@ -19,6 +22,33 @@ export class Coverage {
         this.glob = glob;
         this.vscode = vscode;
         this.fs = fs;
+    }
+
+    /**
+     * Takes an array of file strings and a placeHolder message.
+     * Displays the quick picker vscode modal and lets the user choose a file path
+     * @param filePaths
+     * @param placeHolder
+     */
+    public async pickFile(filePaths: string[], placeHolder: string): Promise<string | undefined> {
+        let pickedFile: string;
+        if (filePaths.length === 1) {
+            pickedFile = filePaths[0];
+        } else {
+            const fileQuickPicks = filePaths.map((filePath) => {
+                return {
+                    description: filePath,
+                    label: basename(filePath),
+                };
+            });
+
+            const item = await this.vscode.showQuickPick<QuickPickItem>(
+                fileQuickPicks,
+                {placeHolder},
+            );
+            pickedFile = item.description;
+        }
+        return pickedFile;
     }
 
     public async findCoverageFiles(): Promise<string[]> {

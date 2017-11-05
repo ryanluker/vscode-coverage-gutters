@@ -80,16 +80,10 @@ export class Gutters {
         try {
             if (!textEditor) { return; }
             const filePaths = await this.coverage.findCoverageFiles();
-            let pickedFile: string;
-            if (filePaths.length === 1) {
-                pickedFile = filePaths[0];
-            } else {
-                this.reporter.sendEvent("user", "showQuickPickCoverage", `${filePaths.length}`);
-                pickedFile = await window.showQuickPick(
-                    filePaths,
-                    {placeHolder: "Choose a file to use for coverage."},
-                );
-            }
+            const pickedFile = await this.coverage.pickFile(
+                filePaths,
+                "Choose a file to use for coverage.",
+            );
             if (!pickedFile) { throw new Error("Could not show coverage for file!"); }
 
             await this.loadAndRenderCoverage(textEditor, pickedFile);
@@ -105,27 +99,20 @@ export class Gutters {
         const textEditor = window.activeTextEditor;
         try {
             const filePaths = await this.coverage.findCoverageFiles();
-
-            let pickedPath: string;
-            if (filePaths.length === 1) {
-                pickedPath = filePaths[0];
-            } else {
-                this.reporter.sendEvent("user", "showQuickPickCoverage", `${filePaths.length}`);
-                pickedPath = await window.showQuickPick(
-                    filePaths,
-                    {placeHolder: "Choose a file to use for coverage."},
-                );
-            }
-            if (!pickedPath) { throw new Error("Could not show coverage for file!"); }
+            const pickedFile = await this.coverage.pickFile(
+                filePaths,
+                "Choose a file to use for coverage.",
+            );
+            if (!pickedFile) { throw new Error("Could not show coverage for file!"); }
 
             // When we try to load the coverage when watch is actived we dont want to error
             // if the active file has no coverage
-            this.loadAndRenderCoverage(textEditor, pickedPath).catch(() => {});
+            this.loadAndRenderCoverage(textEditor, pickedFile).catch(() => {});
 
-            this.coverageWatcher = vscodeImpl.watchFile(pickedPath);
-            this.coverageWatcher.onDidChange((event) => this.renderCoverageOnVisible(pickedPath));
+            this.coverageWatcher = vscodeImpl.watchFile(pickedFile);
+            this.coverageWatcher.onDidChange((event) => this.renderCoverageOnVisible(pickedFile));
             this.editorWatcher = window.onDidChangeVisibleTextEditors(
-                (event) => this.renderCoverageOnVisible(pickedPath));
+                (event) => this.renderCoverageOnVisible(pickedFile));
             this.statusBar.toggle();
 
             this.reporter.sendEvent("user", "watch-coverage-editors");
