@@ -183,23 +183,23 @@
     "commands": [
       {
         "command": "extension.previewCoverageReport",
-        "title": "Coverage Gutters: Preview Lcov Report"
+        "title": "Coverage Gutters: Preview Coverage Report"
       },
       {
         "command": "extension.displayCoverage",
-        "title": "Coverage Gutters: Display File Coverage"
+        "title": "Coverage Gutters: Display Coverage"
       },
       {
         "command": "extension.watchCoverageAndVisibleEditors",
-        "title": "Coverage Gutters: Watch Coverage File and Visible Editors"
+        "title": "Coverage Gutters: Watch"
       },
       {
         "command": "extension.removeWatch",
-        "title": "Coverage Gutters: Remove Lcov and Editor Watch"
+        "title": "Coverage Gutters: Remove Watch"
       },
       {
         "command": "extension.removeCoverage",
-        "title": "Coverage Gutters: Remove File Coverage"
+        "title": "Coverage Gutters: Remove Coverage"
       }
     ],
     "keybindings": [
