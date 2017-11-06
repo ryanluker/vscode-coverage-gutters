@@ -1,5 +1,5 @@
 import {basename} from "path";
-import {QuickPickItem} from "vscode";
+import {QuickPickItem, Uri, WorkspaceFolder} from "vscode";
 
 import {IConfigStore} from "./config";
 import {InterfaceFs} from "./wrappers/fs";
@@ -55,21 +55,22 @@ export class Coverage {
         const lcovFiles = await this.findLcovs();
         const xmlFiles = await this.findXmls();
 
-        const files = [].concat(lcovFiles, xmlFiles);
+        // Remove duplicate file paths between workspaces
+        const files = [...new Set<string>([].concat(lcovFiles, xmlFiles))];
         if (!files.length) { throw new Error("Could not find a Coverage file!"); }
         return files;
     }
 
     public findReports(): Promise<string[]> {
-        return new Promise<string[]>((resolve, reject) => {
-            this.glob.find(
-                `**/coverage/**/index.html`,
-                { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true, dot: true },
-                (err, files) => {
-                    if (!files || !files.length) { return reject("Could not find a Coverage Report file!"); }
-                    return resolve(files);
-                });
+        const files = [];
+        const actions = this.vscode.getWorkspaceFolders().map((workspaceFolder) => {
+            return this.globFind(workspaceFolder, "coverage/**/index.html");
         });
+        return Promise.all(actions)
+            .then((coverageInWorkspaceFolders) => {
+                // Spread first array to properly concat the file arrays from the globFind
+                return [].concat(...coverageInWorkspaceFolders);
+            });
     }
 
     public load(path: string): Promise<string> {
@@ -81,11 +82,16 @@ export class Coverage {
         });
     }
 
-    private findLcovs(): Promise<string[]> {
+    private globFind(workspaceFolder: WorkspaceFolder, fileName: string): Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
             this.glob.find(
-                `**/${this.configStore.lcovFileName}`,
-                { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true, dot: true },
+                `**/${fileName}`,
+                {
+                    cwd: workspaceFolder.uri.fsPath,
+                    dot: true,
+                    ignore: "**/node_modules/**",
+                    realpath: true,
+                },
                 (err, files) => {
                     if (!files || !files.length) { return resolve([]); }
                     return resolve(files);
@@ -93,15 +99,27 @@ export class Coverage {
         });
     }
 
-    private findXmls(): Promise<string[]> {
-        return new Promise<string[]>((resolve, reject) => {
-            this.glob.find(
-                `**/${this.configStore.xmlFileName}`,
-                { ignore: "**/node_modules/**", cwd: this.vscode.getRootPath(), realpath: true, dot: true },
-                (err, files) => {
-                    if (!files || !files.length) { return resolve([]); }
-                    return resolve(files);
-                });
+    private findLcovs(): Promise<string[]> {
+        const files = [];
+        const actions = this.vscode.getWorkspaceFolders().map((workspaceFolder) => {
+            return this.globFind(workspaceFolder, this.configStore.lcovFileName);
         });
+        return Promise.all(actions)
+            .then((coverageInWorkspaceFolders) => {
+                // Spread first array to properly concat the file arrays from the globFind
+                return [].concat(...coverageInWorkspaceFolders);
+            });
+    }
+
+    private findXmls(): Promise<string[]> {
+        const files = [];
+        const actions = this.vscode.getWorkspaceFolders().map((workspaceFolder) => {
+            return this.globFind(workspaceFolder, this.configStore.xmlFileName);
+        });
+        return Promise.all(actions)
+            .then((coverageInWorkspaceFolders) => {
+                // Spread first array to properly concat the file arrays from the globFind
+                return [].concat(...coverageInWorkspaceFolders);
+            });
     }
 }

@@ -9,7 +9,7 @@
 [![[Donate]](https://img.shields.io/badge/%20donate%20-%20paypal%20-blue.svg)](https://www.paypal.me/ryanluker/)
 
 ## Features
-- watch editors and coverage files via status bar button or command
+- multi workspace friendly watch command
 
 ![Coverage Gutters features watch](images/coverage-gutters-features-3.gif)
 
@@ -27,7 +27,7 @@
 - colour compatibility with light and dark themes
 
 ## Requirements
-- vscode 1.14.x and up
+- vscode 1.17.0 and up
 - macos, linux or windows
 
 ## Extension Settings

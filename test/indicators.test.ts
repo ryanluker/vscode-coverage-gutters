@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import {BranchDetail, Section} from "lcov-parse";
-import {TextEditor} from "vscode";
+import {TextEditor, WorkspaceFolder} from "vscode";
 
 import {Indicators} from "../src/indicators";
 import {LcovParse} from "../src/wrappers/lcov-parse";
@@ -261,7 +261,9 @@ suite("Indicators Tests", function() {
     test("#extract: should find a matching file with relative match mode", function(done) {
         fakeConfig.altSfCompare = true;
         const vscodeImpl = new Vscode();
-        vscodeImpl.getRootPath = function() { return "vscode-coverage-gutters"; };
+        vscodeImpl.getWorkspaceFolders = function() { return [
+            {uri: {path: "vscode-coverage-gutters"}, name: "vscode-coverage-gutters"} as any,
+        ]; };
         const parseImpl = new LcovParse();
         // tslint:disable-next-line:max-line-length
         const fakeLinuxLcov = "TN:\nSF:/mnt/c/dev/vscode-coverage-gutters/example/test-coverage.js\nDA:1,1\nend_of_record";
@@ -286,7 +288,7 @@ suite("Indicators Tests", function() {
     test("#extract: should find a matching file using xml coverage generated in linux", function(done) {
         fakeConfig.altSfCompare = true;
         const vscodeImpl = new Vscode();
-        vscodeImpl.getRootPath = function() { return "vscode-coverage-gutters"; };
+        vscodeImpl.getWorkspaceFolders = function() { return [{uri: {path: "vscode-coverage-gutters"}} as any]; };
         const parseImpl = new LcovParse();
         // tslint:disable-next-line:max-line-length
         const fakeLinuxXML = '<?xml version="1.0" ?><coverage branch-rate="0" line-rate="0.625" timestamp="1508710464400" version="4.2"><sources><source>/c/dev/vscode-coverage-gutters/example/python</source></sources><packages><package branch-rate="0" complexity="0" line-rate="0.625" name="files"><classes><class branch-rate="0" complexity="0" filename="files/test_sample.py" line-rate="0.625" name="test_sample.py"><methods/><lines><line hits="1" number="4"/><line hits="1" number="6"/><line hits="1" number="7"/><line hits="0" number="8"/><line hits="0" number="9"/><line hits="0" number="11"/><line hits="1" number="13"/><line hits="1" number="15"/></lines></class></classes></package></packages></coverage>';

@@ -50,17 +50,11 @@ export class Gutters {
     public async previewCoverageReport() {
         try {
             const coverageReports = await this.coverage.findReports();
-            let pickedReport: string;
-            if (coverageReports.length === 1) {
-                pickedReport = coverageReports[0];
-            } else {
-                this.reporter.sendEvent("user", "showQuickPickReport", `${coverageReports.length}`);
-                pickedReport = await window.showQuickPick(
-                    coverageReports,
-                    {placeHolder: "Choose a Coverage Report to preview."},
-                );
-            }
-
+            this.reporter.sendEvent("user", "preview-coverage-report-findCoverageFiles", `${coverageReports.length}`);
+            const pickedReport = await this.coverage.pickFile(
+                coverageReports,
+                "Choose a Coverage Report to preview.",
+            );
             if (!pickedReport) { throw new Error("Could not show Coverage Report file!"); }
             const reportUri = Uri.file(pickedReport.toString());
             await commands.executeCommand(
@@ -80,6 +74,7 @@ export class Gutters {
         try {
             if (!textEditor) { return; }
             const filePaths = await this.coverage.findCoverageFiles();
+            this.reporter.sendEvent("user", "display-coverage-findCoverageFiles", `${filePaths.length}`);
             const pickedFile = await this.coverage.pickFile(
                 filePaths,
                 "Choose a file to use for coverage.",
@@ -99,6 +94,7 @@ export class Gutters {
         const textEditor = window.activeTextEditor;
         try {
             const filePaths = await this.coverage.findCoverageFiles();
+            this.reporter.sendEvent("user", "watch-coverage-editors-findCoverageFiles", `${filePaths.length}`);
             const pickedFile = await this.coverage.pickFile(
                 filePaths,
                 "Choose a file to use for coverage.",
