@@ -123,26 +123,34 @@ export class Indicators {
         return coverageLines;
     }
 
+    private nodeCompare(folderName: string, sourceFile: string[], openFile: string[], index) {
+        let match = true;
+
+        // work backwards from the file folder leaf to folder node
+        do {
+            if (sourceFile[index] === openFile[index]) {
+                index++;
+            } else {
+                match = false;
+                break;
+            }
+        } while (folderName !== openFile[index]);
+
+        return match;
+    }
+
     private compareFilePaths(coverageFile: string, file: string): boolean {
         if (this.configStore.altSfCompare) {
             // consider windows and linux file paths
             const sourceFile = coverageFile.split(/[\\\/]/).reverse();
             const openFile = file.split(/[\\\/]/).reverse();
-            const folderName = this.vscode.getRootPath().split(/[\\\/]/).reverse()[0];
-            let match = true;
-            let index = 0;
+            const match: boolean[] = [];
+            this.vscode.getWorkspaceFolders().forEach((workspaceFolder) => {
+                match.push(this.nodeCompare(workspaceFolder.name, sourceFile, openFile, 0));
+            });
 
-            // work backwards from the file folder leaf to folder node
-            do {
-                if (sourceFile[index] === openFile[index]) {
-                    index++;
-                } else {
-                    match = false;
-                    break;
-                }
-            } while (folderName !== openFile[index]);
-
-            return match;
+            // return true as along as one node compare has a match
+            return match.some((value) => value);
         } else {
             // prevent hazardous casing mishaps
             return coverageFile.toLocaleLowerCase() === file.toLocaleLowerCase();

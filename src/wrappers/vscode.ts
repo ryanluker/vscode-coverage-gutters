@@ -3,19 +3,27 @@ import {
     commands,
     DecorationRenderOptions,
     FileSystemWatcher,
+    QuickPickItem,
+    QuickPickOptions,
     Range,
     TextEditorDecorationType,
     window,
     workspace,
     WorkspaceConfiguration,
+    WorkspaceFolder,
 } from "vscode";
 
 export interface InterfaceVscode {
     createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType;
     executeCommand(command: string, ...rest: any[]): Thenable<{}>;
     getConfiguration(section?: string): WorkspaceConfiguration;
-    getRootPath(): string;
+    getWorkspaceFolders(): WorkspaceFolder[] | undefined;
     watchFile(filePattern: string): FileSystemWatcher;
+    showQuickPick<T extends QuickPickItem>(
+        items: T[] | Thenable<T[]>,
+        options?: QuickPickOptions,
+        token?: CancellationToken,
+    ): Thenable<T | undefined>;
 }
 
 export class Vscode implements InterfaceVscode {
@@ -31,8 +39,16 @@ export class Vscode implements InterfaceVscode {
         return workspace.getConfiguration(section);
     }
 
-    public getRootPath(): string {
-        return workspace.rootPath;
+    public getWorkspaceFolders(): WorkspaceFolder[] | undefined {
+        return workspace.workspaceFolders;
+    }
+
+    public showQuickPick<T extends QuickPickItem>(
+        items: T[] | Thenable<T[]>,
+        options?: QuickPickOptions,
+        token?: CancellationToken,
+    ): Thenable<T | undefined> {
+        return window.showQuickPick(items, options, token);
     }
 
     public watchFile(filePattern: string): FileSystemWatcher {
