@@ -151,8 +151,13 @@ export class Gutters {
 
     private handleError(error: Error) {
         const message = error.message ? error.message : error;
+        const stackTrace = error.stack;
         window.showWarningMessage(message.toString());
-        this.reporter.sendEvent("error", message.toString());
+        this.reporter.sendEvent(
+            "error",
+            message.toString(),
+            stackTrace ? stackTrace.toString() : undefined,
+        );
     }
 
     private removeDecorationsForTextEditor(textEditor: TextEditor) {
