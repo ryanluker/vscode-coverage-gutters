@@ -101,6 +101,54 @@ suite("Indicators Tests", function() {
             });
     });
 
+    test("#renderToTextEditor: should not error if negative line", function(done) {
+        const vscodeImpl = new Vscode();
+        const parseImpl = new LcovParse();
+        const xmlImpl = new XmlParse();
+        const indicators = new Indicators(
+            xmlImpl,
+            parseImpl,
+            vscodeImpl,
+            fakeConfig,
+        );
+
+        const fakeSection: Section = {
+            branches: {
+                details: [],
+                found: 1,
+                hit: 1,
+            },
+            file: "test",
+            functions: {
+                details: [],
+                found: 1,
+                hit: 1,
+            },
+            lines: {
+                details: [{
+                    hit: 1,
+                    line: -1,
+                }],
+                found: 1,
+                hit: 1,
+            },
+        };
+
+        const fakeTextEditor: any = {
+            setDecorations(decorType, ranges) {
+                return ;
+            },
+        };
+
+        indicators.renderToTextEditor(fakeSection, fakeTextEditor)
+            .then(function() {
+                return done();
+            })
+            .catch(function(error) {
+                return done(error);
+            });
+    });
+
     test("#renderToTextEditor: should remove full coverage if partial on same line", function(done) {
         let callsToSetDecorations = 0;
 

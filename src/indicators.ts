@@ -100,6 +100,7 @@ export class Indicators {
 
     private filterCoverage(section: Section, coverageLines: ICoverageLines): ICoverageLines {
         section.lines.details.forEach((detail) => {
+            if (detail.line < 0) { return ; }
             const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
             if (detail.hit > 0) {
                 coverageLines.full.push(lineRange);
@@ -111,6 +112,7 @@ export class Indicators {
         if (section.branches) {
             section.branches.details.forEach((detail) => {
                 if (detail.branch === 0 && detail.taken === 0) {
+                    if (detail.line < 0) { return ; }
                     const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
                     if (coverageLines.full.find((range) => range.isEqual(partialRange))) {
                         // remove full converage if partial is a better match
