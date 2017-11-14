@@ -46,6 +46,8 @@ export class Coverage {
                 fileQuickPicks,
                 {placeHolder},
             );
+            if (!item) { return pickedFile; }
+
             pickedFile = item.description;
         }
         return pickedFile;

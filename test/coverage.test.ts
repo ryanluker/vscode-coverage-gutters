@@ -243,4 +243,28 @@ suite("Coverage Tests", function() {
                 return done(error);
             });
     });
+
+    test("#pickFile: Should return undefined if no item is picked", function(done) {
+        const vscodeImpl = new Vscode();
+        const globImpl = new Glob();
+        const fsImpl = new Fs();
+
+        vscodeImpl.showQuickPick = async () => undefined;
+
+        const coverage = new Coverage(
+            fakeConfig,
+            globImpl,
+            vscodeImpl,
+            fsImpl,
+        );
+
+        coverage.pickFile(["test1", "test2"], "nope")
+            .then((value) => {
+                assert.equal(value, undefined);
+                return done();
+            })
+            .catch((error) => {
+                return done(error);
+            });
+    });
 });
