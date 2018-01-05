@@ -14,6 +14,16 @@ describe('test func', function() {
         assert(num==="reallyNull");
     });
 
+    it('should show coverage', function() {
+        var num = testFunc(3);
+        assert(num==="notNull");
+    });
+
+    it('should show coverage', function() {
+        var num = testFunc(9);
+        assert(true);
+    });
+
     it('should show coverage on line 9', function() {
         var num = testFunc(7);
         assert(num==="wap");
@@ -21,6 +31,6 @@ describe('test func', function() {
 
     it('should show coverage on line 9 x2', function() {
         var num = testFunc(5);
-        assert(num==="woop");
+        assert(num==="wap");
     });
 });

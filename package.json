@@ -16,7 +16,7 @@
   "bugs": "https://github.com/ryanluker/vscode-coverage-gutters/issues",
   "publisher": "ryanluker",
   "engines": {
-    "vscode": "^1.17.0"
+    "vscode": "^1.19.0"
   },
   "categories": [
     "Other"

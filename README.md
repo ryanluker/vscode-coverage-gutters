@@ -27,7 +27,7 @@
 - colour compatibility with light and dark themes
 
 ## Requirements
-- vscode 1.17.0 and up
+- vscode 1.19.0 and up
 - macos, linux or windows
 
 ## Extension Settings
