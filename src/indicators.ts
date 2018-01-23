@@ -61,12 +61,12 @@ export class Indicators {
                 if (err) { return reject(err); }
                 const section = data.find((lcovSection) => {
                     // consider windows and linux file paths
-                    var cleanFile = file.replace(/[\\\/]/g, "");
-                    var cleanLcovFileSection = lcovSection.file.replace(/[\\\/]/g, "");
+                    let cleanFile = file.replace(/[\\\/]/g, "");
+                    let cleanLcovFileSection = lcovSection.file.replace(/[\\\/]/g, "");
 
                     // on Windows remove drive letter from path because of cobertura format
                     // also convert both path to lowercase because Windows's filesystem is case insensitive
-                    if ( process.platform === 'win32' ) {
+                    if ( process.platform === "win32" ) {
                         cleanFile = cleanFile.substr(2).toLowerCase();
                         cleanLcovFileSection = cleanLcovFileSection.toLowerCase();
                     }
