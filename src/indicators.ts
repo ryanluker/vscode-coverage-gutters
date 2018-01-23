@@ -61,8 +61,16 @@ export class Indicators {
                 if (err) { return reject(err); }
                 const section = data.find((lcovSection) => {
                     // consider windows and linux file paths
-                    const cleanFile = file.replace(/[\\\/]/g, "");
-                    const cleanLcovFileSection = lcovSection.file.replace(/[\\\/]/g, "");
+                    var cleanFile = file.replace(/[\\\/]/g, "");
+                    var cleanLcovFileSection = lcovSection.file.replace(/[\\\/]/g, "");
+
+                    // on Windows remove drive letter from path because of cobertura format
+                    // also convert both path to lowercase because Windows's filesystem is case insensitive
+                    if ( process.platform === 'win32' ) {
+                        cleanFile = cleanFile.substr(2).toLowerCase();
+                        cleanLcovFileSection = cleanLcovFileSection.toLowerCase();
+                    }
+
                     return cleanFile.includes(cleanLcovFileSection);
                 });
 
@@ -100,6 +108,7 @@ export class Indicators {
 
     private filterCoverage(section: Section, coverageLines: ICoverageLines): ICoverageLines {
         section.lines.details.forEach((detail) => {
+            if (detail.line < 0) { return ; }
             const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
             if (detail.hit > 0) {
                 coverageLines.full.push(lineRange);
@@ -111,6 +120,7 @@ export class Indicators {
         if (section.branches) {
             section.branches.details.forEach((detail) => {
                 if (detail.branch === 0 && detail.taken === 0) {
+                    if (detail.line < 0) { return ; }
                     const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
                     if (coverageLines.full.find((range) => range.isEqual(partialRange))) {
                         // remove full converage if partial is a better match
