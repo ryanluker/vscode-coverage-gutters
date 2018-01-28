@@ -306,11 +306,41 @@ suite("Indicators Tests", function() {
             });
     });
 
+    test.only("#extract: should find a matching file when in multi" +
+        " folder workspace mode", function(done) {
+        fakeConfig.altSfCompare = true;
+        const vscodeImpl = new Vscode();
+        vscodeImpl.getWorkspaceFolders = function() { return [
+            {uri: {path: "python/user/code"}, name: "python"} as any,
+            {uri: {path: "vscode-coverage-gutters/user/code"}, name: "vscode-coverage-gutters"} as any,
+        ]; };
+        const parseImpl = new LcovParse();
+        // tslint:disable-next-line:max-line-length
+        const fakeLinuxLcov = "TN:\nSF:/mnt/c/dev/vscode-coverage-gutters/example/test-coverage.js\nDA:1,1\nend_of_record";
+        const fakeFile = "/mnt/c/dev/vscode-coverage-gutters/example/test-coverage.js";
+        const xmlImpl = new XmlParse();
+        const indicators = new Indicators(
+            xmlImpl,
+            parseImpl,
+            vscodeImpl,
+            fakeConfig,
+        );
+        indicators.extractCoverage(fakeLinuxLcov, fakeFile)
+            .then(function(data) {
+                assert.equal(data.lines.details.length, 1);
+                return done();
+            })
+            .catch(function(error) {
+                return done(error);
+            });
+    });
+
     test("#extract: should find a matching file with relative match mode", function(done) {
         fakeConfig.altSfCompare = true;
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [
             {uri: {path: "vscode-coverage-gutters"}, name: "vscode-coverage-gutters"} as any,
+            {uri: {path: "vscode-coverage-gutters/user/code"}, name: "python"} as any,
         ]; };
         const parseImpl = new LcovParse();
         // tslint:disable-next-line:max-line-length
