@@ -144,7 +144,9 @@ export class Indicators {
                 match = false;
                 break;
             }
-        } while (folderName !== openFile[index]);
+        } while (folderName !== openFile[index] &&
+            sourceFile[index] !== undefined &&
+            openFile[index] !== undefined);
 
         return match;
     }
