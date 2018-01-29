@@ -306,7 +306,7 @@ suite("Indicators Tests", function() {
             });
     });
 
-    test.only("#extract: should find a matching file when in multi" +
+    test("#extract: should find a matching file when in multi" +
         " folder workspace mode", function(done) {
         fakeConfig.altSfCompare = true;
         const vscodeImpl = new Vscode();
