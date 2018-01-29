@@ -243,4 +243,68 @@ suite("Coverage Tests", function() {
                 return done(error);
             });
     });
+
+    test("#pickFile: Should return undefined if no item is picked", function(done) {
+        const vscodeImpl = new Vscode();
+        const globImpl = new Glob();
+        const fsImpl = new Fs();
+        vscodeImpl.showQuickPick = async () => undefined;
+        const coverage = new Coverage(
+            fakeConfig,
+            globImpl,
+            vscodeImpl,
+            fsImpl,
+        );
+
+        coverage.pickFile(["test1", "test2"], "nope")
+            .then((value) => {
+                return done(new Error("Expected error did not fire!"));
+            })
+            .catch((error) => {
+                assert.equal(error.message, "Did not choose a file!");
+                return done();
+            });
+    });
+
+    test("#pickFile: Should return string if filePaths is a string", function(done) {
+        const vscodeImpl = new Vscode();
+        const globImpl = new Glob();
+        const fsImpl = new Fs();
+        const coverage = new Coverage(
+            fakeConfig,
+            globImpl,
+            vscodeImpl,
+            fsImpl,
+        );
+
+        coverage.pickFile("123", "nope")
+            .then((value) => {
+                assert.equal(value, "123");
+                return done();
+            })
+            .catch((error) => {
+                return done(error);
+            });
+    });
+
+    test("#pickFile: Should return string if filePaths is an array with one value", function(done) {
+        const vscodeImpl = new Vscode();
+        const globImpl = new Glob();
+        const fsImpl = new Fs();
+        const coverage = new Coverage(
+            fakeConfig,
+            globImpl,
+            vscodeImpl,
+            fsImpl,
+        );
+
+        coverage.pickFile(["123"], "nope")
+            .then((value) => {
+                assert.equal(value, "123");
+                return done();
+            })
+            .catch((error) => {
+                return done(error);
+            });
+    });
 });

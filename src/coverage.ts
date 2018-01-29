@@ -30,9 +30,11 @@ export class Coverage {
      * @param filePaths
      * @param placeHolder
      */
-    public async pickFile(filePaths: string[], placeHolder: string): Promise<string | undefined> {
+    public async pickFile(filePaths: string[] | string, placeHolder: string): Promise<string | undefined> {
         let pickedFile: string;
-        if (filePaths.length === 1) {
+        if (typeof filePaths === "string") {
+            pickedFile = filePaths;
+        } else if (filePaths.length === 1) {
             pickedFile = filePaths[0];
         } else {
             const fileQuickPicks = filePaths.map((filePath) => {
@@ -46,6 +48,8 @@ export class Coverage {
                 fileQuickPicks,
                 {placeHolder},
             );
+            if (!item) { throw new Error("Did not choose a file!"); }
+
             pickedFile = item.description;
         }
         return pickedFile;
