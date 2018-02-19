@@ -387,4 +387,27 @@ suite("Indicators Tests", function() {
                 return done(error);
             });
     });
+
+    test("#extract: should distinct two files with same name but on a different path", async function() {
+        const vscodeImpl = new Vscode();
+        vscodeImpl.getWorkspaceFolders = function() { return [{uri: {path: "vscode-coverage-gutters"}} as any]; };
+        const parseImpl = new LcovParse();
+        // tslint:disable-next-line:max-line-length
+        const fakeXML = '<?xml version="1.0" ?><coverage branch-rate="0" branches-covered="0" branches-valid="0" complexity="0" line-rate="0.75" lines-covered="9" lines-valid="12" timestamp="1518685916300" version="4.4.1"><sources><source>/c/dev/vscode-coverage-gutters/example/python/foobar</source></sources><packages><package branch-rate="0" complexity="0" line-rate="1" name="."><classes><class branch-rate="0" complexity="0" filename="__init__.py" line-rate="1" name="__init__.py"><methods/><lines/></class></classes></package><package branch-rate="0" complexity="0" line-rate="1" name="tests"><classes><class branch-rate="0" complexity="0" filename="tests/test_sample.py" line-rate="1" name="test_sample.py"><methods/><lines><line hits="1" number="2"/><line hits="1" number="3"/><line hits="1" number="6"/><line hits="1" number="8"/></lines></class></classes></package><package branch-rate="0" complexity="0" line-rate="0.5" name="tests.bar"><classes><class branch-rate="0" complexity="0" filename="tests/bar/__init__.py" line-rate="1" name="__init__.py"><methods/><lines/></class><class branch-rate="0" complexity="0" filename="tests/bar/a.py" line-rate="0.5" name="a.py"><methods/><lines><line hits="1" number="1"/><line hits="1" number="3"/><line hits="1" number="4"/><line hits="0" number="5"/><line hits="0" number="6"/><line hits="0" number="8"/></lines></class></classes></package><package branch-rate="0" complexity="0" line-rate="1" name="tests.foo"><classes><class branch-rate="0" complexity="0" filename="tests/foo/__init__.py" line-rate="1" name="__init__.py"><methods/><lines/></class><class branch-rate="0" complexity="0" filename="tests/foo/a.py" line-rate="1" name="a.py"><methods/><lines><line hits="1" number="1"/><line hits="1" number="2"/></lines></class></classes></package></packages></coverage>';
+        const fakeFileFoo = "c:\/dev\/vscode-coverage-gutters\/example\/python\/foobar\/foo\/a.py";
+        const fakeFileBar = "c:\/dev\/vscode-coverage-gutters\/example\/python\/foobar\/bar\/a.py";
+        const xmlImpl = new XmlParse();
+        const indicators = new Indicators(
+            xmlImpl,
+            parseImpl,
+            vscodeImpl,
+            fakeConfig,
+        );
+
+        let covSectionFoo = await indicators.extractCoverage(fakeXML, fakeFileFoo);
+        let covSectionBar = await indicators.extractCoverage(fakeXML, fakeFileBar);
+
+        assert.equal(covSectionFoo.lines.details.length, 2);
+        assert.equal(covSectionBar.lines.details.length, 6);
+    });
 });

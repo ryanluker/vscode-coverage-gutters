@@ -6,6 +6,7 @@ import {InterfaceXmlParse} from "./wrappers/xml-parse";
 import {Section} from "lcov-parse";
 import {extname} from "path";
 import {Range, TextEditor} from "vscode";
+import * as _ from "lodash";
 
 export interface ICoverageLines {
     full: Range[];
@@ -59,19 +60,26 @@ export class Indicators {
         return new Promise<Section>((resolve, reject) => {
             this.xmlParse.parseContent(xmlFile, (err, data) => {
                 if (err) { return reject(err); }
-                const section = data.find((lcovSection) => {
-                    // consider windows and linux file paths
-                    let cleanFile = file.replace(/[\\\/]/g, "");
-                    let cleanLcovFileSection = lcovSection.file.replace(/[\\\/]/g, "");
 
-                    // on Windows remove drive letter from path because of cobertura format
-                    // also convert both path to lowercase because Windows's filesystem is case insensitive
-                    if (process.platform === "win32") {
-                        cleanFile = cleanFile.substr(2).toLowerCase();
-                        cleanLcovFileSection = cleanLcovFileSection.toLowerCase();
+                let cleanFileToMatch = file.split(/[\\\/]/).reverse();
+
+                // Find best path match
+                let bestMatchLength = 0;
+                let section = null;
+
+                _.forEach(data, (xmlSection) => {
+                    let cleanLcovFileSection = xmlSection.file.split(/[\\\/]/).reverse();
+
+                    // Comparing length of shared path
+                    let zippedPaths = _.zip(cleanFileToMatch, cleanLcovFileSection);
+                    let sharedPath = _.map(zippedPaths, (x) => {return x[0] === x[1]});
+                    sharedPath = _.compact(sharedPath)
+
+                    // New best match
+                    if (sharedPath.length > bestMatchLength) {
+                        section = xmlSection;
+                        bestMatchLength = sharedPath.length;
                     }
-
-                    return cleanFile.includes(cleanLcovFileSection);
                 });
 
                 if (!section) { return reject(new Error("No coverage for file!")); }
@@ -123,7 +131,7 @@ export class Indicators {
                     if (detail.line < 0) { return ; }
                     const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
                     if (coverageLines.full.find((range) => range.isEqual(partialRange))) {
-                        // remove full converage if partial is a better match
+                        // remove full coverage if partial is a better match
                         coverageLines.full = coverageLines.full.filter((range) => !range.isEqual(partialRange));
                         coverageLines.partial.push(partialRange);
                     }

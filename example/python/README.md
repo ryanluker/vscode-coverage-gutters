@@ -1,2 +1,2 @@
 Use the command below to generate a test xml file
-```py.test --cov-report xml:cov.xml --cov```
+```py.test foobar --cov-report xml:cov.xml --cov foobar```
