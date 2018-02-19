@@ -404,8 +404,8 @@ suite("Indicators Tests", function() {
             fakeConfig,
         );
 
-        let covSectionFoo = await indicators.extractCoverage(fakeXML, fakeFileFoo);
-        let covSectionBar = await indicators.extractCoverage(fakeXML, fakeFileBar);
+        const covSectionFoo = await indicators.extractCoverage(fakeXML, fakeFileFoo);
+        const covSectionBar = await indicators.extractCoverage(fakeXML, fakeFileBar);
 
         assert.equal(covSectionFoo.lines.details.length, 2);
         assert.equal(covSectionBar.lines.details.length, 6);

@@ -4,9 +4,9 @@ import {InterfaceVscode} from "./wrappers/vscode";
 import {InterfaceXmlParse} from "./wrappers/xml-parse";
 
 import {Section} from "lcov-parse";
+import * as _ from "lodash";
 import {extname} from "path";
 import {Range, TextEditor} from "vscode";
-import * as _ from "lodash";
 
 export interface ICoverageLines {
     full: Range[];
@@ -61,19 +61,19 @@ export class Indicators {
             this.xmlParse.parseContent(xmlFile, (err, data) => {
                 if (err) { return reject(err); }
 
-                let cleanFileToMatch = file.split(/[\\\/]/).reverse();
+                const cleanFileToMatch = file.split(/[\\\/]/).reverse();
 
                 // Find best path match
                 let bestMatchLength = 0;
                 let section = null;
 
                 _.forEach(data, (xmlSection) => {
-                    let cleanLcovFileSection = xmlSection.file.split(/[\\\/]/).reverse();
+                    const cleanLcovFileSection = xmlSection.file.split(/[\\\/]/).reverse();
 
                     // Comparing length of shared path
-                    let zippedPaths = _.zip(cleanFileToMatch, cleanLcovFileSection);
-                    let sharedPath = _.map(zippedPaths, (x) => {return x[0] === x[1]});
-                    sharedPath = _.compact(sharedPath)
+                    const zippedPaths = _.zip(cleanFileToMatch, cleanLcovFileSection);
+                    let sharedPath = _.map(zippedPaths, (x) => x[0] === x[1]);
+                    sharedPath = _.compact(sharedPath);
 
                     // New best match
                     if (sharedPath.length > bestMatchLength) {
