@@ -288,11 +288,11 @@
     "vscode": "1.1.10"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.102",
+    "@types/lodash": "4.14.102",
     "cobertura-parse": "1.0.4",
     "glob": "7.1.2",
     "lcov-parse": "1.0.0",
-    "lodash": "^4.17.5",
+    "lodash": "4.17.5",
     "request": "2.83.0"
   }
 }
