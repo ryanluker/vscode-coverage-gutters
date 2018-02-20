@@ -55,12 +55,24 @@ export class Indicators {
         }
     }
 
+    private normalizeFilename(filename: string, stripDrive = false): string {
+        if (process.platform === "win32") {
+            if (stripDrive) {
+                filename = filename.substr(2);
+            }
+            filename = filename.toLowerCase();
+        }
+
+        return filename;
+    }
+
     private xmlExtract(xmlFile: string, file: string): Promise<Section> {
         if (xmlFile === "") { return Promise.reject("No coverage details inside file!"); }
         return new Promise<Section>((resolve, reject) => {
             this.xmlParse.parseContent(xmlFile, (err, data) => {
                 if (err) { return reject(err); }
 
+                file = this.normalizeFilename(file, true);
                 const cleanFileToMatch = file.split(/[\\\/]/).reverse();
 
                 // Find best path match
@@ -68,10 +80,11 @@ export class Indicators {
                 let section = null;
 
                 _.forEach(data, (xmlSection) => {
-                    const cleanLcovFileSection = xmlSection.file.split(/[\\\/]/).reverse();
+                    const lcovFile = this.normalizeFilename(xmlSection.file);
+                    const lcovFileSection = lcovFile.split(/[\\\/]/).reverse();
 
                     // Comparing length of shared path
-                    const zippedPaths = _.zip(cleanFileToMatch, cleanLcovFileSection);
+                    const zippedPaths = _.zip(cleanFileToMatch, lcovFileSection);
                     let sharedPath = _.map(zippedPaths, (x) => x[0] === x[1]);
                     sharedPath = _.compact(sharedPath);
 
