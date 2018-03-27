@@ -106,7 +106,8 @@ export class Gutters {
             this.loadAndRenderCoverage(textEditor, pickedFile).catch(() => {});
 
             this.coverageWatcher = vscodeImpl.watchFile(pickedFile);
-            this.coverageWatcher.onDidChange((event) => this.renderCoverageOnVisible(pickedFile));
+            this.coverageWatcher.onDidChange(
+                (event) => this.renderCoverageOnChange(pickedFile));
             this.editorWatcher = window.onDidChangeVisibleTextEditors(
                 (event) => this.renderCoverageOnVisible(pickedFile));
             this.statusBar.toggle();
@@ -181,5 +182,10 @@ export class Gutters {
             if (!editor) { return; }
             await this.loadAndRenderCoverage(editor, coveragePath);
         });
+    }
+
+    private renderCoverageOnChange(coveragePath: string) {
+        this.indicators.clearCoverageCache();
+        this.renderCoverageOnVisible(coveragePath);
     }
 }

@@ -20,6 +20,8 @@ export class Indicators {
     private vscode: InterfaceVscode;
     private configStore: IConfigStore;
 
+    private coverageCache;
+
     constructor(
         xmlParse: InterfaceXmlParse,
         lcovParse: InterfaceLcovParse,
@@ -30,6 +32,7 @@ export class Indicators {
         this.xmlParse = xmlParse;
         this.vscode = vscode;
         this.configStore = configStore;
+        this.coverageCache = {};
     }
 
     public renderToTextEditor(section: Section, textEditor: TextEditor): Promise<string> {
@@ -47,7 +50,15 @@ export class Indicators {
         });
     }
 
+    public clearCoverageCache() {
+        this.coverageCache = {};
+    }
+
     public async extractCoverage(coverageFile: string, file: string): Promise<Section> {
+        if (this.coverageCache[file]) {
+            return Promise.resolve(this.coverageCache[file]);
+        }
+
         if (coverageFile.includes("<?xml")) {
             return this.xmlExtract(coverageFile, file);
         } else {
@@ -72,8 +83,8 @@ export class Indicators {
             this.xmlParse.parseContent(xmlFile, (err, data) => {
                 if (err) { return reject(err); }
 
-                file = this.normalizeFilename(file, true);
-                const cleanFileToMatch = file.split(/[\\\/]/).reverse();
+                const normalizedFile = this.normalizeFilename(file, true);
+                const cleanFileToMatch = normalizedFile.split(/[\\\/]/).reverse();
 
                 // Find best path match
                 let bestMatchLength = 0;
@@ -96,6 +107,8 @@ export class Indicators {
                 });
 
                 if (!section) { return reject(new Error("No coverage for file!")); }
+
+                this.coverageCache[file] = section;
                 return resolve(section);
             });
         });
