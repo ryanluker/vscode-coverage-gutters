@@ -1,6 +1,5 @@
 import {Range, TextEditor, commands, ViewColumn, Uri} from "vscode";
 import {Section} from "lcov-parse";
-
 import {IConfigStore as ConfigStore} from "./config";
 
 interface CoverageLines {
