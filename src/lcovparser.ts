@@ -1,12 +1,11 @@
 import {parseContent} from "cobertura-parse";
 import {Section, source} from "lcov-parse";
-import {workspace} from "vscode";
-import {IConfigStore as ConfigStore} from "./config";
+import {IConfigStore} from "./config";
 
 export class LcovParser {
-    private configStore: ConfigStore;
+    private configStore: IConfigStore;
 
-    constructor(configStore: ConfigStore) {
+    constructor(configStore: IConfigStore) {
         this.configStore = configStore;
     }
 
@@ -14,7 +13,7 @@ export class LcovParser {
      * Extracts coverage sections of type xml and lcov
      * @param files array of coverage files in string format
      */
-    public async filesToSections(files: string[]): Promise<Map<string, Section>> {
+    public async filesToSections(files: Set<string>): Promise<Map<string, Section>> {
         let coverages = new Map<string, Section>();
 
         files.forEach(async (file) => {

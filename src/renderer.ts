@@ -1,6 +1,6 @@
 import {Section} from "lcov-parse";
 import {commands, Range, TextEditor, Uri, ViewColumn} from "vscode";
-import {IConfigStore as ConfigStore} from "./config";
+import {IConfigStore} from "./config";
 
 interface ICoverageLines {
     full: Range[];
@@ -9,9 +9,9 @@ interface ICoverageLines {
 }
 
 export class Renderer {
-    private configStore: ConfigStore;
+    private configStore: IConfigStore;
 
-    constructor(configStore: ConfigStore) {
+    constructor(configStore: IConfigStore) {
         this.configStore = configStore;
     }
 
