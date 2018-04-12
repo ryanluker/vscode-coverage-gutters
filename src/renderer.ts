@@ -1,8 +1,8 @@
-import {Range, TextEditor, commands, ViewColumn, Uri} from "vscode";
 import {Section} from "lcov-parse";
+import {commands, Range, TextEditor, Uri, ViewColumn} from "vscode";
 import {IConfigStore as ConfigStore} from "./config";
 
-interface CoverageLines {
+interface ICoverageLines {
     full: Range[];
     partial: Range[];
     none: Range[];
@@ -21,10 +21,10 @@ export class Renderer {
      * @param textEditors currently visible text editors
      */
     public async renderCoverage(
-        sections: Set<Section>,
-        textEditors: Array<TextEditor>
+        sections: Map<string, Section>,
+        textEditors: TextEditor[],
     ) {
-        const coverageLines: CoverageLines = {
+        const coverageLines: ICoverageLines = {
             full: [],
             none: [],
             partial: [],
@@ -38,6 +38,8 @@ export class Renderer {
             this.filterCoverage(section, coverageLines);
 
             textEditors.forEach((textEditor) => {
+                // Check if current editor file is the current section
+                if (textEditor.document.fileName !== section.file) { return ; }
                 this.setDecorationsForEditor(textEditor, coverageLines);
             });
         });
@@ -55,40 +57,40 @@ export class Renderer {
 
     private setDecorationsForEditor(
         editor: TextEditor,
-        coverage: CoverageLines
+        coverage: ICoverageLines,
     ) {
         // remove existing coverage first to prevent graphical conflicts
         editor.setDecorations(
             this.configStore.fullCoverageDecorationType,
-            []
+            [],
         );
         editor.setDecorations(
             this.configStore.noCoverageDecorationType,
-            []
+            [],
         );
         editor.setDecorations(
             this.configStore.partialCoverageDecorationType,
-            []
+            [],
         );
-
+        // set new coverage on editor
         editor.setDecorations(
             this.configStore.fullCoverageDecorationType,
-            coverage.full
+            coverage.full,
         );
         editor.setDecorations(
             this.configStore.noCoverageDecorationType,
-            coverage.none
+            coverage.none,
         );
         editor.setDecorations(
             this.configStore.partialCoverageDecorationType,
-            coverage.partial
+            coverage.partial,
         );
     }
 
     private filterCoverage(
         section: Section,
-        coverageLines: CoverageLines
-    ): CoverageLines {
+        coverageLines: ICoverageLines,
+    ) {
         // TODO cleanup this arears by using maps, filters, etc
         section.lines.details.forEach((detail) => {
             if (detail.line < 0) { return ; }
@@ -113,6 +115,5 @@ export class Renderer {
                 }
             });
         }
-        return coverageLines;
     }
 }
