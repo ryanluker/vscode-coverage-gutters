@@ -1,5 +1,5 @@
 environment:
-  CODE_VERSION: 1.14.0
+  CODE_VERSION: 1.22.0
 
 install:
   - ps: Install-Product node 6.11.0 x64
