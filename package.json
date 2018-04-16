@@ -274,7 +274,7 @@
     "test-unit": "cross-env MOCHA_GREP=@unit npm test --silent",
     "test-integration": "cross-env CODE_TESTS_WORKSPACE=./example MOCHA_GREP=@integration npm test --silent",
     "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
+    "compile": "tsc -p ./",
     "build": "npm install && npm run lint && tsc -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
