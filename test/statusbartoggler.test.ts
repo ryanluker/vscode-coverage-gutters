@@ -23,12 +23,12 @@ suite("Status Bar Toggler Tests", function() {
         xmlFileName: "test.xml",
     };
 
-    test("Should toggle showStatusBarToggler command and message", function() {
+    test("Should toggle showStatusBarToggler command and message @unit", function() {
         const statusBarToggler = new StatusBarToggler(fakeConfig);
         statusBarToggler.toggle();
     });
 
-    test("Should dispose when asked", function() {
+    test("Should dispose when asked @unit", function() {
         const statusBarToggler = new StatusBarToggler(fakeConfig);
         statusBarToggler.dispose();
     });

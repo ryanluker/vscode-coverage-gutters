@@ -24,7 +24,7 @@ suite("Coverage Tests", function() {
         xmlFileName: "test.xml",
     };
 
-    test("Constructor should setup properly", function(done) {
+    test("Constructor should setup properly @unit", function(done) {
         try {
             const blobImpl = new Glob();
             const vscodeImpl = new Vscode();
@@ -42,7 +42,7 @@ suite("Coverage Tests", function() {
         }
     });
 
-    test("#find: Should not return error if more then one file found for lcovFileName", function(done) {
+    test("#find: Should not return error if more then one file found for lcovFileName @unit", function(done) {
         const globImpl = new Glob();
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [{uri: {path: "vscode-coverage-gutters"}} as any]; };
@@ -70,7 +70,7 @@ suite("Coverage Tests", function() {
             });
     });
 
-    test("#find: Should return error if no file found for lcovFileName or xmlFileName", function(done) {
+    test("#find: Should return error if no file found for lcovFileName or xmlFileName @unit", function(done) {
         const globImpl = new Glob();
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [{uri: {path: "vscode-coverage-gutters"}} as any]; };
@@ -98,7 +98,7 @@ suite("Coverage Tests", function() {
             });
     });
 
-    test("#find: Should return file paths from open workspace folders", function(done) {
+    test("#find: Should return file paths from open workspace folders @unit", function(done) {
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [
             {uri: {path: "vscode-coverage-gutters1"}} as any,
@@ -131,7 +131,7 @@ suite("Coverage Tests", function() {
             });
     });
 
-    test("#find: Should return file paths from open workspace folders without dupes", function(done) {
+    test("#find: Should return file paths from open workspace folders without dupes @unit", function(done) {
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [
             {uri: {path: "vscode-coverage-gutters1"}} as any,
@@ -163,7 +163,7 @@ suite("Coverage Tests", function() {
             });
     });
 
-    test("#find: Should return a file system path", function(done) {
+    test("#find: Should return a file system path @unit", function(done) {
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [{uri: {path: "vscode-coverage-gutters"}} as any]; };
         const globImpl = new Glob();
@@ -190,7 +190,7 @@ suite("Coverage Tests", function() {
             });
     });
 
-    test("#load: Should reject when readFile returns an error", function(done) {
+    test("#load: Should reject when readFile returns an error @unit", function(done) {
         const vscodeImpl = new Vscode();
         const globImpl = new Glob();
         const fsImpl = new Fs();
@@ -218,7 +218,7 @@ suite("Coverage Tests", function() {
             });
     });
 
-    test("#load: Should return a data string", function(done) {
+    test("#load: Should return a data string @unit", function(done) {
         const vscodeImpl = new Vscode();
         const globImpl = new Glob();
         const fsImpl = new Fs();
@@ -244,7 +244,7 @@ suite("Coverage Tests", function() {
             });
     });
 
-    test("#pickFile: Should return undefined if no item is picked", function(done) {
+    test("#pickFile: Should return undefined if no item is picked @unit", function(done) {
         const vscodeImpl = new Vscode();
         const globImpl = new Glob();
         const fsImpl = new Fs();
@@ -266,7 +266,7 @@ suite("Coverage Tests", function() {
             });
     });
 
-    test("#pickFile: Should return string if filePaths is a string", function(done) {
+    test("#pickFile: Should return string if filePaths is a string @unit", function(done) {
         const vscodeImpl = new Vscode();
         const globImpl = new Glob();
         const fsImpl = new Fs();
@@ -287,7 +287,7 @@ suite("Coverage Tests", function() {
             });
     });
 
-    test("#pickFile: Should return string if filePaths is an array with one value", function(done) {
+    test("#pickFile: Should return string if filePaths is an array with one value @unit", function(done) {
         const vscodeImpl = new Vscode();
         const globImpl = new Glob();
         const fsImpl = new Fs();

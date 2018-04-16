@@ -10,14 +10,21 @@
 // to report the results back to the caller. When the tests are finished, return
 // a possible error to the callback or null if none.
 
-// tslint:disable-next-line:no-var-requires
-const testRunner = require("vscode/lib/testrunner");
+import * as testRunner from "vscode/lib/testrunner";
+import {MochaSetupOptions} from "vscode/lib/testrunner";
+const mochaOpts: MochaSetupOptions = {};
+
+// Apply regex to run subset of tests (integration vs unit)
+if (process.env.MOCHA_GREP) {
+    const grepRE = new RegExp(process.env.MOCHA_GREP);
+    mochaOpts.grep = grepRE;
+}
+
+mochaOpts.ui = "tdd";
+mochaOpts.useColors = true;
 
 // You can directly control Mocha options by uncommenting the following lines
 // See https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically#set-options for more info
-testRunner.configure({
-    ui: "tdd", 		 // the TDD UI is being used in extension.test.ts (suite, test, etc.)
-    useColors: true, // colored output from test results
-});
+testRunner.configure(mochaOpts);
 
 module.exports = testRunner;

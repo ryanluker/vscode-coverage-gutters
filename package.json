@@ -270,8 +270,9 @@
   ],
   "scripts": {
     "lint": "tslint './src/**/*.ts' './test/**/*.ts'",
-    "test": "cross-env CODE_TESTS_WORKSPACE=./example node ./node_modules/vscode/bin/test",
-    "test-ci": "npm run lint && npm test --silent",
+    "test": "node ./node_modules/vscode/bin/test",
+    "test-unit": "cross-env MOCHA_GREP=@unit npm test --silent",
+    "test-integration": "cross-env CODE_TESTS_WORKSPACE=./example MOCHA_GREP=@integration npm test --silent",
     "vscode:prepublish": "tsc -p ./",
     "compile": "tsc -watch -p ./",
     "build": "npm install && npm run lint && tsc -p ./",

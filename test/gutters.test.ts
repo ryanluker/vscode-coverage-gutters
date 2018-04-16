@@ -10,7 +10,7 @@ import {StatusBarToggler} from "../src/statusbartoggler";
 suite("Gutters Tests", function() {
     this.timeout(4000);
 
-    test("Should setup gutters based on config values with no errors", function(done) {
+    test("Should setup gutters based on config values with no errors @unit", function(done) {
         try {
             const reporter: Reporter = {
                 sendEvent() {
@@ -33,7 +33,7 @@ suite("Gutters Tests", function() {
         }
     });
 
-    test("Should not error when trying to render coverage on empty editor", async function() {
+    test("Should not error when trying to render coverage on empty editor @unit", async function() {
         try {
             const reporter: Reporter = {
                 sendEvent(cat, action) {

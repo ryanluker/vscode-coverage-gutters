@@ -27,7 +27,7 @@ suite("Indicators Tests", function() {
         xmlFileName: "test.xml",
     };
 
-    test("Constructor should setup properly", function(done) {
+    test("Constructor should setup properly @unit", function(done) {
         try {
             const vscodeImpl = new Vscode();
             const parseImpl = new LcovParse();
@@ -45,7 +45,7 @@ suite("Indicators Tests", function() {
         }
     });
 
-    test("#renderToTextEditor: should set basic coverage", function(done) {
+    test("#renderToTextEditor: should set basic coverage @unit", function(done) {
         let callsToSetDecorations = 0;
 
         const vscodeImpl = new Vscode();
@@ -101,7 +101,7 @@ suite("Indicators Tests", function() {
             });
     });
 
-    test("#renderToTextEditor: should not error if negative line", function(done) {
+    test("#renderToTextEditor: should not error if negative line @unit", function(done) {
         const vscodeImpl = new Vscode();
         const parseImpl = new LcovParse();
         const xmlImpl = new XmlParse();
@@ -149,7 +149,7 @@ suite("Indicators Tests", function() {
             });
     });
 
-    test("#renderToTextEditor: should remove full coverage if partial on same line", function(done) {
+    test("#renderToTextEditor: should remove full coverage if partial on same line @unit", function(done) {
         let callsToSetDecorations = 0;
 
         const vscodeImpl = new Vscode();
@@ -216,7 +216,7 @@ suite("Indicators Tests", function() {
             });
     });
 
-    test("#renderToTextEditor: should render full coverage and no coverage", function(done) {
+    test("#renderToTextEditor: should render full coverage and no coverage @unit", function(done) {
         let callsToSetDecorations = 0;
 
         const vscodeImpl = new Vscode();
@@ -281,7 +281,7 @@ suite("Indicators Tests", function() {
             });
     });
 
-    test("#extract: should find a matching file with absolute match mode", function(done) {
+    test("#extract: should find a matching file with absolute match mode @unit", function(done) {
         fakeConfig.altSfCompare = false;
 
         const fakeLcov = "TN:\nSF:c:\/dev\/vscode-coverage-gutters\/example\/test-coverage.js\nDA:1,1\nend_of_record";
@@ -306,8 +306,7 @@ suite("Indicators Tests", function() {
             });
     });
 
-    test("#extract: should find a matching file when in multi" +
-        " folder workspace mode", function(done) {
+    test("#extract: should find a matching file when in multi folder workspace mode @unit", function(done) {
         fakeConfig.altSfCompare = true;
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [
@@ -335,7 +334,7 @@ suite("Indicators Tests", function() {
             });
     });
 
-    test("#extract: should find a matching file with relative match mode", function(done) {
+    test("#extract: should find a matching file with relative match mode @unit", function(done) {
         fakeConfig.altSfCompare = true;
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [
@@ -363,7 +362,7 @@ suite("Indicators Tests", function() {
             });
     });
 
-    test("#extract: should find a matching file using xml coverage generated in linux", function(done) {
+    test("#extract: should find a matching file using xml coverage generated in linux @unit", function(done) {
         fakeConfig.altSfCompare = true;
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [{uri: {path: "vscode-coverage-gutters"}} as any]; };
@@ -388,7 +387,7 @@ suite("Indicators Tests", function() {
             });
     });
 
-    test("#extract: should distinct two files with same name but on a different path", async function() {
+    test("#extract: should distinct two files with same name but on a different path @unit", async function() {
         const vscodeImpl = new Vscode();
         vscodeImpl.getWorkspaceFolders = function() { return [{uri: {path: "vscode-coverage-gutters"}} as any]; };
         const parseImpl = new LcovParse();
