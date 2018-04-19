@@ -30,9 +30,9 @@ export class FilesLoader {
     public async loadDataFiles(files: Set<string>): Promise<Set<string>> {
         // Load the files and convert into data strings
         const dataFiles = new Set<string>();
-        files.forEach(async (file) => {
+        for (const file of files) {
             dataFiles.add(await this.load(file));
-        });
+        }
         return dataFiles;
     }
 
@@ -47,23 +47,29 @@ export class FilesLoader {
 
     private async findCoverageInWorkspace(fileNames: string[]) {
         let files = new Set<string>();
-        fileNames.forEach(async (fileName) => {
+        for (const fileName of fileNames) {
             const coverage = await this.findCoverageForFileName(fileName);
             files = new Set([...files, ...coverage]);
-        });
+        }
         return files;
     }
 
-    private findCoverageForFileName(fileName: string): Promise<string[]> {
+    private findCoverageForFileName(fileName: string): Promise<Set<string>> {
         const files = [];
         const actions = workspace.workspaceFolders.map((workspaceFolder) => {
             return this.globFind(workspaceFolder, fileName);
         });
         return Promise.all(actions)
             .then((coverageInWorkspaceFolders) => {
-                // Spread the array first to properly concat the file arrays
-                // from the globFind
-                return [].concat(...coverageInWorkspaceFolders);
+                let totalCoverage = new Set<string>();
+                coverageInWorkspaceFolders.forEach(
+                    (coverage) => {
+                        totalCoverage = new Set(
+                            [...totalCoverage, ...coverage],
+                        );
+                    },
+                );
+                return totalCoverage;
             });
     }
 
@@ -82,7 +88,7 @@ export class FilesLoader {
                 (err, files) => {
                     if (!files || !files.length) { return resolve(new Set()); }
                     const setFiles = new Set<string>();
-                    files.forEach(setFiles.add);
+                    files.forEach((file) => setFiles.add(file));
                     return resolve(setFiles);
                 },
             );

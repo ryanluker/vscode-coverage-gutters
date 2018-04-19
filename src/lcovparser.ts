@@ -16,7 +16,7 @@ export class LcovParser {
     public async filesToSections(files: Set<string>): Promise<Map<string, Section>> {
         let coverages = new Map<string, Section>();
 
-        files.forEach(async (file) => {
+        for (const file of files) {
             let coverage = new Map<string, Section>();
             if (file.includes("<?xml")) {
                 coverage = await this.xmlExtract(file);
@@ -25,7 +25,7 @@ export class LcovParser {
             }
             // add new coverage map to existing coverages generated so far
             coverages = new Map([...coverages, ...coverage]);
-        });
+        }
 
         return coverages;
     }
