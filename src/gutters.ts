@@ -2,6 +2,7 @@ import {
     commands,
     Disposable,
     FileSystemWatcher,
+    OutputChannel,
     StatusBarItem,
     TextEditor,
     Uri,
@@ -14,6 +15,7 @@ import {Vscode} from "./wrappers/vscode";
 
 import {IConfigStore} from "./config";
 import {Coverage} from "./coverage";
+import {CoverageService} from "./coverageservice";
 import {Indicators} from "./indicators";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
@@ -26,22 +28,31 @@ export class Gutters {
     private editorWatcher: Disposable;
     private statusBarItem: StatusBarItem;
     private coverage: Coverage;
+    private outputChannel: OutputChannel;
     private indicators: Indicators;
     private reporter: Reporter;
     private statusBar: StatusBarToggler;
+    private coverageService: CoverageService;
 
     constructor(
         configStore: IConfigStore,
         coverage: Coverage,
         indicators: Indicators,
+        outputChannel: OutputChannel,
         reporter: Reporter,
         statusBar: StatusBarToggler,
     ) {
         this.configStore = configStore;
         this.coverage = coverage;
+        this.outputChannel = outputChannel;
         this.indicators = indicators;
         this.statusBar = statusBar;
         this.reporter = reporter;
+
+        this.coverageService = new CoverageService(
+            configStore,
+            this.outputChannel,
+        );
 
         this.reporter.sendEvent("user", "start");
         this.reporter.sendEvent("user", "vscodeVersion", version);
@@ -63,6 +74,8 @@ export class Gutters {
                 ViewColumn.One,
                 "Preview Coverage Report",
             );
+
+            this.outputChannel.appendLine("Preview coverage report displayed");
             this.reporter.sendEvent("user", "preview-coverage-report");
         } catch (error) {
             this.handleError(error);
@@ -70,51 +83,11 @@ export class Gutters {
     }
 
     public async displayCoverageForActiveFile() {
-        const textEditor = window.activeTextEditor;
-        try {
-            if (!textEditor) { return; }
-            const filePaths = await this.coverage.findCoverageFiles();
-            this.reporter.sendEvent("user", "display-coverage-findCoverageFiles", `${filePaths.length}`);
-            const pickedFile = await this.coverage.pickFile(
-                filePaths,
-                "Choose a file to use for coverage.",
-            );
-            if (!pickedFile) { throw new Error("Could not show coverage for file!"); }
-
-            await this.loadAndRenderCoverage(textEditor, pickedFile);
-            this.reporter.sendEvent("user", "display-coverage");
-        } catch (error) {
-            this.handleError(error);
-        }
+        await this.coverageService.displayForFile();
     }
 
     public async watchCoverageAndVisibleEditors() {
-        if (this.coverageWatcher && this.editorWatcher) { return; }
-
-        const textEditor = window.activeTextEditor;
-        try {
-            const filePaths = await this.coverage.findCoverageFiles();
-            this.reporter.sendEvent("user", "watch-coverage-editors-findCoverageFiles", `${filePaths.length}`);
-            const pickedFile = await this.coverage.pickFile(
-                filePaths,
-                "Choose a file to use for coverage.",
-            );
-            if (!pickedFile) { throw new Error("Could not show coverage for file!"); }
-
-            // When we try to load the coverage when watch is actived we dont want to error
-            // if the active file has no coverage
-            this.loadAndRenderCoverage(textEditor, pickedFile).catch(() => {});
-
-            this.coverageWatcher = vscodeImpl.watchFile(pickedFile);
-            this.coverageWatcher.onDidChange((event) => this.renderCoverageOnVisible(pickedFile));
-            this.editorWatcher = window.onDidChangeVisibleTextEditors(
-                (event) => this.renderCoverageOnVisible(pickedFile));
-            this.statusBar.toggle();
-
-            this.reporter.sendEvent("user", "watch-coverage-editors");
-        } catch (error) {
-            this.handleError(error);
-        }
+        await this.coverageService.watchWorkspace();
     }
 
     public removeWatch() {
@@ -153,6 +126,8 @@ export class Gutters {
         const message = error.message ? error.message : error;
         const stackTrace = error.stack;
         window.showWarningMessage(message.toString());
+        this.outputChannel.appendLine(`Error: ${message}`);
+        this.outputChannel.appendLine(`Stacktrace: ${stackTrace}`);
         this.reporter.sendEvent(
             "error",
             message.toString(),

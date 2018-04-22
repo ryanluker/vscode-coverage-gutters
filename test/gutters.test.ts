@@ -25,8 +25,16 @@ suite("Gutters Tests", function() {
             const coverage: Coverage = {} as any;
             const indicators: Indicators = {} as any;
             const configStore: IConfigStore = {} as any;
+            const outputChannel: vscode.OutputChannel = {} as any;
 
-            const gutters = new Gutters(configStore, coverage, indicators, reporter, statusbar);
+            const gutters = new Gutters(
+                configStore,
+                coverage,
+                indicators,
+                outputChannel,
+                reporter,
+                statusbar,
+            );
             return done();
         } catch (e) {
             return done(e);
@@ -65,8 +73,16 @@ suite("Gutters Tests", function() {
                 },
             } as any;
             const configStore: IConfigStore = {} as any;
+            const outputChannel: vscode.OutputChannel = {} as any;
 
-            const gutters = new Gutters(configStore, coverage, indicators, reporter, statusbar);
+            const gutters = new Gutters(
+                configStore,
+                coverage,
+                indicators,
+                outputChannel,
+                reporter,
+                statusbar,
+            );
             await gutters.displayCoverageForActiveFile();
         } catch (error) {
             throw error;

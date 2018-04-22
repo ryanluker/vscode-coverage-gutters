@@ -2,6 +2,8 @@ import {Section} from "lcov-parse";
 import {
     Disposable,
     FileSystemWatcher,
+    OutputChannel,
+    TextEditor,
     window,
     workspace,
 } from "vscode";
@@ -12,15 +14,16 @@ import {LcovParser} from "./lcovparser";
 import {Renderer} from "./renderer";
 
 enum Status {
-    ready,
-    initializing,
-    loading,
-    rendering,
-    error,
+    ready = "READY",
+    initializing = "INITIALIZING",
+    loading = "LOADING",
+    rendering = "RENDERING",
+    error = "ERROR",
 }
 
 export class CoverageService {
     private configStore: IConfigStore;
+    private outputChannel: OutputChannel;
     private filesLoader: FilesLoader;
     private renderer: Renderer;
     private lcovParser: LcovParser;
@@ -31,9 +34,13 @@ export class CoverageService {
     private cache: Map<string, Section>;
     private status: Status;
 
-    constructor(configStore: IConfigStore) {
-        this.status = Status.initializing;
+    constructor(
+        configStore: IConfigStore,
+        outputChannel: OutputChannel,
+    ) {
         this.configStore = configStore;
+        this.outputChannel = outputChannel;
+        this.updateServiceState(Status.initializing);
         this.cache = new Map();
         this.filesLoader = new FilesLoader(configStore);
         this.renderer = new Renderer(configStore);
@@ -42,10 +49,10 @@ export class CoverageService {
     }
 
     public async displayForFile() {
-        this.status = Status.rendering;
+        this.updateServiceState(Status.rendering);
         const textEditor = window.activeTextEditor;
-        this.renderer.renderCoverage(this.cache, [textEditor]);
-        this.status = Status.ready;
+        await this.renderer.renderCoverage(this.cache, [textEditor]);
+        this.updateServiceState(Status.ready);
     }
 
     public async watchWorkspace() {
@@ -55,40 +62,55 @@ export class CoverageService {
     }
 
     public async loadCache() {
-        this.status = Status.loading;
+        this.updateServiceState(Status.loading);
         const files = await this.filesLoader.findCoverageFiles();
         const dataFiles = await this.filesLoader.loadDataFiles(files);
         const dataCoverage = await this.lcovParser.filesToSections(dataFiles);
         this.cache = dataCoverage;
-        this.status = Status.ready;
+        this.updateServiceState(Status.ready);
+    }
+
+    private updateServiceState(state: Status) {
+        this.status = state;
+        this.outputChannel.appendLine(
+            `[${Date.now()}][coverageservice]: ${state}`);
+    }
+
+    private async loadCacheAndRender() {
+        await this.loadCache();
+        this.updateServiceState(Status.rendering);
+        const visibleEditors = window.visibleTextEditors;
+        await this.renderer.renderCoverage(this.cache, visibleEditors);
     }
 
     private listenToFileSystem() {
         this.lcovWatcher = workspace.createFileSystemWatcher(
-            this.configStore.lcovFileName,
+            `**/${this.configStore.lcovFileName}`,
         );
-        this.lcovWatcher.onDidChange(this.loadCache);
-        this.lcovWatcher.onDidCreate(this.loadCache);
-        this.lcovWatcher.onDidDelete(this.loadCache);
+        this.lcovWatcher.onDidChange(this.loadCacheAndRender.bind(this));
+        this.lcovWatcher.onDidCreate(this.loadCacheAndRender.bind(this));
+        this.lcovWatcher.onDidDelete(this.loadCacheAndRender.bind(this));
 
         this.xmlWatcher = workspace.createFileSystemWatcher(
-            this.configStore.xmlFileName,
+            `**/${this.configStore.xmlFileName}`,
         );
-        this.xmlWatcher.onDidChange(this.loadCache);
-        this.xmlWatcher.onDidCreate(this.loadCache);
-        this.xmlWatcher.onDidDelete(this.loadCache);
+        this.xmlWatcher.onDidChange(this.loadCacheAndRender.bind(this));
+        this.xmlWatcher.onDidCreate(this.loadCacheAndRender.bind(this));
+        this.xmlWatcher.onDidDelete(this.loadCacheAndRender.bind(this));
+    }
+
+    private async handleEditorEvents(textEditors: TextEditor[]) {
+        this.updateServiceState(Status.rendering);
+        await this.renderer.renderCoverage(
+            this.cache,
+            textEditors,
+        );
+        this.updateServiceState(Status.ready);
     }
 
     private listenToEditorEvents() {
         this.editorWatcher = window.onDidChangeVisibleTextEditors(
-            (textEditors) => {
-                this.status = Status.rendering;
-                this.renderer.renderCoverage(
-                    this.cache,
-                    textEditors,
-                );
-                this.status = Status.ready;
-            },
+            this.handleEditorEvents.bind(this),
         );
     }
 }

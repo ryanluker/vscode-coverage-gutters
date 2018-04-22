@@ -30,6 +30,11 @@ export class Renderer {
             partial: [],
         };
 
+        textEditors.forEach((textEditor) => {
+            // Remove all decorations first to prevent graphical issues
+            this.removeDecorationsForEditor(textEditor);
+        });
+
         sections.forEach((section) => {
             // Reset lines for new section
             coverageLines.full = [];
@@ -45,21 +50,7 @@ export class Renderer {
         });
     }
 
-    public async displayReport(reportPath: string) {
-        const reportUri = Uri.file(reportPath);
-        await commands.executeCommand(
-            "vscode.previewHtml",
-            reportUri,
-            ViewColumn.One,
-            "Preview Coverage Report",
-        );
-    }
-
-    private setDecorationsForEditor(
-        editor: TextEditor,
-        coverage: ICoverageLines,
-    ) {
-        // remove existing coverage first to prevent graphical conflicts
+    private removeDecorationsForEditor(editor: TextEditor) {
         editor.setDecorations(
             this.configStore.fullCoverageDecorationType,
             [],
@@ -72,6 +63,12 @@ export class Renderer {
             this.configStore.partialCoverageDecorationType,
             [],
         );
+    }
+
+    private setDecorationsForEditor(
+        editor: TextEditor,
+        coverage: ICoverageLines,
+    ) {
         // set new coverage on editor
         editor.setDecorations(
             this.configStore.fullCoverageDecorationType,
