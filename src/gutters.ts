@@ -84,10 +84,12 @@ export class Gutters {
 
     public async displayCoverageForActiveFile() {
         await this.coverageService.displayForFile();
+        this.reporter.sendEvent("user", "display-coverage");
     }
 
     public async watchCoverageAndVisibleEditors() {
         await this.coverageService.watchWorkspace();
+        this.reporter.sendEvent("user", "watch-coverage-editors");
     }
 
     public removeWatch() {
@@ -140,21 +142,5 @@ export class Gutters {
         textEditor.setDecorations(this.configStore.fullCoverageDecorationType, []);
         textEditor.setDecorations(this.configStore.partialCoverageDecorationType, []);
         textEditor.setDecorations(this.configStore.noCoverageDecorationType, []);
-    }
-
-    private async loadAndRenderCoverage(textEditor: TextEditor, coveragePath: string): Promise<void> {
-        if (!textEditor.document) { return ; }
-        const coverageFile = await this.coverage.load(coveragePath);
-        const file = textEditor.document.fileName;
-        const coveredLines = await this.indicators.extractCoverage(coverageFile, file);
-        await this.indicators.renderToTextEditor(coveredLines, textEditor);
-        this.reporter.sendEvent("user", "coverageFileType", coverageFile.includes("<?xml") ? "xml" : "info");
-    }
-
-    private renderCoverageOnVisible(coveragePath: string) {
-        window.visibleTextEditors.forEach(async (editor) => {
-            if (!editor) { return; }
-            await this.loadAndRenderCoverage(editor, coveragePath);
-        });
     }
 }

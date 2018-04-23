@@ -5,6 +5,7 @@
 		}
 	],
 	"settings": {
-		"coverage-gutters.showLineCoverage": true
+		"coverage-gutters.showLineCoverage": true,
+		"search.useRipgrep": false
 	}
 }

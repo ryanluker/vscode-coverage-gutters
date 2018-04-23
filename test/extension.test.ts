@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 
 suite("Extension Tests", function() {
-    this.timeout(50000);
+    this.timeout(5000);
 
     test("Should start extension @integration", async () => {
         const started = vscode.extensions.getExtension(
@@ -19,7 +19,6 @@ suite("Extension Tests", function() {
 
         // Wait for decorations to load
         await sleep(1000);
-        return;
     });
 });
 
