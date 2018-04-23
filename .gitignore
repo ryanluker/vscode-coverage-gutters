@@ -7,3 +7,4 @@ debug.log
 npm-debug.log
 __pycache__
 .coverage
+example/.vscode

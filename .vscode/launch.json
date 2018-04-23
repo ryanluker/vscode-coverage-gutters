@@ -19,7 +19,7 @@
             "request": "launch",
             "runtimeExecutable": "${execPath}",
             "args": [
-                "${workspaceRoot}/example",
+                "${workspaceRoot}/example/example.code-workspace",
                 "--extensionDevelopmentPath=${workspaceRoot}",
                 "--extensionTestsPath=${workspaceRoot}/out/test"
             ],

@@ -49,10 +49,7 @@ export class CoverageService {
     }
 
     public async displayForFile() {
-        this.updateServiceState(Status.rendering);
-        const textEditor = window.activeTextEditor;
-        await this.renderer.renderCoverage(this.cache, [textEditor]);
-        this.updateServiceState(Status.ready);
+        await this.loadCacheAndRender();
     }
 
     public async watchWorkspace() {
@@ -81,6 +78,7 @@ export class CoverageService {
         this.updateServiceState(Status.rendering);
         const visibleEditors = window.visibleTextEditors;
         await this.renderer.renderCoverage(this.cache, visibleEditors);
+        this.updateServiceState(Status.ready);
     }
 
     private listenToFileSystem() {
