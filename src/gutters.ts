@@ -16,7 +16,6 @@ import {Vscode} from "./wrappers/vscode";
 import {IConfigStore} from "./config";
 import {Coverage} from "./coverage";
 import {CoverageService} from "./coverageservice";
-import {Indicators} from "./indicators";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 
@@ -29,7 +28,6 @@ export class Gutters {
     private statusBarItem: StatusBarItem;
     private coverage: Coverage;
     private outputChannel: OutputChannel;
-    private indicators: Indicators;
     private reporter: Reporter;
     private statusBar: StatusBarToggler;
     private coverageService: CoverageService;
@@ -37,7 +35,6 @@ export class Gutters {
     constructor(
         configStore: IConfigStore,
         coverage: Coverage,
-        indicators: Indicators,
         outputChannel: OutputChannel,
         reporter: Reporter,
         statusBar: StatusBarToggler,
@@ -45,7 +42,6 @@ export class Gutters {
         this.configStore = configStore;
         this.coverage = coverage;
         this.outputChannel = outputChannel;
-        this.indicators = indicators;
         this.statusBar = statusBar;
         this.reporter = reporter;
 
@@ -75,7 +71,6 @@ export class Gutters {
                 "Preview Coverage Report",
             );
 
-            this.outputChannel.appendLine("Preview coverage report displayed");
             this.reporter.sendEvent("user", "preview-coverage-report");
         } catch (error) {
             this.handleError(error);
@@ -83,42 +78,39 @@ export class Gutters {
     }
 
     public async displayCoverageForActiveFile() {
-        await this.coverageService.displayForFile();
-        this.reporter.sendEvent("user", "display-coverage");
-    }
-
-    public async watchCoverageAndVisibleEditors() {
-        await this.coverageService.watchWorkspace();
-        this.reporter.sendEvent("user", "watch-coverage-editors");
-    }
-
-    public removeWatch() {
         try {
-            this.coverageWatcher.dispose();
-            this.editorWatcher.dispose();
-            this.coverageWatcher = null;
-            this.editorWatcher = null;
-            this.statusBar.toggle();
-            this.removeCoverageForActiveFile();
-
-            this.reporter.sendEvent("user", "remove-watch");
+            await this.coverageService.displayForFile();
+            this.reporter.sendEvent("user", "display-coverage");
         } catch (error) {
-            if (error.message === "Cannot read property 'dispose' of undefined") { return ; }
-            if (error.message === "Cannot read property 'dispose' of null") { return ; }
             this.handleError(error);
         }
     }
 
-    public removeCoverageForActiveFile() {
-        const activeEditor = window.activeTextEditor;
-        this.removeDecorationsForTextEditor(activeEditor);
+    public async watchCoverageAndVisibleEditors() {
+        try {
+            this.statusBar.toggle();
+            await this.coverageService.watchWorkspace();
+            this.reporter.sendEvent("user", "watch-coverage-editors");
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
 
+    public removeWatch() {
+        this.coverageService.removeCoverageForCurrentEditor();
+        this.coverageService.dispose();
+        this.statusBar.toggle();
+
+        this.reporter.sendEvent("user", "remove-watch");
+    }
+
+    public removeCoverageForActiveFile() {
+        this.coverageService.removeCoverageForCurrentEditor();
         this.reporter.sendEvent("user", "remove-coverage");
     }
 
     public dispose() {
-        this.coverageWatcher.dispose();
-        this.editorWatcher.dispose();
+        this.coverageService.dispose();
         this.statusBar.dispose();
 
         this.reporter.sendEvent("cleanup", "dispose");
@@ -128,19 +120,12 @@ export class Gutters {
         const message = error.message ? error.message : error;
         const stackTrace = error.stack;
         window.showWarningMessage(message.toString());
-        this.outputChannel.appendLine(`Error: ${message}`);
-        this.outputChannel.appendLine(`Stacktrace: ${stackTrace}`);
+        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Error ${message}`);
+        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Stacktrace ${stackTrace}`);
         this.reporter.sendEvent(
             "error",
             message.toString(),
             stackTrace ? stackTrace.toString() : undefined,
         );
-    }
-
-    private removeDecorationsForTextEditor(textEditor: TextEditor) {
-        if (!textEditor) { return; }
-        textEditor.setDecorations(this.configStore.fullCoverageDecorationType, []);
-        textEditor.setDecorations(this.configStore.partialCoverageDecorationType, []);
-        textEditor.setDecorations(this.configStore.noCoverageDecorationType, []);
     }
 }

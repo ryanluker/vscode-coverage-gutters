@@ -50,7 +50,7 @@ export class Renderer {
         });
     }
 
-    private removeDecorationsForEditor(editor: TextEditor) {
+    public removeDecorationsForEditor(editor: TextEditor) {
         editor.setDecorations(
             this.configStore.fullCoverageDecorationType,
             [],

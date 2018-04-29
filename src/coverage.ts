@@ -55,16 +55,6 @@ export class Coverage {
         return pickedFile;
     }
 
-    public async findCoverageFiles(): Promise<string[]> {
-        const lcovFiles = await this.findLcovs();
-        const xmlFiles = await this.findXmls();
-
-        // Remove duplicate file paths between workspaces
-        const files = [...new Set<string>([].concat(lcovFiles, xmlFiles))];
-        if (!files.length) { throw new Error("Could not find a Coverage file!"); }
-        return files;
-    }
-
     public findReports(): Promise<string[]> {
         const files = [];
         const actions = this.vscode.getWorkspaceFolders().map((workspaceFolder) => {
@@ -101,29 +91,5 @@ export class Coverage {
                     return resolve(files);
                 });
         });
-    }
-
-    private findLcovs(): Promise<string[]> {
-        const files = [];
-        const actions = this.vscode.getWorkspaceFolders().map((workspaceFolder) => {
-            return this.globFind(workspaceFolder, this.configStore.lcovFileName);
-        });
-        return Promise.all(actions)
-            .then((coverageInWorkspaceFolders) => {
-                // Spread first array to properly concat the file arrays from the globFind
-                return [].concat(...coverageInWorkspaceFolders);
-            });
-    }
-
-    private findXmls(): Promise<string[]> {
-        const files = [];
-        const actions = this.vscode.getWorkspaceFolders().map((workspaceFolder) => {
-            return this.globFind(workspaceFolder, this.configStore.xmlFileName);
-        });
-        return Promise.all(actions)
-            .then((coverageInWorkspaceFolders) => {
-                // Spread first array to properly concat the file arrays from the globFind
-                return [].concat(...coverageInWorkspaceFolders);
-            });
     }
 }

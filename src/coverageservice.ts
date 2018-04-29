@@ -45,7 +45,14 @@ export class CoverageService {
         this.filesLoader = new FilesLoader(configStore);
         this.renderer = new Renderer(configStore);
         this.lcovParser = new LcovParser(configStore);
-        this.loadCache();
+    }
+
+    public dispose() {
+        this.xmlWatcher.dispose();
+        this.editorWatcher.dispose();
+        this.cache = new Map(); // reset cache to empty
+        const visibleEditors = window.visibleTextEditors;
+        this.renderer.renderCoverage(this.cache, visibleEditors);
     }
 
     public async displayForFile() {
@@ -58,13 +65,27 @@ export class CoverageService {
         this.listenToEditorEvents();
     }
 
-    public async loadCache() {
-        this.updateServiceState(Status.loading);
-        const files = await this.filesLoader.findCoverageFiles();
-        const dataFiles = await this.filesLoader.loadDataFiles(files);
-        const dataCoverage = await this.lcovParser.filesToSections(dataFiles);
-        this.cache = dataCoverage;
-        this.updateServiceState(Status.ready);
+    public async removeCoverageForCurrentEditor() {
+        const visibleEditors = window.visibleTextEditors;
+        await this.renderer.renderCoverage(new Map(), visibleEditors);
+    }
+
+    private async loadCache() {
+        try {
+            this.updateServiceState(Status.loading);
+            const files = await this.filesLoader.findCoverageFiles();
+            this.outputChannel.appendLine(
+                `[${Date.now()}][coverageservice]: Loading ${files.size} file(s)`);
+            const dataFiles = await this.filesLoader.loadDataFiles(files);
+            const dataCoverage = await this.lcovParser.filesToSections(dataFiles);
+            this.outputChannel.appendLine(
+                `[${Date.now()}][coverageservice]: Caching ${dataCoverage.size} coverage(s)`);
+            this.cache = dataCoverage;
+            this.updateServiceState(Status.ready);
+        } catch (error) {
+            this.outputChannel.appendLine(
+                `[${Date.now()}][coverageservice]: Warning ${error.toString()}`);
+        }
     }
 
     private updateServiceState(state: Status) {
