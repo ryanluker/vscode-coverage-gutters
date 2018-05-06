@@ -1,5 +1,6 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
+import {ICoverageLines} from "../src/renderer";
 
 suite("Extension Tests", function() {
     this.timeout(5000);
@@ -12,13 +13,21 @@ suite("Extension Tests", function() {
     });
 
     test("Run display coverage on node test file @integration", async () => {
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const getCachedLines = extension.exports;
         const testCoverage = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         const testEditor = await vscode.window.showTextDocument(testDocument);
         await vscode.commands.executeCommand("extension.displayCoverage");
 
         // Wait for decorations to load
-        await sleep(1000);
+        await sleep(2000);
+
+        // Look for exact coverage on the file
+        const cachedLines: ICoverageLines = getCachedLines();
+        assert.equal(14, cachedLines.full.length);
+        assert.equal(4, cachedLines.none.length);
+        assert.equal(7, cachedLines.partial.length);
     });
 });
 

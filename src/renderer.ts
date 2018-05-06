@@ -1,8 +1,9 @@
 import {Section} from "lcov-parse";
 import {commands, Range, TextEditor, Uri, ViewColumn} from "vscode";
 import {IConfigStore} from "./config";
+import {setLastCoverageLines} from "./exportsapi";
 
-interface ICoverageLines {
+export interface ICoverageLines {
     full: Range[];
     partial: Range[];
     none: Range[];
@@ -46,6 +47,8 @@ export class Renderer {
                 // Check if current editor file is the current section
                 if (textEditor.document.fileName !== section.file) { return ; }
                 this.setDecorationsForEditor(textEditor, coverageLines);
+                // Cache last coverage lines for exports api
+                setLastCoverageLines(coverageLines);
             });
         });
     }
@@ -99,9 +102,10 @@ export class Renderer {
             }
         });
 
+        // apply partial coverage over full where it is more accurate
         if (section.branches) {
             section.branches.details.forEach((detail) => {
-                if (detail.branch === 0 && detail.taken === 0) {
+                if (detail.taken === 0) {
                     if (detail.line < 0) { return ; }
                     const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
                     if (coverageLines.full.find((range) => range.isEqual(partialRange))) {

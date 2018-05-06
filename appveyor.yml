@@ -6,7 +6,7 @@ install:
 
 build_script:
   - npm install
-  - npm run vscode:prepublish
+  - npm run compile
 
 test_script:
   - npm run lint

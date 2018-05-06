@@ -23,7 +23,7 @@ before_install:
 
 install:
   - npm install
-  - npm run vscode:prepublish
+  - npm run compile
 
 script:
   - npm run lint
