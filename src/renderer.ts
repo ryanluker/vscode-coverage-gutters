@@ -44,8 +44,10 @@ export class Renderer {
             this.filterCoverage(section, coverageLines);
 
             textEditors.forEach((textEditor) => {
-                // Check if current editor file is the current section
-                if (textEditor.document.fileName !== section.file) { return ; }
+                const sectionFile = this.normalizeFileName(section.file);
+                const editorFile = this.normalizeFileName(textEditor.document.fileName);
+
+                if (!this.compareFileNames(editorFile, sectionFile)) { return ; }
                 this.setDecorationsForEditor(textEditor, coverageLines);
                 // Cache last coverage lines for exports api
                 setLastCoverageLines(coverageLines);
@@ -66,6 +68,38 @@ export class Renderer {
             this.configStore.partialCoverageDecorationType,
             [],
         );
+    }
+
+    private compareFileNames(base: string, comparee: string): boolean {
+        const a = [...base].reverse();
+        const b = [...comparee].reverse();
+
+        // find the intersection and reverse it back into a string
+        const intersection: string[] = [];
+        let pos = 0;
+        // stop when strings at pos are no longer are equal
+        while (a[pos] === b[pos]) {
+            intersection.push(a[pos]);
+            pos++;
+        }
+        const subInt = intersection.reverse().join("");
+
+        // prevent file names from returning true, the intersection must include ###'s
+        // from the normalize process
+        if (!subInt.includes("###")) { return false; }
+
+        // if the whole intersection is present in base, return true
+        return base.includes(subInt);
+    }
+
+    private normalizeFileName(fileName: string): string {
+        let name = fileName;
+        // make file path relative and OS independent
+        name = name.toLocaleLowerCase();
+        // remove all file slashes
+        name = name.replace(/\//g, "###");
+        name = name.replace(/\\/g, "###");
+        return name;
     }
 
     private setDecorationsForEditor(
