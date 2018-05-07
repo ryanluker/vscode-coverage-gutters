@@ -6,28 +6,26 @@
 [![Build Status](https://travis-ci.org/ryanluker/vscode-coverage-gutters.svg?branch=master)](https://travis-ci.org/ryanluker/vscode-coverage-gutters)
 [![Build status](https://ci.appveyor.com/api/projects/status/8vb8t787frcqtrm7?svg=true)](https://ci.appveyor.com/project/ryanluker/vscode-coverage-gutters)
 
-[![Buy Me A Coffee](https://img.shields.io/badge/donate-buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/FufzejLo3)
+[![Buy Me A Coffee](images/donate.svg)](https://www.buymeacoffee.com/FufzejLo3)
 
 ## Features
-- multi workspace friendly watch command
+- multi workspace friendly watch functionality consumes all your coverage files
 
-![Coverage Gutters features watch](images/coverage-gutters-features-3.gif)
+![Coverage Gutters features watch](images/coverage-gutters-features-1.gif)
 
-- lcov displayed in full, partial and uncovered options (can consume xml or info file types)
+- extensive logging and insight into operations
 
-![Coverage Gutters features options](images/coverage-gutters-features-2.PNG)
+![Coverage Gutters features options](images/coverage-gutters-features-2.png)
 
-- preview overall coverage inside vscode
-
-![Coverage Gutters preview overall coverage](images/vs-gutters-preview-2.gif)
-
-- multi coverage file support via option picker
-- relative coverage file resolution option for those with complex file paths
-- workspace settings to customize the features to your liking
+- multi coverage file support for both xml and lcov
+- coverage caching layer makes for speedy rendering even in large files
+- relative coverage file resolution for those with complex file paths
+- preview coverage reports inside the editor
+- huge amount of workspace settings to customize the features to your liking
 - colour compatibility with light and dark themes
 
 ## Requirements
-- vscode 1.19.0 and up
+- vscode 1.22.0 and up
 - macos, linux or windows
 
 ## Extension Settings

@@ -2,6 +2,7 @@ import {
     commands,
     Disposable,
     FileSystemWatcher,
+    OutputChannel,
     StatusBarItem,
     TextEditor,
     Uri,
@@ -14,7 +15,7 @@ import {Vscode} from "./wrappers/vscode";
 
 import {IConfigStore} from "./config";
 import {Coverage} from "./coverage";
-import {Indicators} from "./indicators";
+import {CoverageService} from "./coverageservice";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 
@@ -26,22 +27,28 @@ export class Gutters {
     private editorWatcher: Disposable;
     private statusBarItem: StatusBarItem;
     private coverage: Coverage;
-    private indicators: Indicators;
+    private outputChannel: OutputChannel;
     private reporter: Reporter;
     private statusBar: StatusBarToggler;
+    private coverageService: CoverageService;
 
     constructor(
         configStore: IConfigStore,
         coverage: Coverage,
-        indicators: Indicators,
+        outputChannel: OutputChannel,
         reporter: Reporter,
         statusBar: StatusBarToggler,
     ) {
         this.configStore = configStore;
         this.coverage = coverage;
-        this.indicators = indicators;
+        this.outputChannel = outputChannel;
         this.statusBar = statusBar;
         this.reporter = reporter;
+
+        this.coverageService = new CoverageService(
+            configStore,
+            this.outputChannel,
+        );
 
         this.reporter.sendEvent("user", "start");
         this.reporter.sendEvent("user", "vscodeVersion", version);
@@ -63,6 +70,7 @@ export class Gutters {
                 ViewColumn.One,
                 "Preview Coverage Report",
             );
+
             this.reporter.sendEvent("user", "preview-coverage-report");
         } catch (error) {
             this.handleError(error);
@@ -70,18 +78,8 @@ export class Gutters {
     }
 
     public async displayCoverageForActiveFile() {
-        const textEditor = window.activeTextEditor;
         try {
-            if (!textEditor) { return; }
-            const filePaths = await this.coverage.findCoverageFiles();
-            this.reporter.sendEvent("user", "display-coverage-findCoverageFiles", `${filePaths.length}`);
-            const pickedFile = await this.coverage.pickFile(
-                filePaths,
-                "Choose a file to use for coverage.",
-            );
-            if (!pickedFile) { throw new Error("Could not show coverage for file!"); }
-
-            await this.loadAndRenderCoverage(textEditor, pickedFile);
+            await this.coverageService.displayForFile();
             this.reporter.sendEvent("user", "display-coverage");
         } catch (error) {
             this.handleError(error);
@@ -89,28 +87,9 @@ export class Gutters {
     }
 
     public async watchCoverageAndVisibleEditors() {
-        if (this.coverageWatcher && this.editorWatcher) { return; }
-
-        const textEditor = window.activeTextEditor;
         try {
-            const filePaths = await this.coverage.findCoverageFiles();
-            this.reporter.sendEvent("user", "watch-coverage-editors-findCoverageFiles", `${filePaths.length}`);
-            const pickedFile = await this.coverage.pickFile(
-                filePaths,
-                "Choose a file to use for coverage.",
-            );
-            if (!pickedFile) { throw new Error("Could not show coverage for file!"); }
-
-            // When we try to load the coverage when watch is actived we dont want to error
-            // if the active file has no coverage
-            this.loadAndRenderCoverage(textEditor, pickedFile).catch(() => {});
-
-            this.coverageWatcher = vscodeImpl.watchFile(pickedFile);
-            this.coverageWatcher.onDidChange((event) => this.renderCoverageOnVisible(pickedFile));
-            this.editorWatcher = window.onDidChangeVisibleTextEditors(
-                (event) => this.renderCoverageOnVisible(pickedFile));
             this.statusBar.toggle();
-
+            await this.coverageService.watchWorkspace();
             this.reporter.sendEvent("user", "watch-coverage-editors");
         } catch (error) {
             this.handleError(error);
@@ -118,32 +97,20 @@ export class Gutters {
     }
 
     public removeWatch() {
-        try {
-            this.coverageWatcher.dispose();
-            this.editorWatcher.dispose();
-            this.coverageWatcher = null;
-            this.editorWatcher = null;
-            this.statusBar.toggle();
-            this.removeCoverageForActiveFile();
+        this.coverageService.removeCoverageForCurrentEditor();
+        this.coverageService.dispose();
+        this.statusBar.toggle();
 
-            this.reporter.sendEvent("user", "remove-watch");
-        } catch (error) {
-            if (error.message === "Cannot read property 'dispose' of undefined") { return ; }
-            if (error.message === "Cannot read property 'dispose' of null") { return ; }
-            this.handleError(error);
-        }
+        this.reporter.sendEvent("user", "remove-watch");
     }
 
     public removeCoverageForActiveFile() {
-        const activeEditor = window.activeTextEditor;
-        this.removeDecorationsForTextEditor(activeEditor);
-
+        this.coverageService.removeCoverageForCurrentEditor();
         this.reporter.sendEvent("user", "remove-coverage");
     }
 
     public dispose() {
-        this.coverageWatcher.dispose();
-        this.editorWatcher.dispose();
+        this.coverageService.dispose();
         this.statusBar.dispose();
 
         this.reporter.sendEvent("cleanup", "dispose");
@@ -153,33 +120,12 @@ export class Gutters {
         const message = error.message ? error.message : error;
         const stackTrace = error.stack;
         window.showWarningMessage(message.toString());
+        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Error ${message}`);
+        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Stacktrace ${stackTrace}`);
         this.reporter.sendEvent(
             "error",
             message.toString(),
             stackTrace ? stackTrace.toString() : undefined,
         );
-    }
-
-    private removeDecorationsForTextEditor(textEditor: TextEditor) {
-        if (!textEditor) { return; }
-        textEditor.setDecorations(this.configStore.fullCoverageDecorationType, []);
-        textEditor.setDecorations(this.configStore.partialCoverageDecorationType, []);
-        textEditor.setDecorations(this.configStore.noCoverageDecorationType, []);
-    }
-
-    private async loadAndRenderCoverage(textEditor: TextEditor, coveragePath: string): Promise<void> {
-        if (!textEditor.document) { return ; }
-        const coverageFile = await this.coverage.load(coveragePath);
-        const file = textEditor.document.fileName;
-        const coveredLines = await this.indicators.extractCoverage(coverageFile, file);
-        await this.indicators.renderToTextEditor(coveredLines, textEditor);
-        this.reporter.sendEvent("user", "coverageFileType", coverageFile.includes("<?xml") ? "xml" : "info");
-    }
-
-    private renderCoverageOnVisible(coveragePath: string) {
-        window.visibleTextEditors.forEach(async (editor) => {
-            if (!editor) { return; }
-            await this.loadAndRenderCoverage(editor, coveragePath);
-        });
     }
 }

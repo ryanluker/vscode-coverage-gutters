@@ -23,7 +23,9 @@ before_install:
 
 install:
   - npm install
-  - npm run vscode:prepublish
+  - npm run compile
 
 script:
-  - npm run test-ci
+  - npm run lint
+  - npm run test-unit
+  - npm run test-integration

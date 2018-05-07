@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import {Config} from "./config";
 import {Coverage} from "./coverage";
+import {getLastCoverageLines} from "./exportsapi";
 import {Gutters} from "./gutters";
-import {Indicators} from "./indicators";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 import {Fs} from "./wrappers/fs";
@@ -24,11 +24,11 @@ export function activate(context: vscode.ExtensionContext) {
     const configStore = new Config(vscodeImpl, context, reporter).get();
     const statusBarToggler = new StatusBarToggler(configStore);
     const coverage = new Coverage(configStore, globImpl, vscodeImpl, fsImpl);
-    const indicators = new Indicators(xmlParseImpl, lcovParseImpl, vscodeImpl, configStore);
+    const outputChannel = vscode.window.createOutputChannel("coverage-gutters");
     const gutters = new Gutters(
         configStore,
         coverage,
-        indicators,
+        outputChannel,
         reporter,
         statusBarToggler,
     );
@@ -59,4 +59,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(watch);
     context.subscriptions.push(removeWatch);
     context.subscriptions.push(gutters);
+    context.subscriptions.push(outputChannel);
+
+    // return coverage lines getter to allow for integration hooks
+    return getLastCoverageLines;
 }

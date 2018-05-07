@@ -70,9 +70,6 @@ export class Config {
         this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
         const STATUS_BAR_TOGGLER = "status-bar-toggler-watchCoverageAndVisibleEditors-enabled";
         this.showStatusBarToggler = rootCustomConfig.get(STATUS_BAR_TOGGLER) as boolean;
-        this.reporter.sendEvent("config", "lcovFileName", this.lcovFileName);
-        this.reporter.sendEvent("config", "xmlFileName", this.xmlFileName);
-        this.reporter.sendEvent("config", "altSfCompare", this.altSfCompare.toString());
 
         // Themes and icons
         const coverageLightBackgroundColour = rootConfig.get("highlightlight") as string;
@@ -94,6 +91,7 @@ export class Config {
         this.reporter.sendEvent("config", "showLineCoverage", showLineCoverage);
         this.reporter.sendEvent("config", "showRulerCoverage", showRulerCoverage);
 
+        // Setup info for decorations
         const fullDecoration: DecorationRenderOptions = {
             dark: {
                 backgroundColor: showLineCoverage ? coverageDarkBackgroundColour : "",
@@ -141,6 +139,7 @@ export class Config {
 
         this.cleanupEmptyGutterIcons(fullDecoration, partialDecoration, noDecoration);
 
+        // Generate decorations
         this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType(noDecoration);
         this.partialCoverageDecorationType = this.vscode.createTextEditorDecorationType(partialDecoration);
         this.fullCoverageDecorationType = this.vscode.createTextEditorDecorationType(fullDecoration);

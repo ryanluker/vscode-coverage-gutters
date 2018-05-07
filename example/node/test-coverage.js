@@ -2,6 +2,20 @@ module.exports.test = function test(testNumber) {
     if(testNumber === 1) {
         return true;
     }
+
+    if(true===false) {
+        return "never get here";
+    }
+
+    if(true===false) {
+        return "never get here";
+    }
+
+    const test = 0;
+    if(true===false) {
+        return "never get here";
+    }
+
     if(testNumber === 2) {
         return false;
     }
@@ -21,7 +35,7 @@ module.exports.test = function test(testNumber) {
     testNumber = testNumber === 5 ? "woop":"wap";
 
     const testComplexReturn = callbackBased(111, subTest);
- 
+
     return testNumber;
 }
 

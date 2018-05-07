@@ -1,5 +1,4 @@
 import * as assert from "assert";
-import * as vscode from "vscode";
 import {Config} from "../src/config";
 
 suite("Config Tests", function() {
@@ -35,20 +34,20 @@ suite("Config Tests", function() {
         },
     };
 
-    test("Constructor should setup properly", function() {
+    test("Constructor should setup properly @unit", function() {
         assert.doesNotThrow(() => {
             const _CONFIG = new Config(fakeVscode, fakeContext, fakeReport);
         });
     });
 
-    test("Can get configStore after initialization", function() {
+    test("Can get configStore after initialization @unit", function() {
         const config = new Config(fakeVscode, fakeContext, fakeReport);
         const store = config.get();
         assert.notEqual(store.altSfCompare, null);
         assert.notEqual(store.lcovFileName, null);
     });
 
-    test("Should remove gutter icons if path is blank, allows breakpoint usage", function() {
+    test("Should remove gutter icons if path is blank, allows breakpoint usage @unit", function() {
         fakeVscode.createTextEditorDecorationType = (options) => {
             assert.equal("gutterIconPath" in options.dark, false);
             assert.equal("gutterIconPath" in options.light, false);

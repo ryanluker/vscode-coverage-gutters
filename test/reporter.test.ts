@@ -3,7 +3,7 @@ import {Reporter} from "../src/reporter";
 import {IOptions} from "../src/wrappers/request";
 
 suite("Reporter Tests", function() {
-    test("Should not report metrics if enabledMetrics false", function() {
+    test("Should not report metrics if enabledMetrics false @unit", function() {
         const fakeRequest = {
             post(uri: string, options?: IOptions) {
                 assert.equal(1, 2);
@@ -17,7 +17,7 @@ suite("Reporter Tests", function() {
         reporter.sendEvent("test", "action");
     });
 
-    test("Should send metrics if enabledMetrics is true", function() {
+    test("Should send metrics if enabledMetrics is true @unit", function() {
         const fakeRequest = {
             post(uri: string, options?: IOptions) {
                 // tslint:disable-next-line:no-string-literal
@@ -32,7 +32,7 @@ suite("Reporter Tests", function() {
         reporter.sendEvent("test", "action");
     });
 
-    test("GA tracking id should not be set in code", function() {
+    test("GA tracking id should not be set in code @unit", function() {
         const fakeRequest = {
             post(uri: string, options?: IOptions) {
                 // tslint:disable-next-line:no-string-literal
@@ -47,7 +47,7 @@ suite("Reporter Tests", function() {
         reporter.sendEvent("test", "action");
     });
 
-    test("GA tracking id should be set by env variable", function() {
+    test("GA tracking id should be set by env variable @unit", function() {
         const fakeRequest = {
             post(uri: string, options?: IOptions) {
                 // tslint:disable-next-line:no-string-literal
