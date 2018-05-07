@@ -1,5 +1,12 @@
 import {Section} from "lcov-parse";
-import {commands, Range, TextEditor, Uri, ViewColumn} from "vscode";
+import {
+    commands,
+    OutputChannel,
+    Range,
+    TextEditor,
+    Uri,
+    ViewColumn,
+} from "vscode";
 import {IConfigStore} from "./config";
 import {setLastCoverageLines} from "./exportsapi";
 
@@ -11,9 +18,14 @@ export interface ICoverageLines {
 
 export class Renderer {
     private configStore: IConfigStore;
+    private outputChannel: OutputChannel;
 
-    constructor(configStore: IConfigStore) {
+    constructor(
+        configStore: IConfigStore,
+        outputChannel: OutputChannel,
+    ) {
         this.configStore = configStore;
+        this.outputChannel = outputChannel;
     }
 
     /**
@@ -36,22 +48,21 @@ export class Renderer {
             this.removeDecorationsForEditor(textEditor);
         });
 
-        sections.forEach((section) => {
-            // Reset lines for new section
+        textEditors.forEach((textEditor) => {
+            // Reset lines for new editor
             coverageLines.full = [];
             coverageLines.none = [];
             coverageLines.partial = [];
-            this.filterCoverage(section, coverageLines);
 
-            textEditors.forEach((textEditor) => {
-                const sectionFile = this.normalizeFileName(section.file);
-                const editorFile = this.normalizeFileName(textEditor.document.fileName);
+            // find best scoring section editor combo (or undefined if too low score)
+            const topSection = this.findTopSectionForEditor(textEditor, sections);
 
-                if (!this.compareFileNames(editorFile, sectionFile)) { return ; }
-                this.setDecorationsForEditor(textEditor, coverageLines);
-                // Cache last coverage lines for exports api
-                setLastCoverageLines(coverageLines);
-            });
+            if (!topSection) { return ; }
+            this.filterCoverage(topSection, coverageLines);
+            this.setDecorationsForEditor(textEditor, coverageLines);
+
+            // Cache last coverage lines for exports api
+            setLastCoverageLines(coverageLines);
         });
     }
 
@@ -70,7 +81,48 @@ export class Renderer {
         );
     }
 
-    private compareFileNames(base: string, comparee: string): boolean {
+    /**
+     * Compare the score of each editor / section combo and pick the best
+     * @param textEditor editor to find best section for
+     * @param sections sections to compare against open editors
+     */
+    private findTopSectionForEditor(
+        textEditor: TextEditor,
+        sections: Map<string, Section>,
+    ): Section | undefined {
+        const topSection: {score: number, section: Section|undefined} = {
+            score: 0,
+            section: undefined,
+        };
+
+        sections.forEach((section) => {
+            const sectionFile = this.normalizeFileName(section.file);
+            const editorFile = this.normalizeFileName(textEditor.document.fileName);
+
+            const intersect = this.findIntersect(editorFile, sectionFile);
+            if (!intersect) { return ; }
+
+            // create a score to judge top "performing" editor
+            // this score is the percent of the file path that is same as the intersect
+            const score = (intersect.length / editorFile.length) * 100;
+            if (topSection.score > score) { return ; }
+
+            // new top
+            topSection.section = section;
+            topSection.score = score;
+        });
+
+        // capture score to logs
+        if (topSection.section) {
+            const template = `[${Date.now()}][renderer][section file path]: `;
+            const message = template + `${topSection.section.file} [exactness score]: ${topSection.score}`;
+            this.outputChannel.appendLine(message);
+        }
+
+        return topSection.section;
+    }
+
+    private findIntersect(base: string, comparee: string): string {
         const a = [...base].reverse();
         const b = [...comparee].reverse();
 
@@ -79,6 +131,9 @@ export class Renderer {
         let pos = 0;
         // stop when strings at pos are no longer are equal
         while (a[pos] === b[pos]) {
+            // if we reached the end or there isnt a value for that pos
+            // exit the while loop
+            if (!a[pos] || !b[pos]) { break; }
             intersection.push(a[pos]);
             pos++;
         }
@@ -86,10 +141,8 @@ export class Renderer {
 
         // prevent file names from returning true, the intersection must include ###'s
         // from the normalize process
-        if (!subInt.includes("###")) { return false; }
-
-        // if the whole intersection is present in base, return true
-        return base.includes(subInt);
+        if (!subInt.includes("###")) { return ""; }
+        return subInt;
     }
 
     private normalizeFileName(fileName: string): string {

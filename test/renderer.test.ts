@@ -21,8 +21,18 @@ suite("Renderer Tests", function() {
         xmlFileName: "test.xml",
     };
 
+    const fakeOutput = {
+        append: () => {},
+        appendLine: () => {},
+        clear: () => {},
+        dispose: () => {},
+        hide: () => {},
+        name: "fake",
+        show: () => {},
+    };
+
     test("Constructor should setup properly @unit", function(done) {
-        assert.doesNotThrow(() => new Renderer(fakeConfig));
+        assert.doesNotThrow(() => new Renderer(fakeConfig, fakeOutput));
         return done();
     });
 });

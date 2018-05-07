@@ -43,7 +43,7 @@ export class CoverageService {
         this.updateServiceState(Status.initializing);
         this.cache = new Map();
         this.filesLoader = new FilesLoader(configStore);
-        this.renderer = new Renderer(configStore);
+        this.renderer = new Renderer(configStore, this.outputChannel);
         this.lcovParser = new LcovParser(configStore);
     }
 
