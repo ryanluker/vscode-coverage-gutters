@@ -138,10 +138,6 @@ export class Renderer {
             pos++;
         }
         const subInt = intersection.reverse().join("");
-
-        // prevent file names from returning true, the intersection must include ###'s
-        // from the normalize process
-        if (!subInt.includes("###")) { return ""; }
         return subInt;
     }
 
