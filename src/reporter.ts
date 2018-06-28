@@ -36,6 +36,10 @@ export class Reporter {
             v: "1",
         };
 
-        return this.request.post("https://www.google-analytics.com/collect", { form: data });
+        return this.request.post("https://www.google-analytics.com/collect", { form: data }, (err) => {
+            if (err) {
+                console.error(err.message);
+            }
+        });
     }
 }
