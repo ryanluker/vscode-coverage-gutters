@@ -77,7 +77,7 @@ suite("Coverage Tests", function() {
 
         fsImpl.readFile = function(path: string, cb: (err: NodeJS.ErrnoException, data: Buffer) => void) {
             assert.equal(path, "pathtofile");
-            return cb({} as NodeJS.ErrnoException, new Buffer("lcovhere"));
+            return cb(undefined as any, new Buffer("lcovhere"));
         };
 
         const coverage = new Coverage(
@@ -92,8 +92,8 @@ suite("Coverage Tests", function() {
                 assert.equal(dataString, "lcovhere");
                 return done();
             })
-            .catch(function(error) {
-                return done(error);
+            .catch(function() {
+                return done(new Error("should not get here"));
             });
     });
 
