@@ -20,6 +20,12 @@ suite("Reporter Tests", function() {
     test("Should send metrics if enabledMetrics is true @unit", function() {
         const fakeRequest = {
             post(uri: string, options?: IOptions) {
+                if (!options) {
+                    throw new Error("Options is undefined.");
+                }
+                if (!options.form) {
+                    throw new Error("Options.form is undefined.");
+                }
                 // tslint:disable-next-line:no-string-literal
                 assert.equal(options.form["ec"], "test");
                 return;
@@ -35,6 +41,12 @@ suite("Reporter Tests", function() {
     test("GA tracking id should not be set in code @unit", function() {
         const fakeRequest = {
             post(uri: string, options?: IOptions) {
+                if (!options) {
+                    throw new Error("Options is undefined.");
+                }
+                if (!options.form) {
+                    throw new Error("Options.form is undefined.");
+                }
                 // tslint:disable-next-line:no-string-literal
                 assert.equal(options.form["tid"], "");
                 return;
@@ -50,6 +62,12 @@ suite("Reporter Tests", function() {
     test("GA tracking id should be set by env variable @unit", function() {
         const fakeRequest = {
             post(uri: string, options?: IOptions) {
+                if (!options) {
+                    throw new Error("Options is undefined.");
+                }
+                if (!options.form) {
+                    throw new Error("Options.form is undefined.");
+                }
                 // tslint:disable-next-line:no-string-literal
                 assert.equal(options.form["tid"], "123");
                 return;

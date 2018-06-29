@@ -50,7 +50,7 @@ suite("Coverage Tests", function() {
         fsImpl.readFile = function(path: string, cb) {
             assert.equal(path, "pathtofile");
             const error: NodeJS.ErrnoException = new Error("could not read from fs");
-            return cb(error, null);
+            return cb(error, new Buffer(""));
         };
         const coverage = new Coverage(
             fakeConfig,
@@ -75,10 +75,11 @@ suite("Coverage Tests", function() {
         const globImpl = new Glob();
         const fsImpl = new Fs();
 
-        fsImpl.readFile = function(path: string, cb) {
+        fsImpl.readFile = function(path: string, cb: (err: NodeJS.ErrnoException, data: Buffer) => void) {
             assert.equal(path, "pathtofile");
-            return cb(null, new Buffer("lcovhere"));
+            return cb({} as NodeJS.ErrnoException, new Buffer("lcovhere"));
         };
+
         const coverage = new Coverage(
             fakeConfig,
             globImpl,

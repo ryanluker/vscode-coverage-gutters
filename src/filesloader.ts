@@ -56,9 +56,12 @@ export class FilesLoader {
 
     private findCoverageForFileName(fileName: string): Promise<Set<string>> {
         const files = [];
-        const actions = workspace.workspaceFolders.map((workspaceFolder) => {
-            return this.globFind(workspaceFolder, fileName);
-        });
+        let actions: Array<Promise<Set<string>>> = new Array<Promise<Set<string>>>();
+        if (workspace.workspaceFolders) {
+            actions = workspace.workspaceFolders.map((workspaceFolder) => {
+                return this.globFind(workspaceFolder, fileName);
+            });
+        }
         return Promise.all(actions)
             .then((coverageInWorkspaceFolders) => {
                 let totalCoverage = new Set<string>();
