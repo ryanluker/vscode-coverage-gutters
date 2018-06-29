@@ -76,7 +76,7 @@ export class Coverage {
     public load(path: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             this.fs.readFile(path, (err, data) => {
-                if (err && Object.keys(err).length !== 0) { return reject(err); }
+                if (err) { return reject(err); }
                 return resolve(data.toString());
             });
         });
