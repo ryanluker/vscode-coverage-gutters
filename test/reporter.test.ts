@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import {Reporter} from "../src/reporter";
-import {IOptions} from "../src/wrappers/request";
+import {IOptions, RequestCallback} from "../src/wrappers/request";
 
 suite("Reporter Tests", function() {
     test("Should not report metrics if enabledMetrics false @unit", function() {
@@ -71,6 +71,20 @@ suite("Reporter Tests", function() {
                 // tslint:disable-next-line:no-string-literal
                 assert.equal(options.form["tid"], "123");
                 return;
+            },
+        };
+
+        const fakeUuid = "fakeuuidhere";
+
+        const reporter = new Reporter(fakeRequest, fakeUuid, "123", true);
+        reporter.sendEvent("test", "action");
+    });
+
+    test("Error when sending report should not propagate", function() {
+        const fakeRequest = {
+            post(uri: string, options?: IOptions, callback?: RequestCallback) {
+                const errormessage = "getaddrinfo ENOTFOUND www.google-analytics.com www.google-analytics.com:443";
+                return callback(new Error(errormessage), null, null);
             },
         };
 
