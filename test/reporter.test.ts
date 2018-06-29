@@ -83,8 +83,11 @@ suite("Reporter Tests", function() {
     test("Error when sending report should not propagate", function() {
         const fakeRequest = {
             post(uri: string, options?: IOptions, callback?: RequestCallback) {
+                if (!callback) {
+                    throw new Error("Callback is undefined.");
+                }
                 const errormessage = "getaddrinfo ENOTFOUND www.google-analytics.com www.google-analytics.com:443";
-                return callback(new Error(errormessage), null, null);
+                return callback(new Error(errormessage), null as any, null);
             },
         };
 
