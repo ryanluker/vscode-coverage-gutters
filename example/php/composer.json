@@ -1,0 +1,31 @@
+{
+  "name": "test/testCoverage",
+  "version": "0.1.0",
+  "homepage": "https://github.com/test/testCoverage",
+  "description": "",
+  "keywords": [
+    "php"
+  ],
+  "authors": [
+    {
+      "name": "test",
+      "homepage": "https://github.com/test",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/test/testCoverage/issues",
+    "source": "https://github.com/test/testCoverage"
+  },
+  "license": "MIT",
+  "type": "library",
+  "require": {
+    "php": ">=5.3.0",
+    "monolog/monolog": "1.*"
+  },
+  "require-dev": {
+    "phpdocumentor/phpdocumentor": "2.*",
+    "phpunit/phpunit": "4.*",
+    "sebastian/phpcpd": "2.*"
+  }
+}

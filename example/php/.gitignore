@@ -1,0 +1,9 @@
+node_modules
+bower_components
+*.log
+
+vendor
+composer.lock
+composer.phar
+
+_lint
