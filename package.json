@@ -292,7 +292,7 @@
     "vscode": "1.1.10"
   },
   "dependencies": {
-    "cobertura-parse": "1.0.5",
+    "cobertura-parse": "vokal/cobertura-parse#53109a6",
     "glob": "7.1.2",
     "lcov-parse": "1.0.0",
     "lodash": "4.17.5",
