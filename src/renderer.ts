@@ -1,3 +1,4 @@
+import {extname} from "path";
 import {Section} from "lcov-parse";
 import {
     commands,
@@ -9,6 +10,7 @@ import {
 } from "vscode";
 import {IConfigStore} from "./config";
 import {setLastCoverageLines} from "./exportsapi";
+import {Reporter} from "./reporter";
 
 export interface ICoverageLines {
     full: Range[];
@@ -19,13 +21,16 @@ export interface ICoverageLines {
 export class Renderer {
     private configStore: IConfigStore;
     private outputChannel: OutputChannel;
+    private eventReporter: Reporter;
 
     constructor(
         configStore: IConfigStore,
         outputChannel: OutputChannel,
+        eventReporter: Reporter,
     ) {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
+        this.eventReporter = eventReporter;
     }
 
     /**
@@ -114,9 +119,13 @@ export class Renderer {
 
         // capture score to logs
         if (topSection.section) {
+            const filePath = topSection.section.file;
             const template = `[${Date.now()}][renderer][section file path]: `;
-            const message = template + `${topSection.section.file} [exactness score]: ${topSection.score}`;
+            const message = template + `${filePath} [exactness score]: ${topSection.score}`;
             this.outputChannel.appendLine(message);
+            // log event and file type
+            this.eventReporter.sendEvent("system", "renderer", "correctness", topSection.score);
+            this.eventReporter.sendEvent("system", "renderer", "fileType", extname(filePath));
         }
 
         return topSection.section;
