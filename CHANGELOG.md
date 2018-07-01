@@ -1,3 +1,12 @@
+### 2.0.1
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/16?closed=1)
+## Under the hood:
+- event metrics to better understand language usage #134
+- misc project tidying and cleanup #135 #136
+
+## Bugs:
+- xml path issue related to upstream parser fixed #133
+
 ### 2.0.0
 [Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/15?closed=1)
 ## Features:

@@ -5,13 +5,6 @@ import {ICoverageLines} from "../src/renderer";
 suite("Extension Tests", function() {
     this.timeout(25000);
 
-    test("Should start extension @integration", async () => {
-        const started = vscode.extensions.getExtension(
-            "ryanluker.vscode-coverage-gutters",
-        ).isActive;
-        assert.equal(started, true);
-    });
-
     test("Run display coverage on node test file @integration", async () => {
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         const getCachedLines = extension.exports;
