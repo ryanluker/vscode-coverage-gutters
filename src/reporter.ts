@@ -20,7 +20,7 @@ export class Reporter {
         category: string,
         action: string,
         label?: string,
-        value?: number | string,
+        value?: number,
     ) {
         if (!this.enableMetrics) { return; }
         const data = {

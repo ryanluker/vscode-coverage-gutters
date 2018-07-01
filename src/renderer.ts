@@ -124,8 +124,8 @@ export class Renderer {
             const message = template + `${filePath} [exactness score]: ${topSection.score}`;
             this.outputChannel.appendLine(message);
             // log event and file type
-            this.eventReporter.sendEvent("system", "renderer", "correctness", topSection.score);
-            this.eventReporter.sendEvent("system", "renderer", "fileType", extname(filePath));
+            this.eventReporter.sendEvent("system", "renderer-correctness", topSection.score.toString());
+            this.eventReporter.sendEvent("system", "renderer-fileType", extname(filePath));
         }
 
         return topSection.section;

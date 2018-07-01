@@ -7,14 +7,10 @@ import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 import {Fs} from "./wrappers/fs";
 import {Glob} from "./wrappers/glob";
-import {LcovParse} from "./wrappers/lcov-parse";
 import {Request} from "./wrappers/request";
 import {Vscode} from "./wrappers/vscode";
-import {XmlParse} from "./wrappers/xml-parse";
 
 const fsImpl = new Fs();
-const xmlParseImpl = new XmlParse();
-const lcovParseImpl = new LcovParse();
 const vscodeImpl = new Vscode();
 const globImpl = new Glob();
 
