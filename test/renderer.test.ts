@@ -33,7 +33,7 @@ suite("Renderer Tests", function() {
 
     const fakeReporter = {
         sendEvent: () => {},
-    }
+    };
 
     test("Constructor should setup properly @unit", function(done) {
         assert.doesNotThrow(() => new Renderer(fakeConfig, fakeOutput, fakeReporter as any));

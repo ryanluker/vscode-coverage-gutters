@@ -1,5 +1,5 @@
-import {extname} from "path";
 import {Section} from "lcov-parse";
+import {extname} from "path";
 import {
     commands,
     OutputChannel,

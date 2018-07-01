@@ -42,7 +42,7 @@ export class LcovParser {
                     });
                     return resolve(sections);
                 });
-            } catch(error) {
+            } catch (error) {
                 return reject(error);
             }
 
