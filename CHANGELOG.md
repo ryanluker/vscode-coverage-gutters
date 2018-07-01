@@ -1,3 +1,48 @@
+### 2.0.0
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/15?closed=1)
+## Features:
+- Architecture Revamp: focus on caching and performance #117
+
+## Under the hood:
+- Module: Revamp gutters / core loop into new CoverageService #116
+- Module: Revamp Coverage into LcovParser #115
+- Module: Revamp Coverage Renderer #114
+- Module: Revamp extension setup and initialization #118
+- Module: Revamp File Loader #127
+- Update dependencies #110
+- Update documentation and readme #111
+
+## Bugs:
+- Donate link doesnt have svg in readme in extension search #128
+- It doesnt live reload on icov update when 2 panes #109
+
+### 1.3.1
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/14?closed=1)
+## Bugs Fixed
+- Multi root workspace 100% cpu issue
+- Windows xml support issue with cobertura
+- Misc bugs related to code execution
+
+### 1.3.0
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/13?closed=1)
+## Features
+- Multi Workspace support for extension
+
+## Misc
+- Add new readme content
+- Add quick pick items for multiple file paths
+- Update extension info
+
+### 1.2.0
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/12?closed=1)
+## Features
+- xml lcov file support, full and no line coverage reporting with all existing options (no partial at this time)
+
+## Misc
+- Add new readme content
+- Update changelog file
+- Update extension info, add xml coverage file support feature
+
 ### 1.1.3
 [Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/11?closed=1)
 - fix bug where dots in file path would prevent lcov finding
