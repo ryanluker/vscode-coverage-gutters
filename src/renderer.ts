@@ -1,16 +1,11 @@
 import {Section} from "lcov-parse";
-import {extname} from "path";
 import {
-    commands,
-    OutputChannel,
     Range,
     TextEditor,
-    Uri,
-    ViewColumn,
 } from "vscode";
 import {IConfigStore} from "./config";
 import {setLastCoverageLines} from "./exportsapi";
-import {Reporter} from "./reporter";
+import {TopSectionFinder} from "./topSectionFinder";
 
 export interface ICoverageLines {
     full: Range[];
@@ -20,17 +15,14 @@ export interface ICoverageLines {
 
 export class Renderer {
     private configStore: IConfigStore;
-    private outputChannel: OutputChannel;
-    private eventReporter: Reporter;
+    private topSectionFinder: TopSectionFinder;
 
     constructor(
         configStore: IConfigStore,
-        outputChannel: OutputChannel,
-        eventReporter: Reporter,
+        topSectionFinder: TopSectionFinder,
     ) {
         this.configStore = configStore;
-        this.outputChannel = outputChannel;
-        this.eventReporter = eventReporter;
+        this.topSectionFinder = topSectionFinder;
     }
 
     /**
@@ -38,7 +30,7 @@ export class Renderer {
      * @param sections cached set of sections
      * @param textEditors currently visible text editors
      */
-    public async renderCoverage(
+    public renderCoverage(
         sections: Map<string, Section>,
         textEditors: TextEditor[],
     ) {
@@ -60,9 +52,10 @@ export class Renderer {
             coverageLines.partial = [];
 
             // find best scoring section editor combo (or undefined if too low score)
-            const topSection = this.findTopSectionForEditor(textEditor, sections);
+            const topSection = this.topSectionFinder.findTopSectionForEditor(textEditor, sections);
 
             if (!topSection) { return ; }
+
             this.filterCoverage(topSection, coverageLines);
             this.setDecorationsForEditor(textEditor, coverageLines);
 
@@ -84,80 +77,6 @@ export class Renderer {
             this.configStore.partialCoverageDecorationType,
             [],
         );
-    }
-
-    /**
-     * Compare the score of each editor / section combo and pick the best
-     * @param textEditor editor to find best section for
-     * @param sections sections to compare against open editors
-     */
-    private findTopSectionForEditor(
-        textEditor: TextEditor,
-        sections: Map<string, Section>,
-    ): Section | undefined {
-        const topSection: {score: number, section: Section|undefined} = {
-            score: 0,
-            section: undefined,
-        };
-
-        sections.forEach((section) => {
-            const sectionFile = this.normalizeFileName(section.file);
-            const editorFile = this.normalizeFileName(textEditor.document.fileName);
-
-            const intersect = this.findIntersect(editorFile, sectionFile);
-            if (!intersect) { return ; }
-
-            // create a score to judge top "performing" editor
-            // this score is the percent of the file path that is same as the intersect
-            const score = (intersect.length / editorFile.length) * 100;
-            if (topSection.score > score) { return ; }
-
-            // new top
-            topSection.section = section;
-            topSection.score = score;
-        });
-
-        // capture score to logs
-        if (topSection.section) {
-            const filePath = topSection.section.file;
-            const template = `[${Date.now()}][renderer][section file path]: `;
-            const message = template + `${filePath} [exactness score]: ${topSection.score}`;
-            this.outputChannel.appendLine(message);
-            // log event and file type
-            this.eventReporter.sendEvent("system", "renderer-correctness", topSection.score.toString());
-            this.eventReporter.sendEvent("system", "renderer-fileType", extname(filePath));
-        }
-
-        return topSection.section;
-    }
-
-    private findIntersect(base: string, comparee: string): string {
-        const a = [...base].reverse();
-        const b = [...comparee].reverse();
-
-        // find the intersection and reverse it back into a string
-        const intersection: string[] = [];
-        let pos = 0;
-        // stop when strings at pos are no longer are equal
-        while (a[pos] === b[pos]) {
-            // if we reached the end or there isnt a value for that pos
-            // exit the while loop
-            if (!a[pos] || !b[pos]) { break; }
-            intersection.push(a[pos]);
-            pos++;
-        }
-        const subInt = intersection.reverse().join("");
-        return subInt;
-    }
-
-    private normalizeFileName(fileName: string): string {
-        let name = fileName;
-        // make file path relative and OS independent
-        name = name.toLocaleLowerCase();
-        // remove all file slashes
-        name = name.replace(/\//g, "###");
-        name = name.replace(/\\/g, "###");
-        return name;
     }
 
     private setDecorationsForEditor(
