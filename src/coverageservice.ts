@@ -12,6 +12,7 @@ import {IConfigStore} from "./config";
 import {FilesLoader} from "./filesloader";
 import {LcovParser} from "./lcovparser";
 import {Renderer} from "./renderer";
+import {Reporter} from "./reporter";
 
 enum Status {
     ready = "READY",
@@ -24,6 +25,7 @@ enum Status {
 export class CoverageService {
     private configStore: IConfigStore;
     private outputChannel: OutputChannel;
+    private eventReporter: Reporter;
     private filesLoader: FilesLoader;
     private renderer: Renderer;
     private lcovParser: LcovParser;
@@ -37,13 +39,19 @@ export class CoverageService {
     constructor(
         configStore: IConfigStore,
         outputChannel: OutputChannel,
+        eventReporter: Reporter,
     ) {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
+        this.eventReporter = eventReporter;
         this.updateServiceState(Status.initializing);
         this.cache = new Map();
         this.filesLoader = new FilesLoader(configStore);
-        this.renderer = new Renderer(configStore, this.outputChannel);
+        this.renderer = new Renderer(
+            configStore,
+            this.outputChannel,
+            this.eventReporter,
+        );
         this.lcovParser = new LcovParser(configStore);
     }
 
@@ -83,8 +91,7 @@ export class CoverageService {
             this.cache = dataCoverage;
             this.updateServiceState(Status.ready);
         } catch (error) {
-            this.outputChannel.appendLine(
-                `[${Date.now()}][coverageservice]: Warning ${error.toString()}`);
+            this.handleError(error);
         }
     }
 
@@ -130,6 +137,19 @@ export class CoverageService {
     private listenToEditorEvents() {
         this.editorWatcher = window.onDidChangeVisibleTextEditors(
             this.handleEditorEvents.bind(this),
+        );
+    }
+
+    private handleError(error: Error) {
+        const message = error.message ? error.message : error;
+        const stackTrace = error.stack;
+        window.showWarningMessage(message.toString());
+        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Error ${message}`);
+        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Stacktrace ${stackTrace}`);
+        this.eventReporter.sendEvent(
+            "error",
+            message.toString(),
+            stackTrace ? stackTrace.toString() : undefined,
         );
     }
 }

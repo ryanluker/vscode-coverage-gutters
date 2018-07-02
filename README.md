@@ -6,8 +6,6 @@
 [![Build Status](https://travis-ci.org/ryanluker/vscode-coverage-gutters.svg?branch=master)](https://travis-ci.org/ryanluker/vscode-coverage-gutters)
 [![Build status](https://ci.appveyor.com/api/projects/status/8vb8t787frcqtrm7?svg=true)](https://ci.appveyor.com/project/ryanluker/vscode-coverage-gutters)
 
-[![Buy Me A Coffee](images/donate.png)](https://www.buymeacoffee.com/FufzejLo3)
-
 ## Features
 - multi workspace friendly watch functionality consumes all your coverage files
 

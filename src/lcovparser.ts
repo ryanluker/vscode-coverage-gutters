@@ -32,15 +32,20 @@ export class LcovParser {
 
     private xmlExtract(xmlFile: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
-            parseContent(xmlFile, (err, data) => {
-                if (err) { return reject(err); }
-                // convert the array of sections into an unique map
-                const sections = new Map<string, Section>();
-                data.forEach((section) => {
-                    sections.set(section.file, section);
+            try {
+                parseContent(xmlFile, (err, data) => {
+                    if (err) { return reject(err); }
+                    // convert the array of sections into an unique map
+                    const sections = new Map<string, Section>();
+                    data.forEach((section) => {
+                        sections.set(section.file, section);
+                    });
+                    return resolve(sections);
                 });
-                return resolve(sections);
-            });
+            } catch (error) {
+                return reject(error);
+            }
+
         });
     }
 

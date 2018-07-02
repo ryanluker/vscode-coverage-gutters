@@ -48,6 +48,7 @@ export class Gutters {
         this.coverageService = new CoverageService(
             configStore,
             this.outputChannel,
+            this.reporter,
         );
 
         this.reporter.sendEvent("user", "start");
