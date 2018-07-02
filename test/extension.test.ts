@@ -7,6 +7,9 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on node test file @integration", async () => {
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
         const getCachedLines = extension.exports;
         const testCoverage = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
@@ -26,6 +29,9 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on python test file @integration", async () => {
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
         const getCachedLines = extension.exports;
         const testCoverage = await vscode.workspace.findFiles("**/bar/a.py", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);

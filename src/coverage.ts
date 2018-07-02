@@ -31,7 +31,7 @@ export class Coverage {
      * @param placeHolder
      */
     public async pickFile(filePaths: string[] | string, placeHolder: string): Promise<string | undefined> {
-        let pickedFile: string;
+        let pickedFile: string | undefined;
         if (typeof filePaths === "string") {
             pickedFile = filePaths;
         } else if (filePaths.length === 1) {
@@ -57,13 +57,19 @@ export class Coverage {
 
     public findReports(): Promise<string[]> {
         const files = [];
-        const actions = this.vscode.getWorkspaceFolders().map((workspaceFolder) => {
-            return this.globFind(workspaceFolder, "coverage/**/index.html");
-        });
+        let actions: Array<Promise<string[]>> = new Array<Promise<string[]>>();
+
+        const workspaceFolders = this.vscode.getWorkspaceFolders();
+        if (workspaceFolders) {
+            actions = workspaceFolders.map((workspaceFolder) => {
+                return this.globFind(workspaceFolder, "coverage/**/index.html");
+            });
+        }
+
         return Promise.all(actions)
             .then((coverageInWorkspaceFolders) => {
                 // Spread first array to properly concat the file arrays from the globFind
-                return [].concat(...coverageInWorkspaceFolders);
+                return new Array().concat(...coverageInWorkspaceFolders);
             });
     }
 

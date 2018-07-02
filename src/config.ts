@@ -156,11 +156,11 @@ export class Config {
         partial: DecorationRenderOptions,
         no: DecorationRenderOptions,
     ): void {
-        if (!full.dark.gutterIconPath) { delete full.dark.gutterIconPath; }
-        if (!full.light.gutterIconPath) { delete full.light.gutterIconPath; }
-        if (!partial.dark.gutterIconPath) { delete partial.dark.gutterIconPath; }
-        if (!partial.light.gutterIconPath) { delete partial.light.gutterIconPath; }
-        if (!no.dark.gutterIconPath) { delete no.dark.gutterIconPath; }
-        if (!no.light.gutterIconPath) { delete no.light.gutterIconPath; }
+        if (full && full.dark && !full.dark.gutterIconPath) { delete full.dark.gutterIconPath; }
+        if (full && full.light && !full.light.gutterIconPath) { delete full.light.gutterIconPath; }
+        if (partial && partial.dark && !partial.dark.gutterIconPath) { delete partial.dark.gutterIconPath; }
+        if (partial && partial.light && !partial.light.gutterIconPath) { delete partial.light.gutterIconPath; }
+        if (no && no.dark && !no.dark.gutterIconPath) { delete no.dark.gutterIconPath; }
+        if (no && no.light && !no.light.gutterIconPath) { delete no.light.gutterIconPath; }
     }
 }
