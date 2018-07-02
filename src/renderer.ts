@@ -102,6 +102,20 @@ export class Renderer {
         section: Section,
         coverageLines: ICoverageLines,
     ) {
+        if (!section) {
+            return;
+        }
+        this.filterLineCoverage(section, coverageLines);
+        this.filterBranchCoverage(section, coverageLines);
+    }
+
+    private filterLineCoverage(
+        section: Section,
+        coverageLines: ICoverageLines,
+    ) {
+        if (!section || !section.lines) {
+            return;
+        }
         // TODO cleanup this arears by using maps, filters, etc
         section.lines.details.forEach((detail) => {
             if (detail.line < 0) { return ; }
@@ -112,20 +126,25 @@ export class Renderer {
                 coverageLines.none.push(lineRange);
             }
         });
+    }
 
-        // apply partial coverage over full where it is more accurate
-        if (section.branches) {
-            section.branches.details.forEach((detail) => {
-                if (detail.taken === 0) {
-                    if (detail.line < 0) { return ; }
-                    const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
-                    if (coverageLines.full.find((range) => range.isEqual(partialRange))) {
-                        // remove full coverage if partial is a better match
-                        coverageLines.full = coverageLines.full.filter((range) => !range.isEqual(partialRange));
-                        coverageLines.partial.push(partialRange);
-                    }
-                }
-            });
+    private filterBranchCoverage(
+        section: Section,
+        coverageLines: ICoverageLines,
+    ) {
+        if (!section || !section.branches) {
+            return;
         }
+        section.branches.details.forEach((detail) => {
+            if (detail.taken === 0) {
+                if (detail.line < 0) { return ; }
+                const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
+                if (coverageLines.full.find((range) => range.isEqual(partialRange))) {
+                    // remove full coverage if partial is a better match
+                    coverageLines.full = coverageLines.full.filter((range) => !range.isEqual(partialRange));
+                    coverageLines.partial.push(partialRange);
+                }
+            }
+        });
     }
 }

@@ -19,7 +19,7 @@ suite("TopSectionFinder Tests", function() {
         sendEvent: () => {},
     };
 
-    test("Should do a thing @unit", function(done) {
+    test("Should not throw an error @unit", function(done) {
         const textEditor: TextEditor = {} as TextEditor;
         const sectionMap: Map<string, Section> = new Map<string, Section>();
         const topSectionFinder: TopSectionFinder = new TopSectionFinder(fakeOutput, fakeReporter as any);
