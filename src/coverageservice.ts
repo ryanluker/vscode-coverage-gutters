@@ -13,6 +13,7 @@ import {FilesLoader} from "./filesloader";
 import {LcovParser} from "./lcovparser";
 import {Renderer} from "./renderer";
 import {Reporter} from "./reporter";
+import { TopSectionFinder } from "./topSectionFinder";
 
 enum Status {
     ready = "READY",
@@ -32,6 +33,7 @@ export class CoverageService {
     private lcovWatcher: FileSystemWatcher;
     private xmlWatcher: FileSystemWatcher;
     private editorWatcher: Disposable;
+    private topSectionFinder: TopSectionFinder;
 
     private cache: Map<string, Section>;
     private status: Status;
@@ -47,10 +49,13 @@ export class CoverageService {
         this.updateServiceState(Status.initializing);
         this.cache = new Map();
         this.filesLoader = new FilesLoader(configStore);
-        this.renderer = new Renderer(
-            configStore,
+        this.topSectionFinder = new TopSectionFinder(
             this.outputChannel,
             this.eventReporter,
+        );
+        this.renderer = new Renderer(
+            configStore,
+            this.topSectionFinder,
         );
         this.lcovParser = new LcovParser(configStore);
     }
