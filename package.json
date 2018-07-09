@@ -44,6 +44,11 @@
           "default": "cov.xml",
           "description": "name of your xml file"
         },
+        "coverage-gutters.matchNameExact": {
+          "type": "boolean",
+          "default": false,
+          "description": "match lcov source file only if exactness score = 100"
+        },
         "coverage-gutters.altSfCompare": {
           "type": "boolean",
           "default": true,

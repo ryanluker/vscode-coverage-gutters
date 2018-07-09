@@ -4,18 +4,22 @@ import {TextEditor} from "vscode";
 import {OutputChannel} from "vscode";
 import {findIntersect, normalizeFileName} from "./helpers";
 import {Reporter} from "./reporter";
+import {IConfigStore} from "./config";
 
 export class TopSectionFinder {
 
     private outputChannel: OutputChannel;
     private eventReporter: Reporter;
+    private configStore: IConfigStore;
 
     constructor(
         outputChannel: OutputChannel,
         eventReporter: Reporter,
+        configStore: IConfigStore,
     ) {
         this.outputChannel = outputChannel;
         this.eventReporter = eventReporter;
+        this.configStore = configStore;
     }
 
     /**
@@ -42,6 +46,7 @@ export class TopSectionFinder {
             // create a score to judge top "performing" editor
             // this score is the percent of the file path that is same as the intersect
             const score = (intersect.length / editorFile.length) * 100;
+            if (this.configStore.matchNameExact && score < 100) { return; }
             if (topSection.score > score) { return ; }
 
             // new top
