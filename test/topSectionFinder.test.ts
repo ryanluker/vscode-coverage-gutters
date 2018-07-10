@@ -19,10 +19,14 @@ suite("TopSectionFinder Tests", function() {
         sendEvent: () => {},
     };
 
+    const fakeConfig = {
+        sectionMatchThreshold: 50,
+    };
+
     test("Should not throw an error @unit", function(done) {
         const textEditor: TextEditor = {} as TextEditor;
         const sectionMap: Map<string, Section> = new Map<string, Section>();
-        const topSectionFinder: TopSectionFinder = new TopSectionFinder(fakeOutput, fakeReporter as any);
+        const topSectionFinder: TopSectionFinder = new TopSectionFinder(fakeOutput, fakeReporter as any, fakeConfig);
         topSectionFinder.findTopSectionForEditor(textEditor, sectionMap);
         return done();
     });

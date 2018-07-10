@@ -46,7 +46,9 @@ export class TopSectionFinder {
             // create a score to judge top "performing" editor
             // this score is the percent of the file path that is same as the intersect
             const score = (intersect.length / editorFile.length) * 100;
-            if (this.configStore.matchNameExact && score < 100) { return; }
+
+            //score must be above configured threshold
+            if (score < this.configStore.sectionMatchThreshold) { return; }
             if (topSection.score > score) { return ; }
 
             // new top
