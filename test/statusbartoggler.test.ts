@@ -21,6 +21,7 @@ suite("Status Bar Toggler Tests", function() {
         },
         showStatusBarToggler: false,
         xmlFileName: "test.xml",
+        sectionMatchThreshold: 50,
     };
 
     test("Should toggle showStatusBarToggler command and message @unit", function() {
