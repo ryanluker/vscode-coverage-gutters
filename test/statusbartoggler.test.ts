@@ -19,6 +19,7 @@ suite("Status Bar Toggler Tests", function() {
             key: "testKey3",
             dispose() {},
         },
+        sectionMatchThreshold: 50,
         showStatusBarToggler: false,
         xmlFileName: "test.xml",
     };

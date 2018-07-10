@@ -52,6 +52,7 @@ export class CoverageService {
         this.topSectionFinder = new TopSectionFinder(
             this.outputChannel,
             this.eventReporter,
+            configStore,
         );
         this.renderer = new Renderer(
             configStore,

@@ -2,6 +2,7 @@ import {Section} from "lcov-parse";
 import {extname} from "path";
 import {TextEditor} from "vscode";
 import {OutputChannel} from "vscode";
+import {IConfigStore} from "./config";
 import {findIntersect, normalizeFileName} from "./helpers";
 import {Reporter} from "./reporter";
 
@@ -9,13 +10,16 @@ export class TopSectionFinder {
 
     private outputChannel: OutputChannel;
     private eventReporter: Reporter;
+    private configStore: IConfigStore;
 
     constructor(
         outputChannel: OutputChannel,
         eventReporter: Reporter,
+        configStore: IConfigStore,
     ) {
         this.outputChannel = outputChannel;
         this.eventReporter = eventReporter;
+        this.configStore = configStore;
     }
 
     /**
@@ -42,6 +46,9 @@ export class TopSectionFinder {
             // create a score to judge top "performing" editor
             // this score is the percent of the file path that is same as the intersect
             const score = (intersect.length / editorFile.length) * 100;
+
+            // score must be above configured threshold
+            if (score < this.configStore.sectionMatchThreshold) { return; }
             if (topSection.score > score) { return ; }
 
             // new top

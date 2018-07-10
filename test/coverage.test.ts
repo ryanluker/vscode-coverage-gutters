@@ -20,6 +20,7 @@ suite("Coverage Tests", function() {
             key: "testKey3",
             dispose() {},
         },
+        sectionMatchThreshold: 50,
         showStatusBarToggler: true,
         xmlFileName: "test.xml",
     };
