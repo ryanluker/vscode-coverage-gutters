@@ -2,8 +2,8 @@ import {Section} from "lcov-parse";
 import {extname} from "path";
 import {TextEditor} from "vscode";
 import {OutputChannel} from "vscode";
-import {findIntersect, normalizeFileName} from "./helpers";
 import {IConfigStore} from "./config";
+import {findIntersect, normalizeFileName} from "./helpers";
 import {Reporter} from "./reporter";
 
 export class TopSectionFinder {
