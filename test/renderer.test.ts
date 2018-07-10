@@ -22,6 +22,7 @@ suite("Renderer Tests", function() {
         },
         showStatusBarToggler: true,
         xmlFileName: "test.xml",
+        sectionMatchThreshold: 50,
     };
 
     test("Constructor should setup properly @unit", function(done) {

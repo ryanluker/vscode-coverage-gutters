@@ -20,6 +20,22 @@ suite("TopSectionFinder Tests", function() {
     };
 
     const fakeConfig = {
+        altSfCompare: false,
+        fullCoverageDecorationType: {
+            key: "testKey",
+            dispose() {},
+        },
+        lcovFileName: "test.ts",
+        noCoverageDecorationType: {
+            key: "testKey4",
+            dispose() {},
+        },
+        partialCoverageDecorationType: {
+            key: "testKey3",
+            dispose() {},
+        },
+        showStatusBarToggler: true,
+        xmlFileName: "test.xml",
         sectionMatchThreshold: 50,
     };
 
