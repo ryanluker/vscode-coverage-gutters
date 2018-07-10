@@ -3,8 +3,8 @@ import {extname} from "path";
 import {TextEditor} from "vscode";
 import {OutputChannel} from "vscode";
 import {findIntersect, normalizeFileName} from "./helpers";
-import {Reporter} from "./reporter";
 import {IConfigStore} from "./config";
+import {Reporter} from "./reporter";
 
 export class TopSectionFinder {
 
@@ -47,7 +47,7 @@ export class TopSectionFinder {
             // this score is the percent of the file path that is same as the intersect
             const score = (intersect.length / editorFile.length) * 100;
 
-            //score must be above configured threshold
+            // score must be above configured threshold
             if (score < this.configStore.sectionMatchThreshold) { return; }
             if (topSection.score > score) { return ; }
 

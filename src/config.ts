@@ -15,8 +15,8 @@ export interface IConfigStore {
     partialCoverageDecorationType: TextEditorDecorationType;
     noCoverageDecorationType: TextEditorDecorationType;
     altSfCompare: boolean;
-    showStatusBarToggler: boolean;
     sectionMatchThreshold: number;
+    showStatusBarToggler: boolean;
 }
 
 export class Config {
@@ -47,9 +47,9 @@ export class Config {
             lcovFileName: this.lcovFileName,
             noCoverageDecorationType: this.noCoverageDecorationType,
             partialCoverageDecorationType: this.partialCoverageDecorationType,
+            sectionMatchThreshold: this.sectionMatchThreshold,
             showStatusBarToggler: this.showStatusBarToggler,
             xmlFileName: this.xmlFileName,
-            sectionMatchThreshold: this.sectionMatchThreshold,
         };
     }
 

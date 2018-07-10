@@ -20,9 +20,9 @@ suite("Renderer Tests", function() {
             key: "testKey3",
             dispose() {},
         },
+        sectionMatchThreshold: 50,
         showStatusBarToggler: true,
         xmlFileName: "test.xml",
-        sectionMatchThreshold: 50,
     };
 
     test("Constructor should setup properly @unit", function(done) {

@@ -34,9 +34,9 @@ suite("TopSectionFinder Tests", function() {
             key: "testKey3",
             dispose() {},
         },
+        sectionMatchThreshold: 50,
         showStatusBarToggler: true,
         xmlFileName: "test.xml",
-        sectionMatchThreshold: 50,
     };
 
     test("Should not throw an error @unit", function(done) {
