@@ -5,8 +5,7 @@ import {
 } from "vscode";
 import {IConfigStore} from "./config";
 import {setLastCoverageLines} from "./exportsapi";
-import {TopSectionFinder} from "./topSectionFinder";
-
+import {normalizeFileName} from "./helpers";
 export interface ICoverageLines {
     full: Range[];
     partial: Range[];
@@ -15,14 +14,11 @@ export interface ICoverageLines {
 
 export class Renderer {
     private configStore: IConfigStore;
-    private topSectionFinder: TopSectionFinder;
 
     constructor(
         configStore: IConfigStore,
-        topSectionFinder: TopSectionFinder,
     ) {
         this.configStore = configStore;
-        this.topSectionFinder = topSectionFinder;
     }
 
     /**
@@ -40,6 +36,8 @@ export class Renderer {
             partial: [],
         };
 
+        if (!textEditors) { return ; }
+
         textEditors.forEach((textEditor) => {
             // Remove all decorations first to prevent graphical issues
             this.removeDecorationsForEditor(textEditor);
@@ -51,13 +49,14 @@ export class Renderer {
             coverageLines.none = [];
             coverageLines.partial = [];
 
-            // find best scoring section editor combo (or undefined if too low score)
-            const topSection = this.topSectionFinder.findTopSectionForEditor(textEditor, sections);
+            if (!textEditor || !textEditor.document) {return; }
 
-            if (!topSection) { return ; }
+            const section = sections.get(normalizeFileName(textEditor.document.fileName));
 
-            this.filterCoverage(topSection, coverageLines);
-            this.setDecorationsForEditor(textEditor, coverageLines);
+            if (section) {
+                this.filterCoverage(section, coverageLines);
+                this.setDecorationsForEditor(textEditor, coverageLines);
+            }
 
             // Cache last coverage lines for exports api
             setLastCoverageLines(coverageLines);

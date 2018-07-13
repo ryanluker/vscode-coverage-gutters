@@ -271,6 +271,7 @@
   "scripts": {
     "lint": "tslint './src/**/*.ts' './test/**/*.ts'",
     "pretty": "tslint --fix './src/**/*.ts' './test/**/*.ts'",
+    "pretest": "cross-env npm run compile && ( cd ./example/node && npm install && npm run test) && ( cd ./example/python && ./buildcov.sh)",
     "test": "node ./node_modules/vscode/bin/test",
     "test-unit": "cross-env MOCHA_GREP=@unit npm test --silent",
     "test-integration": "cross-env CODE_TESTS_WORKSPACE=./example/example.code-workspace MOCHA_GREP=@integration npm test --silent",

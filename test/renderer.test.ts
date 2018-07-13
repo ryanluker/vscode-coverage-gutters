@@ -2,7 +2,6 @@ import {assert} from "chai";
 import {Section} from "lcov-parse";
 import {DecorationOptions, Range, TextEditor, TextEditorDecorationType} from "vscode";
 import {Renderer} from "../src/renderer";
-import { TopSectionFinder } from "../src/topSectionFinder";
 
 suite("Renderer Tests", function() {
     const fakeConfig = {
@@ -25,14 +24,12 @@ suite("Renderer Tests", function() {
     };
 
     test("Constructor should setup properly @unit", function(done) {
-        const topSectionFinder: TopSectionFinder = {} as TopSectionFinder;
-        assert.doesNotThrow(() => new Renderer(fakeConfig, topSectionFinder));
+        assert.doesNotThrow(() => new Renderer(fakeConfig));
         return done();
     });
 
     test("renderCoverage should not error with empty map and empty TextEditor array @unit", function(done) {
-        const topSectionFinder: TopSectionFinder = {} as TopSectionFinder;
-        const renderer: Renderer = new Renderer(fakeConfig, topSectionFinder);
+        const renderer: Renderer = new Renderer(fakeConfig);
         renderer.renderCoverage(new Map<string, Section>(), new Array<TextEditor>());
         return done();
     });
@@ -40,18 +37,7 @@ suite("Renderer Tests", function() {
     test("renderCoverage should not error with empty map and single textEditor @unit", function(done) {
         const section: Section = {} as Section;
 
-        const topSectionFinder: TopSectionFinder = {
-            findTopSectionForEditor: (
-                functionTextEditor: TextEditor,
-                functionSections: Map<string, Section>,
-            ): Section | undefined => {
-                assert.isNotNull(functionTextEditor);
-                assert.isNotNull(functionSections);
-                return section;
-            },
-        } as TopSectionFinder;
-
-        const renderer: Renderer = new Renderer(fakeConfig, topSectionFinder);
+        const renderer: Renderer = new Renderer(fakeConfig);
         const textEditor: TextEditor = {} as TextEditor;
 
         textEditor.setDecorations = function(
@@ -74,8 +60,7 @@ suite("Renderer Tests", function() {
     });
 
     test("removeDecorationsForEditor should not error @unit", function(done) {
-        const topSectionFinder: TopSectionFinder = {} as TopSectionFinder;
-        const renderer: Renderer = new Renderer(fakeConfig, topSectionFinder);
+        const renderer: Renderer = new Renderer(fakeConfig);
         const textEditor: TextEditor = {} as TextEditor;
         textEditor.setDecorations = function(
             decorationType: TextEditorDecorationType,
