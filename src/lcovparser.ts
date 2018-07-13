@@ -1,6 +1,7 @@
 import {parseContent} from "cobertura-parse";
 import {Section, source} from "lcov-parse";
 import {IConfigStore} from "./config";
+import {normalizeFileName} from "./helpers";
 
 export class LcovParser {
     private configStore: IConfigStore;
@@ -14,7 +15,7 @@ export class LcovParser {
      * @param files array of coverage files in string format
      */
     public async filesToSections(files: Set<string>): Promise<Map<string, Section>> {
-        let coverages = new Map<string, Section>();
+        const coverages = new Map<string, Section>();
 
         for (const file of files) {
             let coverage = new Map<string, Section>();
@@ -24,7 +25,9 @@ export class LcovParser {
                 coverage = await this.lcovExtract(file);
             }
             // add new coverage map to existing coverages generated so far
-            coverages = new Map([...coverages, ...coverage]);
+            coverage.forEach( (value, key) => {
+                coverages.set(normalizeFileName(key), value);
+            });
         }
 
         return coverages;
@@ -41,7 +44,7 @@ export class LcovParser {
                         sections.set(section.file, section);
                     });
                     return resolve(sections);
-                });
+                }, true);
             } catch (error) {
                 return reject(error);
             }
