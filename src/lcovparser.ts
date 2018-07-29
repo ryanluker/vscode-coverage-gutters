@@ -1,6 +1,6 @@
+import {parseContent as parseContentClover} from "@cvrg-report/clover-json";
 import {parseContent as parseContentCobertura} from "cobertura-parse";
 import {Section, source} from "lcov-parse";
-import {parseContent as parseContentClover} from "@cvrg-report/clover-json";
 import {IConfigStore} from "./config";
 
 export class LcovParser {
