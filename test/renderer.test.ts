@@ -2,7 +2,7 @@ import {assert} from "chai";
 import {Section} from "lcov-parse";
 import {DecorationOptions, Range, TextEditor, TextEditorDecorationType} from "vscode";
 import {Renderer} from "../src/renderer";
-import { TopSectionFinder } from "../src/topSectionFinder";
+import {SectionFinder} from "../src/sectionFinder";
 
 suite("Renderer Tests", function() {
     const fakeConfig = {
@@ -25,14 +25,14 @@ suite("Renderer Tests", function() {
     };
 
     test("Constructor should setup properly @unit", function(done) {
-        const topSectionFinder: TopSectionFinder = {} as TopSectionFinder;
-        assert.doesNotThrow(() => new Renderer(fakeConfig, topSectionFinder));
+        const sectionFinder: SectionFinder = {} as SectionFinder;
+        assert.doesNotThrow(() => new Renderer(fakeConfig, sectionFinder));
         return done();
     });
 
     test("renderCoverage should not error with empty map and empty TextEditor array @unit", function(done) {
-        const topSectionFinder: TopSectionFinder = {} as TopSectionFinder;
-        const renderer: Renderer = new Renderer(fakeConfig, topSectionFinder);
+        const sectionFinder: SectionFinder = {} as SectionFinder;
+        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
         renderer.renderCoverage(new Map<string, Section>(), new Array<TextEditor>());
         return done();
     });
@@ -40,8 +40,8 @@ suite("Renderer Tests", function() {
     test("renderCoverage should not error with empty map and single textEditor @unit", function(done) {
         const section: Section = {} as Section;
 
-        const topSectionFinder: TopSectionFinder = {
-            findTopSectionForEditor: (
+        const sectionFinder: SectionFinder = {
+            findSectionForEditor: (
                 functionTextEditor: TextEditor,
                 functionSections: Map<string, Section>,
             ): Section | undefined => {
@@ -49,9 +49,9 @@ suite("Renderer Tests", function() {
                 assert.isNotNull(functionSections);
                 return section;
             },
-        } as TopSectionFinder;
+        } as SectionFinder;
 
-        const renderer: Renderer = new Renderer(fakeConfig, topSectionFinder);
+        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
         const textEditor: TextEditor = {} as TextEditor;
 
         textEditor.setDecorations = function(
@@ -74,8 +74,8 @@ suite("Renderer Tests", function() {
     });
 
     test("removeDecorationsForEditor should not error @unit", function(done) {
-        const topSectionFinder: TopSectionFinder = {} as TopSectionFinder;
-        const renderer: Renderer = new Renderer(fakeConfig, topSectionFinder);
+        const sectionFinder: SectionFinder = {} as SectionFinder;
+        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
         const textEditor: TextEditor = {} as TextEditor;
         textEditor.setDecorations = function(
             decorationType: TextEditorDecorationType,

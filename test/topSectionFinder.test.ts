@@ -1,9 +1,9 @@
 import {assert} from "chai";
 import {Section} from "lcov-parse";
 import {DecorationOptions, Range, TextEditor, TextEditorDecorationType} from "vscode";
-import { TopSectionFinder } from "../src/topSectionFinder";
+import {SectionFinder} from "../src/sectionFinder";
 
-suite("TopSectionFinder Tests", function() {
+suite("SectionFinder Tests", function() {
 
     const fakeOutput = {
         append: () => {},
@@ -22,8 +22,8 @@ suite("TopSectionFinder Tests", function() {
     test("Should not throw an error @unit", function(done) {
         const textEditor: TextEditor = {} as TextEditor;
         const sectionMap: Map<string, Section> = new Map<string, Section>();
-        const topSectionFinder: TopSectionFinder = new TopSectionFinder(fakeOutput, fakeReporter as any);
-        topSectionFinder.findTopSectionForEditor(textEditor, sectionMap);
+        const sectionFinder: SectionFinder = new SectionFinder(fakeOutput, fakeReporter as any);
+        sectionFinder.findSectionForEditor(textEditor, sectionMap);
         return done();
     });
 });
