@@ -48,6 +48,9 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on php test file @integration", async () => {
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
         const getCachedLines = extension.exports;
         const testCoverage = await vscode.workspace.findFiles("**/main.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
@@ -55,11 +58,12 @@ suite("Extension Tests", function() {
         await vscode.commands.executeCommand("extension.displayCoverage");
 
         // Wait for decorations to load
-        await sleep(10000);
+        await sleep(2000);
 
         // Look for exact coverage on the file
         const cachedLines: ICoverageLines = getCachedLines();
-        assert.equal(6, cachedLines.full.length);
+        assert.equal(4, cachedLines.full.length);
+        assert.equal(2, cachedLines.none.length);
     });
 });
 
