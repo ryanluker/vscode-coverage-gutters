@@ -9,3 +9,6 @@ __pycache__
 .coverage
 example/.vscode
 venv
+vendor
+composer.lock
+composer.phar

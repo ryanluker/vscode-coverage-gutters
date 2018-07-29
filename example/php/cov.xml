@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1530396341">
-  <project timestamp="1530396341">
+<coverage generated="1532887774">
+  <project timestamp="1532887774">
     <package name="test">
-      <file name="/mnt/c/dev/vscode-coverage-gutters/example/php/src/testCoverage/testMain/main.php">
+      <file name="/home/ryan/dev/vscode-coverage-gutters/example/php/src/testCoverage/testMain/main.php">
         <class name="main" namespace="test">
-          <metrics methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+          <metrics methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
         </class>
         <line num="37" type="method" name="increase" crap="1" count="1"/>
         <line num="38" type="stmt" count="1"/>
@@ -12,9 +12,12 @@
         <line num="48" type="method" name="negate" crap="1" count="1"/>
         <line num="49" type="stmt" count="1"/>
         <line num="50" type="stmt" count="1"/>
-        <metrics loc="52" ncloc="20" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+        <line num="59" type="method" name="notcovered" crap="2" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <line num="61" type="stmt" count="0"/>
+        <metrics loc="63" ncloc="25" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
       </file>
     </package>
-    <metrics files="1" loc="52" ncloc="20" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+    <metrics files="1" loc="63" ncloc="25" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
   </project>
 </coverage>

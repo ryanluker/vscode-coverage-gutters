@@ -49,4 +49,15 @@ class main {
 		$this->myParam = 0;
 		return $this;
 	}
+
+	/**
+	 * A sample function that isnt covered
+	 * @name negate
+	 * @since 0.1.0
+	 * @return object the main object
+	 */
+	public function notcovered (){
+		$this->myParam = 0;
+		return $this;
+	}
 }
