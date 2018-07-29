@@ -13,15 +13,19 @@ export class LcovParser {
      * Extracts coverage sections of type xml and lcov
      * @param files array of coverage files in string format
      */
-    public async filesToSections(files: Set<string>): Promise<Map<string, Section>> {
+    public async filesToSections(files: Map<string, string>): Promise<Map<string, Section>> {
         let coverages = new Map<string, Section>();
 
         for (const file of files) {
+            const value = file[1];
+            const key = file[0];
+
+            // file is an array
             let coverage = new Map<string, Section>();
-            if (file.includes("<?xml")) {
-                coverage = await this.xmlExtract(file);
+            if (value.includes("<?xml")) {
+                coverage = await this.xmlExtract(value, key);
             } else {
-                coverage = await this.lcovExtract(file);
+                coverage = await this.lcovExtract(value);
             }
             // add new coverage map to existing coverages generated so far
             coverages = new Map([...coverages, ...coverage]);
@@ -30,7 +34,7 @@ export class LcovParser {
         return coverages;
     }
 
-    private xmlExtract(xmlFile: string) {
+    private xmlExtract(xmlFile: string, absolutePath: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
             try {
                 parseContent(xmlFile, (err, data) => {
@@ -41,7 +45,7 @@ export class LcovParser {
                         sections.set(section.file, section);
                     });
                     return resolve(sections);
-                });
+                }, absolutePath);
             } catch (error) {
                 return reject(error);
             }

@@ -47,7 +47,7 @@
         "coverage-gutters.altSfCompare": {
           "type": "boolean",
           "default": true,
-          "description": "uses a relative method of comparing lcov source file paths"
+          "description": "DEPRECATED: uses a relative method of comparing lcov source file paths"
         },
         "coverage-gutters.highlightlight": {
           "type": "string",

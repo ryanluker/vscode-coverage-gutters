@@ -5,7 +5,7 @@ import {
 } from "vscode";
 import {IConfigStore} from "./config";
 import {setLastCoverageLines} from "./exportsapi";
-import {TopSectionFinder} from "./topSectionFinder";
+import {SectionFinder} from "./sectionFinder";
 
 export interface ICoverageLines {
     full: Range[];
@@ -15,14 +15,14 @@ export interface ICoverageLines {
 
 export class Renderer {
     private configStore: IConfigStore;
-    private topSectionFinder: TopSectionFinder;
+    private sectionFinder: SectionFinder;
 
     constructor(
         configStore: IConfigStore,
-        topSectionFinder: TopSectionFinder,
+        sectionFinder: SectionFinder,
     ) {
         this.configStore = configStore;
-        this.topSectionFinder = topSectionFinder;
+        this.sectionFinder = sectionFinder;
     }
 
     /**
@@ -51,12 +51,13 @@ export class Renderer {
             coverageLines.none = [];
             coverageLines.partial = [];
 
-            // find best scoring section editor combo (or undefined if too low score)
-            const topSection = this.topSectionFinder.findTopSectionForEditor(textEditor, sections);
+            // find the section (or undefined) by looking relatively at each workspace
+            // users can also optional use absolute instead of relative for this
+            const section = this.sectionFinder.findSectionForEditor(textEditor, sections);
 
-            if (!topSection) { return ; }
+            if (!section) { return ; }
 
-            this.filterCoverage(topSection, coverageLines);
+            this.filterCoverage(section, coverageLines);
             this.setDecorationsForEditor(textEditor, coverageLines);
 
             // Cache last coverage lines for exports api

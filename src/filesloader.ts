@@ -27,11 +27,11 @@ export class FilesLoader {
      * Takes files and converts to data strings for coverage consumption
      * @param files files that are to turned into data strings
      */
-    public async loadDataFiles(files: Set<string>): Promise<Set<string>> {
+    public async loadDataFiles(files: Set<string>): Promise<Map<string, string>> {
         // Load the files and convert into data strings
-        const dataFiles = new Set<string>();
+        const dataFiles = new Map<string, string>();
         for (const file of files) {
-            dataFiles.add(await this.load(file));
+            dataFiles.set(file, await this.load(file));
         }
         return dataFiles;
     }
