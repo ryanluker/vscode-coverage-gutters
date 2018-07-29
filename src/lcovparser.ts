@@ -1,4 +1,5 @@
-import {parseContent} from "cobertura-parse";
+import {parseContent as parseContentClover} from "@cvrg-report/clover-json";
+import {parseContent as parseContentCobertura} from "cobertura-parse";
 import {Section, source} from "lcov-parse";
 import {IConfigStore} from "./config";
 
@@ -22,8 +23,14 @@ export class LcovParser {
 
             // file is an array
             let coverage = new Map<string, Section>();
-            if (value.includes("<?xml")) {
-                coverage = await this.xmlExtract(value, key);
+            if (
+                value.includes("<?xml") &&
+                value.includes("<coverage") &&
+                value.includes("<project")
+            ) {
+                coverage = await this.xmlExtractClover(value, key);
+            } else if (value.includes("<?xml")) {
+                coverage = await this.xmlExtractCobertura(value, key);
             } else {
                 coverage = await this.lcovExtract(value);
             }
@@ -34,10 +41,10 @@ export class LcovParser {
         return coverages;
     }
 
-    private xmlExtract(xmlFile: string, absolutePath: string) {
+    private xmlExtractCobertura(xmlFile: string, absolutePath: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
             try {
-                parseContent(xmlFile, (err, data) => {
+                parseContentCobertura(xmlFile, (err, data) => {
                     if (err) { return reject(err); }
                     // convert the array of sections into an unique map
                     const sections = new Map<string, Section>();
@@ -51,6 +58,16 @@ export class LcovParser {
             }
 
         });
+    }
+
+    private async xmlExtractClover(xmlFile: string, absolutePath: string) {
+        const data = await parseContentClover(xmlFile);
+        // convert the array of sections into an unique map
+        const sections = new Map<string, Section>();
+        data.forEach((section) => {
+            sections.set(section.file, section);
+        });
+        return sections;
     }
 
     private lcovExtract(lcovFile: string) {

@@ -85,7 +85,7 @@ export class FilesLoader {
                 {
                     cwd: workspaceFolder.uri.fsPath,
                     dot: true,
-                    ignore: "**/node_modules/**",
+                    ignore: ["**/node_modules/**", "**/venv/**", "**/vendor/**"],
                     realpath: true,
                 },
                 (err, files) => {
