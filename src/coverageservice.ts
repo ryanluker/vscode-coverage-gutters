@@ -12,6 +12,8 @@ import {IConfigStore} from "./config";
 import {FilesLoader} from "./filesloader";
 import {LcovParser} from "./lcovparser";
 import {Renderer} from "./renderer";
+import {Reporter} from "./reporter";
+import {SectionFinder} from "./sectionFinder";
 
 enum Status {
     ready = "READY",
@@ -24,12 +26,14 @@ enum Status {
 export class CoverageService {
     private configStore: IConfigStore;
     private outputChannel: OutputChannel;
+    private eventReporter: Reporter;
     private filesLoader: FilesLoader;
     private renderer: Renderer;
     private lcovParser: LcovParser;
     private lcovWatcher: FileSystemWatcher;
     private xmlWatcher: FileSystemWatcher;
     private editorWatcher: Disposable;
+    private sectionFinder: SectionFinder;
 
     private cache: Map<string, Section>;
     private status: Status;
@@ -37,13 +41,22 @@ export class CoverageService {
     constructor(
         configStore: IConfigStore,
         outputChannel: OutputChannel,
+        eventReporter: Reporter,
     ) {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
+        this.eventReporter = eventReporter;
         this.updateServiceState(Status.initializing);
         this.cache = new Map();
         this.filesLoader = new FilesLoader(configStore);
-        this.renderer = new Renderer(configStore, this.outputChannel);
+        this.sectionFinder = new SectionFinder(
+            this.outputChannel,
+            this.eventReporter,
+        );
+        this.renderer = new Renderer(
+            configStore,
+            this.sectionFinder,
+        );
         this.lcovParser = new LcovParser(configStore);
     }
 
@@ -83,8 +96,7 @@ export class CoverageService {
             this.cache = dataCoverage;
             this.updateServiceState(Status.ready);
         } catch (error) {
-            this.outputChannel.appendLine(
-                `[${Date.now()}][coverageservice]: Warning ${error.toString()}`);
+            this.handleError(error);
         }
     }
 
@@ -130,6 +142,19 @@ export class CoverageService {
     private listenToEditorEvents() {
         this.editorWatcher = window.onDidChangeVisibleTextEditors(
             this.handleEditorEvents.bind(this),
+        );
+    }
+
+    private handleError(error: Error) {
+        const message = error.message ? error.message : error;
+        const stackTrace = error.stack;
+        window.showWarningMessage(message.toString());
+        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Error ${message}`);
+        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Stacktrace ${stackTrace}`);
+        this.eventReporter.sendEvent(
+            "error",
+            message.toString(),
+            stackTrace ? stackTrace.toString() : undefined,
         );
     }
 }

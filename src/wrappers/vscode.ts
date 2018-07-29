@@ -15,7 +15,7 @@ import {
 
 export interface InterfaceVscode {
     createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType;
-    executeCommand(command: string, ...rest: any[]): Thenable<{}>;
+    executeCommand(command: string, ...rest: any[]): Thenable<{} | undefined>;
     getConfiguration(section?: string): WorkspaceConfiguration;
     getWorkspaceFolders(): WorkspaceFolder[] | undefined;
     watchFile(filePattern: string): FileSystemWatcher;
@@ -31,7 +31,7 @@ export class Vscode implements InterfaceVscode {
         return window.createTextEditorDecorationType(options);
     }
 
-    public executeCommand(command: string, ...rest: any[]): Thenable<{}> {
+    public executeCommand(command: string, ...rest: any[]): Thenable<{} | undefined> {
         return commands.executeCommand(command, rest);
     }
 
