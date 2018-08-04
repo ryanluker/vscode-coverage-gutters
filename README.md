@@ -7,20 +7,29 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/8vb8t787frcqtrm7?svg=true)](https://ci.appveyor.com/project/ryanluker/vscode-coverage-gutters)
 
 ## Features
-- multi workspace friendly watch functionality consumes all your coverage files
+![Coverage Gutters features watch](promo_images/coverage-gutters-features-1.gif)
 
-![Coverage Gutters features watch](images/coverage-gutters-features-1.gif)
+- Supports any language as long as you can generate an lcov style coverage file
+- Extensive logging and insight into operations via the output logs
+- Multi coverage file support for both xml and lcov
+- Coverage caching layer makes for speedy rendering even in large files
+- Relative coverage file resolution for those with complex file paths
+- Preview coverage reports inside the editor
+- Huge amount of workspace settings to customize the features to your liking
+- Colour compatibility with light and dark themes
 
-- extensive logging and insight into operations
+## Common Commands
+**Watch** (activated via command palette or shortcut icon on the status bar):
+Activating watch allows the extension to keep track of coverage changes and update it's cache. It also will automatically apply coverage to a file if some exists.
 
-![Coverage Gutters features options](images/coverage-gutters-features-2.png)
+**Display** (activated via command palette or shortcut key):
+Displays coverage for the current activate file only, does not update if the coverage files change.
 
-- multi coverage file support for both xml and lcov
-- coverage caching layer makes for speedy rendering even in large files
-- relative coverage file resolution for those with complex file paths
-- preview coverage reports inside the editor
-- huge amount of workspace settings to customize the features to your liking
-- colour compatibility with light and dark themes
+**Preview Report** (activated via command palette):
+Shows you a html preview of your coverage reports in your editor.
+
+## Tips and Tricks
+**Using Breakpoints**: Currently to both use the extension and code debugging breakpoints you need to disable the gutter coverage and enable the line coverage via the settings ( `coverage-gutters.showGutterCoverage` and `coverage-gutters.showLineCoverage` respectively).
 
 ## Requirements
 - vscode 1.22.0 and up

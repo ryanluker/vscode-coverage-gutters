@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/ryanluker/vscode-coverage-gutters"
   },
-  "icon": "images/icon.png",
+  "icon": "app_images/icon.png",
   "galleryBanner": {
     "color": "#24381b",
     "theme": "dark"
@@ -81,32 +81,32 @@
         },
         "coverage-gutters.gutterIconPathLight": {
           "type": "string",
-          "default": "./images/gutter-icon-light.svg",
+          "default": "./app_images/gutter-icon-light.svg",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for full coverage"
         },
         "coverage-gutters.gutterIconPathDark": {
           "type": "string",
-          "default": "./images/gutter-icon-dark.svg",
+          "default": "./app_images/gutter-icon-dark.svg",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for full coverage"
         },
         "coverage-gutters.partialGutterIconPathLight": {
           "type": "string",
-          "default": "./images/partial-gutter-icon-light.svg",
+          "default": "./app_images/partial-gutter-icon-light.svg",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for partial coverage"
         },
         "coverage-gutters.partialGutterIconPathDark": {
           "type": "string",
-          "default": "./images/partial-gutter-icon-dark.svg",
+          "default": "./app_images/partial-gutter-icon-dark.svg",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for partial coverage"
         },
         "coverage-gutters.noGutterIconPathLight": {
           "type": "string",
-          "default": "./images/no-gutter-icon-light.svg",
+          "default": "./app_images/no-gutter-icon-light.svg",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for no coverage"
         },
         "coverage-gutters.noGutterIconPathDark": {
           "type": "string",
-          "default": "./images/no-gutter-icon-dark.svg",
+          "default": "./app_images/no-gutter-icon-dark.svg",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for no coverage"
         },
         "coverage-gutters.showLineCoverage": {
