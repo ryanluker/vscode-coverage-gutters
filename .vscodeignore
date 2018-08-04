@@ -1,6 +1,7 @@
 .vscode/**
 .vscode-test/**
 out/test/**
+out/example/**
 test/**
 src/**
 **/*.map
@@ -12,3 +13,4 @@ example/**
 .vscodeignore
 types/**
 tslint.json
+promo_images/**
