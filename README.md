@@ -9,11 +9,11 @@
 ## Features
 - multi workspace friendly watch functionality consumes all your coverage files
 
-![Coverage Gutters features watch](images/coverage-gutters-features-1.gif)
+![Coverage Gutters features watch](https://raw.githubusercontent.com/ryanluker/vscode-coverage-gutters/master/promo_images/coverage-gutters-features-1.gif)
 
 - extensive logging and insight into operations
 
-![Coverage Gutters features options](images/coverage-gutters-features-2.png)
+![Coverage Gutters features options](https://raw.githubusercontent.com/ryanluker/vscode-coverage-gutters/master/promo_images/coverage-gutters-features-2.png)
 
 - multi coverage file support for both xml and lcov
 - coverage caching layer makes for speedy rendering even in large files
