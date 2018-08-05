@@ -46,7 +46,7 @@ suite("Extension Tests", function() {
         assert.equal(3, cachedLines.none.length);
     });
 
-    test("Run display coverage on php test file @integration", async () => {
+    test("Run display coverage on php test file number 1 @integration", async () => {
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -64,6 +64,26 @@ suite("Extension Tests", function() {
         const cachedLines: ICoverageLines = getCachedLines();
         assert.equal(4, cachedLines.full.length);
         assert.equal(2, cachedLines.none.length);
+    });
+
+    test("Run display coverage on php test file number 2 @integration", async () => {
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
+        const getCachedLines = extension.exports;
+        const testCoverage = await vscode.workspace.findFiles("**/main2.php", "**/node_modules/**");
+        const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
+        const testEditor = await vscode.window.showTextDocument(testDocument);
+        await vscode.commands.executeCommand("extension.displayCoverage");
+
+        // Wait for decorations to load
+        await sleep(2000);
+
+        // Look for exact coverage on the file
+        const cachedLines: ICoverageLines = getCachedLines();
+        assert.equal(2, cachedLines.full.length);
+        assert.equal(6, cachedLines.none.length);
     });
 });
 
