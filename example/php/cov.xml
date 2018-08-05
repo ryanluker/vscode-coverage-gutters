@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1532887774">
-  <project timestamp="1532887774">
+<coverage generated="1533433429">
+  <project timestamp="1533433429">
     <package name="test">
       <file name="/home/ryan/dev/vscode-coverage-gutters/example/php/src/testCoverage/testMain/main.php">
         <class name="main" namespace="test">
           <metrics methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
         </class>
-        <line num="37" type="method" name="increase" crap="1" count="1"/>
-        <line num="38" type="stmt" count="1"/>
-        <line num="39" type="stmt" count="1"/>
-        <line num="48" type="method" name="negate" crap="1" count="1"/>
-        <line num="49" type="stmt" count="1"/>
-        <line num="50" type="stmt" count="1"/>
-        <line num="59" type="method" name="notcovered" crap="2" count="0"/>
-        <line num="60" type="stmt" count="0"/>
-        <line num="61" type="stmt" count="0"/>
-        <metrics loc="63" ncloc="25" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
+        <line num="11" type="method" name="increase" crap="1" count="1"/>
+        <line num="12" type="stmt" count="1"/>
+        <line num="13" type="stmt" count="1"/>
+        <line num="16" type="method" name="negate" crap="1" count="1"/>
+        <line num="17" type="stmt" count="1"/>
+        <line num="18" type="stmt" count="1"/>
+        <line num="21" type="method" name="notcovered" crap="2" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <metrics loc="25" ncloc="25" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
+      </file>
+      <file name="/home/ryan/dev/vscode-coverage-gutters/example/php/src/testCoverage/testMain2/main2.php">
+        <class name="secondmain" namespace="test">
+          <metrics methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="2" elements="11" coveredelements="3"/>
+        </class>
+        <line num="11" type="method" name="increaseCovered" crap="1" count="1"/>
+        <line num="12" type="stmt" count="1"/>
+        <line num="13" type="stmt" count="1"/>
+        <line num="16" type="method" name="notcovered" crap="2" count="0"/>
+        <line num="17" type="stmt" count="0"/>
+        <line num="18" type="stmt" count="0"/>
+        <line num="21" type="method" name="negate" crap="2" count="0"/>
+        <line num="22" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="25" type="stmt" count="0"/>
+        <metrics loc="27" ncloc="27" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="2" elements="11" coveredelements="3"/>
       </file>
     </package>
-    <metrics files="1" loc="63" ncloc="25" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
+    <metrics files="2" loc="52" ncloc="52" classes="2" methods="6" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="6" elements="20" coveredelements="9"/>
   </project>
 </coverage>
