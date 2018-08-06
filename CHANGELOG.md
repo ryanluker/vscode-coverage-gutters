@@ -1,3 +1,14 @@
+### 2.1.0
+[Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/16?closed=1)
+## Features:
+- php support via clover-json and xml files! #140 #141
+
+## Under the hood:
+- use relative path comparison instead of score based #148 #152
+
+## Bugs:
+- removed score based file matching which cleans up alot of issues #150 #137
+
 ### 2.0.1
 [Github Milestone](https://github.com/ryanluker/vscode-coverage-gutters/milestone/16?closed=1)
 ## Under the hood:
