@@ -2,7 +2,7 @@ import {Section} from "lcov-parse";
 import {extname} from "path";
 import {TextEditor, Uri, workspace} from "vscode";
 import {OutputChannel} from "vscode";
-import {normalizeFileName} from "./helpers";
+import {areFilesRelativeEquals, normalizeFileName} from "./helpers";
 import {Reporter} from "./reporter";
 
 export class SectionFinder {
@@ -36,19 +36,7 @@ export class SectionFinder {
             const sectionFile = normalizeFileName(section.file);
             const editorFile = normalizeFileName(textEditor.document.fileName);
 
-            try {
-                const relativeSectionFile = sectionFile.split(workspaceFolderName)[1];
-                const relativeEditorFile = editorFile.split(workspaceFolderName)[1];
-
-                if (relativeSectionFile === relativeEditorFile) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (error) {
-                // catch possible index out of bounds errors
-                return false;
-            }
+            return areFilesRelativeEquals(sectionFile, editorFile, workspaceFolderName);
         }
 
         const sectionsArray = Array.from(sections.values());

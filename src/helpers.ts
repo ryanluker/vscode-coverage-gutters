@@ -32,3 +32,30 @@ export function normalizeFileName(fileName: string): string {
     name = name.replace(/\\/g, "###");
     return name;
 }
+
+/**
+ * Checks that the passed in files are the same when compared relatively from the rootFolder
+ * @param fileOne first file for comparing
+ * @param fileTwo second file for comparing
+ * @param rootFolder folder to substring on to create relative paths
+ */
+export function areFilesRelativeEquals(fileOne: string, fileTwo: string, rootFolder: string): boolean {
+    try {
+        /**
+         * Note: string.split causes issues if you have more then one folder with the workspace name.
+         * Instead we use substring and indexOf inorder to string off the first part of the path while
+         * preserving the relative portion after the workspace folder name.
+         */
+        const relativeFileOne = fileOne.substring(fileOne.indexOf(rootFolder));
+        const relativeFileTwo = fileTwo.substring(fileTwo.indexOf(rootFolder));
+
+        if (relativeFileOne === relativeFileTwo) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        // catch possible index out of bounds errors
+        return false;
+    }
+}

@@ -57,7 +57,11 @@ export class CoverageService {
             configStore,
             this.sectionFinder,
         );
-        this.lcovParser = new LcovParser(configStore);
+        this.lcovParser = new LcovParser(
+            configStore,
+            this.outputChannel,
+            this.eventReporter,
+        );
     }
 
     public dispose() {
