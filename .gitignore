@@ -12,3 +12,4 @@ venv
 vendor
 composer.lock
 composer.phar
+*.pyc
