@@ -1,5 +1,6 @@
 import {parseContent as parseContentClover} from "@cvrg-report/clover-json";
 import {parseContent as parseContentCobertura} from "cobertura-parse";
+import {parseContent as parseContentJacoco} from "jacoco-parse";
 import {Section, source} from "lcov-parse";
 import {OutputChannel} from "vscode";
 import {IConfigStore} from "./config";
@@ -38,12 +39,15 @@ export class LcovParser {
                 value.includes("<coverage") &&
                 value.includes("<project")
             ) {
-                coverage = await this.xmlExtractClover(value, key);
+                coverage = await this.xmlExtractClover(value);
+            } else if (value.includes("JACOCO")) {
+                coverage = await this.xmlExtractJacoco(value);
             } else if (value.includes("<?xml")) {
                 coverage = await this.xmlExtractCobertura(value, key);
             } else {
                 coverage = await this.lcovExtract(value);
             }
+
             // add new coverage map to existing coverages generated so far
             coverages = new Map([...coverages, ...coverage]);
         }
@@ -71,7 +75,27 @@ export class LcovParser {
         });
     }
 
-    private async xmlExtractClover(xmlFile: string, absolutePath: string) {
+    private xmlExtractJacoco(xmlFile: string) {
+        return new Promise<Map<string, Section>>((resolve, reject) => {
+            try {
+                parseContentJacoco(xmlFile, (err, data) => {
+                    if (err) { return reject(err); }
+                    // convert the array of sections into an unique map
+                    const sections = new Map<string, Section>();
+                    data.forEach((section) => {
+                        sections.set(section.file, section);
+                    });
+                    this.eventReporter.sendEvent("system", "xmlExtractJacoco-success");
+                    return resolve(sections);
+                });
+            } catch (error) {
+                this.handleError("cobertura-parse", error);
+                return resolve(new Map<string, Section>());
+            }
+        });
+    }
+
+    private async xmlExtractClover(xmlFile: string) {
         try {
             const data = await parseContentClover(xmlFile);
             // convert the array of sections into an unique map
