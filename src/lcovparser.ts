@@ -89,7 +89,7 @@ export class LcovParser {
                     return resolve(sections);
                 });
             } catch (error) {
-                this.handleError("cobertura-parse", error);
+                this.handleError("jacoco-parse", error);
                 return resolve(new Map<string, Section>());
             }
         });
