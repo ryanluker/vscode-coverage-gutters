@@ -6,7 +6,7 @@ const lastCoverageLines: ICoverageLines = {
     partial: [],
 };
 
-function emptyLastCoverage() {
+export function emptyLastCoverage() {
     lastCoverageLines.full = [];
     lastCoverageLines.none = [];
     lastCoverageLines.partial = [];
@@ -22,8 +22,5 @@ export function setLastCoverageLines(coverageLines: ICoverageLines) {
  * Pulling the last coverage lines sets the struct back to empty
  */
 export function getLastCoverageLines(): ICoverageLines {
-    const pullCoverageLines = lastCoverageLines;
-    // clean out last coverage after consumption
-    emptyLastCoverage();
-    return pullCoverageLines;
+    return lastCoverageLines;
 }

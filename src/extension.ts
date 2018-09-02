@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import {Config} from "./config";
 import {Coverage} from "./coverage";
-import {getLastCoverageLines} from "./exportsapi";
+import {emptyLastCoverage, getLastCoverageLines} from "./exportsapi";
 import {Gutters} from "./gutters";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
@@ -57,6 +57,9 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(gutters);
     context.subscriptions.push(outputChannel);
 
-    // return coverage lines getter to allow for integration hooks
-    return getLastCoverageLines;
+    // return exports api functions
+    return {
+        emptyLastCoverage,
+        getLastCoverageLines,
+    };
 }
