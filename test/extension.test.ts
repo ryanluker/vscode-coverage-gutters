@@ -10,7 +10,7 @@ suite("Extension Tests", function() {
         if (!extension) {
             throw new Error("Could not load extension");
         }
-        const getCachedLines = extension.exports.getCachedLines;
+        const getCachedLines = extension.exports.getLastCoverageLines;
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
@@ -33,7 +33,7 @@ suite("Extension Tests", function() {
         if (!extension) {
             throw new Error("Could not load extension");
         }
-        const getCachedLines = extension.exports.getCachedLines;
+        const getCachedLines = extension.exports.getLastCoverageLines;
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/bar/a.py", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
@@ -55,7 +55,7 @@ suite("Extension Tests", function() {
         if (!extension) {
             throw new Error("Could not load extension");
         }
-        const getCachedLines = extension.exports.getCachedLines;
+        const getCachedLines = extension.exports.getLastCoverageLines;
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/main.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
@@ -77,7 +77,7 @@ suite("Extension Tests", function() {
         if (!extension) {
             throw new Error("Could not load extension");
         }
-        const getCachedLines = extension.exports.getCachedLines;
+        const getCachedLines = extension.exports.getLastCoverageLines;
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/main2.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
@@ -99,7 +99,7 @@ suite("Extension Tests", function() {
         if (!extension) {
             throw new Error("Could not load extension");
         }
-        const getCachedLines = extension.exports.getCachedLines;
+        const getCachedLines = extension.exports.getLastCoverageLines;
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/mycompany/app/App.java", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
