@@ -1,6 +1,3 @@
-import * as assert from "assert";
-import * as vscode from "vscode";
-import {IConfigStore} from "../../src/extension/config";
 import {StatusBarToggler} from "../../src/extension/statusbartoggler";
 
 suite("Status Bar Toggler Tests", function() {
