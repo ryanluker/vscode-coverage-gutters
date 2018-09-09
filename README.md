@@ -28,11 +28,17 @@ Displays coverage for the current activate file only, does not update if the cov
 **Preview Report** (activated via command palette):
 Shows you a html preview of your coverage reports in your editor.
 
+## Officially Supported Languages (Backed by tests ran nightly)
+- Java
+- PHP
+- Python
+- Nodejs
+
 ## Tips and Tricks
 **Using Breakpoints**: Currently to both use the extension and code debugging breakpoints you need to disable the gutter coverage and enable the line coverage via the settings ( `coverage-gutters.showGutterCoverage` and `coverage-gutters.showLineCoverage` respectively).
 
 ## Requirements
-- vscode 1.22.0 and up
+- vscode 1.27.0 and up
 - macos, linux or windows
 
 ## Extension Settings
