@@ -6,7 +6,7 @@ import {
     WorkspaceConfiguration,
 } from "vscode";
 import {Reporter} from "./reporter";
-import {InterfaceVscode} from "./wrappers/vscode";
+import {InterfaceVscode} from "../wrappers/vscode";
 
 export interface IConfigStore {
     lcovFileName: string;

@@ -3,8 +3,8 @@ import {parseContent as parseContentCobertura} from "cobertura-parse";
 import {parseContent as parseContentJacoco} from "jacoco-parse";
 import {Section, source} from "lcov-parse";
 import {OutputChannel} from "vscode";
-import {IConfigStore} from "./config";
-import {Reporter} from "./reporter";
+import {IConfigStore} from "../extension/config";
+import {Reporter} from "../extension/reporter";
 
 export class LcovParser {
     private configStore: IConfigStore;

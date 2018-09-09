@@ -1,14 +1,14 @@
 import * as vscode from "vscode";
-import {Config} from "./extension/config";
-import {Coverage} from "./coverage/coverage";
-import {emptyLastCoverage, getLastCoverageLines} from "./extension/exportsapi";
-import {Gutters} from "./extension/gutters";
-import {Reporter} from "./extension/reporter";
-import {StatusBarToggler} from "./extension/statusbartoggler";
-import {Fs} from "./wrappers/fs";
-import {Glob} from "./wrappers/glob";
-import {Request} from "./wrappers/request";
-import {Vscode} from "./wrappers/vscode";
+import {Config} from "./config";
+import {Coverage} from "../coverage/coverage";
+import {emptyLastCoverage, getLastCoverageLines} from "./exportsapi";
+import {Gutters} from "./gutters";
+import {Reporter} from "./reporter";
+import {StatusBarToggler} from "./statusbartoggler";
+import {Fs} from "../wrappers/fs";
+import {Glob} from "../wrappers/glob";
+import {Request} from "../wrappers/request";
+import {Vscode} from "../wrappers/vscode";
 
 const fsImpl = new Fs();
 const vscodeImpl = new Vscode();

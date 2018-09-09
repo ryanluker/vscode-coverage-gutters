@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
-import {ICoverageLines} from "../src/renderer";
+import {ICoverageLines} from "../src/coverage/renderer";
 
 suite("Extension Tests", function() {
     this.timeout(25000);

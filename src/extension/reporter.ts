@@ -1,4 +1,4 @@
-import {Request} from "./wrappers/request";
+import {Request} from "../wrappers/request";
 
 const EXT_NAME = "vscode-coverage-gutters";
 const EXT_VERSION = "2.2.0";
