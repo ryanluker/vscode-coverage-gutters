@@ -1,4 +1,4 @@
-import {ICoverageLines} from "../coverage/renderer";
+import {ICoverageLines} from "../coverage-system/renderer";
 
 const lastCoverageLines: ICoverageLines = {
     full: [],

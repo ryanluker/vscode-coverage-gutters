@@ -14,8 +14,8 @@ import {
 import {Vscode} from "../wrappers/vscode";
 
 import {IConfigStore} from "./config";
-import {Coverage} from "../coverage/coverage";
-import {CoverageService} from "../coverage/coverageservice";
+import {Coverage} from "../coverage-system/coverage";
+import {CoverageService} from "../coverage-system/coverageservice";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 
