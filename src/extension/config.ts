@@ -3,10 +3,9 @@ import {
     ExtensionContext,
     OverviewRulerLane,
     TextEditorDecorationType,
-    WorkspaceConfiguration,
 } from "vscode";
-import {Reporter} from "./reporter";
 import {InterfaceVscode} from "../wrappers/vscode";
+import {Reporter} from "./reporter";
 
 export interface IConfigStore {
     lcovFileName: string;

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import {Config} from "./extension/config";
 import {Coverage} from "./coverage-system/coverage";
+import {Config} from "./extension/config";
 import {emptyLastCoverage, getLastCoverageLines} from "./extension/exportsapi";
 import {Gutters} from "./extension/gutters";
 import {Reporter} from "./extension/reporter";

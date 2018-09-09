@@ -11,21 +11,14 @@ import {
     window,
 } from "vscode";
 
-import {Vscode} from "../wrappers/vscode";
-
-import {IConfigStore} from "./config";
 import {Coverage} from "../coverage-system/coverage";
 import {CoverageService} from "../coverage-system/coverageservice";
+import {IConfigStore} from "./config";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 
-const vscodeImpl = new Vscode();
-
 export class Gutters {
     private configStore: IConfigStore;
-    private coverageWatcher: FileSystemWatcher;
-    private editorWatcher: Disposable;
-    private statusBarItem: StatusBarItem;
     private coverage: Coverage;
     private outputChannel: OutputChannel;
     private reporter: Reporter;
