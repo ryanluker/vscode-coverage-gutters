@@ -1,4 +1,4 @@
-import {ICoverageLines} from "./renderer";
+import {ICoverageLines} from "../coverage-system/renderer";
 
 const lastCoverageLines: ICoverageLines = {
     full: [],
@@ -6,12 +6,21 @@ const lastCoverageLines: ICoverageLines = {
     partial: [],
 };
 
+export function emptyLastCoverage() {
+    lastCoverageLines.full = [];
+    lastCoverageLines.none = [];
+    lastCoverageLines.partial = [];
+}
+
 export function setLastCoverageLines(coverageLines: ICoverageLines) {
     lastCoverageLines.full = coverageLines.full;
     lastCoverageLines.none = coverageLines.none;
     lastCoverageLines.partial = coverageLines.partial;
 }
 
+/**
+ * Pulling the last coverage lines sets the struct back to empty
+ */
 export function getLastCoverageLines(): ICoverageLines {
     return lastCoverageLines;
 }

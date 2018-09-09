@@ -1,8 +1,8 @@
 import * as assert from "assert";
-import {Coverage} from "../src/coverage";
-import {Fs} from "../src/wrappers/fs";
-import {Glob} from "../src/wrappers/glob";
-import {Vscode} from "../src/wrappers/vscode";
+import {Coverage} from "../../src/coverage-system/coverage";
+import {Fs} from "../../src/wrappers/fs";
+import {Glob} from "../../src/wrappers/glob";
+import {Vscode} from "../../src/wrappers/vscode";
 
 suite("Coverage Tests", function() {
     const fakeConfig = {

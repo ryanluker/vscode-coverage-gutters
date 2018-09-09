@@ -3,8 +3,8 @@ import {
     Range,
     TextEditor,
 } from "vscode";
-import {IConfigStore} from "./config";
-import {setLastCoverageLines} from "./exportsapi";
+import {IConfigStore} from "../extension/config";
+import {setLastCoverageLines} from "../extension/exportsapi";
 import {SectionFinder} from "./sectionFinder";
 
 export interface ICoverageLines {

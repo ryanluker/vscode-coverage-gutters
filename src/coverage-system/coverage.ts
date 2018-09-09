@@ -1,10 +1,10 @@
 import {basename} from "path";
 import {QuickPickItem, Uri, WorkspaceFolder} from "vscode";
 
-import {IConfigStore} from "./config";
-import {InterfaceFs} from "./wrappers/fs";
-import {InterfaceGlob} from "./wrappers/glob";
-import {InterfaceVscode} from "./wrappers/vscode";
+import {IConfigStore} from "../extension/config";
+import {InterfaceFs} from "../wrappers/fs";
+import {InterfaceGlob} from "../wrappers/glob";
+import {InterfaceVscode} from "../wrappers/vscode";
 
 export class Coverage {
     private configStore: IConfigStore;
@@ -95,7 +95,8 @@ export class Coverage {
                 (err, files) => {
                     if (!files || !files.length) { return resolve([]); }
                     return resolve(files);
-                });
+                },
+            );
         });
     }
 }

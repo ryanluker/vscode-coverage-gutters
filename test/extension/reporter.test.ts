@@ -1,6 +1,6 @@
 import * as assert from "assert";
-import {Reporter} from "../src/reporter";
-import {IOptions, RequestCallback} from "../src/wrappers/request";
+import {Reporter} from "../../src/extension/reporter";
+import {IOptions, RequestCallback} from "../../src/wrappers/request";
 
 suite("Reporter Tests", function() {
     test("Should not report metrics if enabledMetrics false @unit", function() {

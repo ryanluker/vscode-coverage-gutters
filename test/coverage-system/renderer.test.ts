@@ -1,8 +1,8 @@
 import {assert} from "chai";
 import {Section} from "lcov-parse";
 import {DecorationOptions, Range, TextEditor, TextEditorDecorationType} from "vscode";
-import {Renderer} from "../src/renderer";
-import {SectionFinder} from "../src/sectionFinder";
+import {Renderer} from "../../src/coverage-system/renderer";
+import {SectionFinder} from "../../src/coverage-system/sectionFinder";
 
 suite("Renderer Tests", function() {
     const fakeConfig = {

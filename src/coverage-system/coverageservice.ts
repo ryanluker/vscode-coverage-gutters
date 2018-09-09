@@ -8,11 +8,11 @@ import {
     workspace,
 } from "vscode";
 
-import {IConfigStore} from "./config";
-import {FilesLoader} from "./filesloader";
-import {LcovParser} from "./lcovparser";
+import {IConfigStore} from "../extension/config";
+import {Reporter} from "../extension/reporter";
+import {CoverageParser} from "../files/coverageparser";
+import {FilesLoader} from "../files/filesloader";
 import {Renderer} from "./renderer";
-import {Reporter} from "./reporter";
 import {SectionFinder} from "./sectionFinder";
 
 enum Status {
@@ -29,7 +29,7 @@ export class CoverageService {
     private eventReporter: Reporter;
     private filesLoader: FilesLoader;
     private renderer: Renderer;
-    private lcovParser: LcovParser;
+    private coverageParser: CoverageParser;
     private lcovWatcher: FileSystemWatcher;
     private xmlWatcher: FileSystemWatcher;
     private editorWatcher: Disposable;
@@ -57,7 +57,7 @@ export class CoverageService {
             configStore,
             this.sectionFinder,
         );
-        this.lcovParser = new LcovParser(
+        this.coverageParser = new CoverageParser(
             configStore,
             this.outputChannel,
             this.eventReporter,
@@ -94,7 +94,7 @@ export class CoverageService {
             this.outputChannel.appendLine(
                 `[${Date.now()}][coverageservice]: Loading ${files.size} file(s)`);
             const dataFiles = await this.filesLoader.loadDataFiles(files);
-            const dataCoverage = await this.lcovParser.filesToSections(dataFiles);
+            const dataCoverage = await this.coverageParser.filesToSections(dataFiles);
             this.outputChannel.appendLine(
                 `[${Date.now()}][coverageservice]: Caching ${dataCoverage.size} coverage(s)`);
             this.cache = dataCoverage;

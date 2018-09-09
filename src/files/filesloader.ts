@@ -1,7 +1,7 @@
 import {readFile} from "fs";
 import * as glob from "glob";
 import {workspace, WorkspaceFolder} from "vscode";
-import {IConfigStore} from "./config";
+import {IConfigStore} from "../extension/config";
 
 export class FilesLoader {
     private configStore: IConfigStore;

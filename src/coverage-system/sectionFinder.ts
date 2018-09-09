@@ -2,8 +2,8 @@ import {Section} from "lcov-parse";
 import {extname} from "path";
 import {TextEditor, Uri, workspace} from "vscode";
 import {OutputChannel} from "vscode";
-import {areFilesRelativeEquals, normalizeFileName} from "./helpers";
-import {Reporter} from "./reporter";
+import {Reporter} from "../extension/reporter";
+import {areFilesRelativeEquals, normalizeFileName} from "../helpers";
 
 export class SectionFinder {
 

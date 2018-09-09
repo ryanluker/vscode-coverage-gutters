@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
-import {Config} from "./config";
-import {Coverage} from "./coverage";
-import {getLastCoverageLines} from "./exportsapi";
-import {Gutters} from "./gutters";
-import {Reporter} from "./reporter";
-import {StatusBarToggler} from "./statusbartoggler";
+import {Coverage} from "./coverage-system/coverage";
+import {Config} from "./extension/config";
+import {emptyLastCoverage, getLastCoverageLines} from "./extension/exportsapi";
+import {Gutters} from "./extension/gutters";
+import {Reporter} from "./extension/reporter";
+import {StatusBarToggler} from "./extension/statusbartoggler";
 import {Fs} from "./wrappers/fs";
 import {Glob} from "./wrappers/glob";
 import {Request} from "./wrappers/request";
@@ -57,6 +57,9 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(gutters);
     context.subscriptions.push(outputChannel);
 
-    // return coverage lines getter to allow for integration hooks
-    return getLastCoverageLines;
+    // return exports api functions
+    return {
+        emptyLastCoverage,
+        getLastCoverageLines,
+    };
 }

@@ -1,8 +1,5 @@
-environment:
-  CODE_VERSION: 1.22.0
-
 install:
-  - ps: Install-Product node 6.11.0 x64
+  - ps: Install-Product node 10 x64
 
 build_script:
   - npm install

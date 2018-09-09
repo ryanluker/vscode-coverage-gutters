@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import {Config} from "../src/config";
+import {Config} from "../../src/extension/config";
 
 suite("Config Tests", function() {
     const fakeVscode: any = {

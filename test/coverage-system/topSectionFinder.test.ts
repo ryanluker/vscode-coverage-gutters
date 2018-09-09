@@ -1,7 +1,6 @@
-import {assert} from "chai";
 import {Section} from "lcov-parse";
-import {DecorationOptions, Range, TextEditor, TextEditorDecorationType} from "vscode";
-import {SectionFinder} from "../src/sectionFinder";
+import {TextEditor} from "vscode";
+import {SectionFinder} from "../../src/coverage-system/sectionFinder";
 
 suite("SectionFinder Tests", function() {
 
