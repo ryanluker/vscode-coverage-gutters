@@ -271,11 +271,12 @@
   "scripts": {
     "lint": "tslint './src/**/*.ts' './test/**/*.ts'",
     "pretty": "tslint --fix './src/**/*.ts' './test/**/*.ts'",
-    "test": "node ./node_modules/vscode/bin/test",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test",
     "test-unit": "cross-env MOCHA_GREP=@unit npm test --silent",
     "test-integration": "cross-env CODE_TESTS_WORKSPACE=./example/example.code-workspace MOCHA_GREP=@integration npm test --silent",
     "vscode:prepublish": "tsc -p ./",
     "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
     "build": "npm install && npm run lint && tsc -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
