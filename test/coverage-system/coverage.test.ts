@@ -3,27 +3,9 @@ import {Coverage} from "../../src/coverage-system/coverage";
 import {Fs} from "../../src/wrappers/fs";
 import {Glob} from "../../src/wrappers/glob";
 import {Vscode} from "../../src/wrappers/vscode";
+import {fakeConfig} from "../fakeConfig.test";
 
 suite("Coverage Tests", function() {
-    const fakeConfig = {
-        altSfCompare: false,
-        fullCoverageDecorationType: {
-            key: "testKey",
-            dispose() {},
-        },
-        lcovFileName: "test.ts",
-        noCoverageDecorationType: {
-            key: "testKey4",
-            dispose() {},
-        },
-        partialCoverageDecorationType: {
-            key: "testKey3",
-            dispose() {},
-        },
-        showStatusBarToggler: true,
-        xmlFileName: "test.xml",
-    };
-
     test("Constructor should setup properly @unit", function(done) {
         try {
             const blobImpl = new Glob();

@@ -3,27 +3,10 @@ import {Section} from "lcov-parse";
 import {DecorationOptions, Range, TextEditor, TextEditorDecorationType} from "vscode";
 import {Renderer} from "../../src/coverage-system/renderer";
 import {SectionFinder} from "../../src/coverage-system/sectionFinder";
+import { IConfigStore } from "../../src/extension/config";
+import { fakeConfig } from "../fakeConfig.test";
 
 suite("Renderer Tests", function() {
-    const fakeConfig = {
-        altSfCompare: false,
-        fullCoverageDecorationType: {
-            key: "testKey",
-            dispose() {},
-        },
-        lcovFileName: "test.ts",
-        noCoverageDecorationType: {
-            key: "testKey4",
-            dispose() {},
-        },
-        partialCoverageDecorationType: {
-            key: "testKey3",
-            dispose() {},
-        },
-        showStatusBarToggler: true,
-        xmlFileName: "test.xml",
-    };
-
     test("Constructor should setup properly @unit", function(done) {
         const sectionFinder: SectionFinder = {} as SectionFinder;
         assert.doesNotThrow(() => new Renderer(fakeConfig, sectionFinder));

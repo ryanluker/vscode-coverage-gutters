@@ -1,25 +1,7 @@
 import {StatusBarToggler} from "../../src/extension/statusbartoggler";
+import { fakeConfig } from "../fakeConfig.test";
 
 suite("Status Bar Toggler Tests", function() {
-    const fakeConfig = {
-        altSfCompare: false,
-        fullCoverageDecorationType: {
-            key: "testKey",
-            dispose() {},
-        },
-        lcovFileName: "test.ts",
-        noCoverageDecorationType: {
-            key: "testKey4",
-            dispose() {},
-        },
-        partialCoverageDecorationType: {
-            key: "testKey3",
-            dispose() {},
-        },
-        showStatusBarToggler: false,
-        xmlFileName: "test.xml",
-    };
-
     test("Should toggle showStatusBarToggler command and message @unit", function() {
         const statusBarToggler = new StatusBarToggler(fakeConfig);
         statusBarToggler.toggle();
