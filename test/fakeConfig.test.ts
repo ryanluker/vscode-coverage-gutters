@@ -6,6 +6,7 @@ export const fakeConfig: IConfigStore = {
         key: "testKey",
         dispose() { },
     },
+    ignoredPathGlobs: ["test/*"],
     lcovFileName: "test.ts",
     noCoverageDecorationType: {
         key: "testKey4",
@@ -17,5 +18,4 @@ export const fakeConfig: IConfigStore = {
     },
     showStatusBarToggler: true,
     xmlFileName: "test.xml",
-    ignoredPathGlobs: ["test/*"]
 };

@@ -30,7 +30,7 @@ export class Config {
     private noCoverageDecorationType: TextEditorDecorationType;
     private altSfCompare: boolean;
     private showStatusBarToggler: boolean;
-    private ignoredPaths:ArrayLike<string>;
+    private ignoredPaths: ArrayLike<string>;
 
     constructor(vscode: InterfaceVscode, context: ExtensionContext, reporter: Reporter) {
         this.vscode = vscode;
@@ -43,12 +43,12 @@ export class Config {
         return {
             altSfCompare: this.altSfCompare,
             fullCoverageDecorationType: this.fullCoverageDecorationType,
+            ignoredPathGlobs: this.ignoredPaths,
             lcovFileName: this.lcovFileName,
             noCoverageDecorationType: this.noCoverageDecorationType,
             partialCoverageDecorationType: this.partialCoverageDecorationType,
             showStatusBarToggler: this.showStatusBarToggler,
             xmlFileName: this.xmlFileName,
-            ignoredPathGlobs: this.ignoredPaths
         };
     }
 
