@@ -131,7 +131,7 @@
             "**/venv/**",
             "**/vendor/**"
           ],
-          "description": "show or hide the gutter coverage"
+          "description": "paths that will be ignored by the extension"
         },
         "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": {
           "type": "boolean",
