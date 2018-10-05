@@ -162,31 +162,6 @@
           "type": "boolean",
           "default": true,
           "description": "enable or disable the removeCoverage command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.keybindings-previewCoverageReport-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for previewing the lcov report"
-        },
-        "coverage-gutters.customizable.keybindings-displayCoverage-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for enabling coverage on the active file"
-        },
-        "coverage-gutters.customizable.keybindings-watchCoverageAndVisibleEditors-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for watching the lcov file and visible editors"
-        },
-        "coverage-gutters.customizable.keybindings-removeWatch-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for removing the watch on lcov and editors"
-        },
-        "coverage-gutters.customizable.keybindings-removeCoverage-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for removing the coverage on the active file"
         }
       }
     },
@@ -216,32 +191,27 @@
       {
         "command": "extension.previewCoverageReport",
         "key": "ctrl+shift+6",
-        "mac": "shift+cmd+6",
-        "when": "config.coverage-gutters.customizable.keybindings-previewCoverageReport-enabled"
+        "mac": "shift+cmd+6"
       },
       {
         "command": "extension.displayCoverage",
         "key": "ctrl+shift+7",
-        "mac": "shift+cmd+7",
-        "when": "config.coverage-gutters.customizable.keybindings-displayCoverage-enabled"
+        "mac": "shift+cmd+7"
       },
       {
         "command": "extension.watchCoverageAndVisibleEditors",
         "key": "ctrl+shift+8",
-        "mac": "shift+cmd+8",
-        "when": "config.coverage-gutters.customizable.keybindings-watchCoverageAndVisibleEditors-enabled"
+        "mac": "shift+cmd+8"
       },
       {
         "command": "extension.removeWatch",
         "key": "ctrl+shift+9",
-        "mac": "shift+cmd+9",
-        "when": "config.coverage-gutters.customizable.keybindings-removeWatch-enabled"
+        "mac": "shift+cmd+9"
       },
       {
         "command": "extension.removeCoverage",
         "key": "ctrl+shift+0",
-        "mac": "shift+cmd+0",
-        "when": "config.coverage-gutters.customizable.keybindings-removeCoverage-enabled"
+        "mac": "shift+cmd+0"
       }
     ],
     "menus": {
