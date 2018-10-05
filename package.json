@@ -137,31 +137,6 @@
           "type": "boolean",
           "default": true,
           "description": "enable or disable the status bar item"
-        },
-        "coverage-gutters.customizable.menus-editor-context-previewCoverageReport-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the previewCoverageReport command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the displayCoverage command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.menus-editor-context-watchCoverageAndVisibleEditors-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the watchCoverageAndVisibleEditors command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.menus-editor-context-removeWatch-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the removeWatch command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the removeCoverage command in the editor/context menu"
         }
       }
     },
@@ -217,27 +192,22 @@
     "menus": {
       "editor/context": [
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-previewCoverageReport-enabled",
           "command": "extension.previewCoverageReport",
           "group": "Coverage-Gutters@1"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled",
           "command": "extension.displayCoverage",
           "group": "Coverage-Gutters@2"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-watchCoverageAndVisibleEditors-enabled",
           "command": "extension.watchCoverageAndVisibleEditors",
           "group": "Coverage-Gutters@3"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-removeWatch-enabled",
           "command": "extension.removeWatch",
           "group": "Coverage-Gutters@4"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled",
           "command": "extension.removeCoverage",
           "group": "Coverage-Gutters@5"
         }
