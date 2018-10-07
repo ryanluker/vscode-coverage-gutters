@@ -44,11 +44,6 @@
           "default": "cov.xml",
           "description": "name of your xml file"
         },
-        "coverage-gutters.altSfCompare": {
-          "type": "boolean",
-          "default": true,
-          "description": "DEPRECATED: uses a relative method of comparing lcov source file paths"
-        },
         "coverage-gutters.highlightlight": {
           "type": "string",
           "default": "rgba(166, 220, 142, 0.75)",
@@ -137,56 +132,6 @@
           "type": "boolean",
           "default": true,
           "description": "enable or disable the status bar item"
-        },
-        "coverage-gutters.customizable.menus-editor-context-previewCoverageReport-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the previewCoverageReport command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the displayCoverage command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.menus-editor-context-watchCoverageAndVisibleEditors-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the watchCoverageAndVisibleEditors command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.menus-editor-context-removeWatch-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the removeWatch command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the removeCoverage command in the editor/context menu"
-        },
-        "coverage-gutters.customizable.keybindings-previewCoverageReport-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for previewing the lcov report"
-        },
-        "coverage-gutters.customizable.keybindings-displayCoverage-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for enabling coverage on the active file"
-        },
-        "coverage-gutters.customizable.keybindings-watchCoverageAndVisibleEditors-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for watching the lcov file and visible editors"
-        },
-        "coverage-gutters.customizable.keybindings-removeWatch-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for removing the watch on lcov and editors"
-        },
-        "coverage-gutters.customizable.keybindings-removeCoverage-enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "enable or disable the keybinding shortcut for removing the coverage on the active file"
         }
       }
     },
@@ -216,58 +161,48 @@
       {
         "command": "extension.previewCoverageReport",
         "key": "ctrl+shift+6",
-        "mac": "shift+cmd+6",
-        "when": "config.coverage-gutters.customizable.keybindings-previewCoverageReport-enabled"
+        "mac": "shift+cmd+6"
       },
       {
         "command": "extension.displayCoverage",
         "key": "ctrl+shift+7",
-        "mac": "shift+cmd+7",
-        "when": "config.coverage-gutters.customizable.keybindings-displayCoverage-enabled"
+        "mac": "shift+cmd+7"
       },
       {
         "command": "extension.watchCoverageAndVisibleEditors",
         "key": "ctrl+shift+8",
-        "mac": "shift+cmd+8",
-        "when": "config.coverage-gutters.customizable.keybindings-watchCoverageAndVisibleEditors-enabled"
+        "mac": "shift+cmd+8"
       },
       {
         "command": "extension.removeWatch",
         "key": "ctrl+shift+9",
-        "mac": "shift+cmd+9",
-        "when": "config.coverage-gutters.customizable.keybindings-removeWatch-enabled"
+        "mac": "shift+cmd+9"
       },
       {
         "command": "extension.removeCoverage",
         "key": "ctrl+shift+0",
-        "mac": "shift+cmd+0",
-        "when": "config.coverage-gutters.customizable.keybindings-removeCoverage-enabled"
+        "mac": "shift+cmd+0"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-previewCoverageReport-enabled",
           "command": "extension.previewCoverageReport",
           "group": "Coverage-Gutters@1"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-displayCoverage-enabled",
           "command": "extension.displayCoverage",
           "group": "Coverage-Gutters@2"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-watchCoverageAndVisibleEditors-enabled",
           "command": "extension.watchCoverageAndVisibleEditors",
           "group": "Coverage-Gutters@3"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-removeWatch-enabled",
           "command": "extension.removeWatch",
           "group": "Coverage-Gutters@4"
         },
         {
-          "when": "config.coverage-gutters.customizable.menus-editor-context-removeCoverage-enabled",
           "command": "extension.removeCoverage",
           "group": "Coverage-Gutters@5"
         }

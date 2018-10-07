@@ -13,7 +13,6 @@ export interface IConfigStore {
     fullCoverageDecorationType: TextEditorDecorationType;
     partialCoverageDecorationType: TextEditorDecorationType;
     noCoverageDecorationType: TextEditorDecorationType;
-    altSfCompare: boolean;
     showStatusBarToggler: boolean;
     ignoredPathGlobs: ArrayLike<string>;
 }
@@ -28,7 +27,6 @@ export class Config {
     private fullCoverageDecorationType: TextEditorDecorationType;
     private partialCoverageDecorationType: TextEditorDecorationType;
     private noCoverageDecorationType: TextEditorDecorationType;
-    private altSfCompare: boolean;
     private showStatusBarToggler: boolean;
     private ignoredPaths: ArrayLike<string>;
 
@@ -41,7 +39,6 @@ export class Config {
 
     public get(): IConfigStore {
         return {
-            altSfCompare: this.altSfCompare,
             fullCoverageDecorationType: this.fullCoverageDecorationType,
             ignoredPathGlobs: this.ignoredPaths,
             lcovFileName: this.lcovFileName,
@@ -69,7 +66,6 @@ export class Config {
         // Basic configurations
         this.lcovFileName = rootConfig.get("lcovname") as string;
         this.xmlFileName = rootConfig.get("xmlname") as string;
-        this.altSfCompare = rootConfig.get("altSfCompare") as boolean;
         const STATUS_BAR_TOGGLER = "status-bar-toggler-watchCoverageAndVisibleEditors-enabled";
         this.showStatusBarToggler = rootCustomConfig.get(STATUS_BAR_TOGGLER) as boolean;
 
