@@ -43,7 +43,6 @@ suite("Config Tests", function() {
     test("Can get configStore after initialization @unit", function() {
         const config = new Config(fakeVscode, fakeContext, fakeReport);
         const store = config.get();
-        assert.notEqual(store.altSfCompare, null);
         assert.notEqual(store.lcovFileName, null);
     });
 

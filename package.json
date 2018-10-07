@@ -44,11 +44,6 @@
           "default": "cov.xml",
           "description": "name of your xml file"
         },
-        "coverage-gutters.altSfCompare": {
-          "type": "boolean",
-          "default": true,
-          "description": "DEPRECATED: uses a relative method of comparing lcov source file paths"
-        },
         "coverage-gutters.highlightlight": {
           "type": "string",
           "default": "rgba(166, 220, 142, 0.75)",

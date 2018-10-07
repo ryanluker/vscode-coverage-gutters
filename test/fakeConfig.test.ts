@@ -1,7 +1,6 @@
 import { IConfigStore } from "../src/extension/config";
 
 export const fakeConfig: IConfigStore = {
-    altSfCompare: false,
     fullCoverageDecorationType: {
         key: "testKey",
         dispose() { },
