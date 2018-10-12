@@ -121,12 +121,9 @@ export class CoverageParser {
         }
 
         function findAbsolutePathFromTextDocumentsWhenRelativePath() {
-            
             if (!workspace.textDocuments) { return possiblePath; }
-            if (!possiblePath.startsWith('.')) { return possiblePath }
-            
+            if (!possiblePath.startsWith(".")) { return possiblePath; }
             const partialPath = possiblePath.substring(1);
-        
             // look through currently open documents for possible path
             const filePaths = workspace.textDocuments.map(
                 (document) => document.uri.fsPath,
@@ -135,13 +132,13 @@ export class CoverageParser {
             // find possible match to absolutely path of open document
             filePaths.forEach((filePath) => {
                 if (filePath.endsWith(partialPath)) {
-                    files.push(filePath)
+                    files.push(filePath);
                 }
-            })
+            });
             if (files.length === 1) {
-                return files[0]
+                return files[0];
             } else {
-                return possiblePath
+                return possiblePath;
             }
         }
 
