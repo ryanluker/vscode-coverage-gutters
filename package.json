@@ -242,7 +242,7 @@
     "@cvrg-report/clover-json": "0.1.0",
     "cobertura-parse": "1.0.5",
     "glob": "7.1.2",
-    "jacoco-parse": "1.0.1",
+    "jacoco-parse": "2.0.0",
     "lcov-parse": "1.0.0",
     "lodash": "4.17.5",
     "request": "2.88.0"
