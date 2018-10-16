@@ -15,8 +15,9 @@ export class FilesLoader {
      */
     public async findCoverageFiles(): Promise<Set<string>> {
         const fileNames = [
+            "jacoco.xml",   // Default XML coverage file for Jacoco Plugin
             this.configStore.lcovFileName,
-            this.configStore.xmlFileName,
+            this.configStore.xmlFileName
         ];
         const files = await this.findCoverageInWorkspace(fileNames);
         if (!files.size) { throw new Error("Could not find a Coverage file!"); }
