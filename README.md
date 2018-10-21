@@ -29,10 +29,13 @@ Displays coverage for the current activate file only, does not update if the cov
 Shows you a html preview of your coverage reports in your editor.
 
 ## Officially Supported Languages (Backed by tests ran nightly)
-- Java
-- PHP
-- Python
-- Nodejs
+
+See [examples directory](example) on how to setup a project.
+
+- [Java](example/java)
+- [PHP](example/php)
+- [Python](example/python)
+- [Nodejs](example/node)
 
 ## Tips and Tricks
 **Using Breakpoints**: Currently to both use the extension and code debugging breakpoints you need to disable the gutter coverage and enable the line coverage via the settings ( `coverage-gutters.showGutterCoverage` and `coverage-gutters.showLineCoverage` respectively).
