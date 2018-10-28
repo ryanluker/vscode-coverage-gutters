@@ -13,7 +13,7 @@ export interface IConfigStore {
     partialCoverageDecorationType: TextEditorDecorationType;
     noCoverageDecorationType: TextEditorDecorationType;
     showStatusBarToggler: boolean;
-    ignoredPathGlobs: ArrayLike<string>;
+    ignoredPathGlobs: string[];
 }
 
 export class Config {
@@ -26,7 +26,7 @@ export class Config {
     private partialCoverageDecorationType: TextEditorDecorationType;
     private noCoverageDecorationType: TextEditorDecorationType;
     private showStatusBarToggler: boolean;
-    private ignoredPaths: ArrayLike<string>;
+    private ignoredPaths: string[];
 
     constructor(vscode: InterfaceVscode, context: ExtensionContext, reporter: Reporter) {
         this.vscode = vscode;
@@ -69,6 +69,9 @@ export class Config {
 
         // Make fileNames unique
         this.coverageFileNames = [...new Set(this.coverageFileNames)];
+
+        // Load ignored paths
+        this.ignoredPaths = rootConfig.get("ignoredPathGlobs") as string[];
 
         const STATUS_BAR_TOGGLER = "status-bar-toggler-watchCoverageAndVisibleEditors-enabled";
         this.showStatusBarToggler = rootCustomConfig.get(STATUS_BAR_TOGGLER) as boolean;
