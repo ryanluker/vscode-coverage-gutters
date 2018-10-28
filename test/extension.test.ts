@@ -6,6 +6,9 @@ suite("Extension Tests", function() {
     this.timeout(25000);
 
     test("Run display coverage on node test file @integration", async () => {
+        // Wait for extension to load
+        await sleep(2000);
+
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -14,7 +17,7 @@ suite("Extension Tests", function() {
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
-        const testEditor = await vscode.window.showTextDocument(testDocument);
+        await vscode.window.showTextDocument(testDocument);
         await vscode.commands.executeCommand("extension.displayCoverage");
 
         // Wait for decorations to load
@@ -29,6 +32,9 @@ suite("Extension Tests", function() {
     });
 
     test("Run display coverage on python test file @integration", async () => {
+        // Wait for extension to load
+        await sleep(2000);
+
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -37,7 +43,7 @@ suite("Extension Tests", function() {
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/bar/a.py", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
-        const testEditor = await vscode.window.showTextDocument(testDocument);
+        await vscode.window.showTextDocument(testDocument);
         await vscode.commands.executeCommand("extension.displayCoverage");
 
         // Wait for decorations to load
@@ -51,6 +57,9 @@ suite("Extension Tests", function() {
     });
 
     test("Run display coverage on php test file number 1 @integration", async () => {
+        // Wait for extension to load
+        await sleep(2000);
+
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -59,7 +68,7 @@ suite("Extension Tests", function() {
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/main.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
-        const testEditor = await vscode.window.showTextDocument(testDocument);
+        await vscode.window.showTextDocument(testDocument);
         await vscode.commands.executeCommand("extension.displayCoverage");
 
         // Wait for decorations to load
@@ -73,6 +82,9 @@ suite("Extension Tests", function() {
     });
 
     test("Run display coverage on php test file number 2 @integration", async () => {
+        // Wait for extension to load
+        await sleep(2000);
+
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -81,7 +93,7 @@ suite("Extension Tests", function() {
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/main2.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
-        const testEditor = await vscode.window.showTextDocument(testDocument);
+        await vscode.window.showTextDocument(testDocument);
         await vscode.commands.executeCommand("extension.displayCoverage");
 
         // Wait for decorations to load
@@ -95,6 +107,9 @@ suite("Extension Tests", function() {
     });
 
     test("Run display coverage on java test file @integration", async () => {
+        // Wait for extension to load
+        await sleep(2000);
+
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -103,7 +118,7 @@ suite("Extension Tests", function() {
         const emptyLines = extension.exports.emptyLastCoverage;
         const testCoverage = await vscode.workspace.findFiles("**/mycompany/app/App.java", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
-        const testEditor = await vscode.window.showTextDocument(testDocument);
+        await vscode.window.showTextDocument(testDocument);
         await vscode.commands.executeCommand("extension.displayCoverage");
 
         // Wait for decorations to load

@@ -14,10 +14,7 @@ export class FilesLoader {
      * Finds all coverages files by xml and lcov and returns them
      */
     public async findCoverageFiles(): Promise<Set<string>> {
-        const fileNames = [
-            this.configStore.lcovFileName,
-            this.configStore.xmlFileName,
-        ];
+        const fileNames = this.configStore.coverageFileNames;
         const files = await this.findCoverageInWorkspace(fileNames);
         if (!files.size) { throw new Error("Could not find a Coverage file!"); }
         return files;

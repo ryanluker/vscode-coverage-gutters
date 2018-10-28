@@ -1,12 +1,12 @@
 import { IConfigStore } from "../src/extension/config";
 
 export const fakeConfig: IConfigStore = {
+    coverageFileNames: ["test.ts", "test.xml"],
     fullCoverageDecorationType: {
         key: "testKey",
         dispose() { },
     },
     ignoredPathGlobs: ["test/*"],
-    lcovFileName: "test.ts",
     noCoverageDecorationType: {
         key: "testKey4",
         dispose() { },
@@ -16,5 +16,4 @@ export const fakeConfig: IConfigStore = {
         dispose() { },
     },
     showStatusBarToggler: true,
-    xmlFileName: "test.xml",
 };
