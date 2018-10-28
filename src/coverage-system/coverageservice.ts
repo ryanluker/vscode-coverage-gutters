@@ -30,13 +30,11 @@ export class CoverageService {
     private filesLoader: FilesLoader;
     private renderer: Renderer;
     private coverageParser: CoverageParser;
-    private lcovWatcher: FileSystemWatcher;
-    private xmlWatcher: FileSystemWatcher;
+    private coverageWatcher: FileSystemWatcher;
     private editorWatcher: Disposable;
     private sectionFinder: SectionFinder;
 
     private cache: Map<string, Section>;
-    private status: Status;
 
     constructor(
         configStore: IConfigStore,
@@ -65,7 +63,7 @@ export class CoverageService {
     }
 
     public dispose() {
-        this.xmlWatcher.dispose();
+        this.coverageWatcher.dispose();
         this.editorWatcher.dispose();
         this.cache = new Map(); // reset cache to empty
         const visibleEditors = window.visibleTextEditors;
@@ -105,7 +103,6 @@ export class CoverageService {
     }
 
     private updateServiceState(state: Status) {
-        this.status = state;
         this.outputChannel.appendLine(
             `[${Date.now()}][coverageservice]: ${state}`);
     }
@@ -119,19 +116,15 @@ export class CoverageService {
     }
 
     private listenToFileSystem() {
-        this.lcovWatcher = workspace.createFileSystemWatcher(
-            `**/${this.configStore.lcovFileName}`,
+        const fileNames = this.configStore.coverageFileNames.toString();
+        // Creates a BlobPattern for all coverage files.
+        // EX: `**/{cov.xml, lcov.info}`
+        this.coverageWatcher = workspace.createFileSystemWatcher(
+            `**/{${fileNames}}`,
         );
-        this.lcovWatcher.onDidChange(this.loadCacheAndRender.bind(this));
-        this.lcovWatcher.onDidCreate(this.loadCacheAndRender.bind(this));
-        this.lcovWatcher.onDidDelete(this.loadCacheAndRender.bind(this));
-
-        this.xmlWatcher = workspace.createFileSystemWatcher(
-            `**/${this.configStore.xmlFileName}`,
-        );
-        this.xmlWatcher.onDidChange(this.loadCacheAndRender.bind(this));
-        this.xmlWatcher.onDidCreate(this.loadCacheAndRender.bind(this));
-        this.xmlWatcher.onDidDelete(this.loadCacheAndRender.bind(this));
+        this.coverageWatcher.onDidChange(this.loadCacheAndRender.bind(this));
+        this.coverageWatcher.onDidCreate(this.loadCacheAndRender.bind(this));
+        this.coverageWatcher.onDidDelete(this.loadCacheAndRender.bind(this));
     }
 
     private async handleEditorEvents(textEditors: TextEditor[]) {

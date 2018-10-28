@@ -8,8 +8,7 @@ import {InterfaceVscode} from "../wrappers/vscode";
 import {Reporter} from "./reporter";
 
 export interface IConfigStore {
-    lcovFileName: string;
-    xmlFileName: string;
+    coverageFileNames: string[];
     fullCoverageDecorationType: TextEditorDecorationType;
     partialCoverageDecorationType: TextEditorDecorationType;
     noCoverageDecorationType: TextEditorDecorationType;
@@ -22,8 +21,7 @@ export class Config {
     private context: ExtensionContext;
     private reporter: Reporter;
 
-    private lcovFileName: string;
-    private xmlFileName: string;
+    private coverageFileNames: string[];
     private fullCoverageDecorationType: TextEditorDecorationType;
     private partialCoverageDecorationType: TextEditorDecorationType;
     private noCoverageDecorationType: TextEditorDecorationType;
@@ -39,13 +37,12 @@ export class Config {
 
     public get(): IConfigStore {
         return {
+            coverageFileNames: this.coverageFileNames,
             fullCoverageDecorationType: this.fullCoverageDecorationType,
             ignoredPathGlobs: this.ignoredPaths,
-            lcovFileName: this.lcovFileName,
             noCoverageDecorationType: this.noCoverageDecorationType,
             partialCoverageDecorationType: this.partialCoverageDecorationType,
             showStatusBarToggler: this.showStatusBarToggler,
-            xmlFileName: this.xmlFileName,
         };
     }
 
@@ -64,8 +61,15 @@ export class Config {
         const rootConfig = this.vscode.getConfiguration("coverage-gutters");
 
         // Basic configurations
-        this.lcovFileName = rootConfig.get("lcovname") as string;
-        this.xmlFileName = rootConfig.get("xmlname") as string;
+        // TODO: remove lcovname and xmlname in 3.0.0 release
+        const lcovName = rootConfig.get("lcovname") as string;
+        const xmlName = rootConfig.get("xmlname") as string;
+        this.coverageFileNames = rootConfig.get("coverageFileNames") as string[];
+        this.coverageFileNames.push(lcovName, xmlName);
+
+        // Make fileNames unique
+        this.coverageFileNames = [...new Set(this.coverageFileNames)];
+
         const STATUS_BAR_TOGGLER = "status-bar-toggler-watchCoverageAndVisibleEditors-enabled";
         this.showStatusBarToggler = rootCustomConfig.get(STATUS_BAR_TOGGLER) as boolean;
 

@@ -43,7 +43,7 @@ suite("Config Tests", function() {
     test("Can get configStore after initialization @unit", function() {
         const config = new Config(fakeVscode, fakeContext, fakeReport);
         const store = config.get();
-        assert.notEqual(store.lcovFileName, null);
+        assert.notEqual(store.coverageFileNames, null);
     });
 
     test("Should remove gutter icons if path is blank, allows breakpoint usage @unit", function() {
