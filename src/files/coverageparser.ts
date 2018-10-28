@@ -39,26 +39,25 @@ export class CoverageParser {
         let coverages = new Map<string, Section>();
 
         for (const file of files) {
-            const value = file[1];
-            const key = file[0];
+            const fileContent = file[1];
 
             // file is an array
             let coverage = new Map<string, Section>();
 
             // get coverage file type
-            const fileType = this.findCoverageFileType(value);
+            const fileType = this.findCoverageFileType(fileContent);
             switch (fileType) {
                 case CoverageType.CLOVER:
-                    coverage = await this.xmlExtractClover(value);
+                    coverage = await this.xmlExtractClover(fileContent);
                     break;
                 case CoverageType.JACOCO:
-                    coverage = await this.xmlExtractJacoco(value);
+                    coverage = await this.xmlExtractJacoco(fileContent);
                     break;
                 case CoverageType.COBERTURA:
-                    coverage = await this.xmlExtractCobertura(value);
+                    coverage = await this.xmlExtractCobertura(fileContent);
                     break;
                 case CoverageType.LCOV:
-                    coverage = await this.lcovExtract(value);
+                    coverage = await this.lcovExtract(fileContent);
                     break;
                 default:
                     break;
@@ -87,54 +86,47 @@ export class CoverageParser {
         return fileType;
     }
 
-    private convertPartialPathsToAbsolute(
-        path: string,
-        fileType: CoverageType,
-    ): string {
-        let possiblePath = path;
-        function findAbsolutePath() {
-            if (!workspace.workspaceFolders) { return possiblePath; }
-            const folders = workspace.workspaceFolders.map(
-                (folder) => folder.uri.fsPath,
-            );
-            const files: string[] = [];
-            // look over all workspaces for the possible path
-            folders.forEach((folder) => {
-                // find the possible path in the workspace folder
-                files.push(...glob.sync(
-                    `**/${possiblePath}`,
-                    {
-                        cwd: folder,
-                        dot: true,
-                        ignore: ["**/node_modules/**", "**/venv/**", "**/vendor/**"],
-                        realpath: true,
-                    },
-                ));
-            });
-            if (files.length === 0) {
-                throw Error(`Cannot find absolute path for ${possiblePath}`);
-            }
-            if (files.length > 1) {
-                throw Error(`Found too many files with partial path ${possiblePath}`);
-            }
-            return files[0];
-        }
+    /**
+     * Takes paths and tries to make them absolute
+     * based on currently open workspaceFolders
+     * @param path potential partial path to be converted
+     */
+    private convertPartialPathsToAbsolute(path: string): string {
+        if (!workspace.workspaceFolders) { return path; }
+        // Path is already absolute
+        // Note 1: some coverage generators can start with no slash #160
+        // Note 2: accounts for windows and linux style file paths
+        // windows as they start with drives (ie: c:\)
+        // linux as they start with forward slashes
+        // both windows and linux use ./ or .\ for relative
+        if (!path.startsWith(".") && path.startsWith("/")) { return path; }
 
-        switch (fileType) {
-            case CoverageType.COBERTURA:
-            case CoverageType.JACOCO:
-                try {
-                    possiblePath = findAbsolutePath();
-                } catch (error) {
-                    // remove stacktrace as it clutters the output and isnt useful
-                    error.stack = undefined;
-                    this.handleError("convertPartialPathsToAbsolute", error);
-                }
-                break;
-            default:
-                break;
+        const folders = workspace.workspaceFolders.map(
+            (folder) => folder.uri.fsPath,
+        );
+        const files: string[] = [];
+        // look over all workspaces for the path
+        folders.forEach((folder) => {
+            // find the path in the workspace folder
+            files.push(...glob.sync(
+                `**/${path}`,
+                {
+                    cwd: folder,
+                    dot: true,
+                    ignore: this.configStore.ignoredPathGlobs,
+                    realpath: true,
+                },
+            ));
+        });
+        if (files.length === 0) {
+            // Some paths are already absolute but caught by this function
+            // ie: C:\ for windows
+            return path;
         }
-        return possiblePath;
+        if (files.length > 1) {
+            throw Error(`Found too many files with partial path ${path}`);
+        }
+        return files[0];
     }
 
     private convertSectionsToMap(
@@ -144,8 +136,16 @@ export class CoverageParser {
         // convert the array of sections into an unique map
         const sections = new Map<string, Section>();
         data.forEach((section) => {
-            // properly convert paths
-            const mapKey = this.convertPartialPathsToAbsolute(section.file, fileType);
+            let mapKey = section.file;
+            try {
+                // Check for the secion having a partial path
+                mapKey = this.convertPartialPathsToAbsolute(section.file);
+            } catch (error) {
+                // remove stacktrace as it clutters the output and isnt useful
+                error.stack = undefined;
+                this.handleError(`${fileType}-convertPartialPathsToAbsolute`, error);
+            }
+
             // Assign mapKey to the section file as well to allow for renderer matching
             section.file = mapKey;
             sections.set(mapKey, section);
@@ -229,11 +229,11 @@ export class CoverageParser {
         const message = error.message ? error.message : error;
         const stackTrace = error.stack;
         this.outputChannel.appendLine(
-            `[${Date.now()}][lcovparser][${system}]: Error: ${message}`,
+            `[${Date.now()}][coverageparser][${system}]: Error: ${message}`,
         );
         if (stackTrace) {
             this.outputChannel.appendLine(
-                `[${Date.now()}][lcovparser][${system}]: Stacktrace: ${stackTrace}`,
+                `[${Date.now()}][coverageparser][${system}]: Stacktrace: ${stackTrace}`,
             );
         }
         this.eventReporter.sendEvent("system", `${system}-error`, `${stackTrace}`);
