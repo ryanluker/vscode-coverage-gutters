@@ -39,26 +39,25 @@ export class CoverageParser {
         let coverages = new Map<string, Section>();
 
         for (const file of files) {
-            const value = file[1];
-            const key = file[0];
+            const fileContent = file[1];
 
             // file is an array
             let coverage = new Map<string, Section>();
 
             // get coverage file type
-            const fileType = this.findCoverageFileType(value);
+            const fileType = this.findCoverageFileType(fileContent);
             switch (fileType) {
                 case CoverageType.CLOVER:
-                    coverage = await this.xmlExtractClover(value);
+                    coverage = await this.xmlExtractClover(fileContent);
                     break;
                 case CoverageType.JACOCO:
-                    coverage = await this.xmlExtractJacoco(value);
+                    coverage = await this.xmlExtractJacoco(fileContent);
                     break;
                 case CoverageType.COBERTURA:
-                    coverage = await this.xmlExtractCobertura(value);
+                    coverage = await this.xmlExtractCobertura(fileContent);
                     break;
                 case CoverageType.LCOV:
-                    coverage = await this.lcovExtract(value);
+                    coverage = await this.lcovExtract(fileContent);
                     break;
                 default:
                     break;
