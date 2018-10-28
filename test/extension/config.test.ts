@@ -14,10 +14,20 @@ suite("Config Tests", function() {
 
         getConfiguration: () => {
             return {
-                get: () => "123",
+                coverageFileNames: ["test.xml", "lcov.info"],
+                get: (key) => {
+                    if (key === "coverageFileNames") {
+                        return ["test.xml", "lcov.info"];
+                    } else if (key === "lcovname") {
+                        return "lcov.info";
+                    }
+                    return "123";
+                },
+                lcovname: "lcov.info",
                 test1: "test1",
                 test2: "test2",
                 test3: "test3",
+                xmlname: "name.xml",
             };
         },
     };
@@ -44,6 +54,13 @@ suite("Config Tests", function() {
         const config = new Config(fakeVscode, fakeContext, fakeReport);
         const store = config.get();
         assert.notEqual(store.coverageFileNames, null);
+    });
+
+    test("Can get coverage file names @unit", function() {
+        const config = new Config(fakeVscode, fakeContext, fakeReport);
+        const store = config.get();
+        // Check that unique file names is being applied
+        assert.equal(store.coverageFileNames.length, 3);
     });
 
     test("Should remove gutter icons if path is blank, allows breakpoint usage @unit", function() {
