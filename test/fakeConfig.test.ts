@@ -6,7 +6,7 @@ export const fakeConfig: IConfigStore = {
         key: "testKey",
         dispose() { },
     },
-    ignoredPathGlobs: ["test/*"],
+    ignoredPathGlobs: "test/*",
     noCoverageDecorationType: {
         key: "testKey4",
         dispose() { },
