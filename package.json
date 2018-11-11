@@ -125,7 +125,7 @@
           "description": "paths that will be ignored by the extension"
         },
         "coverage-gutters.coverageFileNames": {
-          "type": "Array<string>",
+          "type": "array",
           "default": [
             "lcov.info",
             "cov.xml",
