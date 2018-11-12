@@ -20,6 +20,7 @@
             "runtimeExecutable": "${execPath}",
             "args": [
                 "${workspaceRoot}/example/example.code-workspace",
+                "--disable-extensions",
                 "--extensionDevelopmentPath=${workspaceRoot}",
                 "--extensionTestsPath=${workspaceRoot}/out/test"
             ],
