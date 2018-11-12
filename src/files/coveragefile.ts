@@ -9,7 +9,7 @@ export class CoverageFile {
     public type: CoverageType;
     private file: string;
 
-    constructor(file) {
+    constructor(file: string) {
         this.file = file;
         this.setFileType(this.file);
     }
