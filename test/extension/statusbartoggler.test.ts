@@ -1,5 +1,5 @@
 import {StatusBarToggler} from "../../src/extension/statusbartoggler";
-import { fakeConfig } from "../fakeConfig.test";
+import { fakeConfig } from "../mocks/fakeConfig";
 
 suite("Status Bar Toggler Tests", function() {
     test("Should toggle showStatusBarToggler command and message @unit", function() {

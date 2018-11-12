@@ -6,15 +6,7 @@ import {Section, source} from "lcov-parse";
 import {OutputChannel, workspace} from "vscode";
 import {IConfigStore} from "../extension/config";
 import {Reporter} from "../extension/reporter";
-
-// tslint:disable:no-shadowed-variable
-
-enum CoverageType {
-    LCOV,
-    CLOVER,
-    COBERTURA,
-    JACOCO,
-}
+import {CoverageFile, CoverageType} from "./coveragefile";
 
 export class CoverageParser {
     private configStore: IConfigStore;
@@ -45,7 +37,9 @@ export class CoverageParser {
             let coverage = new Map<string, Section>();
 
             // get coverage file type
-            const fileType = this.findCoverageFileType(fileContent);
+            const coverageFile = new CoverageFile(fileContent);
+            const fileType = coverageFile.type;
+
             switch (fileType) {
                 case CoverageType.CLOVER:
                     coverage = await this.xmlExtractClover(fileContent);
@@ -70,28 +64,35 @@ export class CoverageParser {
         return coverages;
     }
 
-    private findCoverageFileType(file: string): CoverageType {
-        let fileType = CoverageType.LCOV;
-        if (
-            file.includes("<?xml") &&
-            file.includes("<coverage") &&
-            file.includes("<project")
-        ) {
-            fileType = CoverageType.CLOVER;
-        } else if (file.includes("JACOCO")) {
-            fileType = CoverageType.JACOCO;
-        } else if (file.includes("<?xml")) {
-            fileType = CoverageType.COBERTURA;
-        }
-        return fileType;
-    }
-
     /**
      * Takes paths and tries to make them absolute
      * based on currently open workspaceFolders
      * @param path potential partial path to be converted
      */
-    private convertPartialPathsToAbsolute(path: string): string {
+    private async convertPartialPathsToAbsolute(path: string): Promise<string> {
+        const files: string[] = [];
+        const globFind = async (folder: string) => {
+            return new Promise<string[]>((resolve, reject) => {
+                // find the path in the workspace folder
+                glob(
+                    `**/${path}`,
+                    {
+                        cwd: folder,
+                        dot: true,
+                        ignore: this.configStore.ignoredPathGlobs,
+                        realpath: true,
+                    },
+                    (err, possibleFiles) => {
+                        // spread the possible files to store for later use.
+                        if (possibleFiles && possibleFiles.length) {
+                            files.push(...possibleFiles);
+                        }
+                        return resolve();
+                    },
+                );
+            });
+        };
+
         if (!workspace.workspaceFolders) { return path; }
         // Path is already absolute
         // Note 1: some coverage generators can start with no slash #160
@@ -104,20 +105,10 @@ export class CoverageParser {
         const folders = workspace.workspaceFolders.map(
             (folder) => folder.uri.fsPath,
         );
-        const files: string[] = [];
         // look over all workspaces for the path
-        folders.forEach((folder) => {
-            // find the path in the workspace folder
-            files.push(...glob.sync(
-                `**/${path}`,
-                {
-                    cwd: folder,
-                    dot: true,
-                    ignore: this.configStore.ignoredPathGlobs,
-                    realpath: true,
-                },
-            ));
-        });
+        const findPromises = folders.map(globFind);
+        await Promise.all(findPromises);
+
         if (files.length === 0) {
             // Some paths are already absolute but caught by this function
             // ie: C:\ for windows
@@ -129,17 +120,16 @@ export class CoverageParser {
         return files[0];
     }
 
-    private convertSectionsToMap(
+    private async convertSectionsToMap(
         data: Section[],
         fileType: CoverageType,
-    ): Map<string, Section> {
-        // convert the array of sections into an unique map
+    ): Promise<Map<string, Section>> {
         const sections = new Map<string, Section>();
-        data.forEach((section) => {
+        const addToSectionsMap = async (section) => {
             let mapKey = section.file;
             try {
                 // Check for the secion having a partial path
-                mapKey = this.convertPartialPathsToAbsolute(section.file);
+                mapKey = await this.convertPartialPathsToAbsolute(section.file);
             } catch (error) {
                 // remove stacktrace as it clutters the output and isnt useful
                 error.stack = undefined;
@@ -149,16 +139,20 @@ export class CoverageParser {
             // Assign mapKey to the section file as well to allow for renderer matching
             section.file = mapKey;
             sections.set(mapKey, section);
-        });
+        };
+
+        // convert the array of sections into an unique map
+        const addPromises = data.map(addToSectionsMap);
+        await Promise.all(addPromises);
         return sections;
     }
 
     private xmlExtractCobertura(xmlFile: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
             try {
-                parseContentCobertura(xmlFile, (err, data) => {
+                parseContentCobertura(xmlFile, async (err, data) => {
                     if (err) { return reject(err); }
-                    const sections = this.convertSectionsToMap(
+                    const sections = await this.convertSectionsToMap(
                         data,
                         CoverageType.COBERTURA,
                     );
@@ -175,9 +169,9 @@ export class CoverageParser {
     private xmlExtractJacoco(xmlFile: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
             try {
-                parseContentJacoco(xmlFile, (err, data) => {
+                parseContentJacoco(xmlFile, async (err, data) => {
                     if (err) { return reject(err); }
-                    const sections = this.convertSectionsToMap(
+                    const sections = await this.convertSectionsToMap(
                         data,
                         CoverageType.JACOCO,
                     );
@@ -194,7 +188,7 @@ export class CoverageParser {
     private async xmlExtractClover(xmlFile: string) {
         try {
             const data = await parseContentClover(xmlFile);
-            const sections = this.convertSectionsToMap(
+            const sections = await this.convertSectionsToMap(
                 data,
                 CoverageType.CLOVER,
             );
@@ -209,9 +203,9 @@ export class CoverageParser {
     private lcovExtract(lcovFile: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
             try {
-                source(lcovFile, (err, data) => {
+                source(lcovFile, async (err, data) => {
                     if (err) { return reject(err); }
-                    const sections = this.convertSectionsToMap(
+                    const sections = await this.convertSectionsToMap(
                         data,
                         CoverageType.LCOV,
                     );

@@ -1,4 +1,4 @@
-import { IConfigStore } from "../src/extension/config";
+import { IConfigStore } from "../../src/extension/config";
 
 export const fakeConfig: IConfigStore = {
     coverageFileNames: ["test.ts", "test.xml"],

@@ -3,7 +3,7 @@ import {Coverage} from "../../src/coverage-system/coverage";
 import {Fs} from "../../src/wrappers/fs";
 import {Glob} from "../../src/wrappers/glob";
 import {Vscode} from "../../src/wrappers/vscode";
-import {fakeConfig} from "../fakeConfig.test";
+import {fakeConfig} from "../mocks/fakeConfig";
 
 suite("Coverage Tests", function() {
     test("Constructor should setup properly @unit", function(done) {
