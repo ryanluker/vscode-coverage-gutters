@@ -87,15 +87,33 @@ export class CoverageService {
 
     private async loadCache() {
         try {
+            const printDataCoverage = (data: Map<string, Section>) => {
+                this.outputChannel.appendLine(
+                    `[${Date.now()}][printDataCoverage]: Coverage ->`,
+                );
+                data.forEach((section) => {
+                    const coverage = JSON.stringify(section, null, 4);
+                    this.outputChannel.appendLine(
+                        `[${Date.now()}][printDataCoverage]: ${coverage}`,
+                    );
+                });
+            };
+
             this.updateServiceState(Status.loading);
             const files = await this.filesLoader.findCoverageFiles();
             this.outputChannel.appendLine(
-                `[${Date.now()}][coverageservice]: Loading ${files.size} file(s)`);
+                `[${Date.now()}][coverageservice]: Loading ${files.size} file(s)`,
+            );
             const dataFiles = await this.filesLoader.loadDataFiles(files);
+            this.outputChannel.appendLine(
+                `[${Date.now()}][coverageservice]: Loaded ${dataFiles.size} data file(s)`,
+            );
             const dataCoverage = await this.coverageParser.filesToSections(dataFiles);
             this.outputChannel.appendLine(
-                `[${Date.now()}][coverageservice]: Caching ${dataCoverage.size} coverage(s)`);
+                `[${Date.now()}][coverageservice]: Caching ${dataCoverage.size} coverage(s)`,
+            );
             this.cache = dataCoverage;
+            printDataCoverage(this.cache);
             this.updateServiceState(Status.ready);
         } catch (error) {
             this.handleError(error);
