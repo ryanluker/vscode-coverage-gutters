@@ -2,7 +2,7 @@ import * as assert from "assert";
 import {CoverageFile, CoverageType} from "../../src/files/coveragefile";
 
 suite("Coverage File Tests", function() {
-    test("Returns the correct file type for a file", function() {
+    test("Returns the correct file type for a file @unit", function() {
         const fakeLcovInfo = `
             TN:
             SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
