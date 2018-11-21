@@ -51,7 +51,7 @@ export class CoverageParser {
                     coverage = await this.xmlExtractCobertura(fileContent);
                     break;
                 case CoverageType.LCOV:
-                    coverage = await this.lcovExtract(fileContent);
+                    coverage = await this.lcovExtract(file[0], fileContent);
                     break;
                 default:
                     break;
@@ -200,11 +200,14 @@ export class CoverageParser {
         }
     }
 
-    private lcovExtract(lcovFile: string) {
+    private lcovExtract(filename: string, lcovFile: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
             try {
                 source(lcovFile, async (err, data) => {
-                    if (err) { return reject(err); }
+                    if (err) {
+                        this.handleError("lcov-parse", err, filename);
+                        return resolve(new Map<string, Section>());
+                    }
                     const sections = await this.convertSectionsToMap(
                         data,
                         CoverageType.LCOV,
@@ -213,17 +216,18 @@ export class CoverageParser {
                     return resolve(sections);
                 });
             } catch (error) {
-                this.handleError("lcov-parse", error);
+                this.handleError("lcov-parse", error, filename);
                 return resolve(new Map<string, Section>());
             }
         });
     }
 
-    private handleError(system: string, error: Error) {
+    private handleError(system: string, error: Error, filename?: string) {
         const message = error.message ? error.message : error;
         const stackTrace = error.stack;
         this.outputChannel.appendLine(
-            `[${Date.now()}][coverageparser][${system}]: Error: ${message}`,
+            `[${Date.now()}][coverageparser][${system}]: Error: ${message}${
+                (!!filename) ? ` in file: "${filename}"` : ""}`,
         );
         if (stackTrace) {
             this.outputChannel.appendLine(
