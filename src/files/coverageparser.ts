@@ -31,6 +31,7 @@ export class CoverageParser {
         let coverages = new Map<string, Section>();
 
         for (const file of files) {
+            const fileName = file[0];
             const fileContent = file[1];
 
             // file is an array
@@ -51,7 +52,7 @@ export class CoverageParser {
                     coverage = await this.xmlExtractCobertura(fileContent);
                     break;
                 case CoverageType.LCOV:
-                    coverage = await this.lcovExtract(file[0], fileContent);
+                    coverage = await this.lcovExtract(fileName, fileContent);
                     break;
                 default:
                     break;
@@ -205,7 +206,8 @@ export class CoverageParser {
             try {
                 source(lcovFile, async (err, data) => {
                     if (err) {
-                        this.handleError("lcov-parse", err, filename);
+                        err.message = `filename: ${filename} ${err.message}`;
+                        this.handleError("lcov-parse", err);
                         return resolve(new Map<string, Section>());
                     }
                     const sections = await this.convertSectionsToMap(
@@ -216,18 +218,18 @@ export class CoverageParser {
                     return resolve(sections);
                 });
             } catch (error) {
-                this.handleError("lcov-parse", error, filename);
+                error.message = `filename: ${filename} ${error.message}`;
+                this.handleError("lcov-parse", error);
                 return resolve(new Map<string, Section>());
             }
         });
     }
 
-    private handleError(system: string, error: Error, filename?: string) {
+    private handleError(system: string, error: Error) {
         const message = error.message ? error.message : error;
         const stackTrace = error.stack;
         this.outputChannel.appendLine(
-            `[${Date.now()}][coverageparser][${system}]: Error: ${message}${
-                (!!filename) ? ` in file: "${filename}"` : ""}`,
+            `[${Date.now()}][coverageparser][${system}]: Error: ${message}`,
         );
         if (stackTrace) {
             this.outputChannel.appendLine(
@@ -236,4 +238,5 @@ export class CoverageParser {
         }
         this.eventReporter.sendEvent("system", `${system}-error`, `${stackTrace}`);
     }
+
 }
