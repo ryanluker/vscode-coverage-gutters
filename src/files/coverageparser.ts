@@ -31,6 +31,7 @@ export class CoverageParser {
         let coverages = new Map<string, Section>();
 
         for (const file of files) {
+            const fileName = file[0];
             const fileContent = file[1];
 
             // file is an array
@@ -51,7 +52,7 @@ export class CoverageParser {
                     coverage = await this.xmlExtractCobertura(fileContent);
                     break;
                 case CoverageType.LCOV:
-                    coverage = await this.lcovExtract(fileContent);
+                    coverage = await this.lcovExtract(fileName, fileContent);
                     break;
                 default:
                     break;
@@ -200,11 +201,15 @@ export class CoverageParser {
         }
     }
 
-    private lcovExtract(lcovFile: string) {
+    private lcovExtract(filename: string, lcovFile: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
             try {
                 source(lcovFile, async (err, data) => {
-                    if (err) { return reject(err); }
+                    if (err) {
+                        err.message = `filename: ${filename} ${err.message}`;
+                        this.handleError("lcov-parse", err);
+                        return resolve(new Map<string, Section>());
+                    }
                     const sections = await this.convertSectionsToMap(
                         data,
                         CoverageType.LCOV,
@@ -213,6 +218,7 @@ export class CoverageParser {
                     return resolve(sections);
                 });
             } catch (error) {
+                error.message = `filename: ${filename} ${error.message}`;
                 this.handleError("lcov-parse", error);
                 return resolve(new Map<string, Section>());
             }
@@ -232,4 +238,5 @@ export class CoverageParser {
         }
         this.eventReporter.sendEvent("system", `${system}-error`, `${stackTrace}`);
     }
+
 }
