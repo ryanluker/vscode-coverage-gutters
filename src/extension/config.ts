@@ -66,6 +66,7 @@ export class Config {
         const xmlName = rootConfig.get("xmlname") as string;
         this.coverageFileNames = rootConfig.get("coverageFileNames") as string[];
         this.coverageFileNames.push(lcovName, xmlName);
+        this.coverageFileNames = this.coverageFileNames.filter((name) => !!name.trim());
 
         // Make fileNames unique
         this.coverageFileNames = [...new Set(this.coverageFileNames)];
