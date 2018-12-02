@@ -101,19 +101,21 @@ export class CoverageParser {
         // windows as they start with drives (ie: c:\)
         // linux as they start with forward slashes
         // both windows and linux use ./ or .\ for relative
-        if (!path.startsWith(".") && path.startsWith("/")) { return path; }
+        const unixRoot = path.startsWith("/");
+        const windowsRoot = path[1] === ":" && path[2] === "\\";
+        if (unixRoot || windowsRoot) {
+            return path;
+        }
 
+        // look over all workspaces for the path
         const folders = workspace.workspaceFolders.map(
             (folder) => folder.uri.fsPath,
         );
-        // look over all workspaces for the path
         const findPromises = folders.map(globFind);
         await Promise.all(findPromises);
 
         if (files.length === 0) {
-            // Some paths are already absolute but caught by this function
-            // ie: C:\ for windows
-            return path;
+            throw Error(`File path not found in open workspaces ${path}`);
         }
         if (files.length > 1) {
             throw Error(`Found too many files with partial path ${path}`);
