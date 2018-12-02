@@ -43,13 +43,13 @@ export class CoverageParser {
 
             switch (fileType) {
                 case CoverageType.CLOVER:
-                    coverage = await this.xmlExtractClover(fileContent);
+                    coverage = await this.xmlExtractClover(fileName, fileContent);
                     break;
                 case CoverageType.JACOCO:
-                    coverage = await this.xmlExtractJacoco(fileContent);
+                    coverage = await this.xmlExtractJacoco(fileName, fileContent);
                     break;
                 case CoverageType.COBERTURA:
-                    coverage = await this.xmlExtractCobertura(fileContent);
+                    coverage = await this.xmlExtractCobertura(fileName, fileContent);
                     break;
                 case CoverageType.LCOV:
                     coverage = await this.lcovExtract(fileName, fileContent);
@@ -150,11 +150,19 @@ export class CoverageParser {
         return sections;
     }
 
-    private xmlExtractCobertura(xmlFile: string) {
+    private xmlExtractCobertura(filename: string, xmlFile: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
+            const checkError = (err) => {
+                if (err) {
+                    err.message = `filename: ${filename} ${err.message}`;
+                    this.handleError("cobertura-parse", err);
+                    return resolve(new Map<string, Section>());
+                }
+            };
+
             try {
                 parseContentCobertura(xmlFile, async (err, data) => {
-                    if (err) { return reject(err); }
+                    checkError(err);
                     const sections = await this.convertSectionsToMap(
                         data,
                         CoverageType.COBERTURA,
@@ -163,17 +171,24 @@ export class CoverageParser {
                     return resolve(sections);
                 });
             } catch (error) {
-                this.handleError("cobertura-parse", error);
-                return resolve(new Map<string, Section>());
+                checkError(error);
             }
         });
     }
 
-    private xmlExtractJacoco(xmlFile: string) {
+    private xmlExtractJacoco(filename: string, xmlFile: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
+            const checkError = (err) => {
+                if (err) {
+                    err.message = `filename: ${filename} ${err.message}`;
+                    this.handleError("jacoco-parse", err);
+                    return resolve(new Map<string, Section>());
+                }
+            };
+
             try {
                 parseContentJacoco(xmlFile, async (err, data) => {
-                    if (err) { return reject(err); }
+                    checkError(err);
                     const sections = await this.convertSectionsToMap(
                         data,
                         CoverageType.JACOCO,
@@ -182,13 +197,12 @@ export class CoverageParser {
                     return resolve(sections);
                 });
             } catch (error) {
-                this.handleError("jacoco-parse", error);
-                return resolve(new Map<string, Section>());
+                checkError(error);
             }
         });
     }
 
-    private async xmlExtractClover(xmlFile: string) {
+    private async xmlExtractClover(filename: string, xmlFile: string) {
         try {
             const data = await parseContentClover(xmlFile);
             const sections = await this.convertSectionsToMap(
@@ -198,6 +212,7 @@ export class CoverageParser {
             this.eventReporter.sendEvent("system", "xmlExtractClover-success");
             return sections;
         } catch (error) {
+            error.message = `filename: ${filename} ${error.message}`;
             this.handleError("clover-parse", error);
             return new Map<string, Section>();
         }
@@ -205,13 +220,17 @@ export class CoverageParser {
 
     private lcovExtract(filename: string, lcovFile: string) {
         return new Promise<Map<string, Section>>((resolve, reject) => {
+            const checkError = (err) => {
+                if (err) {
+                    err.message = `filename: ${filename} ${err.message}`;
+                    this.handleError("lcov-parse", err);
+                    return resolve(new Map<string, Section>());
+                }
+            };
+
             try {
                 source(lcovFile, async (err, data) => {
-                    if (err) {
-                        err.message = `filename: ${filename} ${err.message}`;
-                        this.handleError("lcov-parse", err);
-                        return resolve(new Map<string, Section>());
-                    }
+                    checkError(err);
                     const sections = await this.convertSectionsToMap(
                         data,
                         CoverageType.LCOV,
@@ -220,9 +239,7 @@ export class CoverageParser {
                     return resolve(sections);
                 });
             } catch (error) {
-                error.message = `filename: ${filename} ${error.message}`;
-                this.handleError("lcov-parse", error);
-                return resolve(new Map<string, Section>());
+                checkError(error);
             }
         });
     }

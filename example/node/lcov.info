@@ -1,5 +1,5 @@
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -43,7 +43,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -106,7 +106,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -150,7 +150,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -213,7 +213,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -257,7 +257,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -320,7 +320,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -364,7 +364,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -427,7 +427,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -471,7 +471,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -534,7 +534,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -578,7 +578,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -641,7 +641,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -685,7 +685,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -748,7 +748,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -792,7 +792,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -855,7 +855,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -899,7 +899,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -962,7 +962,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1006,7 +1006,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -1069,7 +1069,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1113,7 +1113,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -1176,7 +1176,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1220,7 +1220,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -1283,7 +1283,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1327,7 +1327,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -1390,7 +1390,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1434,7 +1434,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -1497,7 +1497,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1541,7 +1541,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -1604,7 +1604,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1648,7 +1648,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -1711,7 +1711,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1755,7 +1755,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -1818,7 +1818,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1862,7 +1862,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -1925,7 +1925,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -1969,7 +1969,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2032,7 +2032,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -2076,7 +2076,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2139,7 +2139,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -2183,7 +2183,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2246,7 +2246,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -2290,7 +2290,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2353,7 +2353,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -2397,7 +2397,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2460,7 +2460,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -2504,7 +2504,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2567,7 +2567,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -2611,7 +2611,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2674,7 +2674,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -2718,7 +2718,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2781,7 +2781,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -2825,7 +2825,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2888,7 +2888,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -2932,7 +2932,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -2995,7 +2995,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -3039,7 +3039,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -3102,7 +3102,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -3146,7 +3146,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -3209,7 +3209,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -3253,7 +3253,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -3316,7 +3316,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -3360,7 +3360,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -3423,7 +3423,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -3467,7 +3467,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -3530,7 +3530,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -3574,7 +3574,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -3637,7 +3637,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -3681,7 +3681,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -3744,7 +3744,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -3788,7 +3788,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -3851,7 +3851,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -3895,7 +3895,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -3958,7 +3958,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4002,7 +4002,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -4065,7 +4065,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4109,7 +4109,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -4172,7 +4172,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4216,7 +4216,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -4279,7 +4279,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4323,7 +4323,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -4386,7 +4386,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4430,7 +4430,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -4493,7 +4493,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4537,7 +4537,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -4600,7 +4600,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4644,7 +4644,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -4707,7 +4707,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4751,7 +4751,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -4814,7 +4814,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4858,7 +4858,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -4921,7 +4921,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -4965,7 +4965,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5028,7 +5028,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -5072,7 +5072,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5135,7 +5135,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -5179,7 +5179,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5242,7 +5242,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -5286,7 +5286,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5349,7 +5349,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -5393,7 +5393,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5456,7 +5456,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -5500,7 +5500,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5563,7 +5563,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -5607,7 +5607,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5670,7 +5670,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -5714,7 +5714,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5777,7 +5777,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -5821,7 +5821,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5884,7 +5884,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -5928,7 +5928,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -5991,7 +5991,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6035,7 +6035,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -6098,7 +6098,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6142,7 +6142,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -6205,7 +6205,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6249,7 +6249,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -6312,7 +6312,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6356,7 +6356,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -6419,7 +6419,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6463,7 +6463,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -6526,7 +6526,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6570,7 +6570,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -6633,7 +6633,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6677,7 +6677,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -6740,7 +6740,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6784,7 +6784,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -6847,7 +6847,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6891,7 +6891,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -6954,7 +6954,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -6998,7 +6998,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -7061,7 +7061,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -7105,7 +7105,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -7168,7 +7168,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -7212,7 +7212,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -7275,7 +7275,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -7319,7 +7319,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -7382,7 +7382,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -7426,7 +7426,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -7489,7 +7489,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -7533,7 +7533,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -7596,7 +7596,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -7640,7 +7640,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -7703,7 +7703,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -7747,7 +7747,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -7810,7 +7810,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -7854,7 +7854,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -7917,7 +7917,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -7961,7 +7961,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8024,7 +8024,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -8068,7 +8068,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8131,7 +8131,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -8175,7 +8175,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8238,7 +8238,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -8282,7 +8282,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8345,7 +8345,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -8389,7 +8389,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8452,7 +8452,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -8496,7 +8496,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8559,7 +8559,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -8603,7 +8603,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8666,7 +8666,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -8710,7 +8710,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8773,7 +8773,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -8817,7 +8817,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8880,7 +8880,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -8924,7 +8924,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -8987,7 +8987,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9031,7 +9031,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -9094,7 +9094,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9138,7 +9138,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -9201,7 +9201,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9245,7 +9245,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -9308,7 +9308,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9352,7 +9352,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -9415,7 +9415,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9459,7 +9459,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -9522,7 +9522,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9566,7 +9566,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -9629,7 +9629,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9673,7 +9673,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -9736,7 +9736,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9780,7 +9780,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -9843,7 +9843,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9887,7 +9887,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
@@ -9950,7 +9950,7 @@ BRF:23
 BRH:16
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test.js
+SF:./node/test.js
 FN:6,(anonymous_1)
 FN:7,(anonymous_2)
 FN:12,(anonymous_3)
@@ -9994,7 +9994,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:./ryanluker/dev/vscode-coverage-gutters/example/node/test-coverage.js
+SF:./node/test-coverage.js
 FN:1,test
 FN:42,callbackBased
 FN:46,subTest
