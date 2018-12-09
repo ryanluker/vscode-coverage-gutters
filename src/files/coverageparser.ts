@@ -4,6 +4,7 @@ import * as glob from "glob";
 import {parseContent as parseContentJacoco} from "jacoco-parse";
 import {Section, source} from "lcov-parse";
 import {OutputChannel, workspace} from "vscode";
+
 import {IConfigStore} from "../extension/config";
 import {Reporter} from "../extension/reporter";
 import {CoverageFile, CoverageType} from "./coveragefile";

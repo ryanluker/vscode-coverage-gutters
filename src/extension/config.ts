@@ -1,10 +1,12 @@
 import {
+    commands,
     DecorationRenderOptions,
     ExtensionContext,
     OverviewRulerLane,
     TextEditorDecorationType,
+    window,
+    workspace,
 } from "vscode";
-import {InterfaceVscode} from "../wrappers/vscode";
 import {Reporter} from "./reporter";
 
 export interface IConfigStore {
@@ -17,7 +19,6 @@ export interface IConfigStore {
 }
 
 export class Config {
-    private vscode: InterfaceVscode;
     private context: ExtensionContext;
     private reporter: Reporter;
 
@@ -28,8 +29,7 @@ export class Config {
     private showStatusBarToggler: boolean;
     private ignoredPaths: string;
 
-    constructor(vscode: InterfaceVscode, context: ExtensionContext, reporter: Reporter) {
-        this.vscode = vscode;
+    constructor(context: ExtensionContext, reporter: Reporter) {
         this.context = context;
         this.reporter = reporter;
         this.setup();
@@ -47,18 +47,18 @@ export class Config {
     }
 
     public setup() {
-        const rootCustomConfig = this.vscode.getConfiguration("coverage-gutters.customizable");
+        const rootCustomConfig = workspace.getConfiguration("coverage-gutters.customizable");
 
         // Customizable UI configurations
         const configsCustom = Object.keys(rootCustomConfig);
         for (const element of configsCustom) {
-            this.vscode.executeCommand(
+            commands.executeCommand(
                 "setContext",
                 "config.coverage-gutters.customizable." + element,
                 rootCustomConfig.get(element));
         }
 
-        const rootConfig = this.vscode.getConfiguration("coverage-gutters");
+        const rootConfig = workspace.getConfiguration("coverage-gutters");
 
         // Basic configurations
         // TODO: remove lcovname and xmlname in 3.0.0 release
@@ -146,9 +146,9 @@ export class Config {
         this.cleanupEmptyGutterIcons(fullDecoration, partialDecoration, noDecoration);
 
         // Generate decorations
-        this.noCoverageDecorationType = this.vscode.createTextEditorDecorationType(noDecoration);
-        this.partialCoverageDecorationType = this.vscode.createTextEditorDecorationType(partialDecoration);
-        this.fullCoverageDecorationType = this.vscode.createTextEditorDecorationType(fullDecoration);
+        this.noCoverageDecorationType = window.createTextEditorDecorationType(noDecoration);
+        this.partialCoverageDecorationType = window.createTextEditorDecorationType(partialDecoration);
+        this.fullCoverageDecorationType = window.createTextEditorDecorationType(fullDecoration);
     }
 
     /**

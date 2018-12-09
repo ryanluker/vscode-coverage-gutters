@@ -1,27 +1,22 @@
+import {readFile} from "fs";
+import * as glob from "glob";
 import {basename} from "path";
-import {QuickPickItem, Uri, WorkspaceFolder} from "vscode";
+import {
+    QuickPickItem,
+    window,
+    workspace,
+    WorkspaceFolder,
+} from "vscode";
 
 import {IConfigStore} from "../extension/config";
-import {InterfaceFs} from "../wrappers/fs";
-import {InterfaceGlob} from "../wrappers/glob";
-import {InterfaceVscode} from "../wrappers/vscode";
 
 export class Coverage {
     private configStore: IConfigStore;
-    private glob: InterfaceGlob;
-    private vscode: InterfaceVscode;
-    private fs: InterfaceFs;
 
     constructor(
         configStore: IConfigStore,
-        glob: InterfaceGlob,
-        vscode: InterfaceVscode,
-        fs: InterfaceFs,
     ) {
         this.configStore = configStore;
-        this.glob = glob;
-        this.vscode = vscode;
-        this.fs = fs;
     }
 
     /**
@@ -44,7 +39,7 @@ export class Coverage {
                 };
             });
 
-            const item = await this.vscode.showQuickPick<QuickPickItem>(
+            const item = await window.showQuickPick<QuickPickItem>(
                 fileQuickPicks,
                 {placeHolder},
             );
@@ -59,7 +54,7 @@ export class Coverage {
         const files = [];
         let actions: Array<Promise<string[]>> = new Array<Promise<string[]>>();
 
-        const workspaceFolders = this.vscode.getWorkspaceFolders();
+        const workspaceFolders = workspace.workspaceFolders;
         if (workspaceFolders) {
             actions = workspaceFolders.map((workspaceFolder) => {
                 return this.globFind(workspaceFolder, "coverage/**/index.html");
@@ -75,7 +70,7 @@ export class Coverage {
 
     public load(path: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            this.fs.readFile(path, (err, data) => {
+            readFile(path, (err, data) => {
                 if (err) { return reject(err); }
                 return resolve(data.toString());
             });
@@ -84,7 +79,7 @@ export class Coverage {
 
     private globFind(workspaceFolder: WorkspaceFolder, fileName: string): Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
-            this.glob.find(
+            glob(
                 `**/${fileName}`,
                 {
                     cwd: workspaceFolder.uri.fsPath,

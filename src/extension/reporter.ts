@@ -1,4 +1,4 @@
-import {Request} from "../wrappers/request";
+import {post} from "request";
 
 const EXT_NAME = "vscode-coverage-gutters";
 const EXT_VERSION = "2.3.0";
@@ -6,12 +6,10 @@ const EXT_VERSION = "2.3.0";
 export class Reporter {
     private readonly cid: string;
     private readonly enableMetrics: boolean;
-    private readonly gaTrackingId: string;
-    private readonly request: Request;
+    private gaTrackingId: string;
 
-    constructor(request: Request, machineId: string, gaTrackingId: string, enableMetrics: boolean) {
-        this.gaTrackingId = gaTrackingId;
-        this.request = request;
+    constructor(machineId: string, enableMetrics: boolean) {
+        this.gaTrackingId = "";
         this.cid = machineId;
         this.enableMetrics = enableMetrics;
     }
@@ -36,7 +34,7 @@ export class Reporter {
             v: "1",
         };
 
-        return this.request.post("https://www.google-analytics.com/collect", { form: data }, (err) => {
+        return post("https://www.google-analytics.com/collect", { form: data }, (err) => {
             if (err) {
                 console.error(err.message);
             }
