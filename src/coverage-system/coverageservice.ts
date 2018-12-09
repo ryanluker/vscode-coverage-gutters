@@ -48,6 +48,7 @@ export class CoverageService {
         this.cache = new Map();
         this.filesLoader = new FilesLoader(configStore);
         this.sectionFinder = new SectionFinder(
+            configStore,
             this.outputChannel,
             this.eventReporter,
         );
