@@ -66,83 +66,13 @@ export class CoverageParser {
         return coverages;
     }
 
-    /**
-     * Takes paths and tries to make them absolute
-     * based on currently open workspaceFolders
-     * @param path potential partial path to be converted
-     */
-    private async convertPartialPathsToAbsolute(path: string): Promise<string> {
-        const files: string[] = [];
-        const globFind = async (folder: string) => {
-            return new Promise<string[]>((resolve, reject) => {
-                // find the path in the workspace folder
-                glob(
-                    `**/${path}`,
-                    {
-                        cwd: folder,
-                        dot: true,
-                        ignore: this.configStore.ignoredPathGlobs,
-                        realpath: true,
-                    },
-                    (err, possibleFiles) => {
-                        // spread the possible files to store for later use.
-                        if (possibleFiles && possibleFiles.length) {
-                            files.push(...possibleFiles);
-                        }
-                        return resolve();
-                    },
-                );
-            });
-        };
-
-        if (!workspace.workspaceFolders) { return path; }
-        // Path is already absolute
-        // Note 1: some coverage generators can start with no slash #160
-        // Note 2: accounts for windows and linux style file paths
-        // windows as they start with drives (ie: c:\)
-        // linux as they start with forward slashes
-        // both windows and linux use ./ or .\ for relative
-        const unixRoot = path.startsWith("/");
-        const windowsRoot = path[1] === ":" && path[2] === "\\";
-        if (unixRoot || windowsRoot) {
-            return path;
-        }
-
-        // look over all workspaces for the path
-        const folders = workspace.workspaceFolders.map(
-            (folder) => folder.uri.fsPath,
-        );
-        const findPromises = folders.map(globFind);
-        await Promise.all(findPromises);
-
-        if (files.length === 0) {
-            throw Error(`File path not found in open workspaces ${path}`);
-        }
-        if (files.length > 1) {
-            throw Error(`Found too many files with partial path ${path}`);
-        }
-        return files[0];
-    }
-
     private async convertSectionsToMap(
         data: Section[],
         fileType: CoverageType,
     ): Promise<Map<string, Section>> {
         const sections = new Map<string, Section>();
         const addToSectionsMap = async (section) => {
-            let mapKey = section.file;
-            try {
-                // Check for the secion having a partial path
-                mapKey = await this.convertPartialPathsToAbsolute(section.file);
-            } catch (error) {
-                // remove stacktrace as it clutters the output and isnt useful
-                error.stack = undefined;
-                this.handleError(`${fileType}-convertPartialPathsToAbsolute`, error);
-            }
-
-            // Assign mapKey to the section file as well to allow for renderer matching
-            section.file = mapKey;
-            sections.set(mapKey, section);
+            sections.set(section.file, section);
         };
 
         // convert the array of sections into an unique map
