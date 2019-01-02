@@ -3,7 +3,7 @@ import {
     Range,
     TextEditor,
 } from "vscode";
-import {IConfigStore} from "../extension/config";
+import {Config} from "../extension/config";
 import {setLastCoverageLines} from "../extension/exportsapi";
 import {SectionFinder} from "./sectionFinder";
 
@@ -14,11 +14,11 @@ export interface ICoverageLines {
 }
 
 export class Renderer {
-    private configStore: IConfigStore;
+    private configStore: Config;
     private sectionFinder: SectionFinder;
 
     constructor(
-        configStore: IConfigStore,
+        configStore: Config,
         sectionFinder: SectionFinder,
     ) {
         this.configStore = configStore;

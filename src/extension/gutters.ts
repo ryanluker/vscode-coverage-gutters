@@ -13,12 +13,11 @@ import {
 
 import {Coverage} from "../coverage-system/coverage";
 import {CoverageService} from "../coverage-system/coverageservice";
-import {IConfigStore} from "./config";
+import {Config} from "./config";
 import {Reporter} from "./reporter";
 import {StatusBarToggler} from "./statusbartoggler";
 
 export class Gutters {
-    private configStore: IConfigStore;
     private coverage: Coverage;
     private outputChannel: OutputChannel;
     private reporter: Reporter;
@@ -26,13 +25,12 @@ export class Gutters {
     private coverageService: CoverageService;
 
     constructor(
-        configStore: IConfigStore,
+        configStore: Config,
         coverage: Coverage,
         outputChannel: OutputChannel,
         reporter: Reporter,
         statusBar: StatusBarToggler,
     ) {
-        this.configStore = configStore;
         this.coverage = coverage;
         this.outputChannel = outputChannel;
         this.statusBar = statusBar;

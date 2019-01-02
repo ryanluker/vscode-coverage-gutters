@@ -8,14 +8,12 @@ import {
     WorkspaceFolder,
 } from "vscode";
 
-import {IConfigStore} from "../extension/config";
+import {Config} from "../extension/config";
 
 export class Coverage {
-    private configStore: IConfigStore;
+    private configStore: Config;
 
-    constructor(
-        configStore: IConfigStore,
-    ) {
+    constructor(configStore: Config) {
         this.configStore = configStore;
     }
 

@@ -1,5 +1,5 @@
 import {Disposable, StatusBarItem, window} from "vscode";
-import {IConfigStore} from "./config";
+import {Config} from "./config";
 
 export class StatusBarToggler implements Disposable {
     private static readonly watchCommand = "extension.watchCoverageAndVisibleEditors";
@@ -8,9 +8,9 @@ export class StatusBarToggler implements Disposable {
     private static readonly removeText = "$(list-ordered) Remove Watch";
     private static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
     private statusBarItem: StatusBarItem;
-    private configStore: IConfigStore;
+    private configStore: Config;
 
-    constructor(configStore: IConfigStore) {
+    constructor(configStore: Config) {
         this.statusBarItem = window.createStatusBarItem();
         this.statusBarItem.command = StatusBarToggler.watchCommand;
         this.statusBarItem.text = StatusBarToggler.watchText;

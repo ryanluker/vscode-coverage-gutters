@@ -5,17 +5,17 @@ import {parseContent as parseContentJacoco} from "jacoco-parse";
 import {Section, source} from "lcov-parse";
 import {OutputChannel, workspace} from "vscode";
 
-import {IConfigStore} from "../extension/config";
+import {Config} from "../extension/config";
 import {Reporter} from "../extension/reporter";
 import {CoverageFile, CoverageType} from "./coveragefile";
 
 export class CoverageParser {
-    private configStore: IConfigStore;
+    private configStore: Config;
     private outputChannel: OutputChannel;
     private eventReporter: Reporter;
 
     constructor(
-        configStore: IConfigStore,
+        configStore: Config,
         outputChannel: OutputChannel,
         eventReporter: Reporter,
     ) {

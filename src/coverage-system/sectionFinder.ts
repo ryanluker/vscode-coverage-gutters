@@ -4,17 +4,17 @@ import {extname} from "path";
 import {TextEditor, Uri, workspace} from "vscode";
 import {OutputChannel} from "vscode";
 
-import {IConfigStore} from "../extension/config";
+import {Config} from "../extension/config";
 import {Reporter} from "../extension/reporter";
 import {areFilesRelativeEquals, normalizeFileName} from "../helpers";
 
 export class SectionFinder {
-    private configStore: IConfigStore;
+    private configStore: Config;
     private outputChannel: OutputChannel;
     private eventReporter: Reporter;
 
     constructor(
-        configStore: IConfigStore,
+        configStore: Config,
         outputChannel: OutputChannel,
         eventReporter: Reporter,
     ) {
