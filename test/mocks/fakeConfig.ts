@@ -1,6 +1,4 @@
-import { IConfigStore } from "../../src/extension/config";
-
-export const fakeConfig: IConfigStore = {
+export const fakeConfig: any = {
     coverageFileNames: ["test.ts", "test.xml"],
     fullCoverageDecorationType: {
         key: "testKey",

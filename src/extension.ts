@@ -9,7 +9,7 @@ import {StatusBarToggler} from "./extension/statusbartoggler";
 export function activate(context: vscode.ExtensionContext) {
     const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
     const reporter = new Reporter(vscode.env.machineId, enableMetrics);
-    const configStore = new Config(context, reporter).get();
+    const configStore = new Config(context, reporter);
     const statusBarToggler = new StatusBarToggler(configStore);
     const coverage = new Coverage(configStore);
     const outputChannel = vscode.window.createOutputChannel("coverage-gutters");

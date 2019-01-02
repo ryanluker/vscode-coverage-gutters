@@ -52,13 +52,13 @@ suite.skip("Config Tests", function() {
 
     test("Can get configStore after initialization @unit", function() {
         const config = new Config(fakeContext, fakeReport);
-        const store = config.get();
+        const store = config;
         assert.notEqual(store.coverageFileNames, null);
     });
 
     test("Can get coverage file names @unit", function() {
         const config = new Config(fakeContext, fakeReport);
-        const store = config.get();
+        const store = config;
         // Check that unique file names is being applied
         assert.equal(store.coverageFileNames.length, 3);
     });

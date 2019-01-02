@@ -8,7 +8,7 @@ import {
     workspace,
 } from "vscode";
 
-import {IConfigStore} from "../extension/config";
+import {Config} from "../extension/config";
 import {Reporter} from "../extension/reporter";
 import {CoverageParser} from "../files/coverageparser";
 import {FilesLoader} from "../files/filesloader";
@@ -24,7 +24,7 @@ enum Status {
 }
 
 export class CoverageService {
-    private configStore: IConfigStore;
+    private configStore: Config;
     private outputChannel: OutputChannel;
     private eventReporter: Reporter;
     private filesLoader: FilesLoader;
@@ -37,7 +37,7 @@ export class CoverageService {
     private cache: Map<string, Section>;
 
     constructor(
-        configStore: IConfigStore,
+        configStore: Config,
         outputChannel: OutputChannel,
         eventReporter: Reporter,
     ) {

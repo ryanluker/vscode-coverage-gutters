@@ -9,44 +9,27 @@ import {
 } from "vscode";
 import {Reporter} from "./reporter";
 
-export interface IConfigStore {
-    coverageFileNames: string[];
-    fullCoverageDecorationType: TextEditorDecorationType;
-    partialCoverageDecorationType: TextEditorDecorationType;
-    noCoverageDecorationType: TextEditorDecorationType;
-    showStatusBarToggler: boolean;
-    ignoredPathGlobs: string;
-}
-
 export class Config {
+    public coverageFileNames: string[];
+    public fullCoverageDecorationType: TextEditorDecorationType;
+    public partialCoverageDecorationType: TextEditorDecorationType;
+    public noCoverageDecorationType: TextEditorDecorationType;
+    public showStatusBarToggler: boolean;
+    public ignoredPathGlobs: string;
+
     private context: ExtensionContext;
     private reporter: Reporter;
-
-    private coverageFileNames: string[];
-    private fullCoverageDecorationType: TextEditorDecorationType;
-    private partialCoverageDecorationType: TextEditorDecorationType;
-    private noCoverageDecorationType: TextEditorDecorationType;
-    private showStatusBarToggler: boolean;
-    private ignoredPaths: string;
 
     constructor(context: ExtensionContext, reporter: Reporter) {
         this.context = context;
         this.reporter = reporter;
         this.setup();
+
+        // Reload the cached values if the configuration changes
+        workspace.onDidChangeConfiguration(this.setup.bind(this));
     }
 
-    public get(): IConfigStore {
-        return {
-            coverageFileNames: this.coverageFileNames,
-            fullCoverageDecorationType: this.fullCoverageDecorationType,
-            ignoredPathGlobs: this.ignoredPaths,
-            noCoverageDecorationType: this.noCoverageDecorationType,
-            partialCoverageDecorationType: this.partialCoverageDecorationType,
-            showStatusBarToggler: this.showStatusBarToggler,
-        };
-    }
-
-    public setup() {
+    private setup() {
         const rootCustomConfig = workspace.getConfiguration("coverage-gutters.customizable");
 
         // Customizable UI configurations
@@ -72,7 +55,7 @@ export class Config {
         this.coverageFileNames = [...new Set(this.coverageFileNames)];
 
         // Load ignored paths
-        this.ignoredPaths = rootConfig.get("ignoredPathGlobs") as string;
+        this.ignoredPathGlobs = rootConfig.get("ignoredPathGlobs") as string;
 
         const STATUS_BAR_TOGGLER = "status-bar-toggler-watchCoverageAndVisibleEditors-enabled";
         this.showStatusBarToggler = rootCustomConfig.get(STATUS_BAR_TOGGLER) as boolean;
