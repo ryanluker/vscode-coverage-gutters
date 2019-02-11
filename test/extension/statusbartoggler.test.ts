@@ -19,7 +19,7 @@ suite("Status Bar Toggler Tests", () => {
         assert.equal(statusBarToggler.statusText, "$(list-ordered) Remove Watch");
     });
 
-    test("Should toggle showStatusBarToggler command and message back to \"Wath\" @unit", () => {
+    test("Should toggle showStatusBarToggler command and message back to \"Watch\" @unit", () => {
         const statusBarToggler = new StatusBarToggler(fakeConfig);
         assert.equal(statusBarToggler.statusText, "$(list-ordered) Watch");
         statusBarToggler.toggle(true);
