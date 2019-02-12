@@ -11,11 +11,11 @@ import {
     window,
 } from "vscode";
 
-import {Coverage} from "../coverage-system/coverage";
-import {CoverageService} from "../coverage-system/coverageservice";
-import {Config} from "./config";
-import {Reporter} from "./reporter";
-import {StatusBarToggler} from "./statusbartoggler";
+import { Coverage } from "../coverage-system/coverage";
+import { CoverageService } from "../coverage-system/coverageservice";
+import { Config } from "./config";
+import { Reporter } from "./reporter";
+import { StatusBarToggler } from "./statusbartoggler";
 
 export class Gutters {
     private coverage: Coverage;
@@ -80,7 +80,7 @@ export class Gutters {
 
     public async watchCoverageAndVisibleEditors() {
         try {
-            this.statusBar.toggle();
+            this.statusBar.toggle(true);
             await this.coverageService.watchWorkspace();
             this.reporter.sendEvent("user", "watch-coverage-editors");
         } catch (error) {
@@ -90,8 +90,8 @@ export class Gutters {
 
     public removeWatch() {
         this.coverageService.removeCoverageForCurrentEditor();
+        this.statusBar.toggle(false);
         this.coverageService.dispose();
-        this.statusBar.toggle();
 
         this.reporter.sendEvent("user", "remove-watch");
     }

@@ -1,5 +1,5 @@
-import {Disposable, StatusBarItem, window} from "vscode";
-import {Config} from "./config";
+import { Disposable, StatusBarItem, window } from "vscode";
+import { Config } from "./config";
 
 export class StatusBarToggler implements Disposable {
     private static readonly watchCommand = "extension.watchCoverageAndVisibleEditors";
@@ -19,11 +19,15 @@ export class StatusBarToggler implements Disposable {
         if (this.configStore.showStatusBarToggler) { this.statusBarItem.show(); }
     }
 
+    public get statusText() {
+        return this.statusBarItem.text;
+    }
+
     /**
      * Toggles the status bar item from watch to remove and vice versa
      */
-    public toggle() {
-        if (this.statusBarItem.command === StatusBarToggler.watchCommand) {
+    public toggle(active: boolean) {
+        if (active) {
             this.statusBarItem.command = StatusBarToggler.removeCommand;
             this.statusBarItem.text = StatusBarToggler.removeText;
         } else {
