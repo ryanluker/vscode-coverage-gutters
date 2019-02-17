@@ -6,6 +6,23 @@ import {ICoverageLines} from "../src/coverage-system/renderer";
 suite("Extension Tests", function() {
     this.timeout(25000);
 
+    test("Preview the coverage report in a new webview tab @integration", async () => {
+        // Note: depends on "coverage-gutters.coverageReportFileName": "index.html",
+        // being set in the example.code-workspace setting file as the coverage report
+        // is in the root of the node folder and not inside the default /coverage
+        await waitForExtension(2000);
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
+
+        await vscode.commands.executeCommand("extension.previewCoverageReport");
+        // Look to see if the webview is open and showing preview coverage
+        await waitForExtension(2000);
+        const reportView = vscode.workspace.textDocuments[1];
+        assert.equal(reportView.languageId, "html");
+    });
+
     test("Run display coverage on node test file with large lcov.info file @integration", async () => {
         await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");

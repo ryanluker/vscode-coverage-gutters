@@ -6,6 +6,7 @@
 	],
 	"settings": {
 		"coverage-gutters.showLineCoverage": true,
+		"coverage-gutters.coverageReportFileName": "index.html",
 		"search.useRipgrep": false
 	}
 }
