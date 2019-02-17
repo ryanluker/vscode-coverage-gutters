@@ -45,7 +45,11 @@ export class Gutters {
     public async previewCoverageReport() {
         try {
             const coverageReports = await this.coverage.findReports();
-            this.reporter.sendEvent("user", "preview-coverage-report-findCoverageFiles", `${coverageReports.length}`);
+            this.reporter.sendEvent(
+                "user",
+                "preview-coverage-report-findCoverageFiles",
+                `${coverageReports.length}`,
+            );
             const pickedReport = await this.coverage.pickFile(
                 coverageReports,
                 "Choose a Coverage Report to preview.",

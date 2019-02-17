@@ -20,8 +20,7 @@ export class Coverage {
     /**
      * Takes an array of file strings and a placeHolder message.
      * Displays the quick picker vscode modal and lets the user choose a file path
-     * @param filePaths
-     * @param placeHolder
+     * Note: if only one path is given it will return early and not prompt.
      */
     public async pickFile(filePaths: string[] | string, placeHolder: string): Promise<string | undefined> {
         let pickedFile: string | undefined;
