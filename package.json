@@ -135,8 +135,8 @@
         },
         "coverage-gutters.coverageReportFileName": {
           "type": "string",
-          "default": "index.html",
-          "description": "Default coverage report file name to look for when using the preview command"
+          "default": "coverage/**/index.html",
+          "description": "Default coverage report file names(can be glob style) to look for when using the preview command"
         },
         "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": {
           "type": "boolean",
