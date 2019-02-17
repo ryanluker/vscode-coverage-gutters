@@ -1,6 +1,6 @@
-import {readFile} from "fs";
+import { readFile } from "fs";
 import * as glob from "glob";
-import {basename} from "path";
+import { basename } from "path";
 import {
     QuickPickItem,
     window,
@@ -8,7 +8,7 @@ import {
     WorkspaceFolder,
 } from "vscode";
 
-import {Config} from "../extension/config";
+import { Config } from "../extension/config";
 
 export class Coverage {
     private configStore: Config;
@@ -49,13 +49,12 @@ export class Coverage {
     }
 
     public findReports(): Promise<string[]> {
-        const files = [];
         let actions: Array<Promise<string[]>> = new Array<Promise<string[]>>();
 
         const workspaceFolders = workspace.workspaceFolders;
         if (workspaceFolders) {
             actions = workspaceFolders.map((workspaceFolder) => {
-                return this.globFind(workspaceFolder, "coverage/**/index.html");
+                return this.globFind(workspaceFolder, this.configStore.reportFileName);
             });
         }
 

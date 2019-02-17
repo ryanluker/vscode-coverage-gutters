@@ -133,6 +133,11 @@
           ],
           "description": "Coverage file names for the extension to automatically look for"
         },
+        "coverage-gutters.coverageReportFileName": {
+          "type": "string",
+          "default": "index.html",
+          "description": "Default coverage report file name to look for when using the preview command"
+        },
         "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": {
           "type": "boolean",
           "default": true,

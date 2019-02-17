@@ -1,14 +1,10 @@
 import {
-    commands,
-    Disposable,
-    FileSystemWatcher,
     OutputChannel,
-    StatusBarItem,
-    TextEditor,
     Uri,
     version,
     ViewColumn,
     window,
+    workspace,
 } from "vscode";
 
 import { Coverage } from "../coverage-system/coverage";
@@ -55,13 +51,18 @@ export class Gutters {
                 "Choose a Coverage Report to preview.",
             );
             if (!pickedReport) { throw new Error("Could not show Coverage Report file!"); }
-            const reportUri = Uri.file(pickedReport.toString());
-            await commands.executeCommand(
-                "vscode.previewHtml",
-                reportUri,
-                ViewColumn.One,
+
+            // Construct the webview panel for the coverage report to live in
+            const previewPanel = window.createWebviewPanel(
+                "coverageReportPreview",
                 "Preview Coverage Report",
+                ViewColumn.One,
             );
+
+            // Read in the report html and send it to the webview
+            const reportUri = Uri.file(pickedReport);
+            const reportHtml = await workspace.openTextDocument(reportUri);
+            previewPanel.webview.html = reportHtml.getText();
 
             this.reporter.sendEvent("user", "preview-coverage-report");
         } catch (error) {

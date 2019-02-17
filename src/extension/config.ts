@@ -11,6 +11,7 @@ import {Reporter} from "./reporter";
 
 export class Config {
     public coverageFileNames: string[];
+    public reportFileName: string;
     public fullCoverageDecorationType: TextEditorDecorationType;
     public partialCoverageDecorationType: TextEditorDecorationType;
     public noCoverageDecorationType: TextEditorDecorationType;
@@ -47,6 +48,7 @@ export class Config {
         // TODO: remove lcovname and xmlname in 3.0.0 release
         const lcovName = rootConfig.get("lcovname") as string;
         const xmlName = rootConfig.get("xmlname") as string;
+        this.reportFileName = rootConfig.get("coverageReportFileName") as string;
         this.coverageFileNames = rootConfig.get("coverageFileNames") as string[];
         this.coverageFileNames.push(lcovName, xmlName);
         this.coverageFileNames = this.coverageFileNames.filter((name) => !!name.trim());
