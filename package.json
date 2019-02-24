@@ -249,7 +249,7 @@
     "vscode": "1.1.22"
   },
   "dependencies": {
-    "@cvrg-report/clover-json": "0.1.1",
+    "@cvrg-report/clover-json": "0.3.0",
     "cobertura-parse": "1.0.5",
     "glob": "7.1.2",
     "jacoco-parse": "2.0.0",
