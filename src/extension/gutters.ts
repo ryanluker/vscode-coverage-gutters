@@ -70,7 +70,7 @@ export class Gutters {
 
             this.reporter.sendEvent("user", "preview-coverage-report");
         } catch (error) {
-            this.handleError(error);
+            this.handleError("previewCoverageReport", error);
         }
     }
 
@@ -79,7 +79,7 @@ export class Gutters {
             await this.coverageService.displayForFile();
             this.reporter.sendEvent("user", "display-coverage");
         } catch (error) {
-            this.handleError(error);
+            this.handleError("displayCoverageForActiveFile", error);
         }
     }
 
@@ -89,16 +89,20 @@ export class Gutters {
             await this.coverageService.watchWorkspace();
             this.reporter.sendEvent("user", "watch-coverage-editors");
         } catch (error) {
-            this.handleError(error);
+            this.handleError("watchCoverageAndVisibleEditors", error);
         }
     }
 
     public removeWatch() {
-        this.coverageService.removeCoverageForCurrentEditor();
-        this.statusBar.toggle(false);
-        this.coverageService.dispose();
+        try {
+            this.coverageService.removeCoverageForCurrentEditor();
+            this.statusBar.toggle(false);
+            this.coverageService.dispose();
 
-        this.reporter.sendEvent("user", "remove-watch");
+            this.reporter.sendEvent("user", "remove-watch");
+        } catch (error) {
+            this.handleError("removeWatch", error, false);
+        }
     }
 
     public removeCoverageForActiveFile() {
@@ -113,12 +117,14 @@ export class Gutters {
         this.reporter.sendEvent("cleanup", "dispose");
     }
 
-    private handleError(error: Error) {
+    private handleError(area: string, error: Error, showMessage: boolean = true) {
         const message = error.message ? error.message : error;
         const stackTrace = error.stack;
-        window.showWarningMessage(message.toString());
-        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Error ${message}`);
-        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Stacktrace ${stackTrace}`);
+        if (showMessage) {
+            window.showWarningMessage(message.toString());
+        }
+        this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
+        this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
         this.reporter.sendEvent(
             "error",
             message.toString(),
