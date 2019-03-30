@@ -57,7 +57,6 @@ export class CoverageService {
             this.sectionFinder,
         );
         this.coverageParser = new CoverageParser(
-            configStore,
             this.outputChannel,
             this.eventReporter,
         );
