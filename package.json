@@ -250,7 +250,7 @@
   },
   "dependencies": {
     "@cvrg-report/clover-json": "0.3.0",
-    "cobertura-parse": "1.0.5",
+    "cobertura-parse": "github:vokal/cobertura-parse#53109a6",
     "glob": "7.1.2",
     "jacoco-parse": "2.0.1",
     "lcov-parse": "1.0.0",

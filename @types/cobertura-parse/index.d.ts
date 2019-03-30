@@ -1,5 +1,9 @@
 declare namespace parse {
-    function parseContent(str: string, cb: (err: Error, data: Array<Section>) => void, absPath: string): void
+    function parseContent(
+        str: string,
+        cb: (err: Error, data: Array<Section>) => void,
+        absPath: boolean
+    ): void
 
     interface LineDetail {
         hit: number,

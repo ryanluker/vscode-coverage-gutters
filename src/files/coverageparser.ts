@@ -1,25 +1,21 @@
 import {parseContent as parseContentClover} from "@cvrg-report/clover-json";
 import {parseContent as parseContentCobertura} from "cobertura-parse";
-import * as glob from "glob";
 import {parseContent as parseContentJacoco} from "jacoco-parse";
 import {Section, source} from "lcov-parse";
-import {OutputChannel, workspace} from "vscode";
+import {OutputChannel} from "vscode";
 
 import {Config} from "../extension/config";
 import {Reporter} from "../extension/reporter";
 import {CoverageFile, CoverageType} from "./coveragefile";
 
 export class CoverageParser {
-    private configStore: Config;
     private outputChannel: OutputChannel;
     private eventReporter: Reporter;
 
     constructor(
-        configStore: Config,
         outputChannel: OutputChannel,
         eventReporter: Reporter,
     ) {
-        this.configStore = configStore;
         this.outputChannel = outputChannel;
         this.eventReporter = eventReporter;
     }
@@ -68,7 +64,6 @@ export class CoverageParser {
 
     private async convertSectionsToMap(
         data: Section[],
-        fileType: CoverageType,
     ): Promise<Map<string, Section>> {
         const sections = new Map<string, Section>();
         const addToSectionsMap = async (section) => {
@@ -94,13 +89,10 @@ export class CoverageParser {
             try {
                 parseContentCobertura(xmlFile, async (err, data) => {
                     checkError(err);
-                    const sections = await this.convertSectionsToMap(
-                        data,
-                        CoverageType.COBERTURA,
-                    );
+                    const sections = await this.convertSectionsToMap(data);
                     this.eventReporter.sendEvent("system", "xmlExtractCobrtura-success");
                     return resolve(sections);
-                });
+                }, true);
             } catch (error) {
                 checkError(error);
             }
@@ -120,10 +112,7 @@ export class CoverageParser {
             try {
                 parseContentJacoco(xmlFile, async (err, data) => {
                     checkError(err);
-                    const sections = await this.convertSectionsToMap(
-                        data,
-                        CoverageType.JACOCO,
-                    );
+                    const sections = await this.convertSectionsToMap(data);
                     this.eventReporter.sendEvent("system", "xmlExtractJacoco-success");
                     return resolve(sections);
                 });
@@ -136,10 +125,7 @@ export class CoverageParser {
     private async xmlExtractClover(filename: string, xmlFile: string) {
         try {
             const data = await parseContentClover(xmlFile);
-            const sections = await this.convertSectionsToMap(
-                data,
-                CoverageType.CLOVER,
-            );
+            const sections = await this.convertSectionsToMap(data);
             this.eventReporter.sendEvent("system", "xmlExtractClover-success");
             return sections;
         } catch (error) {
@@ -162,10 +148,7 @@ export class CoverageParser {
             try {
                 source(lcovFile, async (err, data) => {
                     checkError(err);
-                    const sections = await this.convertSectionsToMap(
-                        data,
-                        CoverageType.LCOV,
-                    );
+                    const sections = await this.convertSectionsToMap(data);
                     this.eventReporter.sendEvent("system", "lcovExtract-success");
                     return resolve(sections);
                 });
