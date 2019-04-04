@@ -19,4 +19,9 @@ suite("Coverage File Tests", function() {
         const coverageFile = new CoverageFile(fakeLcovInfo);
         assert.equal(coverageFile.type, CoverageType.LCOV);
     });
+
+    test("Ignores empty file (#150)", function() {
+        const coverageFile = new CoverageFile("");
+        assert.equal(coverageFile.type, CoverageType.NONE);
+    });
 });
