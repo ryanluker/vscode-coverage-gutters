@@ -1,4 +1,5 @@
 export enum CoverageType {
+    NONE,
     LCOV,
     CLOVER,
     COBERTURA,
@@ -19,7 +20,7 @@ export class CoverageFile {
      * @param file file to detect type information
      */
     private setFileType(file: string) {
-        let possibleType = CoverageType.LCOV;
+        let possibleType = CoverageType.NONE;
         if (
             file.includes("<?xml") &&
             file.includes("<coverage") &&
@@ -30,6 +31,8 @@ export class CoverageFile {
             possibleType = CoverageType.JACOCO;
         } else if (file.includes("<?xml")) {
             possibleType = CoverageType.COBERTURA;
+        } else if (file !== "") {
+            possibleType = CoverageType.LCOV;
         }
         this.type = possibleType;
     }
