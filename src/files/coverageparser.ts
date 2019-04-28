@@ -4,7 +4,6 @@ import {parseContent as parseContentJacoco} from "jacoco-parse";
 import {Section, source} from "lcov-parse";
 import {OutputChannel} from "vscode";
 
-import {Config} from "../extension/config";
 import {Reporter} from "../extension/reporter";
 import {CoverageFile, CoverageType} from "./coveragefile";
 
