@@ -20,7 +20,7 @@ suite("Coverage File Tests", function() {
         assert.equal(coverageFile.type, CoverageType.LCOV);
     });
 
-    test("Ignores empty file (#150)", function() {
+    test("Ignores empty file (#150) @unit", function() {
         const coverageFile = new CoverageFile("");
         assert.equal(coverageFile.type, CoverageType.NONE);
     });
