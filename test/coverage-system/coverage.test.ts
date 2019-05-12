@@ -17,9 +17,7 @@ suite("Coverage Tests", function() {
 
     test("Constructor should setup properly @unit", function(done) {
         try {
-            new Coverage(
-                fakeConfig,
-            );
+            new Coverage(fakeConfig); // tslint:disable-line
             return done();
         } catch (e) {
             assert.equal(1, 2);
@@ -28,6 +26,7 @@ suite("Coverage Tests", function() {
     });
 
     test("#load: Should reject when readFile returns an error @unit", function(done) {
+        // tslint:disable-next-line
         const readFile = function(path: string, cb) {
             assert.equal(path, "pathtofile");
             const error: NodeJS.ErrnoException = new Error("could not read from fs");
@@ -51,6 +50,7 @@ suite("Coverage Tests", function() {
     });
 
     test("#load: Should return a data string @unit", function(done) {
+        // tslint:disable-next-line
         const readFile = function(path: string, cb: (err: NodeJS.ErrnoException, data: Buffer) => void) {
             assert.equal(path, "pathtofile");
             return cb(undefined as any, new Buffer("lcovhere"));
@@ -72,7 +72,7 @@ suite("Coverage Tests", function() {
     });
 
     test("#pickFile: Should return undefined if no item is picked @unit", function(done) {
-        const showQuickPick = async () => undefined;
+        const showQuickPick = async () => undefined; // tslint:disable-line
         (vscode as any).window.showQuickPick = showQuickPick;
 
         const coverage = new Coverage(
