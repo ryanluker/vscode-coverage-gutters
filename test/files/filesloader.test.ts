@@ -8,5 +8,5 @@ suite("FilesLoader Tests", function() {
 
     test("findCoverageFiles finds files in the workspaces @unit", function() {
         assert.equal(true, true);
-    })
+    });
 });

@@ -8,5 +8,5 @@ suite("CoverageParser Tests", function() {
 
     test("Correctly chooses the coverage format @unit", function() {
         assert.equal(true, true);
-    })
+    });
 });
