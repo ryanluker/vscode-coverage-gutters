@@ -30,7 +30,7 @@ suite("Coverage Tests", function() {
         const readFile = function(path: string, cb) {
             assert.equal(path, "pathtofile");
             const error: NodeJS.ErrnoException = new Error("could not read from fs");
-            return cb(error, new Buffer(""));
+            return cb(error, Buffer.from(""));
         };
         (fs as any).readFile = readFile;
 
@@ -53,7 +53,7 @@ suite("Coverage Tests", function() {
         // tslint:disable-next-line
         const readFile = function(path: string, cb: (err: NodeJS.ErrnoException, data: Buffer) => void) {
             assert.equal(path, "pathtofile");
-            return cb(undefined as any, new Buffer("lcovhere"));
+            return cb(undefined as any, Buffer.from("lcovhere"));
         };
         (fs as any).readFile = readFile;
 
