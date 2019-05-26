@@ -14,7 +14,7 @@ suite("CoverageParser Tests", function() {
         // Mock lcovExtract
         const lcovExtract = async (filename) => {
             const testSection = new Map();
-            testSection.set(filename, '');
+            testSection.set(filename, "");
             return testSection;
         };
         const coverageParsers = new CoverageParser({} as any, {} as any);
@@ -36,7 +36,7 @@ suite("CoverageParser Tests", function() {
         let wasCalled = false;
         const cloverExtract = async (filename) => {
             wasCalled = true;
-            assert.equal(testFiles.has(filename), true)
+            assert.equal(testFiles.has(filename), true);
             return new Map();
         };
         const coverageParsers = new CoverageParser({} as any, {} as any);

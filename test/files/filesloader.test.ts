@@ -31,10 +31,10 @@ suite("FilesLoader Tests", function() {
     test("findCoverageFiles returns an error if no coverage file @unit", async function() {
         const filesLoader = new FilesLoader(fakeConfig);
         (filesLoader as any).findCoverageInWorkspace = async () => new Map();
-        
+
         return assert.rejects(
             filesLoader.findCoverageFiles.bind(filesLoader),
-            Error("Could not find a Coverage file!")
+            Error("Could not find a Coverage file!"),
         );
     });
 });
