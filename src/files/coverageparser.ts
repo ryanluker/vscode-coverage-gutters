@@ -35,9 +35,7 @@ export class CoverageParser {
 
             // get coverage file type
             const coverageFile = new CoverageFile(fileContent);
-            const fileType = coverageFile.type;
-
-            switch (fileType) {
+            switch (coverageFile.type) {
                 case CoverageType.CLOVER:
                     coverage = await this.xmlExtractClover(fileName, fileContent);
                     break;
