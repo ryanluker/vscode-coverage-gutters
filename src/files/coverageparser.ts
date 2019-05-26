@@ -4,7 +4,6 @@ import {parseContent as parseContentJacoco} from "jacoco-parse";
 import {Section, source} from "lcov-parse";
 import {OutputChannel} from "vscode";
 
-import {Config} from "../extension/config";
 import {Reporter} from "../extension/reporter";
 import {CoverageFile, CoverageType} from "./coveragefile";
 
@@ -36,9 +35,7 @@ export class CoverageParser {
 
             // get coverage file type
             const coverageFile = new CoverageFile(fileContent);
-            const fileType = coverageFile.type;
-
-            switch (fileType) {
+            switch (coverageFile.type) {
                 case CoverageType.CLOVER:
                     coverage = await this.xmlExtractClover(fileName, fileContent);
                     break;

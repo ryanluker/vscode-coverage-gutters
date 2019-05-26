@@ -1,7 +1,14 @@
 import * as assert from "assert";
+import * as vscode from "vscode";
+
 import {Config} from "../../src/extension/config";
 
-suite.skip("Config Tests", function() {
+// Original functions
+const createTextEditorDecorationType = vscode.window.createTextEditorDecorationType;
+const executeCommand = vscode.commands.executeCommand;
+const getConfiguration = vscode.workspace.getConfiguration;
+
+suite("Config Tests", function() {
     const fakeVscode: any = {
         createTextEditorDecorationType: (options) => {
             assert.equal(Object.keys(options).length, 4);
@@ -44,31 +51,41 @@ suite.skip("Config Tests", function() {
         },
     };
 
+    teardown(function() {
+        (vscode as any).window.createTextEditorDecorationType = createTextEditorDecorationType;
+        (vscode as any).commands.executeCommand = executeCommand;
+        (vscode as any).workspace.getConfiguration = getConfiguration;
+    });
+
+    setup(function() {
+        (vscode as any).window.createTextEditorDecorationType = fakeVscode.createTextEditorDecorationType;
+        (vscode as any).commands.executeCommand = fakeVscode.executeCommand;
+        (vscode as any).workspace.getConfiguration = fakeVscode.getConfiguration;
+    });
+
     test("Constructor should setup properly @unit", function() {
         assert.doesNotThrow(() => {
-            const _CONFIG = new Config(fakeContext, fakeReport);
+            new Config(fakeContext, fakeReport); // tslint:disable-line
         });
     });
 
     test("Can get configStore after initialization @unit", function() {
         const config = new Config(fakeContext, fakeReport);
-        const store = config;
-        assert.notEqual(store.coverageFileNames, null);
+        assert.notEqual(config.coverageFileNames, null);
     });
 
     test("Can get coverage file names @unit", function() {
         const config = new Config(fakeContext, fakeReport);
-        const store = config;
         // Check that unique file names is being applied
-        assert.equal(store.coverageFileNames.length, 3);
+        assert.equal(config.coverageFileNames.length, 3);
     });
 
     test("Should remove gutter icons if path is blank, allows breakpoint usage @unit", function() {
-        fakeVscode.createTextEditorDecorationType = (options) => {
+        (vscode as any).window.createTextEditorDecorationType = (options) => {
             assert.equal("gutterIconPath" in options.dark, false);
             assert.equal("gutterIconPath" in options.light, false);
         };
         fakeContext.asAbsolutePath = (options) => "";
-        const config = new Config(fakeContext, fakeReport);
+        new Config(fakeContext, fakeReport); // tslint:disable-line
     });
 });

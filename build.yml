@@ -22,6 +22,8 @@ jobs:
     displayName: 'Run unit tests'
   - script: 'npm run test-integration'
     displayName: 'Run integration tests'
+  - script: 'npm run lint'
+    displayName: 'Run linting'
 - job: macOS
   pool:
     name: Hosted macOS
@@ -45,6 +47,8 @@ jobs:
     displayName: 'Run unit tests'
   - script: 'npm run test-integration'
     displayName: 'Run integration tests'
+  - script: 'npm run lint'
+    displayName: 'Run linting'
 - job: Linux
   pool:
     name: Hosted Ubuntu 1604
@@ -75,5 +79,9 @@ jobs:
       DISPLAY: :10
   - script: 'npm run test-integration'
     displayName: 'Run integration tests'
+    env:
+      DISPLAY: :10
+  - script: 'npm run lint'
+    displayName: 'Run linting'
     env:
       DISPLAY: :10
