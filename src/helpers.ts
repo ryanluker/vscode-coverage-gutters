@@ -23,6 +23,10 @@ export function findIntersect(base: string, comparee: string): string {
     return subInt;
 }
 
+/**
+ * Helps make a file path that is standard for all OSs
+ * @param fileName File name to remove OS specific features
+ */
 export function normalizeFileName(fileName: string): string {
     let name = fileName;
     // make file path relative and OS independent

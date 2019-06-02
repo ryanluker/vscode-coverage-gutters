@@ -124,6 +124,11 @@
           "default": "**/{node_modules,venv,vendor}/**",
           "description": "paths that will be ignored by the extension"
         },
+        "coverage-gutters.remotePathResolve": {
+          "type": "array",
+          "default": [],
+          "description": "Helps with coverage generated outside the local file system by swapping fragments of remote paths with local ones (EG ['/var/www/', '/home/project/']). See https://github.com/ryanluker/vscode-coverage-gutters/issues/201 for more info."
+        },
         "coverage-gutters.coverageFileNames": {
           "type": "array",
           "default": [

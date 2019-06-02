@@ -23,6 +23,30 @@ suite("Extension Tests", function() {
         assert.equal(reportView.languageId, "html");
     });
 
+    test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
+        await waitForExtension(2000);
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
+        const getCachedLines = extension.exports.getLastCoverageLines;
+
+        const testCoverage = await vscode.workspace.findFiles("**/remote-test-coverage.js", "**/node_modules/**");
+        const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
+        await vscode.window.showTextDocument(testDocument);
+        await vscode.commands.executeCommand("extension.displayCoverage");
+
+        await checkCoverage(() => {
+            // Look for exact coverage on the file
+            const cachedLines: ICoverageLines = getCachedLines();
+            assert.equal(3, cachedLines.full.length);
+            assert.equal(1, cachedLines.none.length);
+            assert.equal(1, cachedLines.partial.length);
+        });
+
+        extension.exports.emptyLastCoverage();
+    });
+
     test("Run display coverage on node test file with large lcov.info file @integration", async () => {
         await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");

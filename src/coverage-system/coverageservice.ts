@@ -13,7 +13,7 @@ import {Reporter} from "../extension/reporter";
 import {CoverageParser} from "../files/coverageparser";
 import {FilesLoader} from "../files/filesloader";
 import {Renderer} from "./renderer";
-import {SectionFinder} from "./sectionFinder";
+import {SectionFinder} from "./sectionfinder";
 
 enum Status {
     ready = "READY",
