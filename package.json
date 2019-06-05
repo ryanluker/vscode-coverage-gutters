@@ -142,6 +142,11 @@
           "type": "boolean",
           "default": true,
           "description": "enable or disable the status bar item"
+        },
+        "coverage-gutters.customizable.context-menu": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable or disable quick commands in the context menu"
         }
       }
     },
@@ -197,22 +202,27 @@
     "menus": {
       "editor/context": [
         {
+          "when": "config.coverage-gutters.customizable.context-menu",
           "command": "extension.previewCoverageReport",
           "group": "Coverage-Gutters@1"
         },
         {
+          "when": "config.coverage-gutters.customizable.context-menu",
           "command": "extension.displayCoverage",
           "group": "Coverage-Gutters@2"
         },
         {
+          "when": "config.coverage-gutters.customizable.context-menu",
           "command": "extension.watchCoverageAndVisibleEditors",
           "group": "Coverage-Gutters@3"
         },
         {
+          "when": "config.coverage-gutters.customizable.context-menu",
           "command": "extension.removeWatch",
           "group": "Coverage-Gutters@4"
         },
         {
+          "when": "config.coverage-gutters.customizable.context-menu",
           "command": "extension.removeCoverage",
           "group": "Coverage-Gutters@5"
         }
