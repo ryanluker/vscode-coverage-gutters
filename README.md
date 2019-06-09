@@ -5,6 +5,10 @@
 
 [![Build Status](https://dev.azure.com/ryanluker/vscode-coverage-gutters/_apis/build/status/vscode-coverage-gutters-CI)](https://dev.azure.com/ryanluker/vscode-coverage-gutters/_build/latest?definitionId=1)
 
+## New Features in 2.4.0
+- New remote path resolve feature that helps swap remote paths with local ones (EG ['/var/www/', '/home/project/']). See https://github.com/ryanluker/vscode-coverage-gutters/issues/201 for more info.
+- Turn off context menu options with a settings.json change (Thanks to https://github.com/wenbei999 for this!)
+
 ## Features
 ![Coverage Gutters features watch](promo_images/coverage-gutters-features-1.gif)
 
@@ -16,6 +20,7 @@
 - Preview coverage reports inside the editor
 - Huge amount of workspace settings to customize the features to your liking
 - Colour compatibility with light and dark themes
+- Custom coverage paths with a hot swapping feature for remote builds
 
 ## Common Commands
 **Watch** (activated via command palette or shortcut icon on the status bar):

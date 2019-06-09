@@ -5,7 +5,7 @@ import {
 } from "vscode";
 import {Config} from "../extension/config";
 import {setLastCoverageLines} from "../extension/exportsapi";
-import {SectionFinder} from "./sectionFinder";
+import {SectionFinder} from "./sectionfinder";
 
 export interface ICoverageLines {
     full: Range[];

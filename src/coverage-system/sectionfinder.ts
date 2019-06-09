@@ -32,28 +32,11 @@ export class SectionFinder {
         textEditor: TextEditor,
         sections: Map<string, Section>,
     ): Section | undefined {
-        const findSection = (section): boolean => {
-            const editorFileUri = Uri.file(textEditor.document.fileName);
-            const workspaceFolder = workspace.getWorkspaceFolder(editorFileUri);
-            if (!workspaceFolder) { return false; }
-
-            const workspaceFolderName = workspaceFolder.name;
-            try {
-                // Check for the secion having a partial path
-                section.file = this.convertPartialPathsToAbsolute(section.file);
-            } catch (error) {
-                const absoluteErrorMessage = `[${Date.now()}][sectionFinder][path]${section.file}[error]${error}`;
-                this.outputChannel.appendLine(absoluteErrorMessage);
-            }
-            const sectionFile = normalizeFileName(section.file);
-            const editorFile = normalizeFileName(textEditor.document.fileName);
-
-            return areFilesRelativeEquals(sectionFile, editorFile, workspaceFolderName);
-        };
-
         const sectionsArray = Array.from(sections.values());
-        const foundSection = sectionsArray.find(findSection);
+        const fileName = textEditor.document.fileName;
 
+        // Check each section against the currently active document filename
+        const foundSection = sectionsArray.find((section) => this.checkSection(section, fileName));
         if (!foundSection) { return ; }
 
         const filePath = foundSection.file;
@@ -64,6 +47,57 @@ export class SectionFinder {
         this.eventReporter.sendEvent("system", "renderer-fileType", extname(filePath));
 
         return foundSection;
+    }
+
+    /**
+     * Checks for a matching section file against the a given fileName
+     * @param section data section to check against filename
+     * @param fileName string based filename to compare with
+     */
+    private checkSection(section: Section, fileName: string): boolean {
+        const editorFileUri = Uri.file(fileName);
+        const workspaceFolder = workspace.getWorkspaceFolder(editorFileUri);
+        if (!workspaceFolder) { return false; }
+
+        // Check if we need to swap any fragments of the file path with a remote fragment
+        // IE: /var/www/ -> /home/me/
+        const sectionFileName = this.resolveFileName(section.file);
+        const workspaceFolderName = workspaceFolder.name;
+        try {
+            // Check for the secion having a partial path
+            section.file = this.convertPartialPathsToAbsolute(sectionFileName);
+        } catch (error) {
+            const absoluteErrorMessage = `[${Date.now()}][sectionFinder][path]${section.file}[error]${error}`;
+            this.outputChannel.appendLine(absoluteErrorMessage);
+        }
+        const sectionFile = normalizeFileName(section.file);
+        const editorFile = normalizeFileName(fileName);
+
+        return areFilesRelativeEquals(sectionFile, editorFile, workspaceFolderName);
+    }
+
+    /**
+     * Resolves remote file paths by removing those fragments and replacing with local ones.
+     * EG: /var/www/project/file.js -> /home/dev/project/file.js
+     * Note: this only runs if the developer adds a remotePathResolve setting
+     * @param fileName section file path
+     */
+    private resolveFileName(fileName: string): string {
+        let potentialFileName = fileName;
+        const remoteLocalPaths = this.configStore.remotePathResolve;
+        if (remoteLocalPaths) {
+            const remoteFragment = remoteLocalPaths[0];
+            const localFragment = remoteLocalPaths[1];
+            const paths = fileName.split(remoteFragment);
+
+            // If we have a length of two we have a match and can swap the paths
+            // Note: this is because split will give us an array of two with the first element
+            // being an empty string and the second being the project path.
+            if (paths.length === 2) {
+                potentialFileName = localFragment + paths[1];
+            }
+        }
+        return potentialFileName;
     }
 
     /**

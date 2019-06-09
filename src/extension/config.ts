@@ -17,6 +17,7 @@ export class Config {
     public noCoverageDecorationType: TextEditorDecorationType;
     public showStatusBarToggler: boolean;
     public ignoredPathGlobs: string;
+    public remotePathResolve: string[];
 
     private context: ExtensionContext;
     private reporter: Reporter;
@@ -134,6 +135,11 @@ export class Config {
         this.noCoverageDecorationType = window.createTextEditorDecorationType(noDecoration);
         this.partialCoverageDecorationType = window.createTextEditorDecorationType(partialDecoration);
         this.fullCoverageDecorationType = window.createTextEditorDecorationType(fullDecoration);
+
+        // Assign the key and resolved fragment
+        this.remotePathResolve = rootConfig.get("remotePathResolve") as string[];
+        const hasRemotePathResolve = !!this.remotePathResolve.length;
+        this.reporter.sendEvent("config", "remotePathResolve", hasRemotePathResolve.toString());
     }
 
     /**
