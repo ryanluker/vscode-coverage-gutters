@@ -60,7 +60,7 @@ export class SectionFinder {
         if (!workspaceFolder) { return false; }
 
         // Check if we need to swap any fragments of the file path with a remote fragment
-        // IE: /home/me/ -> /var/www/
+        // IE: /var/www/ -> /home/me/
         const sectionFileName = this.resolveFileName(section.file);
         const workspaceFolderName = workspaceFolder.name;
         try {

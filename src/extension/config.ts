@@ -138,6 +138,8 @@ export class Config {
 
         // Assign the key and resolved fragment
         this.remotePathResolve = rootConfig.get("remotePathResolve") as string[];
+        const hasRemotePathResolve = !!this.remotePathResolve.length;
+        this.reporter.sendEvent("config", "remotePathResolve", hasRemotePathResolve.toString());
     }
 
     /**

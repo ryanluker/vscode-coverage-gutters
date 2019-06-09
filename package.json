@@ -127,7 +127,7 @@
         "coverage-gutters.remotePathResolve": {
           "type": "array",
           "default": [],
-          "description": "Helps with coverage generated outside the local file system by swapping fragments of remote paths with local ones (EG ['/var/www/', '/home/project/']). See https://github.com/ryanluker/vscode-coverage-gutters/issues/201 for more info."
+          "description": "helps with coverage generated outside the local file system by swapping fragments of remote paths with local ones (EG ['/var/www/', '/home/project/']). See https://github.com/ryanluker/vscode-coverage-gutters/issues/201 for more info."
         },
         "coverage-gutters.coverageFileNames": {
           "type": "array",
@@ -136,12 +136,12 @@
             "cov.xml",
             "jacoco.xml"
           ],
-          "description": "Coverage file names for the extension to automatically look for"
+          "description": "coverage file names for the extension to automatically look for"
         },
         "coverage-gutters.coverageReportFileName": {
           "type": "string",
           "default": "coverage/**/index.html",
-          "description": "Default coverage report file names(can be glob style) to look for when using the preview command"
+          "description": "default coverage report file names(can be glob style) to look for when using the preview command"
         },
         "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": {
           "type": "boolean",
