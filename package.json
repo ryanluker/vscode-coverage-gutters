@@ -129,6 +129,11 @@
           "default": [],
           "description": "helps with coverage generated outside the local file system by swapping fragments of remote paths with local ones (EG ['/var/www/', '/home/project/']). See https://github.com/ryanluker/vscode-coverage-gutters/issues/201 for more info."
         },
+        "coverage-gutters.manualCoverageFilePaths": {
+          "type": "array",
+          "default": [],
+          "description": "take manual control over the absolute path to your coverage file(s)"
+        },
         "coverage-gutters.coverageFileNames": {
           "type": "array",
           "default": [

@@ -12,12 +12,18 @@ export class FilesLoader {
 
     /**
      * Finds all coverages files by xml and lcov and returns them
+     * Note: Includes developer override via "manualCoverageFilePaths"
      */
     public async findCoverageFiles(): Promise<Set<string>> {
-        const fileNames = this.configStore.coverageFileNames;
-        const files = await this.findCoverageInWorkspace(fileNames);
-        if (!files.size) { throw new Error("Could not find a Coverage file!"); }
-        return files;
+        // Developers can manually define their absolute coverage paths
+        if (this.configStore.manualCoverageFilePaths.length) {
+            return new Set(this.configStore.manualCoverageFilePaths);
+        } else {
+            const fileNames = this.configStore.coverageFileNames;
+            const files = await this.findCoverageInWorkspace(fileNames);
+            if (!files.size) { throw new Error("Could not find a Coverage file!"); }
+            return files;
+        }
     }
 
     /**

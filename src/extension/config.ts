@@ -18,6 +18,7 @@ export class Config {
     public showStatusBarToggler: boolean;
     public ignoredPathGlobs: string;
     public remotePathResolve: string[];
+    public manualCoverageFilePaths: string[];
 
     private context: ExtensionContext;
     private reporter: Reporter;
@@ -140,6 +141,15 @@ export class Config {
         this.remotePathResolve = rootConfig.get("remotePathResolve") as string[];
         const hasRemotePathResolve = !!this.remotePathResolve.length;
         this.reporter.sendEvent("config", "remotePathResolve", hasRemotePathResolve.toString());
+
+        // Add the manual coverage file path(s) if present
+        this.manualCoverageFilePaths = rootConfig.get("manualCoverageFilePaths") as string[];
+        const hasManualCoverageFilePaths = !!this.manualCoverageFilePaths.length;
+        this.reporter.sendEvent(
+            "config",
+            "hasManualCoverageFilePaths",
+            hasManualCoverageFilePaths.toString(),
+        );
     }
 
     /**
