@@ -5,6 +5,7 @@ export const fakeConfig: any = {
         dispose() { },
     },
     ignoredPathGlobs: "test/*",
+    manualCoverageFilePaths: [],
     noCoverageDecorationType: {
         key: "testKey4",
         dispose() { },

@@ -37,4 +37,12 @@ suite("FilesLoader Tests", function() {
             Error("Could not find a Coverage file!"),
         );
     });
+
+    test("findCoverageFiles returns manual coverage paths if set @unit", async function() {
+        const coverageFiles = ["test.js", "test2.js"];
+        fakeConfig.manualCoverageFilePaths = coverageFiles;
+        const filesLoader = new FilesLoader(fakeConfig);
+        const files = await filesLoader.findCoverageFiles();
+        assert.deepStrictEqual(new Set(coverageFiles), files);
+    });
 });

@@ -148,7 +148,7 @@ export class Config {
         this.reporter.sendEvent(
             "config",
             "hasManualCoverageFilePaths",
-            hasManualCoverageFilePaths.toString()
+            hasManualCoverageFilePaths.toString(),
         );
     }
 
