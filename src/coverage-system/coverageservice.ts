@@ -134,12 +134,15 @@ export class CoverageService {
     }
 
     private listenToFileSystem() {
+        // If the user has defined manual coverage files to do continue, as the files
+        // defined could be outside the workspace folders and not "watchable".
+        if (this.configStore.manualCoverageFilePaths.length) return;
+
         const fileNames = this.configStore.coverageFileNames.toString();
         // Creates a BlobPattern for all coverage files.
         // EX: `**/{cov.xml, lcov.info}`
-        this.coverageWatcher = workspace.createFileSystemWatcher(
-            `**/{${fileNames}}`,
-        );
+        const blobPattern = `**/{${fileNames}}`
+        this.coverageWatcher = workspace.createFileSystemWatcher(blobPattern);
         this.coverageWatcher.onDidChange(this.loadCacheAndRender.bind(this));
         this.coverageWatcher.onDidCreate(this.loadCacheAndRender.bind(this));
         this.coverageWatcher.onDidDelete(this.loadCacheAndRender.bind(this));
