@@ -274,7 +274,7 @@
     "glob": "7.1.4",
     "jacoco-parse": "2.0.1",
     "lcov-parse": "1.0.0",
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
     "request": "2.88.0"
   }
 }
