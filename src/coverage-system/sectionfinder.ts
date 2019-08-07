@@ -3,7 +3,6 @@ import {Section} from "lcov-parse";
 import {extname} from "path";
 import {TextEditor, Uri, workspace} from "vscode";
 import {OutputChannel} from "vscode";
-
 import {Config} from "../extension/config";
 import {Reporter} from "../extension/reporter";
 import {areFilesRelativeEquals, normalizeFileName} from "../helpers";
@@ -12,6 +11,7 @@ export class SectionFinder {
     private configStore: Config;
     private outputChannel: OutputChannel;
     private eventReporter: Reporter;
+    private folderCache: any;
 
     constructor(
         configStore: Config,
@@ -21,6 +21,7 @@ export class SectionFinder {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
         this.eventReporter = eventReporter;
+        this.clearCache();
     }
 
     /**
@@ -47,6 +48,13 @@ export class SectionFinder {
         this.eventReporter.sendEvent("system", "renderer-fileType", extname(filePath));
 
         return foundSection;
+    }
+
+    /**
+     * Clears current cache for workspace folders
+     */
+    public clearCache() {
+        this.folderCache = {};
     }
 
     /**
@@ -107,31 +115,16 @@ export class SectionFinder {
      */
     private convertPartialPathsToAbsolute(path: string): string {
         const files: string[] = [];
-        const globFind = (folder: string) => {
-            // find the path in the workspace folder
-            const possibleFiles = glob.sync(
-                `**/${path}`,
-                {
-                    cwd: folder,
-                    dot: true,
-                    ignore: this.configStore.ignoredPathGlobs,
-                    realpath: true,
-                },
-            );
-            if (possibleFiles.length) {
-                files.push(...possibleFiles);
-            }
-        };
 
         if (!workspace.workspaceFolders) { return path; }
         // Path is already absolute
         // Note 1: some coverage generators can start with no slash #160
         // Note 2: accounts for windows and linux style file paths
-        // windows as they start with drives (ie: c:\)
+        // windows as they start with drives (ie: c:\ or C:/)
         // linux as they start with forward slashes
         // both windows and linux use ./ or .\ for relative
         const unixRoot = path.startsWith("/");
-        const windowsRoot = path[1] === ":" && path[2] === "\\";
+        const windowsRoot = path[1] === ":" && (path[2] === "\\" || path[2] === "/");
         if (unixRoot || windowsRoot) {
             return path;
         }
@@ -140,7 +133,7 @@ export class SectionFinder {
         const folders = workspace.workspaceFolders.map(
             (folder) => folder.uri.fsPath,
         );
-        folders.map(globFind);
+        folders.map((f) => this.getPossibleFiles(f, path, files));
 
         if (files.length === 0) {
             throw Error(`File path not found in open workspaces ${path}`);
@@ -149,5 +142,61 @@ export class SectionFinder {
             throw Error(`Found too many files with partial path ${path}`);
         }
         return files[0];
+    }
+
+    /**
+     * Returns all files that are under given folder (iexcludes file in configStore.ignoredPathGlobs)
+     * Returned files have absolute path and use "/" as folder seperator
+     * Uses caching to reduce FS operations
+     * @param folder parent folder
+     */
+    private getFilesForFolder(folder: string): string[] {
+        if (this.folderCache[folder] === undefined) {
+            this.outputChannel.appendLine(`[${Date.now()}][sectionFinder]: Getting all files for ${folder}`);
+            let allFiles = glob.sync(
+                `**`,
+                {
+                    cwd: folder,
+                    dot: true,
+                    ignore: this.configStore.ignoredPathGlobs,
+                    realpath: true,
+                },
+            );
+            allFiles = allFiles.map((f) => {
+                return f.replace(/\\/g, "/");
+            });
+            this.outputChannel.appendLine(`[${Date.now()}][sectionFinder]: Found ${allFiles.length} files`);
+            this.folderCache[folder] = allFiles;
+        }
+        return this.folderCache[folder];
+    }
+
+    /**
+     * Converts given relative path to string that can be used for searching regardles of OS
+     * @param relativePath relative path to be converted
+     */
+    private makePathSearchable(relativePath: string): string {
+        relativePath = relativePath.replace(/\\/g, "/");
+        if (relativePath.indexOf("./") === 0) {
+            return relativePath.substring(1); // remove leading "."
+        }
+        if (relativePath.indexOf("/") === 0) { // should not happen - path should be relative
+            return relativePath;
+        }
+        return `/${relativePath}`; // add / at the begining so that we find that specific directory
+    }
+
+    /**
+     * Fills provided files array with files that match given relative path in given parent folder
+     * @param folder parent folder
+     * @param relativePath path of files
+     * @param files Array where results will be stored
+     */
+    private getPossibleFiles(folder: string, relativePath: string, files: string[]) {
+        const folderFiles = this.getFilesForFolder(folder);
+        const searchablePath = this.makePathSearchable(relativePath);
+        // filter files based on path
+        const filteredFiles = folderFiles.filter((f) => f.endsWith(searchablePath));
+        files.push(...filteredFiles);
     }
 }

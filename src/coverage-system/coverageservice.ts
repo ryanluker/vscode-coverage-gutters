@@ -75,6 +75,7 @@ export class CoverageService {
     }
 
     public async watchWorkspace() {
+        this.sectionFinder.clearCache();
         await this.displayForFile();
         this.listenToFileSystem();
         this.listenToEditorEvents();
