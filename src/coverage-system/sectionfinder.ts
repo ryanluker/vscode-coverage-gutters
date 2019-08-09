@@ -5,13 +5,12 @@ import {TextEditor, Uri, workspace} from "vscode";
 import {OutputChannel} from "vscode";
 import {Config} from "../extension/config";
 import {Reporter} from "../extension/reporter";
-import {areFilesRelativeEquals, normalizeFileName} from "../helpers";
+import {isPathAbsolute, makePathSearchable, normalizeFileName} from "../helpers";
 
 export class SectionFinder {
     private configStore: Config;
     private outputChannel: OutputChannel;
     private eventReporter: Reporter;
-    private folderCache: any;
 
     constructor(
         configStore: Config,
@@ -21,7 +20,6 @@ export class SectionFinder {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
         this.eventReporter = eventReporter;
-        this.clearCache();
     }
 
     /**
@@ -34,10 +32,13 @@ export class SectionFinder {
         sections: Map<string, Section>,
     ): Section | undefined {
         const sectionsArray = Array.from(sections.values());
-        const fileName = textEditor.document.fileName;
+        const res = this.calculateEditorData(textEditor);
+        if (res === undefined) { return ; }
 
         // Check each section against the currently active document filename
-        const foundSection = sectionsArray.find((section) => this.checkSection(section, fileName));
+        const foundSection = sectionsArray.find(
+            (section) => this.checkSection(section, res.relativePath, res.workspaceFolder),
+        );
         if (!foundSection) { return ; }
 
         const filePath = foundSection.file;
@@ -51,37 +52,20 @@ export class SectionFinder {
     }
 
     /**
-     * Clears current cache for workspace folders
-     */
-    public clearCache() {
-        this.folderCache = {};
-    }
-
-    /**
      * Checks for a matching section file against the a given fileName
      * @param section data section to check against filename
-     * @param fileName string based filename to compare with
+     * @param editorFileRelative normalized relative path (against workspace folder) of editor filename, starts with ###
+     * @param workspaceFolderName workspace folder name
      */
-    private checkSection(section: Section, fileName: string): boolean {
-        const editorFileUri = Uri.file(fileName);
-        const workspaceFolder = workspace.getWorkspaceFolder(editorFileUri);
-        if (!workspaceFolder) { return false; }
-
+    private checkSection(section: Section, editorFileRelative: string, workspaceFolderName: string): boolean {
         // Check if we need to swap any fragments of the file path with a remote fragment
         // IE: /var/www/ -> /home/me/
         const sectionFileName = this.resolveFileName(section.file);
-        const workspaceFolderName = workspaceFolder.name;
-        try {
-            // Check for the secion having a partial path
-            section.file = this.convertPartialPathsToAbsolute(sectionFileName);
-        } catch (error) {
-            const absoluteErrorMessage = `[${Date.now()}][sectionFinder][path]${section.file}[error]${error}`;
-            this.outputChannel.appendLine(absoluteErrorMessage);
+        if (!isPathAbsolute(sectionFileName)) {
+            return this.checkSectionRelative(sectionFileName, editorFileRelative);
+        } else {
+            return this.checkSectionAbsolute(sectionFileName, editorFileRelative, workspaceFolderName);
         }
-        const sectionFile = normalizeFileName(section.file);
-        const editorFile = normalizeFileName(fileName);
-
-        return areFilesRelativeEquals(sectionFile, editorFile, workspaceFolderName);
     }
 
     /**
@@ -109,94 +93,54 @@ export class SectionFinder {
     }
 
     /**
-     * Takes paths and tries to make them absolute
-     * based on currently open workspaceFolders
-     * @param path potential partial path to be converted
+     * Calculates relativePath and workspaceFolder for given TextEditor instance
+     * Returned relativePath is normalized relative path (against workspace folder) of editor filename, starts with ###
+     * Returned workspaceFolder is name of workspaceFolder
+     * Ex. workspace: "c:/Workspace/testProject"
+     *     editor file: "c:/workspace/testProject/src/com/MyCompany/lib/Bla.java"
+     *     returned relativePath: "###src###com###mycompany###lib###bla.java"
+     *     returned workspaceFolder: "testProject"
+     * @param textEditor Instance of TextEditor
      */
-    private convertPartialPathsToAbsolute(path: string): string {
-        const files: string[] = [];
-
-        if (!workspace.workspaceFolders) { return path; }
-        // Path is already absolute
-        // Note 1: some coverage generators can start with no slash #160
-        // Note 2: accounts for windows and linux style file paths
-        // windows as they start with drives (ie: c:\ or C:/)
-        // linux as they start with forward slashes
-        // both windows and linux use ./ or .\ for relative
-        const unixRoot = path.startsWith("/");
-        const windowsRoot = path[1] === ":" && (path[2] === "\\" || path[2] === "/");
-        if (unixRoot || windowsRoot) {
-            return path;
-        }
-
-        // look over all workspaces for the path
-        const folders = workspace.workspaceFolders.map(
-            (folder) => folder.uri.fsPath,
-        );
-        folders.map((f) => this.getPossibleFiles(f, path, files));
-
-        if (files.length === 0) {
-            throw Error(`File path not found in open workspaces ${path}`);
-        }
-        if (files.length > 1) {
-            throw Error(`Found too many files with partial path ${path}`);
-        }
-        return files[0];
+    private calculateEditorData(textEditor: TextEditor): {relativePath: string, workspaceFolder: string} | undefined {
+        // calculate normalize
+        const fileName = textEditor.document.fileName;
+        const editorFileUri = Uri.file(fileName);
+        const workspaceFolder = workspace.getWorkspaceFolder(editorFileUri);
+        if (!workspaceFolder) { return; } // file is not in workspace - skip it
+        const workspaceFsPath = workspaceFolder.uri.fsPath;
+        const editorFileAbs = normalizeFileName(fileName);
+        const workspaceFile = normalizeFileName(workspaceFsPath);
+        const editorFileRelative = editorFileAbs.substring(workspaceFile.length);
+        const workspaceFolderName = workspaceFolder.name;
+        return { relativePath: editorFileRelative, workspaceFolder: workspaceFolderName};
+    }
+    /**
+     * Returns true if relative section matches given editor file
+     * @param sectionFileName relative section fileName
+     * @param editorFileRelative normalized relative path (against workspace folder) of editor filename, starts with ###
+     */
+    private checkSectionRelative(sectionFileName: string, editorFileRelative: string): boolean {
+        // editorFileRelative must end with searchable & normalized section
+        sectionFileName = makePathSearchable(sectionFileName);
+        const sectionFileNormalized = normalizeFileName(sectionFileName);
+        return editorFileRelative.endsWith(sectionFileNormalized);
     }
 
     /**
-     * Returns all files that are under given folder (iexcludes file in configStore.ignoredPathGlobs)
-     * Returned files have absolute path and use "/" as folder seperator
-     * Uses caching to reduce FS operations
-     * @param folder parent folder
+     * Returns true if absolute section matches given editor file
+     * @param sectionFileName absolute section fileName
+     * @param editorFileRelative normalized relative path (against workspace folder) of editor filename, starts with ###
+     * @param workspaceFolderName workspace folder name
      */
-    private getFilesForFolder(folder: string): string[] {
-        if (this.folderCache[folder] === undefined) {
-            this.outputChannel.appendLine(`[${Date.now()}][sectionFinder]: Getting all files for ${folder}`);
-            let allFiles = glob.sync(
-                `**`,
-                {
-                    cwd: folder,
-                    dot: true,
-                    ignore: this.configStore.ignoredPathGlobs,
-                    realpath: true,
-                },
-            );
-            allFiles = allFiles.map((f) => {
-                return f.replace(/\\/g, "/");
-            });
-            this.outputChannel.appendLine(`[${Date.now()}][sectionFinder]: Found ${allFiles.length} files`);
-            this.folderCache[folder] = allFiles;
-        }
-        return this.folderCache[folder];
-    }
-
-    /**
-     * Converts given relative path to string that can be used for searching regardles of OS
-     * @param relativePath relative path to be converted
-     */
-    private makePathSearchable(relativePath: string): string {
-        relativePath = relativePath.replace(/\\/g, "/");
-        if (relativePath.indexOf("./") === 0) {
-            return relativePath.substring(1); // remove leading "."
-        }
-        if (relativePath.indexOf("/") === 0) { // should not happen - path should be relative
-            return relativePath;
-        }
-        return `/${relativePath}`; // add / at the begining so that we find that specific directory
-    }
-
-    /**
-     * Fills provided files array with files that match given relative path in given parent folder
-     * @param folder parent folder
-     * @param relativePath path of files
-     * @param files Array where results will be stored
-     */
-    private getPossibleFiles(folder: string, relativePath: string, files: string[]) {
-        const folderFiles = this.getFilesForFolder(folder);
-        const searchablePath = this.makePathSearchable(relativePath);
-        // filter files based on path
-        const filteredFiles = folderFiles.filter((f) => f.endsWith(searchablePath));
-        files.push(...filteredFiles);
+    private checkSectionAbsolute(
+        sectionFileName: string,
+        editorFileRelative: string,
+        workspaceFolderName: string,
+    ): boolean {
+        // normalized section must end with /workspaceFolderName/editorFileRelative
+        const sectionFileNormalized = normalizeFileName(sectionFileName);
+        const matchPattern = `###${workspaceFolderName}${editorFileRelative}`;
+        return sectionFileNormalized.endsWith(matchPattern);
     }
 }
