@@ -33,7 +33,7 @@ export class SectionFinder {
     ): Section | undefined {
         const sectionsArray = Array.from(sections.values());
         const res = this.calculateEditorData(textEditor);
-        if (res === undefined) { return ; }
+        if (!res) { return ; }
 
         // Check each section against the currently active document filename
         const foundSection = sectionsArray.find(
