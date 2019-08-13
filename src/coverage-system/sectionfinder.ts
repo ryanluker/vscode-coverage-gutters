@@ -115,6 +115,7 @@ export class SectionFinder {
         const workspaceFolderName = workspaceFolder.name;
         return { relativePath: editorFileRelative, workspaceFolder: workspaceFolderName};
     }
+
     /**
      * Returns true if relative section matches given editor file
      * @param sectionFileName relative section fileName
