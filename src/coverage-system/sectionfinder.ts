@@ -1,4 +1,3 @@
-import * as glob from "glob";
 import {Section} from "lcov-parse";
 import {extname} from "path";
 import {TextEditor, Uri, workspace} from "vscode";
