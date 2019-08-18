@@ -5,7 +5,12 @@
 
 [![Build Status](https://dev.azure.com/ryanluker/vscode-coverage-gutters/_apis/build/status/vscode-coverage-gutters-CI)](https://dev.azure.com/ryanluker/vscode-coverage-gutters/_build/latest?definitionId=1)
 
-## New Features in 2.4.0
+## Release 2.4.1
+- Performance cleanup around relative pathing.
+Thanks to https://github.com/jjuzna for this fix!
+https://github.com/ryanluker/vscode-coverage-gutters/issues/231
+
+## Release 2.4.0
 - New remote path resolve feature that helps swap remote paths with local ones (EG ['/var/www/', '/home/project/']). See https://github.com/ryanluker/vscode-coverage-gutters/issues/201.
 - Manually define your coverage file(s) instead of the project search option. See https://github.com/ryanluker/vscode-coverage-gutters/issues/178.
 - Turn off context menu options with a settings.json change (Thanks to https://github.com/wenbei999 for this!)
