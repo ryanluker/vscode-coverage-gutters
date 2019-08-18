@@ -1,7 +1,8 @@
 import {assert} from "chai";
 import {
-    areFilesRelativeEquals,
     findIntersect,
+    isPathAbsolute,
+    makePathSearchable,
     normalizeFileName,
 } from "../src/helpers";
 
@@ -42,25 +43,32 @@ suite("helper Tests", function() {
         return done();
     });
 
-    test("Should compare relative paths properly @unit", function(done) {
+    test("Should determine absolute path properly @unit", function(done) {
         [
-            {
-                expected: false,
-                file1: "c###dev###python###python###foo###bar###a.py",
-                file2: "mnt###c###dev###python###python###foo###bar###_init_.py",
-                folder: "python",
-            },
-            {
-                expected: true,
-                file1: "c###dev###python###python###foo###bar###a.py",
-                file2: "mnt###c###dev###python###python###foo###bar###a.py",
-                folder: "python",
-            },
+            {path: "/a/b", expected: true},
+            {path: "c:\\a\\bb.js", expected: true},
+            {path: "d:/a/bla.js", expected: true},
+            {path: "./a/bla.js", expected: false},
+            {path: "a/b/c.ts", expected: false},
+            {path: "c.ts", expected: false},
+            {path: "", expected: false},
         ].forEach( (parameters) => {
-            // tslint:disable-next-line:max-line-length
-            const testName = `file1 = '${parameters.file1}' and file2 = '${parameters.file2}' and folder = '${parameters.folder}' -> '${parameters.expected}'`;
-            const isEqual = areFilesRelativeEquals(parameters.file1, parameters.file2, parameters.folder);
-            assert.equal(isEqual, parameters.expected, testName);
+            const testName = `path = '${parameters.path}' -> '${parameters.expected}'`;
+            assert.equal(isPathAbsolute(parameters.path), parameters.expected, testName);
+        });
+        return done();
+    });
+
+    test("Should convert path to searchable properly @unit", function(done) {
+        [
+            {path: "/a/b", expected: "/a/b"},
+            {path: "./a/bla.js", expected: "/a/bla.js"},
+            {path: "a\\b\\c.ts", expected: "/a/b/c.ts"},
+            {path: "c.ts", expected: "/c.ts"},
+            {path: "", expected: "/"},
+        ].forEach( (parameters) => {
+            const testName = `path = '${parameters.path}' -> '${parameters.expected}'`;
+            assert.equal(makePathSearchable(parameters.path), parameters.expected, testName);
         });
         return done();
     });

@@ -38,28 +38,31 @@ export function normalizeFileName(fileName: string): string {
 }
 
 /**
- * Checks that the passed in files are the same when compared relatively from the rootFolder
- * @param fileOne first file for comparing
- * @param fileTwo second file for comparing
- * @param rootFolder folder to substring on to create relative paths
+ * Returns true if given path is absolute, false otherwise
+ * @param path path to be tested
  */
-export function areFilesRelativeEquals(fileOne: string, fileTwo: string, rootFolder: string): boolean {
-    try {
-        /**
-         * Note: string.split causes issues if you have more then one folder with the workspace name.
-         * Instead we use substring and indexOf inorder to string off the first part of the path while
-         * preserving the relative portion after the workspace folder name.
-         */
-        const relativeFileOne = fileOne.substring(fileOne.indexOf(rootFolder));
-        const relativeFileTwo = fileTwo.substring(fileTwo.indexOf(rootFolder));
+export function isPathAbsolute(path: string): boolean {
+    // Note 1: some coverage generators can start with no slash #160
+    // Note 2: accounts for windows and linux style file paths
+    // windows as they start with drives (ie: c:\ or C:/)
+    // linux as they start with forward slashes
+    // both windows and linux use ./ or .\ for relative
+    const unixRoot = path.startsWith("/");
+    const windowsRoot = path[1] === ":" && (path[2] === "\\" || path[2] === "/");
+    return (unixRoot || windowsRoot);
+}
 
-        if (relativeFileOne === relativeFileTwo) {
-            return true;
-        } else {
-            return false;
-        }
-    } catch (error) {
-        // catch possible index out of bounds errors
-        return false;
+/**
+ * Converts given relative path to string that can be used for searching regardles of OS
+ * @param relativePath relative path to be converted
+ */
+export function makePathSearchable(relativePath: string): string {
+    relativePath = relativePath.replace(/\\/g, "/");
+    if (relativePath.indexOf("./") === 0) {
+        return relativePath.substring(1); // remove leading "."
     }
+    if (relativePath.indexOf("/") === 0) { // should not happen - path should be relative
+        return relativePath;
+    }
+    return `/${relativePath}`; // add / at the begining so that we find that specific directory
 }

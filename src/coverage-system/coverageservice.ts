@@ -89,14 +89,16 @@ export class CoverageService {
         try {
             const printDataCoverage = (data: Map<string, Section>) => {
                 this.outputChannel.appendLine(
-                    `[${Date.now()}][printDataCoverage]: Coverage ->`,
+                    `[${Date.now()}][printDataCoverage]: Coverage -> ${data.size}`,
                 );
+                /*
                 data.forEach((section) => {
                     const coverage = JSON.stringify(section, null, 4);
                     this.outputChannel.appendLine(
                         `[${Date.now()}][printDataCoverage]: ${coverage}`,
                     );
                 });
+                */
             };
 
             this.updateServiceState(Status.loading);
