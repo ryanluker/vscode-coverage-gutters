@@ -139,6 +139,7 @@
           "default": [
             "lcov.info",
             "cov.xml",
+            "coverage.xml",
             "jacoco.xml"
           ],
           "description": "coverage file names for the extension to automatically look for"
