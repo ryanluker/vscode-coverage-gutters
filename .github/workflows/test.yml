@@ -1,0 +1,27 @@
+name: vscode-coverage-gutters CI
+on: [push]
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, macOS-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      CI: true
+      DISPLAY: :10
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - name: Swap the x display to :10 for only linux
+      run: |
+        set -e
+        /usr/bin/Xvfb :10 -ac >> /tmp/Xvfb.out 2>&1 &
+        disown -ar
+      if: matrix.os == 'ubuntu-latest'
+    - run: npm ci
+    - run: npm run build
+    - run: npm run test-unit
+    - run: npm run test-integration
+    - run: npm run lint
