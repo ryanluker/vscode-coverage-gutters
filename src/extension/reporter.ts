@@ -18,7 +18,7 @@ export class Reporter {
         category: string,
         action: string,
         label?: string,
-        value?: number,
+        value: number = 0,
     ) {
         if (!this.enableMetrics) { return; }
         const data = {

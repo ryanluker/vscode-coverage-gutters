@@ -38,8 +38,7 @@ export class Gutters {
             this.reporter,
         );
 
-        this.reporter.sendEvent("user", "start");
-        this.reporter.sendEvent("user", "vscodeVersion", version);
+        this.reporter.sendEvent("user", "start", version, 1);
     }
 
     public async previewCoverageReport() {
@@ -68,7 +67,7 @@ export class Gutters {
             const reportHtml = await workspace.openTextDocument(reportUri);
             previewPanel.webview.html = reportHtml.getText();
 
-            this.reporter.sendEvent("user", "preview-coverage-report");
+            this.reporter.sendEvent("user", "preview-coverage-report", undefined, 25);
         } catch (error) {
             this.handleError("previewCoverageReport", error);
         }
@@ -77,7 +76,7 @@ export class Gutters {
     public async displayCoverageForActiveFile() {
         try {
             await this.coverageService.displayForFile();
-            this.reporter.sendEvent("user", "display-coverage");
+            this.reporter.sendEvent("user", "display-coverage", undefined, 50);
         } catch (error) {
             this.handleError("displayCoverageForActiveFile", error);
         }
@@ -87,7 +86,7 @@ export class Gutters {
         try {
             this.statusBar.toggle(true);
             await this.coverageService.watchWorkspace();
-            this.reporter.sendEvent("user", "watch-coverage-editors");
+            this.reporter.sendEvent("user", "watch-coverage-editors", undefined, 75);
         } catch (error) {
             this.handleError("watchCoverageAndVisibleEditors", error);
         }
@@ -99,7 +98,7 @@ export class Gutters {
             this.statusBar.toggle(false);
             this.coverageService.dispose();
 
-            this.reporter.sendEvent("user", "remove-watch");
+            this.reporter.sendEvent("user", "remove-watch", undefined, 25);
         } catch (error) {
             this.handleError("removeWatch", error, false);
         }
@@ -107,13 +106,12 @@ export class Gutters {
 
     public removeCoverageForActiveFile() {
         this.coverageService.removeCoverageForCurrentEditor();
-        this.reporter.sendEvent("user", "remove-coverage");
+        this.reporter.sendEvent("user", "remove-coverage", undefined, 25);
     }
 
     public dispose() {
         this.coverageService.dispose();
         this.statusBar.dispose();
-
         this.reporter.sendEvent("cleanup", "dispose");
     }
 
