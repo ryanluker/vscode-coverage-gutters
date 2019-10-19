@@ -1,4 +1,4 @@
-name: vscode-coverage-gutters CI
+name: vscode-coverage-gutters-ci
 on: [push]
 jobs:
   build:
