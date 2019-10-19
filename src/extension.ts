@@ -21,21 +21,26 @@ export function activate(context: vscode.ExtensionContext) {
         statusBarToggler,
     );
 
-    const previewCoverageReport = vscode.commands.registerCommand("extension.previewCoverageReport", () => {
-        gutters.previewCoverageReport();
-    });
-    const display = vscode.commands.registerCommand("extension.displayCoverage", () => {
-        gutters.displayCoverageForActiveFile();
-    });
-    const watch = vscode.commands.registerCommand("extension.watchCoverageAndVisibleEditors", () => {
-        gutters.watchCoverageAndVisibleEditors();
-    });
-    const removeWatch = vscode.commands.registerCommand("extension.removeWatch", () => {
-        gutters.removeWatch();
-    });
-    const remove = vscode.commands.registerCommand("extension.removeCoverage", () => {
-        gutters.removeCoverageForActiveFile();
-    });
+    const previewCoverageReport = vscode.commands.registerCommand(
+        "extension.previewCoverageReport",
+        gutters.previewCoverageReport.bind(gutters),
+    );
+    const display = vscode.commands.registerCommand(
+        "extension.displayCoverage",
+        gutters.displayCoverageForActiveFile.bind(gutters),
+    );
+    const watch = vscode.commands.registerCommand(
+        "extension.watchCoverageAndVisibleEditors",
+        gutters.watchCoverageAndVisibleEditors.bind(gutters),
+    );
+    const removeWatch = vscode.commands.registerCommand(
+        "extension.removeWatch",
+        gutters.removeWatch.bind(gutters),
+    );
+    const remove = vscode.commands.registerCommand(
+        "extension.removeCoverage",
+        gutters.removeCoverageForActiveFile.bind(gutters),
+    );
 
     context.subscriptions.push(previewCoverageReport);
     context.subscriptions.push(remove);

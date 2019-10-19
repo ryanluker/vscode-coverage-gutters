@@ -3,8 +3,6 @@
 [![Installs](https://vsmarketplacebadge.apphb.com/installs/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
 [![Ratings](https://vsmarketplacebadge.apphb.com/rating/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
 
-[![Build Status](https://dev.azure.com/ryanluker/vscode-coverage-gutters/_apis/build/status/vscode-coverage-gutters-CI)](https://dev.azure.com/ryanluker/vscode-coverage-gutters/_build/latest?definitionId=1)
-
 ## Release 2.4.1
 - Performance cleanup around relative pathing.
 Thanks to https://github.com/jjuzna for this fix!
