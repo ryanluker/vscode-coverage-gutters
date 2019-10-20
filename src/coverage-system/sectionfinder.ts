@@ -111,7 +111,7 @@ export class SectionFinder {
         const editorFileAbs = normalizeFileName(fileName);
         const workspaceFile = normalizeFileName(workspaceFsPath);
         const editorFileRelative = editorFileAbs.substring(workspaceFile.length);
-        const workspaceFolderName = workspaceFolder.name;
+        const workspaceFolderName = normalizeFileName(workspaceFolder.name);
         return { relativePath: editorFileRelative, workspaceFolder: workspaceFolderName};
     }
 
