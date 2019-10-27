@@ -1,7 +1,7 @@
 import {post} from "request";
 
 const EXT_NAME = "vscode-coverage-gutters";
-const EXT_VERSION = "2.4.1";
+const EXT_VERSION = "2.4.2";
 
 export class Reporter {
     private readonly cid: string;

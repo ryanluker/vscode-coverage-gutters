@@ -3,15 +3,19 @@
 [![Installs](https://vsmarketplacebadge.apphb.com/installs/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
 [![Ratings](https://vsmarketplacebadge.apphb.com/rating/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
 
-## Release 2.4.1
-- Performance cleanup around relative pathing.
-Thanks to https://github.com/jjuzna for this fix!
-https://github.com/ryanluker/vscode-coverage-gutters/issues/231
+## Call for Maintainers
+Looking for helpful people to assist with bugs, new features or performance improvements. The project has a full suite of tests and code linting, making it very new contributor friendly. Take a look at some of the open github issues and see if any catch your eye!  
+https://github.com/ryanluker/vscode-coverage-gutters/issues
 
-## Release 2.4.0
-- New remote path resolve feature that helps swap remote paths with local ones (EG ['/var/www/', '/home/project/']). See https://github.com/ryanluker/vscode-coverage-gutters/issues/201.
-- Manually define your coverage file(s) instead of the project search option. See https://github.com/ryanluker/vscode-coverage-gutters/issues/178.
-- Turn off context menu options with a settings.json change (Thanks to https://github.com/wenbei999 for this!)
+## Release 2.4.2
+- Fix an issue with around workspace names and normalization.  
+Thanks to https://github.com/kh2se2013 for this fix!  
+https://github.com/ryanluker/vscode-coverage-gutters/milestone/27?closed=1
+
+## Release 2.4.1
+- Performance cleanup around relative pathing.  
+Thanks to https://github.com/jjuzna for this fix!  
+https://github.com/ryanluker/vscode-coverage-gutters/milestone/25?closed=1
 
 ## Features
 ![Coverage Gutters features watch](promo_images/coverage-gutters-features-1.gif)
