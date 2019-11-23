@@ -26,7 +26,7 @@ suite("SectionFinder Tests", function() {
         (textEditor as any).document.fileName = "test123.ts";
         const sectionMap: Map<string, Section> = new Map<string, Section>();
         const sectionFinder: SectionFinder = new SectionFinder(fakeConfig, fakeOutput, fakeReporter as any);
-        sectionFinder.findSectionForEditor(textEditor, sectionMap);
+        sectionFinder.findSectionsForEditor(textEditor, sectionMap);
         return done();
     });
 });

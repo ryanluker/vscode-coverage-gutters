@@ -26,28 +26,32 @@ export class SectionFinder {
      * @param textEditor editor with current active file
      * @param sections sections to compare against open editors
      */
-    public findSectionForEditor(
+    public findSectionsForEditor(
         textEditor: TextEditor,
         sections: Map<string, Section>,
-    ): Section | undefined {
+    ): Section[] {
         const sectionsArray = Array.from(sections.values());
         const res = this.calculateEditorData(textEditor);
-        if (!res) { return ; }
+        if (!res) { return []; }
 
         // Check each section against the currently active document filename
-        const foundSection = sectionsArray.find(
-            (section) => this.checkSection(section, res.relativePath, res.workspaceFolder),
+        const foundSections = sectionsArray.filter(
+            (section) => this.checkSection(section, res.relativePath, res.workspaceFolder)
         );
-        if (!foundSection) { return ; }
+        if (foundSections.length == 0) { return []; }
 
-        const filePath = foundSection.file;
-        const filePathMessage = `[${Date.now()}][renderer][section file path]: ${filePath}`;
-        this.outputChannel.appendLine(filePathMessage);
+        foundSections.forEach(section => {
+            const titleMessage = `[${Date.now()}][renderer][section test name]: ${section.title}`;
+            this.outputChannel.appendLine(titleMessage);
+            
+            const filePath = section.file;
+            const filePathMessage = `[${Date.now()}][renderer][section file path]: ${filePath}`;
+            this.outputChannel.appendLine(filePathMessage);
+            // log file type
+            this.eventReporter.sendEvent("system", "renderer-fileType", extname(filePath));
+        });
 
-        // log file type
-        this.eventReporter.sendEvent("system", "renderer-fileType", extname(filePath));
-
-        return foundSection;
+        return foundSections;
     }
 
     /**

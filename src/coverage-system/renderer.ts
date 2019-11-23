@@ -53,11 +53,13 @@ export class Renderer {
 
             // find the section (or undefined) by looking relatively at each workspace
             // users can also optional use absolute instead of relative for this
-            const section = this.sectionFinder.findSectionForEditor(textEditor, sections);
+            const foundsections = this.sectionFinder.findSectionsForEditor(textEditor, sections);
 
-            if (!section) { return ; }
+            if (foundsections.length == 0) { return ; }
 
-            this.filterCoverage(section, coverageLines);
+            foundsections.forEach(section => {
+                this.filterCoverage(section, coverageLines); 
+            });
             this.setDecorationsForEditor(textEditor, coverageLines);
 
             // Cache last coverage lines for exports api
