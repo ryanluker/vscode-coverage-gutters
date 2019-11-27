@@ -51,15 +51,12 @@ export class Renderer {
             coverageLines.none = [];
             coverageLines.partial = [];
 
-            // find the section (or undefined) by looking relatively at each workspace
+            // find the section(s) (or undefined) by looking relatively at each workspace
             // users can also optional use absolute instead of relative for this
-            const foundsections = this.sectionFinder.findSectionsForEditor(textEditor, sections);
+            const foundSections = this.sectionFinder.findSectionsForEditor(textEditor, sections);
+            if (!foundSections.length) { return ; }
 
-            if (foundsections.length == 0) { return ; }
-
-            foundsections.forEach(section => {
-                this.filterCoverage(section, coverageLines); 
-            });
+            this.filterCoverage(foundSections, coverageLines);
             this.setDecorationsForEditor(textEditor, coverageLines);
 
             // Cache last coverage lines for exports api
@@ -101,15 +98,19 @@ export class Renderer {
         );
     }
 
+    /**
+     * Takes an array of sections and computes the coverage lines
+     * @param sections sections to filter the coverage for
+     * @param coverageLines the current coverage lines as this point in time
+     */
     private filterCoverage(
-        section: Section,
+        sections: Section[],
         coverageLines: ICoverageLines,
     ) {
-        if (!section) {
-            return;
-        }
-        this.filterLineCoverage(section, coverageLines);
-        this.filterBranchCoverage(section, coverageLines);
+        sections.forEach((section) => {
+            this.filterLineCoverage(section, coverageLines);
+            this.filterBranchCoverage(section, coverageLines);
+        });
     }
 
     private filterLineCoverage(

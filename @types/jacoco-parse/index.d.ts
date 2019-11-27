@@ -41,7 +41,7 @@ declare namespace parse {
     }
 
     interface Section {
-        title: string,
+        title?: string,
         branches?: Branches,
         file: string,
         functions: Functions,
