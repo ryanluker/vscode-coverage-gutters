@@ -40,7 +40,7 @@ export class SectionFinder {
         );
         if (!foundSections.length) { return []; }
 
-        foundSections.forEach(this.logSection);
+        foundSections.forEach(this.logSection.bind(this));
         return foundSections;
     }
 
