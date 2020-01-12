@@ -125,9 +125,17 @@ export class Renderer {
             if (detail.line < 0) { return ; }
             const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
             if (detail.hit > 0) {
+                if (coverageLines.none.find((range) => range.isEqual(lineRange))) {
+                    // remove all none coverage, for this line, if one full exists
+                    coverageLines.none = coverageLines.none.filter((range) => !range.isEqual(lineRange));
+                }
                 coverageLines.full.push(lineRange);
             } else {
-                coverageLines.none.push(lineRange);
+                const fullExists = coverageLines.full.find((range) => range.isEqual(lineRange));
+                if (!fullExists) {
+                    // only add a none coverage if no full ones exist
+                    coverageLines.none.push(lineRange);
+                }
             }
         });
     }
