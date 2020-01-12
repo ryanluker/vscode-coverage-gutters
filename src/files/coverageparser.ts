@@ -64,7 +64,7 @@ export class CoverageParser {
     ): Promise<Map<string, Section>> {
         const sections = new Map<string, Section>();
         const addToSectionsMap = async (section) => {
-            sections.set(section.file, section);
+            sections.set(section.title + "::" + section.file, section);
         };
 
         // convert the array of sections into an unique map

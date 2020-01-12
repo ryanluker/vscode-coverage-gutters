@@ -20,16 +20,16 @@ suite("Renderer Tests", function() {
     });
 
     test("renderCoverage should not error with empty map and single textEditor @unit", function(done) {
-        const section: Section = {} as Section;
+        const sections: Section[] = [{} as Section];
 
         const sectionFinder: SectionFinder = {
-            findSectionForEditor: (
+            findSectionsForEditor: (
                 functionTextEditor: TextEditor,
                 functionSections: Map<string, Section>,
-            ): Section | undefined => {
+            ): Section[] => {
                 assert.isNotNull(functionTextEditor);
                 assert.isNotNull(functionSections);
-                return section;
+                return sections;
             },
         } as SectionFinder;
 

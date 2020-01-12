@@ -51,13 +51,12 @@ export class Renderer {
             coverageLines.none = [];
             coverageLines.partial = [];
 
-            // find the section (or undefined) by looking relatively at each workspace
+            // find the section(s) (or undefined) by looking relatively at each workspace
             // users can also optional use absolute instead of relative for this
-            const section = this.sectionFinder.findSectionForEditor(textEditor, sections);
+            const foundSections = this.sectionFinder.findSectionsForEditor(textEditor, sections);
+            if (!foundSections.length) { return ; }
 
-            if (!section) { return ; }
-
-            this.filterCoverage(section, coverageLines);
+            this.filterCoverage(foundSections, coverageLines);
             this.setDecorationsForEditor(textEditor, coverageLines);
 
             // Cache last coverage lines for exports api
@@ -99,15 +98,19 @@ export class Renderer {
         );
     }
 
+    /**
+     * Takes an array of sections and computes the coverage lines
+     * @param sections sections to filter the coverage for
+     * @param coverageLines the current coverage lines as this point in time
+     */
     private filterCoverage(
-        section: Section,
+        sections: Section[],
         coverageLines: ICoverageLines,
     ) {
-        if (!section) {
-            return;
-        }
-        this.filterLineCoverage(section, coverageLines);
-        this.filterBranchCoverage(section, coverageLines);
+        sections.forEach((section) => {
+            this.filterLineCoverage(section, coverageLines);
+            this.filterBranchCoverage(section, coverageLines);
+        });
     }
 
     private filterLineCoverage(
@@ -122,9 +125,17 @@ export class Renderer {
             if (detail.line < 0) { return ; }
             const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
             if (detail.hit > 0) {
+                if (coverageLines.none.find((range) => range.isEqual(lineRange))) {
+                    // remove all none coverage, for this line, if one full exists
+                    coverageLines.none = coverageLines.none.filter((range) => !range.isEqual(lineRange));
+                }
                 coverageLines.full.push(lineRange);
             } else {
-                coverageLines.none.push(lineRange);
+                const fullExists = coverageLines.full.find((range) => range.isEqual(lineRange));
+                if (!fullExists) {
+                    // only add a none coverage if no full ones exist
+                    coverageLines.none.push(lineRange);
+                }
             }
         });
     }
