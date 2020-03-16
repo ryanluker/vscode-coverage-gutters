@@ -1,9 +1,9 @@
 import * as assert from "assert";
 import { exec } from "child_process";
 import * as vscode from "vscode";
-import {ICoverageLines} from "../src/coverage-system/renderer";
+import { ICoverageLines } from "../src/coverage-system/renderer";
 
-suite("Extension Tests", function() {
+suite("Extension Tests", function () {
     this.timeout(25000);
 
     test("Preview the coverage report in a new webview tab @integration", async () => {
@@ -16,7 +16,7 @@ suite("Extension Tests", function() {
             throw new Error("Could not load extension");
         }
 
-        await vscode.commands.executeCommand("extension.previewCoverageReport");
+        await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
         // Look to see if the webview is open and showing preview coverage
         await waitForExtension(2000);
         const reportView = vscode.workspace.textDocuments[1];
@@ -34,7 +34,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/remote-test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("extension.displayCoverage");
+        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -58,7 +58,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("extension.displayCoverage");
+        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -81,7 +81,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/bar/a.py", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("extension.displayCoverage");
+        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -103,7 +103,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/main.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("extension.displayCoverage");
+        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -125,7 +125,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/main2.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("extension.displayCoverage");
+        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -147,7 +147,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/mycompany/app/App.java", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("extension.displayCoverage");
+        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -178,7 +178,7 @@ suite("Extension Tests", function() {
         await exec("cp -r node node7");
 
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("extension.displayCoverage");
+        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -200,7 +200,7 @@ suite("Extension Tests", function() {
         const getCachedLines = extension.exports.getLastCoverageLines;
 
         // Look at javascript file and assert coverage
-        await vscode.commands.executeCommand("extension.watchCoverageAndVisibleEditors");
+        await vscode.commands.executeCommand("coverage-gutters.watchCoverageAndVisibleEditors");
         const testJSCoverage = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
         const testJSDocument = await vscode.workspace.openTextDocument(testJSCoverage[0]);
         await vscode.window.showTextDocument(testJSDocument);
@@ -219,7 +219,7 @@ suite("Extension Tests", function() {
         const testJavaCoverage = await vscode.workspace.findFiles("**/mycompany/app/App.java", "**/node_modules/**");
         const testJavaDocument = await vscode.workspace.openTextDocument(testJavaCoverage[0]);
         await vscode.window.showTextDocument(testJavaDocument);
-        await vscode.commands.executeCommand("extension.displayCoverage");
+        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
         await waitForExtension(2000);
 
         await checkCoverage(() => {
