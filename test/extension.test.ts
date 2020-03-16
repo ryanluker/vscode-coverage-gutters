@@ -3,7 +3,7 @@ import { exec } from "child_process";
 import * as vscode from "vscode";
 import { ICoverageLines } from "../src/coverage-system/renderer";
 
-suite("Extension Tests", function () {
+suite("Extension Tests", function() {
     this.timeout(25000);
 
     test("Preview the coverage report in a new webview tab @integration", async () => {
