@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
-import {Coverage} from "./coverage-system/coverage";
-import {Config} from "./extension/config";
-import {emptyLastCoverage, getLastCoverageLines} from "./extension/exportsapi";
-import {Gutters} from "./extension/gutters";
-import {Reporter} from "./extension/reporter";
-import {StatusBarToggler} from "./extension/statusbartoggler";
+import { Coverage } from "./coverage-system/coverage";
+import { Config } from "./extension/config";
+import { emptyLastCoverage, getLastCoverageLines } from "./extension/exportsapi";
+import { Gutters } from "./extension/gutters";
+import { Reporter } from "./extension/reporter";
+import { StatusBarToggler } from "./extension/statusbartoggler";
 
 export function activate(context: vscode.ExtensionContext) {
     const enableMetrics = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
@@ -22,23 +22,23 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     const previewCoverageReport = vscode.commands.registerCommand(
-        "extension.previewCoverageReport",
+        "coverage-gutters.previewCoverageReport",
         gutters.previewCoverageReport.bind(gutters),
     );
     const display = vscode.commands.registerCommand(
-        "extension.displayCoverage",
+        "coverage-gutters.displayCoverage",
         gutters.displayCoverageForActiveFile.bind(gutters),
     );
     const watch = vscode.commands.registerCommand(
-        "extension.watchCoverageAndVisibleEditors",
+        "coverage-gutters.watchCoverageAndVisibleEditors",
         gutters.watchCoverageAndVisibleEditors.bind(gutters),
     );
     const removeWatch = vscode.commands.registerCommand(
-        "extension.removeWatch",
+        "coverage-gutters.removeWatch",
         gutters.removeWatch.bind(gutters),
     );
     const remove = vscode.commands.registerCommand(
-        "extension.removeCoverage",
+        "coverage-gutters.removeCoverage",
         gutters.removeCoverageForActiveFile.bind(gutters),
     );
 

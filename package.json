@@ -163,49 +163,49 @@
     },
     "commands": [
       {
-        "command": "extension.previewCoverageReport",
+        "command": "coverage-gutters.previewCoverageReport",
         "title": "Coverage Gutters: Preview Coverage Report"
       },
       {
-        "command": "extension.displayCoverage",
+        "command": "coverage-gutters.displayCoverage",
         "title": "Coverage Gutters: Display Coverage"
       },
       {
-        "command": "extension.watchCoverageAndVisibleEditors",
+        "command": "coverage-gutters.watchCoverageAndVisibleEditors",
         "title": "Coverage Gutters: Watch"
       },
       {
-        "command": "extension.removeWatch",
+        "command": "coverage-gutters.removeWatch",
         "title": "Coverage Gutters: Remove Watch"
       },
       {
-        "command": "extension.removeCoverage",
+        "command": "coverage-gutters.removeCoverage",
         "title": "Coverage Gutters: Remove Coverage"
       }
     ],
     "keybindings": [
       {
-        "command": "extension.previewCoverageReport",
+        "command": "coverage-gutters.previewCoverageReport",
         "key": "ctrl+shift+6",
         "mac": "shift+cmd+6"
       },
       {
-        "command": "extension.displayCoverage",
+        "command": "coverage-gutters.displayCoverage",
         "key": "ctrl+shift+7",
         "mac": "shift+cmd+7"
       },
       {
-        "command": "extension.watchCoverageAndVisibleEditors",
+        "command": "coverage-gutters.watchCoverageAndVisibleEditors",
         "key": "ctrl+shift+8",
         "mac": "shift+cmd+8"
       },
       {
-        "command": "extension.removeWatch",
+        "command": "coverage-gutters.removeWatch",
         "key": "ctrl+shift+9",
         "mac": "shift+cmd+9"
       },
       {
-        "command": "extension.removeCoverage",
+        "command": "coverage-gutters.removeCoverage",
         "key": "ctrl+shift+0",
         "mac": "shift+cmd+0"
       }
@@ -214,27 +214,27 @@
       "editor/context": [
         {
           "when": "config.coverage-gutters.customizable.context-menu",
-          "command": "extension.previewCoverageReport",
+          "command": "coverage-gutters.previewCoverageReport",
           "group": "Coverage-Gutters@1"
         },
         {
           "when": "config.coverage-gutters.customizable.context-menu",
-          "command": "extension.displayCoverage",
+          "command": "coverage-gutters.displayCoverage",
           "group": "Coverage-Gutters@2"
         },
         {
           "when": "config.coverage-gutters.customizable.context-menu",
-          "command": "extension.watchCoverageAndVisibleEditors",
+          "command": "coverage-gutters.watchCoverageAndVisibleEditors",
           "group": "Coverage-Gutters@3"
         },
         {
           "when": "config.coverage-gutters.customizable.context-menu",
-          "command": "extension.removeWatch",
+          "command": "coverage-gutters.removeWatch",
           "group": "Coverage-Gutters@4"
         },
         {
           "when": "config.coverage-gutters.customizable.context-menu",
-          "command": "extension.removeCoverage",
+          "command": "coverage-gutters.removeCoverage",
           "group": "Coverage-Gutters@5"
         }
       ]
