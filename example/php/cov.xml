@@ -1,40 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1533433429">
-  <project timestamp="1533433429">
+<coverage generated="1589221121">
+  <project timestamp="1589221121">
     <package name="test">
-      <file name="/home/ryan/dev/vscode-coverage-gutters/example/php/src/testCoverage/testMain/main.php">
-        <class name="main" namespace="test">
-          <metrics methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
+      <file name="/Users/meindertjan/vscode-coverage-gutters/example/php/src/testCoverage/testMain/main.php">
+        <class name="test\main" namespace="test">
+          <metrics complexity="3" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
         </class>
-        <line num="11" type="method" name="increase" crap="1" count="1"/>
-        <line num="12" type="stmt" count="1"/>
-        <line num="13" type="stmt" count="1"/>
-        <line num="16" type="method" name="negate" crap="1" count="1"/>
-        <line num="17" type="stmt" count="1"/>
-        <line num="18" type="stmt" count="1"/>
-        <line num="21" type="method" name="notcovered" crap="2" count="0"/>
-        <line num="22" type="stmt" count="0"/>
-        <line num="23" type="stmt" count="0"/>
-        <metrics loc="25" ncloc="25" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
+        <line num="9" type="method" name="increase" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="10" type="stmt" count="1"/>
+        <line num="11" type="stmt" count="1"/>
+        <line num="14" type="method" name="negate" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="15" type="stmt" count="1"/>
+        <line num="16" type="stmt" count="1"/>
+        <line num="19" type="method" name="notcovered" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="21" type="stmt" count="0"/>
+        <metrics loc="23" ncloc="23" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
       </file>
-      <file name="/home/ryan/dev/vscode-coverage-gutters/example/php/src/testCoverage/testMain2/main2.php">
-        <class name="secondmain" namespace="test">
-          <metrics methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="2" elements="11" coveredelements="3"/>
+      <file name="/Users/meindertjan/vscode-coverage-gutters/example/php/src/testCoverage/testMain2/main2.php">
+        <class name="test\secondmain" namespace="test">
+          <metrics complexity="3" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="2" elements="11" coveredelements="3"/>
         </class>
-        <line num="11" type="method" name="increaseCovered" crap="1" count="1"/>
-        <line num="12" type="stmt" count="1"/>
-        <line num="13" type="stmt" count="1"/>
-        <line num="16" type="method" name="notcovered" crap="2" count="0"/>
-        <line num="17" type="stmt" count="0"/>
-        <line num="18" type="stmt" count="0"/>
-        <line num="21" type="method" name="negate" crap="2" count="0"/>
+        <line num="9" type="method" name="increaseCovered" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="10" type="stmt" count="1"/>
+        <line num="11" type="stmt" count="1"/>
+        <line num="14" type="method" name="notcovered" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="15" type="stmt" count="0"/>
+        <line num="16" type="stmt" count="0"/>
+        <line num="19" type="method" name="negate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="20" type="stmt" count="0"/>
+        <line num="21" type="stmt" count="0"/>
         <line num="22" type="stmt" count="0"/>
         <line num="23" type="stmt" count="0"/>
-        <line num="24" type="stmt" count="0"/>
-        <line num="25" type="stmt" count="0"/>
-        <metrics loc="27" ncloc="27" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="2" elements="11" coveredelements="3"/>
+        <metrics loc="25" ncloc="25" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="2" elements="11" coveredelements="3"/>
       </file>
     </package>
-    <metrics files="2" loc="52" ncloc="52" classes="2" methods="6" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="6" elements="20" coveredelements="9"/>
+    <file name="/Users/meindertjan/vscode-coverage-gutters/example/php/src/testCoverage/testNoNamespace/main3.php">
+      <class name="NonNamespaced" namespace="global">
+        <metrics complexity="3" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="3" elements="7" coveredelements="5"/>
+      </class>
+      <line num="7" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="9" type="stmt" count="1"/>
+      <line num="10" type="stmt" count="1"/>
+      <line num="12" type="method" name="covered" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="14" type="stmt" count="1"/>
+      <line num="17" type="method" name="notCovered" visibility="public" complexity="1" crap="2" count="0"/>
+      <line num="19" type="stmt" count="0"/>
+      <metrics loc="21" ncloc="21" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="3" elements="7" coveredelements="5"/>
+    </file>
+    <metrics files="3" loc="69" ncloc="69" classes="3" methods="9" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="9" elements="27" coveredelements="14"/>
   </project>
 </coverage>
