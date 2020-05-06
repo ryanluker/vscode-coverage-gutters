@@ -1,10 +1,10 @@
 <?php
-require_once(dirname(dirname(__FILE__)) . '/src/testCoverage/testMain/main.php');
-require_once(dirname(dirname(__FILE__)) . '/src/testCoverage/testMain2/main2.php');
+
 use test\main as myClass;
 use test\secondmain as secondMain;
+use PHPUnit\Framework\TestCase;
 
-class mainTest extends PHPUnit_Framework_TestCase
+class mainTest extends TestCase
 {
 	public function testCanBeNegated () {
 		$a = new myClass();
