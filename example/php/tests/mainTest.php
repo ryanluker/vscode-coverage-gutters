@@ -2,6 +2,7 @@
 
 use test\main as myClass;
 use test\secondmain as secondMain;
+use NonNamespaced;
 use PHPUnit\Framework\TestCase;
 
 class mainTest extends TestCase
@@ -17,5 +18,12 @@ class mainTest extends TestCase
 		$b = new secondMain();
 		$b->increaseCovered(9)->increaseCovered(8);
 		$this->assertEquals(17, $b->myParam);
+	}
+
+	public function testNonNamespaced()
+	{
+		$c = new NonNamespaced();
+		$c->covered();
+		$this->assertEquals(2, $c->covered());
 	}
 }
