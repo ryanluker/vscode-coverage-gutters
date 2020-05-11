@@ -137,6 +137,28 @@ suite("Extension Tests", function() {
         extension.exports.emptyLastCoverage();
     });
 
+    test("Run display coverage on php test file number 3 @integration", async () => {
+        await waitForExtension(2000);
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
+        const getCachedLines = extension.exports.getLastCoverageLines;
+        const testCoverage = await vscode.workspace.findFiles("**/main3.php", "**/node_modules/**");
+        const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
+        await vscode.window.showTextDocument(testDocument);
+        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+
+        await checkCoverage(() => {
+            // Look for exact coverage on the file
+            const cachedLines: ICoverageLines = getCachedLines();
+            assert.equal(3, cachedLines.full.length);
+            assert.equal(1, cachedLines.none.length);
+        });
+
+        extension.exports.emptyLastCoverage();
+    });
+
     test("Run display coverage on java test file @integration", async () => {
         await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
