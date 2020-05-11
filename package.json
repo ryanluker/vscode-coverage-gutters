@@ -270,7 +270,7 @@
     "vscode": "1.1.34"
   },
   "dependencies": {
-    "@cvrg-report/clover-json": "0.3.0",
+    "@cvrg-report/clover-json": "0.3.2",
     "cobertura-parse": "github:vokal/cobertura-parse#53109a6",
     "glob": "7.1.4",
     "jacoco-parse": "2.0.1",
