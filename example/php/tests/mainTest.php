@@ -1,10 +1,11 @@
 <?php
-require_once(dirname(dirname(__FILE__)) . '/src/testCoverage/testMain/main.php');
-require_once(dirname(dirname(__FILE__)) . '/src/testCoverage/testMain2/main2.php');
+
 use test\main as myClass;
 use test\secondmain as secondMain;
+use NonNamespaced;
+use PHPUnit\Framework\TestCase;
 
-class mainTest extends PHPUnit_Framework_TestCase
+class mainTest extends TestCase
 {
 	public function testCanBeNegated () {
 		$a = new myClass();
@@ -17,5 +18,12 @@ class mainTest extends PHPUnit_Framework_TestCase
 		$b = new secondMain();
 		$b->increaseCovered(9)->increaseCovered(8);
 		$this->assertEquals(17, $b->myParam);
+	}
+
+	public function testNonNamespaced()
+	{
+		$c = new NonNamespaced();
+		$c->covered();
+		$this->assertEquals(2, $c->covered());
 	}
 }

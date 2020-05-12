@@ -20,12 +20,12 @@
   "license": "MIT",
   "type": "library",
   "require": {
-    "php": ">=5.3.0",
-    "monolog/monolog": "1.*"
+    "php": "^7.2"
   },
   "require-dev": {
-    "phpdocumentor/phpdocumentor": "2.*",
-    "phpunit/phpunit": "4.*",
-    "sebastian/phpcpd": "2.*"
+    "phpunit/phpunit": "^8"
+  },
+  "autoload": {
+    "classmap": ["src/"]
   }
 }
