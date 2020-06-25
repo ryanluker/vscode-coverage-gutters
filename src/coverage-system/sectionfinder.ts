@@ -3,22 +3,18 @@ import {extname} from "path";
 import {TextEditor, Uri, workspace} from "vscode";
 import {OutputChannel} from "vscode";
 import {Config} from "../extension/config";
-import {Reporter} from "../extension/reporter";
 import {isPathAbsolute, makePathSearchable, normalizeFileName} from "../helpers";
 
 export class SectionFinder {
     private configStore: Config;
     private outputChannel: OutputChannel;
-    private eventReporter: Reporter;
 
     constructor(
         configStore: Config,
         outputChannel: OutputChannel,
-        eventReporter: Reporter,
     ) {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
-        this.eventReporter = eventReporter;
     }
 
     /**
@@ -57,8 +53,6 @@ export class SectionFinder {
         const filePath = section.file;
         const filePathMessage = `[${Date.now()}][renderer][section file path]: ${filePath}`;
         this.outputChannel.appendLine(filePathMessage);
-        // log file type
-        this.eventReporter.sendEvent("system", "renderer-fileType", extname(filePath));
     }
 
     /**

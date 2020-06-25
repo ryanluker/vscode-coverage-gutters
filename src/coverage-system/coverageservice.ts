@@ -9,7 +9,6 @@ import {
 } from "vscode";
 
 import {Config} from "../extension/config";
-import {Reporter} from "../extension/reporter";
 import {CoverageParser} from "../files/coverageparser";
 import {FilesLoader} from "../files/filesloader";
 import {Renderer} from "./renderer";
@@ -26,7 +25,6 @@ enum Status {
 export class CoverageService {
     private configStore: Config;
     private outputChannel: OutputChannel;
-    private eventReporter: Reporter;
     private filesLoader: FilesLoader;
     private renderer: Renderer;
     private coverageParser: CoverageParser;
@@ -39,27 +37,21 @@ export class CoverageService {
     constructor(
         configStore: Config,
         outputChannel: OutputChannel,
-        eventReporter: Reporter,
     ) {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
-        this.eventReporter = eventReporter;
         this.updateServiceState(Status.initializing);
         this.cache = new Map();
         this.filesLoader = new FilesLoader(configStore);
         this.sectionFinder = new SectionFinder(
             configStore,
             this.outputChannel,
-            this.eventReporter,
         );
         this.renderer = new Renderer(
             configStore,
             this.sectionFinder,
         );
-        this.coverageParser = new CoverageParser(
-            this.outputChannel,
-            this.eventReporter,
-        );
+        this.coverageParser = new CoverageParser(this.outputChannel);
     }
 
     public dispose() {
@@ -171,10 +163,5 @@ export class CoverageService {
         window.showWarningMessage(message.toString());
         this.outputChannel.appendLine(`[${Date.now()}][gutters]: Error ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][gutters]: Stacktrace ${stackTrace}`);
-        this.eventReporter.sendEvent(
-            "error",
-            message.toString(),
-            stackTrace ? stackTrace.toString() : undefined,
-        );
     }
 }
