@@ -7,8 +7,9 @@ import { Gutters } from "./extension/gutters";
 import { StatusBarToggler } from "./extension/statusbartoggler";
 
 export function activate(context: vscode.ExtensionContext) {
-    const enableTelemetry = vscode.workspace.getConfiguration("telemetry").get("enableTelemetry") as boolean;
-    if (enableTelemetry) {
+    const telemetry = vscode.workspace.getConfiguration("telemetry");
+    const enableCrashReporting = telemetry.get("enableCrashReporter");
+    if (enableCrashReporting) {
         Sentry.init({dsn: "https://4d0a4d2704704334b91208be04cd5cb2@o412074.ingest.sentry.io/5288283"});
     }
 

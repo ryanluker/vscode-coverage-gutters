@@ -110,6 +110,14 @@ export class Gutters {
         }
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
-        Sentry.captureException(error);
+
+        // Only send crash reports if the user allows this from their global settings.
+        const telemetry = workspace.getConfiguration("telemetry");
+        const enableCrashReporting = telemetry.get("enableCrashReporter");
+        if (enableCrashReporting) {
+            const sentryId = Sentry.captureException(error);
+            const sentryPrompt = "Please post this in the github issue if you submit one. Sentry Event ID:";
+            this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${sentryPrompt} ${sentryId}`);
+        }
     }
 }
