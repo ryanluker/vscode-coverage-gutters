@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/node";
+import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
 import { Coverage } from "./coverage-system/coverage";
 import { Config } from "./extension/config";
@@ -10,7 +11,16 @@ export function activate(context: vscode.ExtensionContext) {
     const telemetry = vscode.workspace.getConfiguration("telemetry");
     const enableCrashReporting = telemetry.get("enableCrashReporter");
     if (enableCrashReporting) {
-        Sentry.init({dsn: "https://4d0a4d2704704334b91208be04cd5cb2@o412074.ingest.sentry.io/5288283"});
+        const options = {
+            dsn: "https://4d0a4d2704704334b91208be04cd5cb2@o412074.ingest.sentry.io/5288283",
+            release: "vscode-coverage-gutters@2.5.0",
+        };
+        Sentry.init(options);
+        Sentry.configureScope(function(scope) {
+            // Generate a random string for this session
+            // Note: for privacy reason, we cannot fingerprint across sessions
+            scope.setUser({id: uuidv4()});
+        });
     }
 
     const configStore = new Config(context);
