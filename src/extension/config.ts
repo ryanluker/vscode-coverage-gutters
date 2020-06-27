@@ -7,7 +7,6 @@ import {
     window,
     workspace,
 } from "vscode";
-import {Reporter} from "./reporter";
 
 export class Config {
     public coverageFileNames: string[];
@@ -21,11 +20,9 @@ export class Config {
     public manualCoverageFilePaths: string[];
 
     private context: ExtensionContext;
-    private reporter: Reporter;
 
-    constructor(context: ExtensionContext, reporter: Reporter) {
+    constructor(context: ExtensionContext) {
         this.context = context;
-        this.reporter = reporter;
         this.setup();
 
         // Reload the cached values if the configuration changes
@@ -80,9 +77,6 @@ export class Config {
         const showGutterCoverage = rootConfig.get("showGutterCoverage") as string;
         const showLineCoverage = rootConfig.get("showLineCoverage") as string;
         const showRulerCoverage = rootConfig.get("showRulerCoverage") as string;
-        this.reporter.sendEvent("config", "showGutterCoverage", showGutterCoverage);
-        this.reporter.sendEvent("config", "showLineCoverage", showLineCoverage);
-        this.reporter.sendEvent("config", "showRulerCoverage", showRulerCoverage);
 
         // Setup info for decorations
         const fullDecoration: DecorationRenderOptions = {
@@ -140,16 +134,10 @@ export class Config {
         // Assign the key and resolved fragment
         this.remotePathResolve = rootConfig.get("remotePathResolve") as string[];
         const hasRemotePathResolve = !!this.remotePathResolve.length;
-        this.reporter.sendEvent("config", "remotePathResolve", hasRemotePathResolve.toString());
 
         // Add the manual coverage file path(s) if present
         this.manualCoverageFilePaths = rootConfig.get("manualCoverageFilePaths") as string[];
         const hasManualCoverageFilePaths = !!this.manualCoverageFilePaths.length;
-        this.reporter.sendEvent(
-            "config",
-            "hasManualCoverageFilePaths",
-            hasManualCoverageFilePaths.toString(),
-        );
     }
 
     /**

@@ -45,12 +45,6 @@ suite("Config Tests", function() {
         },
     };
 
-    const fakeReport: any = {
-        sendEvent: () => {
-            return ;
-        },
-    };
-
     teardown(function() {
         (vscode as any).window.createTextEditorDecorationType = createTextEditorDecorationType;
         (vscode as any).commands.executeCommand = executeCommand;
@@ -65,17 +59,17 @@ suite("Config Tests", function() {
 
     test("Constructor should setup properly @unit", function() {
         assert.doesNotThrow(() => {
-            new Config(fakeContext, fakeReport); // tslint:disable-line
+            new Config(fakeContext); // tslint:disable-line
         });
     });
 
     test("Can get configStore after initialization @unit", function() {
-        const config = new Config(fakeContext, fakeReport);
+        const config = new Config(fakeContext);
         assert.notEqual(config.coverageFileNames, null);
     });
 
     test("Can get coverage file names @unit", function() {
-        const config = new Config(fakeContext, fakeReport);
+        const config = new Config(fakeContext);
         // Check that unique file names is being applied
         assert.equal(config.coverageFileNames.length, 3);
     });
@@ -86,6 +80,6 @@ suite("Config Tests", function() {
             assert.equal("gutterIconPath" in options.light, false);
         };
         fakeContext.asAbsolutePath = (options) => "";
-        new Config(fakeContext, fakeReport); // tslint:disable-line
+        new Config(fakeContext); // tslint:disable-line
     });
 });

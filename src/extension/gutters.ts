@@ -1,22 +1,19 @@
+import * as Sentry from "@sentry/node";
 import {
     OutputChannel,
     Uri,
-    version,
     ViewColumn,
     window,
     workspace,
 } from "vscode";
-
 import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
-import { Reporter } from "./reporter";
 import { StatusBarToggler } from "./statusbartoggler";
 
 export class Gutters {
     private coverage: Coverage;
     private outputChannel: OutputChannel;
-    private reporter: Reporter;
     private statusBar: StatusBarToggler;
     private coverageService: CoverageService;
 
@@ -24,31 +21,21 @@ export class Gutters {
         configStore: Config,
         coverage: Coverage,
         outputChannel: OutputChannel,
-        reporter: Reporter,
         statusBar: StatusBarToggler,
     ) {
         this.coverage = coverage;
         this.outputChannel = outputChannel;
         this.statusBar = statusBar;
-        this.reporter = reporter;
 
         this.coverageService = new CoverageService(
             configStore,
             this.outputChannel,
-            this.reporter,
         );
-
-        this.reporter.sendEvent("user", "start", version, 1);
     }
 
     public async previewCoverageReport() {
         try {
             const coverageReports = await this.coverage.findReports();
-            this.reporter.sendEvent(
-                "user",
-                "preview-coverage-report-findCoverageFiles",
-                `${coverageReports.length}`,
-            );
             const pickedReport = await this.coverage.pickFile(
                 coverageReports,
                 "Choose a Coverage Report to preview.",
@@ -66,8 +53,6 @@ export class Gutters {
             const reportUri = Uri.file(pickedReport);
             const reportHtml = await workspace.openTextDocument(reportUri);
             previewPanel.webview.html = reportHtml.getText();
-
-            this.reporter.sendEvent("user", "preview-coverage-report", undefined, 25);
         } catch (error) {
             this.handleError("previewCoverageReport", error);
         }
@@ -76,7 +61,6 @@ export class Gutters {
     public async displayCoverageForActiveFile() {
         try {
             await this.coverageService.displayForFile();
-            this.reporter.sendEvent("user", "display-coverage", undefined, 50);
         } catch (error) {
             this.handleError("displayCoverageForActiveFile", error);
         }
@@ -86,7 +70,6 @@ export class Gutters {
         try {
             this.statusBar.toggle(true);
             await this.coverageService.watchWorkspace();
-            this.reporter.sendEvent("user", "watch-coverage-editors", undefined, 75);
         } catch (error) {
             this.handleError("watchCoverageAndVisibleEditors", error);
         }
@@ -97,22 +80,26 @@ export class Gutters {
             this.coverageService.removeCoverageForCurrentEditor();
             this.statusBar.toggle(false);
             this.coverageService.dispose();
-
-            this.reporter.sendEvent("user", "remove-watch", undefined, 25);
         } catch (error) {
             this.handleError("removeWatch", error, false);
         }
     }
 
     public removeCoverageForActiveFile() {
-        this.coverageService.removeCoverageForCurrentEditor();
-        this.reporter.sendEvent("user", "remove-coverage", undefined, 25);
+        try {
+            this.coverageService.removeCoverageForCurrentEditor();
+        } catch (error) {
+            this.handleError("removeCoverageForActiveFile", error, false);
+        }
     }
 
     public dispose() {
-        this.coverageService.dispose();
-        this.statusBar.dispose();
-        this.reporter.sendEvent("cleanup", "dispose");
+        try {
+            this.coverageService.dispose();
+            this.statusBar.dispose();
+        } catch (error) {
+            this.handleError("dispose", error, false);
+        }
     }
 
     private handleError(area: string, error: Error, showMessage: boolean = true) {
@@ -123,10 +110,14 @@ export class Gutters {
         }
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
-        this.reporter.sendEvent(
-            "error",
-            message.toString(),
-            stackTrace ? stackTrace.toString() : undefined,
-        );
+
+        // Only send crash reports if the user allows this from their global settings.
+        const telemetry = workspace.getConfiguration("telemetry");
+        const enableCrashReporting = telemetry.get("enableCrashReporter");
+        if (enableCrashReporting) {
+            const sentryId = Sentry.captureException(error);
+            const sentryPrompt = "Please post this in the github issue if you submit one. Sentry Event ID:";
+            this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${sentryPrompt} ${sentryId}`);
+        }
     }
 }

@@ -16,16 +16,12 @@ suite("SectionFinder Tests", function() {
         show: () => {},
     };
 
-    const fakeReporter = {
-        sendEvent: () => {},
-    };
-
     test("Should not throw an error @unit", function(done) {
         const textEditor: TextEditor = {} as TextEditor;
         (textEditor as any).document = {};
         (textEditor as any).document.fileName = "test123.ts";
         const sectionMap: Map<string, Section> = new Map<string, Section>();
-        const sectionFinder: SectionFinder = new SectionFinder(fakeConfig, fakeOutput, fakeReporter as any);
+        const sectionFinder: SectionFinder = new SectionFinder(fakeConfig, fakeOutput);
         sectionFinder.findSectionsForEditor(textEditor, sectionMap);
         return done();
     });
