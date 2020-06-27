@@ -9,7 +9,7 @@ import {CoverageFile, CoverageType} from "./coveragefile";
 export class CoverageParser {
     private outputChannel: OutputChannel;
 
-    constructor(outputChannel: OutputChannel){
+    constructor(outputChannel: OutputChannel) {
         this.outputChannel = outputChannel;
     }
 

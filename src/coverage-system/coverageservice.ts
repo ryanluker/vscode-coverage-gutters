@@ -57,7 +57,6 @@ export class CoverageService {
     public dispose() {
         if (this.coverageWatcher) { this.coverageWatcher.dispose(); }
         if (this.editorWatcher) { this.editorWatcher.dispose(); }
-        this.editorWatcher.dispose();
         this.cache = new Map(); // reset cache to empty
         const visibleEditors = window.visibleTextEditors;
         this.renderer.renderCoverage(this.cache, visibleEditors);

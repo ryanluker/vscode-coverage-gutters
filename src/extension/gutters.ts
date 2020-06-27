@@ -1,12 +1,11 @@
+import * as Sentry from "@sentry/node";
 import {
     OutputChannel,
     Uri,
-    version,
     ViewColumn,
     window,
     workspace,
 } from "vscode";
-
 import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
@@ -87,12 +86,20 @@ export class Gutters {
     }
 
     public removeCoverageForActiveFile() {
-        this.coverageService.removeCoverageForCurrentEditor();
+        try {
+            this.coverageService.removeCoverageForCurrentEditor();
+        } catch (error) {
+            this.handleError("removeCoverageForActiveFile", error, false);
+        }
     }
 
     public dispose() {
-        this.coverageService.dispose();
-        this.statusBar.dispose();
+        try {
+            this.coverageService.dispose();
+            this.statusBar.dispose();
+        } catch (error) {
+            this.handleError("dispose", error, false);
+        }
     }
 
     private handleError(area: string, error: Error, showMessage: boolean = true) {
@@ -103,5 +110,6 @@ export class Gutters {
         }
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
+        Sentry.captureException(error);
     }
 }
