@@ -11,11 +11,13 @@ export function activate(context: vscode.ExtensionContext) {
     const telemetry = vscode.workspace.getConfiguration("telemetry");
     const enableCrashReporting = telemetry.get("enableCrashReporter");
     if (enableCrashReporting) {
-        const options = {
-            dsn: "https://4d0a4d2704704334b91208be04cd5cb2@o412074.ingest.sentry.io/5288283",
-            release: "vscode-coverage-gutters@2.5.0",
-        };
-        Sentry.init(options);
+        // Leaving default integrations on captures crashes from other extension hosts
+        // Turning this off fixes that issue and still allows us to capture errors manually
+        Sentry.init({
+            defaultIntegrations: false,
+            dsn: "https://dfd1a0d586284b6b8710feef8a2928b3@o412074.ingest.sentry.io/5288283",
+            release: "vscode-coverage-gutters@2.5.1",
+        });
         Sentry.configureScope(function(scope) {
             // Generate a random string for this session
             // Note: for privacy reason, we cannot fingerprint across sessions
