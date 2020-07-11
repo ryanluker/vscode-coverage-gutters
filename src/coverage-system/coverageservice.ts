@@ -1,4 +1,4 @@
-import {Section} from "lcov-parse";
+import { Section } from "lcov-parse";
 import {
     Disposable,
     FileSystemWatcher,
@@ -8,12 +8,12 @@ import {
     workspace,
 } from "vscode";
 
-import {Config} from "../extension/config";
+import { Config } from "../extension/config";
 import { StatusBarToggler } from "../extension/statusbartoggler";
-import {CoverageParser} from "../files/coverageparser";
-import {FilesLoader} from "../files/filesloader";
-import {Renderer} from "./renderer";
-import {SectionFinder} from "./sectionfinder";
+import { CoverageParser } from "../files/coverageparser";
+import { FilesLoader } from "../files/filesloader";
+import { Renderer } from "./renderer";
+import { SectionFinder } from "./sectionfinder";
 
 enum Status {
     ready = "READY",
