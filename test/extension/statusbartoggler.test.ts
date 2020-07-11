@@ -35,7 +35,7 @@ suite("Status Bar Toggler Tests", () => {
         assert.equal(statusBarToggler.statusText, "$(list-ordered) Watch $(loading~spin)");
         statusBarToggler.toggle(true);
         assert.equal(statusBarToggler.statusText, "$(list-ordered) Remove Watch $(loading~spin)");
-        statusBarToggler.setLoading(true);
+        statusBarToggler.setLoading(false);
         assert.equal(statusBarToggler.statusText, "$(list-ordered) Remove Watch");
     });
 
