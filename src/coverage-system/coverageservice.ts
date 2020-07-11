@@ -24,7 +24,7 @@ enum Status {
 }
 
 export class CoverageService {
-    public statusBar: StatusBarToggler;
+    private statusBar: StatusBarToggler;
     private configStore: Config;
     private outputChannel: OutputChannel;
     private filesLoader: FilesLoader;
