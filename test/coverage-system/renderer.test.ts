@@ -9,7 +9,7 @@ import { fakeConfig } from "../mocks/fakeConfig";
 suite("Renderer Tests", function() {
     let statusBar: StatusBarToggler;
 
-    beforeEach(() => {
+    setup(() => {
         statusBar = new StatusBarToggler(fakeConfig);
     });
 
