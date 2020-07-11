@@ -5,8 +5,8 @@ import {
 } from "vscode";
 import { Config } from "../extension/config";
 import { setLastCoverageLines } from "../extension/exportsapi";
-import { SectionFinder } from "./sectionfinder";
 import { StatusBarToggler } from "../extension/statusbartoggler";
+import { SectionFinder } from "./sectionfinder";
 
 export interface ICoverageLines {
     full: Range[];
@@ -66,7 +66,8 @@ export class Renderer {
 
             // Cache last coverage lines for exports api
             setLastCoverageLines(coverageLines);
-        this.statusBar.setLoading(false);
+            this.statusBar.setLoading(false);
+        });
     }
 
     public removeDecorationsForEditor(editor: TextEditor) {

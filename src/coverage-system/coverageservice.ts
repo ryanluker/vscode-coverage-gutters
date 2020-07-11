@@ -9,11 +9,11 @@ import {
 } from "vscode";
 
 import {Config} from "../extension/config";
+import { StatusBarToggler } from "../extension/statusbartoggler";
 import {CoverageParser} from "../files/coverageparser";
 import {FilesLoader} from "../files/filesloader";
 import {Renderer} from "./renderer";
 import {SectionFinder} from "./sectionfinder";
-import { StatusBarToggler } from "../extension/statusbartoggler";
 
 enum Status {
     ready = "READY",
@@ -24,6 +24,7 @@ enum Status {
 }
 
 export class CoverageService {
+    public statusBar: StatusBarToggler;
     private configStore: Config;
     private outputChannel: OutputChannel;
     private filesLoader: FilesLoader;
@@ -34,7 +35,6 @@ export class CoverageService {
     private sectionFinder: SectionFinder;
 
     private cache: Map<string, Section>;
-    statusBar: StatusBarToggler;
 
     constructor(
         configStore: Config,

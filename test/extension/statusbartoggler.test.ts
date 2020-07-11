@@ -37,17 +37,7 @@ suite("Status Bar Toggler Tests", () => {
         assert.equal(statusBarToggler.statusText, "$(list-ordered) Remove Watch $(loading~spin)");
         statusBarToggler.setLoading(true);
         assert.equal(statusBarToggler.statusText, "$(list-ordered) Remove Watch");
-    })
-
-    test("Should show progress regardless of status @unit", () => {
-        const statusBarToggler = new StatusBarToggler(fakeConfig);
-        assert.equal(statusBarToggler.statusText, "$(list-ordered) Watch");
-        statusBarToggler.setFileProgress(0,10);
-        assert.equal(statusBarToggler.statusText, "$(list-ordered) Watch (0/10)");
-        statusBarToggler.toggle(true);
-        assert.equal(statusBarToggler.statusText, "$(list-ordered) Remove Watch (0/10)");
-
-    })
+    });
 
     test("Should dispose when asked @unit", () => {
         const statusBarToggler = new StatusBarToggler(fakeConfig);

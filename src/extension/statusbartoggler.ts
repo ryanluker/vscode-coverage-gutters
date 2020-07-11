@@ -7,9 +7,10 @@ export class StatusBarToggler implements Disposable {
     private static readonly watchText = "$(list-ordered) Watch";
     private static readonly removeText = "$(list-ordered) Remove Watch";
     private static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
+    public isActive: boolean;
+    public isLoading: boolean;
     private statusBarItem: StatusBarItem;
     private configStore: Config;
-    isLoading: boolean;
 
     constructor(configStore: Config) {
         this.statusBarItem = window.createStatusBarItem();
@@ -59,11 +60,8 @@ export class StatusBarToggler implements Disposable {
             this.statusBarItem.command = StatusBarToggler.watchCommand;
             this.statusBarItem.text = StatusBarToggler.watchText;
         }
-    }
-
-
-        if(this.isLoading) {
-            this.statusBarItem.text = `${this.statusBarItem.text} $(loading~spin)`
+        if (this.isLoading) {
+            this.statusBarItem.text = `${this.statusBarItem.text} $(loading~spin)`;
         }
     }
 }
