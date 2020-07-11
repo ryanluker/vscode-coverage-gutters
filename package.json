@@ -255,17 +255,17 @@
     "build": "npm install && npm run lint && npm run compile"
   },
   "devDependencies": {
-    "@types/chai": "4.1.7",
-    "@types/glob": "7.1.1",
-    "@types/lodash": "4.14.126",
-    "@types/mocha": "5.2.6",
+    "@types/chai": "4.2.11",
+    "@types/glob": "7.1.3",
+    "@types/lodash": "4.14.157",
+    "@types/mocha": "^7.0.2",
     "@types/node": "10.14.6",
     "@types/request": "2.48.1",
     "@types/uuid": "8.0.0",
     "@types/vscode": "^1.27.0",
     "chai": "4.2.0",
     "cross-env": "5.2.0",
-    "mocha": "6.1.4",
+    "mocha": "^8.0.1",
     "tslint": "5.16.0",
     "typescript": "3.4.5",
     "vscode-test": "^1.4.0"
