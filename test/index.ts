@@ -6,8 +6,8 @@ export function run(): Promise<void> {
   // Create the mocha test
   const mocha = new Mocha({
     ui: "tdd",
+    color: true
   });
-  mocha.useColors(true);
 
       // Apply regex to run subset of tests (integration vs unit)
   if (process.env.MOCHA_GREP) {
