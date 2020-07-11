@@ -1,11 +1,12 @@
-import {Section} from "lcov-parse";
+import { Section } from "lcov-parse";
 import {
     Range,
     TextEditor,
 } from "vscode";
-import {Config} from "../extension/config";
-import {setLastCoverageLines} from "../extension/exportsapi";
-import {SectionFinder} from "./sectionfinder";
+import { Config } from "../extension/config";
+import { setLastCoverageLines } from "../extension/exportsapi";
+import { SectionFinder } from "./sectionfinder";
+import { StatusBarToggler } from "../extension/statusbartoggler";
 
 export interface ICoverageLines {
     full: Range[];
@@ -16,13 +17,16 @@ export interface ICoverageLines {
 export class Renderer {
     private configStore: Config;
     private sectionFinder: SectionFinder;
+    private statusBar: StatusBarToggler;
 
     constructor(
         configStore: Config,
         sectionFinder: SectionFinder,
+        statusBar: StatusBarToggler,
     ) {
         this.configStore = configStore;
         this.sectionFinder = sectionFinder;
+        this.statusBar = statusBar;
     }
 
     /**
@@ -34,6 +38,7 @@ export class Renderer {
         sections: Map<string, Section>,
         textEditors: TextEditor[],
     ) {
+        this.statusBar.setLoading(true);
         const coverageLines: ICoverageLines = {
             full: [],
             none: [],
@@ -61,7 +66,7 @@ export class Renderer {
 
             // Cache last coverage lines for exports api
             setLastCoverageLines(coverageLines);
-        });
+        this.statusBar.setLoading(false);
     }
 
     public removeDecorationsForEditor(editor: TextEditor) {

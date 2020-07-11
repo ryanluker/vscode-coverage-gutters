@@ -9,6 +9,7 @@ export class StatusBarToggler implements Disposable {
     private static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
     private statusBarItem: StatusBarItem;
     private configStore: Config;
+    isLoading: boolean;
 
     constructor(configStore: Config) {
         this.statusBarItem = window.createStatusBarItem();
@@ -16,6 +17,8 @@ export class StatusBarToggler implements Disposable {
         this.statusBarItem.text = StatusBarToggler.watchText;
         this.statusBarItem.tooltip = StatusBarToggler.toolTip;
         this.configStore = configStore;
+        this.isLoading = false;
+
         if (this.configStore.showStatusBarToggler) { this.statusBarItem.show(); }
     }
 
@@ -27,7 +30,29 @@ export class StatusBarToggler implements Disposable {
      * Toggles the status bar item from watch to remove and vice versa
      */
     public toggle(active: boolean) {
-        if (active) {
+        this.isActive = active;
+
+        this.update();
+    }
+
+    public setLoading(loading: boolean = !this.isLoading) {
+        this.isLoading = loading;
+        this.update();
+    }
+
+    /**
+     * Cleans up the statusBarItem if asked to dispose
+     */
+    public dispose() {
+        this.statusBarItem.dispose();
+    }
+
+    /**
+     * update
+     * @description Updates the text displayed in the StatusBarToggler
+     */
+    private update() {
+        if (this.isActive) {
             this.statusBarItem.command = StatusBarToggler.removeCommand;
             this.statusBarItem.text = StatusBarToggler.removeText;
         } else {
@@ -36,10 +61,9 @@ export class StatusBarToggler implements Disposable {
         }
     }
 
-    /**
-     * Cleans up the statusBarItem if asked to dispose
-     */
-    public dispose() {
-        this.statusBarItem.dispose();
+
+        if(this.isLoading) {
+            this.statusBarItem.text = `${this.statusBarItem.text} $(loading~spin)`
+        }
     }
 }

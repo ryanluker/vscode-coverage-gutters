@@ -13,6 +13,7 @@ import {CoverageParser} from "../files/coverageparser";
 import {FilesLoader} from "../files/filesloader";
 import {Renderer} from "./renderer";
 import {SectionFinder} from "./sectionfinder";
+import { StatusBarToggler } from "../extension/statusbartoggler";
 
 enum Status {
     ready = "READY",
@@ -33,10 +34,12 @@ export class CoverageService {
     private sectionFinder: SectionFinder;
 
     private cache: Map<string, Section>;
+    statusBar: StatusBarToggler;
 
     constructor(
         configStore: Config,
         outputChannel: OutputChannel,
+        statusBar: StatusBarToggler,
     ) {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
@@ -50,8 +53,10 @@ export class CoverageService {
         this.renderer = new Renderer(
             configStore,
             this.sectionFinder,
+            statusBar,
         );
         this.coverageParser = new CoverageParser(this.outputChannel);
+        this.statusBar = statusBar;
     }
 
     public dispose() {
@@ -79,6 +84,7 @@ export class CoverageService {
 
     private async loadCache() {
         try {
+            this.statusBar.setLoading(true);
             const printDataCoverage = (data: Map<string, Section>) => {
                 this.outputChannel.appendLine(
                     `[${Date.now()}][printDataCoverage]: Coverage -> ${data.size}`,
@@ -112,6 +118,7 @@ export class CoverageService {
         } catch (error) {
             this.handleError(error);
         }
+        this.statusBar.setLoading(false);
     }
 
     private updateServiceState(state: Status) {
