@@ -134,6 +134,11 @@
           "default": [],
           "description": "take manual control over the absolute path to your coverage file(s)"
         },
+        "coverage-gutters.coverageBaseDir": {
+          "type": "string",
+          "default": "**",
+          "description": "workspaceFolder relative path or glob that will be used for coverage file lookup `${coverageBaseDir}/{${coverageFileNames}}`"
+        },
         "coverage-gutters.coverageFileNames": {
           "type": "array",
           "default": [

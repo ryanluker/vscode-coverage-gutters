@@ -133,9 +133,15 @@ export class CoverageService {
         if (this.configStore.manualCoverageFilePaths.length) { return; }
 
         const fileNames = this.configStore.coverageFileNames.toString();
+        let baseDir = this.configStore.coverageBaseDir;
+        if (workspace.workspaceFolders) {
+            const workspaceFolders = workspace.workspaceFolders.map((wf) => wf.uri.fsPath);
+            baseDir = `{${workspaceFolders}}/${baseDir}`;
+        }
+
         // Creates a BlobPattern for all coverage files.
         // EX: `**/{cov.xml, lcov.info}`
-        const blobPattern = `**/{${fileNames}}`;
+        const blobPattern = `${baseDir}/{${fileNames}}`;
         this.coverageWatcher = workspace.createFileSystemWatcher(blobPattern);
         this.coverageWatcher.onDidChange(this.loadCacheAndRender.bind(this));
         this.coverageWatcher.onDidCreate(this.loadCacheAndRender.bind(this));
