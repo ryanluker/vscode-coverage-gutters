@@ -13,7 +13,7 @@ suite("CoverageService Tests", function() {
         (workspace as any).createFileSystemWatcher = createFileSystemWatcher;
     });
 
-    test("Should listen for all paths specified in manualCoverageFilePaths @unit", function(done) {
+    test("Should listen for all paths specified in manualCoverageFilePaths @unit", function() {
         const config: any = {
             manualCoverageFilePaths: [
                 "/path1",
