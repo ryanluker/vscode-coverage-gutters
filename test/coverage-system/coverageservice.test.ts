@@ -40,6 +40,7 @@ suite("CoverageService Tests", function() {
 
     test("Should listen for coverage file names in workspace @unit", function() {
         const config: any = {
+            coverageBaseDir: "custom/path/*",
             coverageFileNames: [
                 "coverage.xml",
                 "custom-lcov.info",
@@ -55,6 +56,11 @@ suite("CoverageService Tests", function() {
         };
         (service as any).listenToFileSystem();
 
-        assert.equal(globPassed, "**/{coverage.xml,custom-lcov.info}");
+        let prefix = config.coverageBaseDir;
+        if (workspace.workspaceFolders) {
+            const workspaceFolders = workspace.workspaceFolders.map((wf) => wf.uri.fsPath);
+            prefix = `{${workspaceFolders}}/${prefix}`;
+        }
+        assert.equal(globPassed, `${prefix}/{coverage.xml,custom-lcov.info}`);
     });
 });
