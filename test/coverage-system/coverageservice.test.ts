@@ -4,6 +4,12 @@ import {OutputChannel, workspace} from "vscode";
 import {CoverageService} from "../../src/coverage-system/coverageservice";
 
 const mockOutputChannel = {appendLine: (x) => {}} as OutputChannel;
+const mockFileWatcher = {
+    dispose: () => {},
+    onDidChange: (fn) => {},
+    onDidCreate: (fn) => {},
+    onDidDelete: (fn) => {},
+};
 
 // Original functions
 const createFileSystemWatcher = workspace.createFileSystemWatcher;
@@ -25,14 +31,30 @@ suite("CoverageService Tests", function() {
         let globPassed;
         (workspace as any).createFileSystemWatcher = (glob) => {
             globPassed = glob;
-            return {
-                onDidChange: (fn) => {},
-                onDidCreate: (fn) => {},
-                onDidDelete: (fn) => {},
-            };
+            return mockFileWatcher;
         };
         (service as any).listenToFileSystem();
 
         assert.equal(globPassed, "{/path1,/path2}");
+    });
+
+    test("Should listen for coverage file names in workspace @unit", function() {
+        const config: any = {
+            coverageFileNames: [
+                "coverage.xml",
+                "custom-lcov.info",
+            ],
+            manualCoverageFilePaths: [],
+        };
+        const service = new CoverageService(config, mockOutputChannel);
+
+        let globPassed;
+        (workspace as any).createFileSystemWatcher = (glob) => {
+            globPassed = glob;
+            return mockFileWatcher;
+        };
+        (service as any).listenToFileSystem();
+
+        assert.equal(globPassed, "**/{coverage.xml,custom-lcov.info}");
     });
 });
