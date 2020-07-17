@@ -140,7 +140,7 @@ export class CoverageService {
         }
 
         // Creates a BlobPattern for all coverage files.
-        // EX: `**/{cov.xml, lcov.info}`
+        // EX: `{/path/to/workspace1, /path/to/workspace2}/**/{cov.xml, lcov.info}`
         const blobPattern = `${baseDir}/{${fileNames}}`;
         this.coverageWatcher = workspace.createFileSystemWatcher(blobPattern);
         this.coverageWatcher.onDidChange(this.loadCacheAndRender.bind(this));
