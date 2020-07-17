@@ -135,6 +135,8 @@ export class CoverageService {
         const fileNames = this.configStore.coverageFileNames.toString();
         let baseDir = this.configStore.coverageBaseDir;
         if (workspace.workspaceFolders) {
+            // Prepend workspace folders glob to the folder lookup glob
+            // This allows watching within all the workspace folders
             const workspaceFolders = workspace.workspaceFolders.map((wf) => wf.uri.fsPath);
             baseDir = `{${workspaceFolders}}/${baseDir}`;
         }
