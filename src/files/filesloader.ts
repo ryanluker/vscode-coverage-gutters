@@ -84,7 +84,7 @@ export class FilesLoader {
         fileName: string,
     ) {
         return new Promise<Set<string>>((resolve, reject) => {
-            glob(`**/${fileName}`,
+            glob(`${this.configStore.coverageBaseDir}/${fileName}`,
                 {
                     cwd: workspaceFolder.uri.fsPath,
                     dot: true,

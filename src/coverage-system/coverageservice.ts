@@ -136,9 +136,17 @@ export class CoverageService {
             blobPattern = `{${this.configStore.manualCoverageFilePaths}}`;
         } else {
             const fileNames = this.configStore.coverageFileNames.toString();
+
+            let baseDir = this.configStore.coverageBaseDir;
+            if (workspace.workspaceFolders) {
+                // Prepend workspace folders glob to the folder lookup glob
+                // This allows watching within all the workspace folders
+                const workspaceFolders = workspace.workspaceFolders.map((wf) => wf.uri.fsPath);
+                baseDir = `{${workspaceFolders}}/${baseDir}`;
+            }
             // Creates a BlobPattern for all coverage files.
-            // EX: `**/{cov.xml, lcov.info}`
-            blobPattern = `**/{${fileNames}}`;
+            // EX: `{/path/to/workspace1, /path/to/workspace2}/**/{cov.xml, lcov.info}`
+            blobPattern = `${baseDir}/{${fileNames}}`;
         }
 
         this.coverageWatcher = workspace.createFileSystemWatcher(blobPattern);
