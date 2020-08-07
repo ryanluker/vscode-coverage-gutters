@@ -60,6 +60,9 @@ suite("Renderer Tests", function() {
         const textEditorArray: TextEditor[] = new Array<TextEditor>();
         textEditorArray.push(textEditor);
         renderer.renderCoverage(new Map<string, Section>(), textEditorArray);
+
+        assert.isFalse(statusBar.isLoading);
+
         return done();
     });
 
