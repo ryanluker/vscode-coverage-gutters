@@ -69,6 +69,11 @@ export class Renderer {
                 setLastCoverageLines(coverageLines);
             });
         }
+        catch(e) {
+            // calling function will handle exceptions
+            // `catch` necessary for `finally`
+            throw e;
+        }
         finally {
             this.statusBar.setLoading(false);
         }
