@@ -68,13 +68,11 @@ export class Renderer {
                 // Cache last coverage lines for exports api
                 setLastCoverageLines(coverageLines);
             });
-        }
-        catch(e) {
+        } catch (e) {
             // calling function will handle exceptions
             // `catch` necessary for `finally`
             throw e;
-        }
-        finally {
+        } finally {
             this.statusBar.setLoading(false);
         }
     }
