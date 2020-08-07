@@ -84,7 +84,6 @@ export class CoverageService {
 
     private async loadCache() {
         try {
-            this.statusBar.setLoading(true);
             const printDataCoverage = (data: Map<string, Section>) => {
                 this.outputChannel.appendLine(
                     `[${Date.now()}][printDataCoverage]: Coverage -> ${data.size}`,
@@ -118,7 +117,6 @@ export class CoverageService {
         } catch (error) {
             this.handleError(error);
         }
-        this.statusBar.setLoading(false);
     }
 
     private updateServiceState(state: Status) {
