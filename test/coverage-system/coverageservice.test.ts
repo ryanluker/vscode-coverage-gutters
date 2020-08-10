@@ -1,7 +1,8 @@
 import * as assert from "assert";
-import {OutputChannel, workspace} from "vscode";
+import { OutputChannel, workspace } from "vscode";
 
-import {CoverageService} from "../../src/coverage-system/coverageservice";
+import { CoverageService } from "../../src/coverage-system/coverageservice";
+import { StatusBarToggler } from "../../src/extension/statusbartoggler";
 
 const mockOutputChannel = {appendLine: (x) => {}} as OutputChannel;
 const mockFileWatcher = {
@@ -10,6 +11,7 @@ const mockFileWatcher = {
     onDidCreate: (fn) => {},
     onDidDelete: (fn) => {},
 };
+const mockStatusBarToggler = {setLoading: () => {}} as StatusBarToggler;
 
 // Original functions
 const createFileSystemWatcher = workspace.createFileSystemWatcher;
@@ -26,7 +28,7 @@ suite("CoverageService Tests", function() {
                 "/path2",
             ],
         };
-        const service = new CoverageService(config, mockOutputChannel);
+        const service = new CoverageService(config, mockOutputChannel, mockStatusBarToggler);
 
         let globPassed;
         (workspace as any).createFileSystemWatcher = (glob) => {
@@ -47,7 +49,7 @@ suite("CoverageService Tests", function() {
             ],
             manualCoverageFilePaths: [],
         };
-        const service = new CoverageService(config, mockOutputChannel);
+        const service = new CoverageService(config, mockOutputChannel, mockStatusBarToggler);
 
         let globPassed;
         (workspace as any).createFileSystemWatcher = (glob) => {

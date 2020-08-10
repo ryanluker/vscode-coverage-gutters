@@ -1,11 +1,11 @@
-import {Section} from "lcov-parse";
+import { Section } from "lcov-parse";
 import {
     Range,
     TextEditor,
 } from "vscode";
-import {Config} from "../extension/config";
-import {setLastCoverageLines} from "../extension/exportsapi";
-import {SectionFinder} from "./sectionfinder";
+import { Config } from "../extension/config";
+import { setLastCoverageLines } from "../extension/exportsapi";
+import { SectionFinder } from "./sectionfinder";
 
 export interface ICoverageLines {
     full: Range[];
@@ -54,7 +54,7 @@ export class Renderer {
             // find the section(s) (or undefined) by looking relatively at each workspace
             // users can also optional use absolute instead of relative for this
             const foundSections = this.sectionFinder.findSectionsForEditor(textEditor, sections);
-            if (!foundSections.length) { return ; }
+            if (!foundSections.length) { return; }
 
             this.filterCoverage(foundSections, coverageLines);
             this.setDecorationsForEditor(textEditor, coverageLines);
@@ -120,9 +120,9 @@ export class Renderer {
         if (!section || !section.lines) {
             return;
         }
-        // TODO cleanup this arears by using maps, filters, etc
+        // TODO cleanup this area by using maps, filters, etc
         section.lines.details.forEach((detail) => {
-            if (detail.line < 0) { return ; }
+            if (detail.line < 0) { return; }
             const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
             if (detail.hit > 0) {
                 if (coverageLines.none.find((range) => range.isEqual(lineRange))) {
@@ -147,9 +147,10 @@ export class Renderer {
         if (!section || !section.branches) {
             return;
         }
+        // TODO cleanup this area by using maps, filters, etc
         section.branches.details.forEach((detail) => {
             if (detail.taken === 0) {
-                if (detail.line < 0) { return ; }
+                if (detail.line < 0) { return; }
                 const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
                 if (coverageLines.full.find((range) => range.isEqual(partialRange))) {
                     // remove full coverage if partial is a better match
