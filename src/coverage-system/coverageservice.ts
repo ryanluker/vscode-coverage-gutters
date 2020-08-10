@@ -53,7 +53,6 @@ export class CoverageService {
         this.renderer = new Renderer(
             configStore,
             this.sectionFinder,
-            statusBar,
         );
         this.coverageParser = new CoverageParser(this.outputChannel);
         this.statusBar = statusBar;
@@ -78,8 +77,13 @@ export class CoverageService {
     }
 
     public async removeCoverageForCurrentEditor() {
-        const visibleEditors = window.visibleTextEditors;
-        await this.renderer.renderCoverage(new Map(), visibleEditors);
+        try {
+            this.statusBar.setLoading(true);
+            const visibleEditors = window.visibleTextEditors;
+            await this.renderer.renderCoverage(new Map(), visibleEditors);
+        } finally {
+            this.statusBar.setLoading(false);
+        }
     }
 
     private async loadCache() {
@@ -125,11 +129,16 @@ export class CoverageService {
     }
 
     private async loadCacheAndRender() {
-        await this.loadCache();
-        this.updateServiceState(Status.rendering);
-        const visibleEditors = window.visibleTextEditors;
-        await this.renderer.renderCoverage(this.cache, visibleEditors);
-        this.updateServiceState(Status.ready);
+        try {
+            this.statusBar.setLoading(true);
+            await this.loadCache();
+            this.updateServiceState(Status.rendering);
+            const visibleEditors = window.visibleTextEditors;
+            await this.renderer.renderCoverage(this.cache, visibleEditors);
+            this.updateServiceState(Status.ready);
+        } finally {
+            this.statusBar.setLoading(false);
+        }
     }
 
     private listenToFileSystem() {
@@ -161,12 +170,17 @@ export class CoverageService {
     }
 
     private async handleEditorEvents(textEditors: TextEditor[]) {
-        this.updateServiceState(Status.rendering);
-        await this.renderer.renderCoverage(
-            this.cache,
-            textEditors,
-        );
-        this.updateServiceState(Status.ready);
+        try {
+            this.updateServiceState(Status.rendering);
+            this.statusBar.setLoading(true);
+            await this.renderer.renderCoverage(
+                this.cache,
+                textEditors,
+            );
+            this.updateServiceState(Status.ready);
+        } finally {
+            this.statusBar.setLoading(false);
+        }
     }
 
     private listenToEditorEvents() {

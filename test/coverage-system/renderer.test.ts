@@ -3,33 +3,25 @@ import { Section } from "lcov-parse";
 import { DecorationOptions, Range, TextEditor, TextEditorDecorationType } from "vscode";
 import { Renderer } from "../../src/coverage-system/renderer";
 import { SectionFinder } from "../../src/coverage-system/sectionfinder";
-import { StatusBarToggler } from "../../src/extension/statusbartoggler";
 import { fakeConfig } from "../mocks/fakeConfig";
 
 suite("Renderer Tests", function() {
-    let statusBar: StatusBarToggler;
-
-    setup(() => {
-        statusBar = new StatusBarToggler(fakeConfig);
-    });
-
     test("Constructor should setup properly @unit", function(done) {
         const sectionFinder: SectionFinder = {} as SectionFinder;
-        assert.doesNotThrow(() => new Renderer(fakeConfig, sectionFinder, statusBar));
+        assert.doesNotThrow(() => new Renderer(fakeConfig, sectionFinder));
         return done();
     });
 
     test("renderCoverage should not error with empty map and empty TextEditor array @unit", function(done) {
         const sectionFinder: SectionFinder = {} as SectionFinder;
+        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
 
-        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder, statusBar);
         renderer.renderCoverage(new Map<string, Section>(), new Array<TextEditor>());
         return done();
     });
 
     test("renderCoverage should not error with empty map and single textEditor @unit", function(done) {
         const sections: Section[] = [{} as Section];
-
         const sectionFinder: SectionFinder = {
             findSectionsForEditor: (
                 functionTextEditor: TextEditor,
@@ -40,8 +32,7 @@ suite("Renderer Tests", function() {
                 return sections;
             },
         } as SectionFinder;
-
-        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder, statusBar);
+        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
         const textEditor: TextEditor = {} as TextEditor;
 
         textEditor.setDecorations = function(
@@ -60,17 +51,14 @@ suite("Renderer Tests", function() {
         const textEditorArray: TextEditor[] = new Array<TextEditor>();
         textEditorArray.push(textEditor);
         renderer.renderCoverage(new Map<string, Section>(), textEditorArray);
-
-        assert.isFalse(statusBar.isLoading);
-
         return done();
     });
 
     test("removeDecorationsForEditor should not error @unit", function(done) {
         const sectionFinder: SectionFinder = {} as SectionFinder;
-
-        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder, statusBar);
+        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
         const textEditor: TextEditor = {} as TextEditor;
+
         textEditor.setDecorations = function(
             decorationType: TextEditorDecorationType,
             rangesOrOptions: Range[] | DecorationOptions[],

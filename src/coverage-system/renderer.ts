@@ -5,7 +5,6 @@ import {
 } from "vscode";
 import { Config } from "../extension/config";
 import { setLastCoverageLines } from "../extension/exportsapi";
-import { StatusBarToggler } from "../extension/statusbartoggler";
 import { SectionFinder } from "./sectionfinder";
 
 export interface ICoverageLines {
@@ -17,16 +16,13 @@ export interface ICoverageLines {
 export class Renderer {
     private configStore: Config;
     private sectionFinder: SectionFinder;
-    private statusBar: StatusBarToggler;
 
     constructor(
         configStore: Config,
         sectionFinder: SectionFinder,
-        statusBar: StatusBarToggler,
     ) {
         this.configStore = configStore;
         this.sectionFinder = sectionFinder;
-        this.statusBar = statusBar;
     }
 
     /**
@@ -38,43 +34,34 @@ export class Renderer {
         sections: Map<string, Section>,
         textEditors: TextEditor[],
     ) {
-        try {
-            this.statusBar.setLoading(true);
-            const coverageLines: ICoverageLines = {
-                full: [],
-                none: [],
-                partial: [],
-            };
+        const coverageLines: ICoverageLines = {
+            full: [],
+            none: [],
+            partial: [],
+        };
 
-            textEditors.forEach((textEditor) => {
-                // Remove all decorations first to prevent graphical issues
-                this.removeDecorationsForEditor(textEditor);
-            });
+        textEditors.forEach((textEditor) => {
+            // Remove all decorations first to prevent graphical issues
+            this.removeDecorationsForEditor(textEditor);
+        });
 
-            textEditors.forEach((textEditor) => {
-                // Reset lines for new editor
-                coverageLines.full = [];
-                coverageLines.none = [];
-                coverageLines.partial = [];
+        textEditors.forEach((textEditor) => {
+            // Reset lines for new editor
+            coverageLines.full = [];
+            coverageLines.none = [];
+            coverageLines.partial = [];
 
-                // find the section(s) (or undefined) by looking relatively at each workspace
-                // users can also optional use absolute instead of relative for this
-                const foundSections = this.sectionFinder.findSectionsForEditor(textEditor, sections);
-                if (!foundSections.length) { return; }
+            // find the section(s) (or undefined) by looking relatively at each workspace
+            // users can also optional use absolute instead of relative for this
+            const foundSections = this.sectionFinder.findSectionsForEditor(textEditor, sections);
+            if (!foundSections.length) { return; }
 
-                this.filterCoverage(foundSections, coverageLines);
-                this.setDecorationsForEditor(textEditor, coverageLines);
+            this.filterCoverage(foundSections, coverageLines);
+            this.setDecorationsForEditor(textEditor, coverageLines);
 
-                // Cache last coverage lines for exports api
-                setLastCoverageLines(coverageLines);
-            });
-        } catch (e) {
-            // calling function will handle exceptions
-            // `catch` necessary for `finally`
-            throw e;
-        } finally {
-            this.statusBar.setLoading(false);
-        }
+            // Cache last coverage lines for exports api
+            setLastCoverageLines(coverageLines);
+        });
     }
 
     public removeDecorationsForEditor(editor: TextEditor) {
@@ -133,7 +120,7 @@ export class Renderer {
         if (!section || !section.lines) {
             return;
         }
-        // TODO cleanup this arears by using maps, filters, etc
+        // TODO cleanup this area by using maps, filters, etc
         section.lines.details.forEach((detail) => {
             if (detail.line < 0) { return; }
             const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
@@ -160,6 +147,7 @@ export class Renderer {
         if (!section || !section.branches) {
             return;
         }
+        // TODO cleanup this area by using maps, filters, etc
         section.branches.details.forEach((detail) => {
             if (detail.taken === 0) {
                 if (detail.line < 0) { return; }

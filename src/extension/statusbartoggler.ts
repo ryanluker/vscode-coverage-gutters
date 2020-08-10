@@ -4,8 +4,10 @@ import { Config } from "./config";
 export class StatusBarToggler implements Disposable {
     private static readonly watchCommand = "coverage-gutters.watchCoverageAndVisibleEditors";
     private static readonly removeCommand = "coverage-gutters.removeWatch";
-    private static readonly watchText = "$(list-ordered) Watch";
-    private static readonly removeText = "$(list-ordered) Remove Watch";
+    private static readonly watchText = "Watch";
+    private static readonly removeText = "Remove Watch";
+    private static readonly listIcon = "$(list-ordered) ";
+    private static readonly loadingIcon = "$(loading~spin) ";
     private static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
     public isActive: boolean;
     public isLoading: boolean;
@@ -61,7 +63,9 @@ export class StatusBarToggler implements Disposable {
             this.statusBarItem.text = StatusBarToggler.watchText;
         }
         if (this.isLoading) {
-            this.statusBarItem.text = `${this.statusBarItem.text} $(loading~spin)`;
+            this.statusBarItem.text = StatusBarToggler.loadingIcon + this.statusBarItem.text;
+        } else {
+            this.statusBarItem.text = StatusBarToggler.listIcon + this.statusBarItem.text;
         }
     }
 }
