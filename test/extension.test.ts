@@ -7,16 +7,16 @@ suite("Extension Tests", function() {
     this.timeout(25000);
 
     test("Preview the coverage report in a new webview tab @integration", async () => {
-        // Note: depends on "coverage-gutters.coverageReportFileName": "index.html",
+        // Note: depends on "pruner.coverageReportFileName": "index.html",
         // being set in the example.code-workspace setting file as the coverage report
         // is in the root of the node folder and not inside the default /coverage
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
 
-        await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
+        await vscode.commands.executeCommand("pruner.previewCoverageReport");
         // Look to see if the webview is open and showing preview coverage
         await waitForExtension(2000);
         const reportView = vscode.workspace.textDocuments[1];
@@ -25,7 +25,7 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
@@ -34,7 +34,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/remote-test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+        await vscode.commands.executeCommand("pruner.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -49,7 +49,7 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on node test file with large lcov.info file @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
@@ -58,7 +58,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+        await vscode.commands.executeCommand("pruner.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -73,7 +73,7 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on python test file @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
@@ -81,7 +81,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/bar/a.py", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+        await vscode.commands.executeCommand("pruner.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -95,7 +95,7 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on php test file number 1 @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
@@ -103,7 +103,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/main.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+        await vscode.commands.executeCommand("pruner.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -117,7 +117,7 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on php test file number 2 @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
@@ -125,7 +125,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/main2.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+        await vscode.commands.executeCommand("pruner.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -139,7 +139,7 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on php test file number 3 @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
@@ -147,7 +147,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/main3.php", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+        await vscode.commands.executeCommand("pruner.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -161,7 +161,7 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on java test file @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
@@ -169,7 +169,7 @@ suite("Extension Tests", function() {
         const testCoverage = await vscode.workspace.findFiles("**/mycompany/app/App.java", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+        await vscode.commands.executeCommand("pruner.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -183,7 +183,7 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on node test file with large code base @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
@@ -200,7 +200,7 @@ suite("Extension Tests", function() {
         await exec("cp -r node node7");
 
         await vscode.window.showTextDocument(testDocument);
-        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+        await vscode.commands.executeCommand("pruner.displayCoverage");
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -215,14 +215,14 @@ suite("Extension Tests", function() {
 
     test("Run watch and open files to see coverage @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-pruner");
         if (!extension) {
             throw new Error("Could not load extension");
         }
         const getCachedLines = extension.exports.getLastCoverageLines;
 
         // Look at javascript file and assert coverage
-        await vscode.commands.executeCommand("coverage-gutters.watchCoverageAndVisibleEditors");
+        await vscode.commands.executeCommand("pruner.watchCoverageAndVisibleEditors");
         const testJSCoverage = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
         const testJSDocument = await vscode.workspace.openTextDocument(testJSCoverage[0]);
         await vscode.window.showTextDocument(testJSDocument);
@@ -241,7 +241,7 @@ suite("Extension Tests", function() {
         const testJavaCoverage = await vscode.workspace.findFiles("**/mycompany/app/App.java", "**/node_modules/**");
         const testJavaDocument = await vscode.workspace.openTextDocument(testJavaCoverage[0]);
         await vscode.window.showTextDocument(testJavaDocument);
-        await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+        await vscode.commands.executeCommand("pruner.displayCoverage");
         await waitForExtension(2000);
 
         await checkCoverage(() => {

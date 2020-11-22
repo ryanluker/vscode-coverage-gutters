@@ -1,4 +1,3 @@
-import { Section } from "lcov-parse";
 import {
     Disposable,
     FileSystemWatcher,
@@ -88,20 +87,6 @@ export class CoverageService {
 
     private async loadCache() {
         try {
-            const printDataCoverage = (data: Map<string, Section>) => {
-                this.outputChannel.appendLine(
-                    `[${Date.now()}][printDataCoverage]: Coverage -> ${data.size}`,
-                );
-                /*
-                data.forEach((section) => {
-                    const coverage = JSON.stringify(section, null, 4);
-                    this.outputChannel.appendLine(
-                        `[${Date.now()}][printDataCoverage]: ${coverage}`,
-                    );
-                });
-                */
-            };
-
             this.updateServiceState(Status.loading);
             const files = await this.filesLoader.findCoverageFiles();
             this.outputChannel.appendLine(
@@ -190,6 +175,7 @@ export class CoverageService {
     }
 
     private handleError(error: Error) {
+        this.updateServiceState(Status.error);
         const message = error.message ? error.message : error;
         const stackTrace = error.stack;
         window.showWarningMessage(message.toString());

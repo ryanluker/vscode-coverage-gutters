@@ -2,7 +2,7 @@
 <coverage generated="1589221121">
   <project timestamp="1589221121">
     <package name="test">
-      <file name="/Users/meindertjan/vscode-coverage-gutters/example/php/src/testCoverage/testMain/main.php">
+      <file name="/Users/meindertjan/vscode-pruner/example/php/src/testCoverage/testMain/main.php">
         <class name="test\main" namespace="test">
           <metrics complexity="3" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
         </class>
@@ -17,7 +17,7 @@
         <line num="21" type="stmt" count="0"/>
         <metrics loc="23" ncloc="23" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="4" elements="9" coveredelements="6"/>
       </file>
-      <file name="/Users/meindertjan/vscode-coverage-gutters/example/php/src/testCoverage/testMain2/main2.php">
+      <file name="/Users/meindertjan/vscode-pruner/example/php/src/testCoverage/testMain2/main2.php">
         <class name="test\secondmain" namespace="test">
           <metrics complexity="3" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="2" elements="11" coveredelements="3"/>
         </class>
@@ -35,7 +35,7 @@
         <metrics loc="25" ncloc="25" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="2" elements="11" coveredelements="3"/>
       </file>
     </package>
-    <file name="/Users/meindertjan/vscode-coverage-gutters/example/php/src/testCoverage/testNoNamespace/main3.php">
+    <file name="/Users/meindertjan/vscode-pruner/example/php/src/testCoverage/testNoNamespace/main3.php">
       <class name="NonNamespaced" namespace="global">
         <metrics complexity="3" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="3" elements="7" coveredelements="5"/>
       </class>

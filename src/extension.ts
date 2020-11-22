@@ -16,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
         Sentry.init({
             defaultIntegrations: false,
             dsn: "https://dfd1a0d586284b6b8710feef8a2928b3@o412074.ingest.sentry.io/5288283",
-            release: "vscode-coverage-gutters@2.7.0-alpha",
+            release: "vscode-pruner@2.7.0-alpha",
         });
         Sentry.configureScope(function(scope) {
             // Generate a random string for this session
@@ -28,7 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
     const configStore = new Config(context);
     const statusBarToggler = new StatusBarToggler(configStore);
     const coverage = new Coverage(configStore);
-    const outputChannel = vscode.window.createOutputChannel("coverage-gutters");
+    const outputChannel = vscode.window.createOutputChannel("pruner");
     const gutters = new Gutters(
         configStore,
         coverage,
@@ -37,23 +37,23 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     const previewCoverageReport = vscode.commands.registerCommand(
-        "coverage-gutters.previewCoverageReport",
+        "pruner.previewCoverageReport",
         gutters.previewCoverageReport.bind(gutters),
     );
     const display = vscode.commands.registerCommand(
-        "coverage-gutters.displayCoverage",
+        "pruner.displayCoverage",
         gutters.displayCoverageForActiveFile.bind(gutters),
     );
     const watch = vscode.commands.registerCommand(
-        "coverage-gutters.watchCoverageAndVisibleEditors",
+        "pruner.watchCoverageAndVisibleEditors",
         gutters.watchCoverageAndVisibleEditors.bind(gutters),
     );
     const removeWatch = vscode.commands.registerCommand(
-        "coverage-gutters.removeWatch",
+        "pruner.removeWatch",
         gutters.removeWatch.bind(gutters),
     );
     const remove = vscode.commands.registerCommand(
-        "coverage-gutters.removeCoverage",
+        "pruner.removeCoverage",
         gutters.removeCoverageForActiveFile.bind(gutters),
     );
 

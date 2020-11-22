@@ -1,4 +1,4 @@
-name: vscode-coverage-gutters-ci
+name: vscode-pruner-ci
 on:
   pull_request:
   push:

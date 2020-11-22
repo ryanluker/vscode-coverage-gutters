@@ -5,9 +5,9 @@
 		}
 	],
 	"settings": {
-		"coverage-gutters.showLineCoverage": true,
-		"coverage-gutters.coverageReportFileName": "index.html",
+		"pruner.showLineCoverage": true,
+		"pruner.coverageReportFileName": "index.html",
 		"search.useRipgrep": false,
-		"coverage-gutters.remotePathResolve": ["/var/www/", "./"]
+		"pruner.remotePathResolve": ["/var/www/", "./"]
 	}
 }

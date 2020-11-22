@@ -1,14 +1,14 @@
-# coverage-gutters
-[![Version](https://vsmarketplacebadge.apphb.com/version/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
-[![Ratings](https://vsmarketplacebadge.apphb.com/rating/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
+# pruner
+[![Version](https://vsmarketplacebadge.apphb.com/version/ryanluker.vscode-pruner.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-pruner)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs/ryanluker.vscode-pruner.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-pruner)
+[![Ratings](https://vsmarketplacebadge.apphb.com/rating/ryanluker.vscode-pruner.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-pruner)
 
 ## Call for Maintainers
 Looking for helpful people to assist with bugs, new features or performance improvements. The project has a full suite of tests and code linting, making it very new contributor friendly. Take a look at some of the open github issues and see if any catch your eye!  
-https://github.com/ryanluker/vscode-coverage-gutters/issues
+https://github.com/ryanluker/vscode-pruner/issues
 
 ## Features
-![Coverage Gutters features watch](promo_images/coverage-gutters-features-1.gif)
+![Coverage Gutters features watch](promo_images/pruner-features-1.gif)
 
 - Supports any language as long as you can generate an lcov style coverage file
 - Extensive logging and insight into operations via the output logs
@@ -40,7 +40,7 @@ See [examples directory](example) on how to setup a project.
 - [Nodejs](example/node)
 
 ## Tips and Tricks
-**Using Breakpoints**: Currently to both use the extension and code debugging breakpoints you need to disable the gutter coverage and enable the line coverage via the settings ( `coverage-gutters.showGutterCoverage` and `coverage-gutters.showLineCoverage` respectively).
+**Using Breakpoints**: Currently to both use the extension and code debugging breakpoints you need to disable the gutter coverage and enable the line coverage via the settings ( `pruner.showGutterCoverage` and `pruner.showLineCoverage` respectively).
 
 ## Requirements
 - vscode 1.27.0 and up
@@ -50,10 +50,10 @@ See [examples directory](example) on how to setup a project.
 See extension setting options in IDE.
 
 ## Known Issues
-### [Open Bugs](https://github.com/ryanluker/vscode-coverage-gutters/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+### [Open Bugs](https://github.com/ryanluker/vscode-pruner/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
 ## Release Notes
-### [Changelog](https://github.com/ryanluker/vscode-coverage-gutters/releases)
+### [Changelog](https://github.com/ryanluker/vscode-pruner/releases)
 
 ## Contribution Guidelines
 ### [Guidelines](/CONTRIBUTING.md)

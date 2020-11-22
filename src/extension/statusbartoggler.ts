@@ -2,8 +2,8 @@ import { Disposable, StatusBarItem, window } from "vscode";
 import { Config } from "./config";
 
 export class StatusBarToggler implements Disposable {
-    private static readonly watchCommand = "coverage-gutters.watchCoverageAndVisibleEditors";
-    private static readonly removeCommand = "coverage-gutters.removeWatch";
+    private static readonly watchCommand = "pruner.watchCoverageAndVisibleEditors";
+    private static readonly removeCommand = "pruner.removeWatch";
     private static readonly watchText = "Watch";
     private static readonly removeText = "Remove Watch";
     private static readonly listIcon = "$(list-ordered) ";

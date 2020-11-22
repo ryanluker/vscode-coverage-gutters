@@ -3,23 +3,11 @@ import {
     DecorationRenderOptions,
     ExtensionContext,
     OverviewRulerLane,
-    TextEditorDecorationType,
     window,
     workspace,
 } from "vscode";
 
 export class Config {
-    public coverageBaseDir: string;
-    public coverageFileNames: string[];
-    public reportFileName: string;
-    public fullCoverageDecorationType: TextEditorDecorationType;
-    public partialCoverageDecorationType: TextEditorDecorationType;
-    public noCoverageDecorationType: TextEditorDecorationType;
-    public showStatusBarToggler: boolean;
-    public ignoredPathGlobs: string;
-    public remotePathResolve: string[];
-    public manualCoverageFilePaths: string[];
-
     private context: ExtensionContext;
 
     constructor(context: ExtensionContext) {
@@ -31,54 +19,18 @@ export class Config {
     }
 
     private setup() {
-        const rootCustomConfig = workspace.getConfiguration("coverage-gutters.customizable");
+        const rootCustomConfig = workspace.getConfiguration("pruner.customizable");
 
         // Customizable UI configurations
         const configsCustom = Object.keys(rootCustomConfig);
         for (const element of configsCustom) {
             commands.executeCommand(
                 "setContext",
-                "config.coverage-gutters.customizable." + element,
+                "config.pruner.customizable." + element,
                 rootCustomConfig.get(element));
         }
 
-        const rootConfig = workspace.getConfiguration("coverage-gutters");
-
-        // Basic configurations
-        // TODO: remove lcovname and xmlname in 3.0.0 release
-        const lcovName = rootConfig.get("lcovname") as string;
-        const xmlName = rootConfig.get("xmlname") as string;
-        this.reportFileName = rootConfig.get("coverageReportFileName") as string;
-        this.coverageBaseDir = rootConfig.get("coverageBaseDir") as string;
-        this.coverageFileNames = rootConfig.get("coverageFileNames") as string[];
-        this.coverageFileNames.push(lcovName, xmlName);
-        this.coverageFileNames = this.coverageFileNames.filter((name) => !!name.trim());
-
-        // Make fileNames unique
-        this.coverageFileNames = [...new Set(this.coverageFileNames)];
-
-        // Load ignored paths
-        this.ignoredPathGlobs = rootConfig.get("ignoredPathGlobs") as string;
-
-        const STATUS_BAR_TOGGLER = "status-bar-toggler-watchCoverageAndVisibleEditors-enabled";
-        this.showStatusBarToggler = rootCustomConfig.get(STATUS_BAR_TOGGLER) as boolean;
-
-        // Themes and icons
-        const coverageLightBackgroundColour = rootConfig.get("highlightlight") as string;
-        const coverageDarkBackgroundColour = rootConfig.get("highlightdark") as string;
-        const partialCoverageLightBackgroundColour = rootConfig.get("partialHighlightLight") as string;
-        const partialCoverageDarkBackgroundColour = rootConfig.get("partialHighlightDark") as string;
-        const noCoverageLightBackgroundColour = rootConfig.get("noHighlightLight") as string;
-        const noCoverageDarkBackgroundColour = rootConfig.get("noHighlightDark") as string;
-        const gutterIconPathDark = rootConfig.get("gutterIconPathDark") as string;
-        const gutterIconPathLight = rootConfig.get("gutterIconPathLight") as string;
-        const partialGutterIconPathDark = rootConfig.get("partialGutterIconPathDark") as string;
-        const partialGutterIconPathLight = rootConfig.get("partialGutterIconPathLight") as string;
-        const noGutterIconPathDark = rootConfig.get("noGutterIconPathDark") as string;
-        const noGutterIconPathLight = rootConfig.get("noGutterIconPathLight") as string;
-        const showGutterCoverage = rootConfig.get("showGutterCoverage") as string;
-        const showLineCoverage = rootConfig.get("showLineCoverage") as string;
-        const showRulerCoverage = rootConfig.get("showRulerCoverage") as string;
+        const rootConfig = workspace.getConfiguration("pruner");
 
         // Setup info for decorations
         const fullDecoration: DecorationRenderOptions = {

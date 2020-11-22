@@ -16,14 +16,12 @@ export class FilesLoader {
      */
     public async findCoverageFiles(): Promise<Set<string>> {
         // Developers can manually define their absolute coverage paths
-        if (this.configStore.manualCoverageFilePaths.length) {
-            return new Set(this.configStore.manualCoverageFilePaths);
-        } else {
-            const fileNames = this.configStore.coverageFileNames;
-            const files = await this.findCoverageInWorkspace(fileNames);
-            if (!files.size) { throw new Error("Could not find a Coverage file!"); }
-            return files;
+        const files = await this.findCoverageInWorkspace();
+        if (!files.size) { 
+            throw new Error("Could not find a Coverage file!"); 
         }
+        
+        return files;
     }
 
     /**
@@ -48,7 +46,7 @@ export class FilesLoader {
         });
     }
 
-    private async findCoverageInWorkspace(fileNames: string[]) {
+    private async findCoverageInWorkspace() {
         let files = new Set<string>();
         for (const fileName of fileNames) {
             const coverage = await this.findCoverageForFileName(fileName);
