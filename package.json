@@ -75,6 +75,7 @@
     "vscode": "1.1.34"
   },
   "dependencies": {
+    "@pruner/cli": "^1.0.34",
     "glob": "7.1.4",
     "uuid": "8.2.0"
   }

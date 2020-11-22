@@ -2,6 +2,8 @@ import {readFile} from "fs";
 import * as glob from "glob";
 import {workspace, WorkspaceFolder} from "vscode";
 import {Config} from "../extension/config";
+import pruner from '@pruner/cli';
+pruner.
 
 export class FilesLoader {
     private configStore: Config;
