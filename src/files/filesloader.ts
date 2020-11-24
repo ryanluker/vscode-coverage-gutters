@@ -2,8 +2,7 @@ import {readFile} from "fs";
 import * as glob from "glob";
 import {workspace, WorkspaceFolder} from "vscode";
 import {Config} from "../extension/config";
-import pruner from '@pruner/cli';
-pruner.
+import {pruner} from '@pruner/cli';
 
 export class FilesLoader {
     private configStore: Config;
@@ -49,6 +48,7 @@ export class FilesLoader {
     }
 
     private async findCoverageInWorkspace() {
+        const prunerDirectory = await pruner.getPrunerPath();
         let files = new Set<string>();
         for (const fileName of fileNames) {
             const coverage = await this.findCoverageForFileName(fileName);
