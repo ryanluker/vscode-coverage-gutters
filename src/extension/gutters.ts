@@ -30,6 +30,7 @@ export class Gutters {
         this.coverageService = new CoverageService(
             configStore,
             this.outputChannel,
+            statusBar,
         );
     }
 

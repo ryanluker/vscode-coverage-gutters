@@ -1,4 +1,4 @@
-import {Section} from "lcov-parse";
+import { Section } from "lcov-parse";
 import {
     Disposable,
     FileSystemWatcher,
@@ -8,11 +8,12 @@ import {
     workspace,
 } from "vscode";
 
-import {Config} from "../extension/config";
-import {CoverageParser} from "../files/coverageparser";
-import {FilesLoader} from "../files/filesloader";
-import {Renderer} from "./renderer";
-import {SectionFinder} from "./sectionfinder";
+import { Config } from "../extension/config";
+import { StatusBarToggler } from "../extension/statusbartoggler";
+import { CoverageParser } from "../files/coverageparser";
+import { FilesLoader } from "../files/filesloader";
+import { Renderer } from "./renderer";
+import { SectionFinder } from "./sectionfinder";
 
 enum Status {
     ready = "READY",
@@ -23,6 +24,7 @@ enum Status {
 }
 
 export class CoverageService {
+    private statusBar: StatusBarToggler;
     private configStore: Config;
     private outputChannel: OutputChannel;
     private filesLoader: FilesLoader;
@@ -37,6 +39,7 @@ export class CoverageService {
     constructor(
         configStore: Config,
         outputChannel: OutputChannel,
+        statusBar: StatusBarToggler,
     ) {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
@@ -52,6 +55,7 @@ export class CoverageService {
             this.sectionFinder,
         );
         this.coverageParser = new CoverageParser(this.outputChannel);
+        this.statusBar = statusBar;
     }
 
     public dispose() {
@@ -73,8 +77,13 @@ export class CoverageService {
     }
 
     public async removeCoverageForCurrentEditor() {
-        const visibleEditors = window.visibleTextEditors;
-        await this.renderer.renderCoverage(new Map(), visibleEditors);
+        try {
+            this.statusBar.setLoading(true);
+            const visibleEditors = window.visibleTextEditors;
+            await this.renderer.renderCoverage(new Map(), visibleEditors);
+        } finally {
+            this.statusBar.setLoading(false);
+        }
     }
 
     private async loadCache() {
@@ -120,11 +129,16 @@ export class CoverageService {
     }
 
     private async loadCacheAndRender() {
-        await this.loadCache();
-        this.updateServiceState(Status.rendering);
-        const visibleEditors = window.visibleTextEditors;
-        await this.renderer.renderCoverage(this.cache, visibleEditors);
-        this.updateServiceState(Status.ready);
+        try {
+            this.statusBar.setLoading(true);
+            await this.loadCache();
+            this.updateServiceState(Status.rendering);
+            const visibleEditors = window.visibleTextEditors;
+            await this.renderer.renderCoverage(this.cache, visibleEditors);
+            this.updateServiceState(Status.ready);
+        } finally {
+            this.statusBar.setLoading(false);
+        }
     }
 
     private listenToFileSystem() {
@@ -156,12 +170,17 @@ export class CoverageService {
     }
 
     private async handleEditorEvents(textEditors: TextEditor[]) {
-        this.updateServiceState(Status.rendering);
-        await this.renderer.renderCoverage(
-            this.cache,
-            textEditors,
-        );
-        this.updateServiceState(Status.ready);
+        try {
+            this.updateServiceState(Status.rendering);
+            this.statusBar.setLoading(true);
+            await this.renderer.renderCoverage(
+                this.cache,
+                textEditors,
+            );
+            this.updateServiceState(Status.ready);
+        } finally {
+            this.statusBar.setLoading(false);
+        }
     }
 
     private listenToEditorEvents() {

@@ -1,8 +1,8 @@
-import {assert} from "chai";
-import {Section} from "lcov-parse";
-import {DecorationOptions, Range, TextEditor, TextEditorDecorationType} from "vscode";
-import {Renderer} from "../../src/coverage-system/renderer";
-import {SectionFinder} from "../../src/coverage-system/sectionfinder";
+import { assert } from "chai";
+import { Section } from "lcov-parse";
+import { DecorationOptions, Range, TextEditor, TextEditorDecorationType } from "vscode";
+import { Renderer } from "../../src/coverage-system/renderer";
+import { SectionFinder } from "../../src/coverage-system/sectionfinder";
 import { fakeConfig } from "../mocks/fakeConfig";
 
 suite("Renderer Tests", function() {
@@ -15,13 +15,13 @@ suite("Renderer Tests", function() {
     test("renderCoverage should not error with empty map and empty TextEditor array @unit", function(done) {
         const sectionFinder: SectionFinder = {} as SectionFinder;
         const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
+
         renderer.renderCoverage(new Map<string, Section>(), new Array<TextEditor>());
         return done();
     });
 
     test("renderCoverage should not error with empty map and single textEditor @unit", function(done) {
         const sections: Section[] = [{} as Section];
-
         const sectionFinder: SectionFinder = {
             findSectionsForEditor: (
                 functionTextEditor: TextEditor,
@@ -32,7 +32,6 @@ suite("Renderer Tests", function() {
                 return sections;
             },
         } as SectionFinder;
-
         const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
         const textEditor: TextEditor = {} as TextEditor;
 
@@ -59,6 +58,7 @@ suite("Renderer Tests", function() {
         const sectionFinder: SectionFinder = {} as SectionFinder;
         const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
         const textEditor: TextEditor = {} as TextEditor;
+
         textEditor.setDecorations = function(
             decorationType: TextEditorDecorationType,
             rangesOrOptions: Range[] | DecorationOptions[],
