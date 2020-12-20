@@ -147,7 +147,7 @@ export class CoverageService {
             // EX: `{/path/to/workspace1, /path/to/workspace2}/**/{cov.xml, lcov.info}`
             blobPattern = `${baseDir}/{${fileNames}}`;
         }
-        const outputMessage = `[${Date.now()}][gutters]: Listening to file system at ${blobPattern}`
+        const outputMessage = `[${Date.now()}][coverageservice]: Listening to file system at ${blobPattern}`;
         this.outputChannel.appendLine(outputMessage);
 
         this.coverageWatcher = workspace.createFileSystemWatcher(blobPattern);
