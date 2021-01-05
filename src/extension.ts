@@ -6,34 +6,23 @@ import { Config } from "./extension/config";
 import { emptyLastCoverage, getLastCoverageLines } from "./extension/exportsapi";
 import { Gutters } from "./extension/gutters";
 import { StatusBarToggler } from "./extension/statusbartoggler";
+import { CrashReporter } from "./extension/report";
 
 export function activate(context: vscode.ExtensionContext) {
-    const telemetry = vscode.workspace.getConfiguration("telemetry");
-    const enableCrashReporting = telemetry.get("enableCrashReporter");
-    if (enableCrashReporting) {
-        // Leaving default integrations on captures crashes from other extension hosts
-        // Turning this off fixes that issue and still allows us to capture errors manually
-        Sentry.init({
-            defaultIntegrations: false,
-            dsn: "https://dfd1a0d586284b6b8710feef8a2928b3@o412074.ingest.sentry.io/5288283",
-            release: "vscode-coverage-gutters@2.7.0-alpha",
-        });
-        Sentry.configureScope(function(scope) {
-            // Generate a random string for this session
-            // Note: for privacy reason, we cannot fingerprint across sessions
-            scope.setUser({id: uuidv4()});
-        });
-    }
+    const outputChannel = vscode.window.createOutputChannel("coverage-gutters");
+    const crashReporter = new CrashReporter(outputChannel, false);
+
+    crashReporter.manualCapture();
 
     const configStore = new Config(context);
     const statusBarToggler = new StatusBarToggler(configStore);
     const coverage = new Coverage(configStore);
-    const outputChannel = vscode.window.createOutputChannel("coverage-gutters");
     const gutters = new Gutters(
         configStore,
         coverage,
         outputChannel,
         statusBarToggler,
+        crashReporter
     );
 
     const previewCoverageReport = vscode.commands.registerCommand(
