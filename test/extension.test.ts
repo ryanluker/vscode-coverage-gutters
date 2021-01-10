@@ -19,7 +19,7 @@ suite("Extension Tests", function() {
         await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
         // Look to see if the webview is open and showing preview coverage
         await waitForExtension(2000);
-        const reportView = vscode.workspace.textDocuments[1];
+        const reportView = vscode.workspace.textDocuments[0];
         assert.equal(reportView.languageId, "html");
     });
 
@@ -261,7 +261,7 @@ async function waitForExtension(ms: number) {
 
 function checkCoverage(checkFunc: () => void) {
     let tries = 0;
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
         function checker() {
             if (tries > 5) {
                 throw new Error("No coverage match after 5 tries!");
