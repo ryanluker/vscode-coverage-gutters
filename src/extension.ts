@@ -1,19 +1,17 @@
-import * as Sentry from "@sentry/node";
-import { v4 as uuidv4 } from "uuid";
 import * as vscode from "vscode";
 import { Coverage } from "./coverage-system/coverage";
 import { Config } from "./extension/config";
 import { emptyLastCoverage, getLastCoverageLines } from "./extension/exportsapi";
 import { Gutters } from "./extension/gutters";
-import { StatusBarToggler } from "./extension/statusbartoggler";
 import { CrashReporter } from "./extension/report";
+import { StatusBarToggler } from "./extension/statusbartoggler";
 
 export function activate(context: vscode.ExtensionContext) {
-    const outputChannel = vscode.window.createOutputChannel("coverage-gutters");
-    const crashReporter = new CrashReporter(outputChannel, false);
+    const crashReporter = new CrashReporter(false);
 
     crashReporter.manualCapture();
 
+    const outputChannel = vscode.window.createOutputChannel("coverage-gutters");
     const configStore = new Config(context);
     const statusBarToggler = new StatusBarToggler(configStore);
     const coverage = new Coverage(configStore);
@@ -22,7 +20,6 @@ export function activate(context: vscode.ExtensionContext) {
         coverage,
         outputChannel,
         statusBarToggler,
-        crashReporter
     );
 
     const previewCoverageReport = vscode.commands.registerCommand(

@@ -1,39 +1,30 @@
 import * as Sentry from "@sentry/node";
 import { v4 as uuidv4 } from "uuid";
 import {
-    OutputChannel,
     workspace,
 } from "vscode";
 
 export class CrashReporter {
-    private outputChannel: OutputChannel;
-    private enableCrashReporting: false | undefined;
+    private enableCrashReporting: any;
 
     constructor(
-        outputChannel: OutputChannel,
-        enableCrashReporting: false | undefined
+        enableCrashReporting: boolean,
     ) {
-        this.outputChannel = outputChannel;
         this.enableCrashReporting = enableCrashReporting;
     }
 
-
-    private checkCrashReporterEnabled () {
-        const telemetry = workspace.getConfiguration("telemetry");
-        this.enableCrashReporting = telemetry.get("enableCrashReporter");
-    }
-
-    public capture (area: string, error: Error) {
+    public captureError(area: string, error: Error) {
         this.checkCrashReporterEnabled();
+        let sentryId = "";
 
         if (this.enableCrashReporting) {
-            const sentryId = Sentry.captureException(error);
-            const sentryPrompt = "Please post this in the github issue if you submit one. Sentry Event ID:";
-            this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${sentryPrompt} ${sentryId}`);
+            sentryId = Sentry.captureException(error);
         }
+
+        return sentryId;
     }
 
-    public manualCapture () {
+    public manualCapture() {
         this.checkCrashReporterEnabled();
 
         if (this.enableCrashReporting) {
@@ -50,5 +41,10 @@ export class CrashReporter {
                 scope.setUser({id: uuidv4()});
             });
         }
+    }
+
+    private checkCrashReporterEnabled() {
+        const telemetry = workspace.getConfiguration("telemetry");
+        this.enableCrashReporting = telemetry.get("enableCrashReporter");
     }
 }
