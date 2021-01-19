@@ -5,27 +5,11 @@ import {
 } from "vscode";
 
 export class CrashReporter {
-    private enableCrashReporting: any;
+    private enableCrashReporting: boolean | undefined;
 
-    constructor(
-        enableCrashReporting: boolean,
-    ) {
-        this.enableCrashReporting = enableCrashReporting;
-    }
-
-    public captureError(area: string, error: Error) {
-        this.checkCrashReporterEnabled();
-        let sentryId = "";
-
-        if (this.enableCrashReporting) {
-            sentryId = Sentry.captureException(error);
-        }
-
-        return sentryId;
-    }
-
-    public manualCapture() {
-        this.checkCrashReporterEnabled();
+    constructor() {
+        const telemetry = workspace.getConfiguration("telemetry");
+        this.enableCrashReporting = telemetry.get("enableCrashReporter");
 
         if (this.enableCrashReporting) {
             // Leaving default integrations on captures crashes from other extension hosts
@@ -43,8 +27,14 @@ export class CrashReporter {
         }
     }
 
-    private checkCrashReporterEnabled() {
-        const telemetry = workspace.getConfiguration("telemetry");
-        this.enableCrashReporting = telemetry.get("enableCrashReporter");
+    public captureError(error: Error): string[] {
+        const sentryId = Sentry.captureException(error);
+        const sentryPrompt = "Please post this in the github issue if you submit one. Sentry Event ID:";
+
+        return [sentryId, sentryPrompt];
+    }
+
+    public checkEnabled(): boolean | undefined {
+        return this.enableCrashReporting;
     }
 }

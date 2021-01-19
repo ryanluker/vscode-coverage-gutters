@@ -1,15 +1,13 @@
 import * as vscode from "vscode";
 import { Coverage } from "./coverage-system/coverage";
 import { Config } from "./extension/config";
+import { CrashReporter } from "./extension/crashreporter";
 import { emptyLastCoverage, getLastCoverageLines } from "./extension/exportsapi";
 import { Gutters } from "./extension/gutters";
-import { CrashReporter } from "./extension/report";
 import { StatusBarToggler } from "./extension/statusbartoggler";
 
 export function activate(context: vscode.ExtensionContext) {
-    const crashReporter = new CrashReporter(false);
-
-    crashReporter.manualCapture();
+    const crashReporter = new CrashReporter();
 
     const outputChannel = vscode.window.createOutputChannel("coverage-gutters");
     const configStore = new Config(context);

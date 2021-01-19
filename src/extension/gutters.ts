@@ -8,7 +8,7 @@ import {
 import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
-import { CrashReporter } from "./report";
+import { CrashReporter } from "./crashreporter";
 import { StatusBarToggler } from "./statusbartoggler";
 export class Gutters {
     private coverage: Coverage;
@@ -111,12 +111,10 @@ export class Gutters {
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
 
-        const crashReporter = new CrashReporter(false);
+        const crashReporter = new CrashReporter();
 
-        const sentryId = crashReporter.captureError(area, error);
-
-        if (sentryId) {
-            const sentryPrompt = "Please post this in the github issue if you submit one. Sentry Event ID:";
+        if (crashReporter.checkEnabled()) {
+            const [ sentryId, sentryPrompt ] = crashReporter.captureError(error);
             this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${sentryPrompt} ${sentryId}`);
         }
     }
