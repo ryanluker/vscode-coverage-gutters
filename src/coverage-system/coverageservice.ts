@@ -9,6 +9,7 @@ import {
 } from "vscode";
 
 import { Config } from "../extension/config";
+import { CrashReporter } from "../extension/crashreporter";
 import { StatusBarToggler } from "../extension/statusbartoggler";
 import { CoverageParser } from "../files/coverageparser";
 import { FilesLoader } from "../files/filesloader";
@@ -179,5 +180,12 @@ export class CoverageService {
         window.showWarningMessage(message.toString());
         this.outputChannel.appendLine(`[${Date.now()}][gutters]: Error ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][gutters]: Stacktrace ${stackTrace}`);
+
+        const crashReporter = new CrashReporter();
+
+        if (crashReporter.checkEnabled()) {
+            const [ sentryId, sentryPrompt ] = crashReporter.captureError(error);
+            this.outputChannel.appendLine(`[${Date.now()}][gutters]: ${sentryPrompt} ${sentryId}`);
+        }
     }
 }
