@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/node";
 import {
     OutputChannel,
     Uri,
@@ -9,8 +8,8 @@ import {
 import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
+import { CrashReporter } from "./crashreporter";
 import { StatusBarToggler } from "./statusbartoggler";
-
 export class Gutters {
     private coverage: Coverage;
     private outputChannel: OutputChannel;
@@ -112,12 +111,10 @@ export class Gutters {
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
 
-        // Only send crash reports if the user allows this from their global settings.
-        const telemetry = workspace.getConfiguration("telemetry");
-        const enableCrashReporting = telemetry.get("enableCrashReporter");
-        if (enableCrashReporting) {
-            const sentryId = Sentry.captureException(error);
-            const sentryPrompt = "Please post this in the github issue if you submit one. Sentry Event ID:";
+        const crashReporter = new CrashReporter();
+
+        if (crashReporter.checkEnabled()) {
+            const [ sentryId, sentryPrompt ] = crashReporter.captureError(error);
             this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${sentryPrompt} ${sentryId}`);
         }
     }

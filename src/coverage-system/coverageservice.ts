@@ -9,6 +9,7 @@ import {
 } from "vscode";
 
 import { Config } from "../extension/config";
+import { CrashReporter } from "../extension/crashreporter";
 import { StatusBarToggler } from "../extension/statusbartoggler";
 import { CoverageParser } from "../files/coverageparser";
 import { FilesLoader } from "../files/filesloader";
@@ -80,7 +81,7 @@ export class CoverageService {
         try {
             this.statusBar.setLoading(true);
             const visibleEditors = window.visibleTextEditors;
-            await this.renderer.renderCoverage(new Map(), visibleEditors);
+            this.renderer.renderCoverage(new Map(), visibleEditors);
         } finally {
             this.statusBar.setLoading(false);
         }
@@ -88,20 +89,6 @@ export class CoverageService {
 
     private async loadCache() {
         try {
-            const printDataCoverage = (data: Map<string, Section>) => {
-                this.outputChannel.appendLine(
-                    `[${Date.now()}][printDataCoverage]: Coverage -> ${data.size}`,
-                );
-                /*
-                data.forEach((section) => {
-                    const coverage = JSON.stringify(section, null, 4);
-                    this.outputChannel.appendLine(
-                        `[${Date.now()}][printDataCoverage]: ${coverage}`,
-                    );
-                });
-                */
-            };
-
             this.updateServiceState(Status.loading);
             const files = await this.filesLoader.findCoverageFiles();
             this.outputChannel.appendLine(
@@ -116,7 +103,6 @@ export class CoverageService {
                 `[${Date.now()}][coverageservice]: Caching ${dataCoverage.size} coverage(s)`,
             );
             this.cache = dataCoverage;
-            printDataCoverage(this.cache);
             this.updateServiceState(Status.ready);
         } catch (error) {
             this.handleError(error);
@@ -134,7 +120,7 @@ export class CoverageService {
             await this.loadCache();
             this.updateServiceState(Status.rendering);
             const visibleEditors = window.visibleTextEditors;
-            await this.renderer.renderCoverage(this.cache, visibleEditors);
+            this.renderer.renderCoverage(this.cache, visibleEditors);
             this.updateServiceState(Status.ready);
         } finally {
             this.statusBar.setLoading(false);
@@ -162,6 +148,8 @@ export class CoverageService {
             // EX: `{/path/to/workspace1, /path/to/workspace2}/**/{cov.xml, lcov.info}`
             blobPattern = `${baseDir}/{${fileNames}}`;
         }
+        const outputMessage = `[${Date.now()}][coverageservice]: Listening to file system at ${blobPattern}`;
+        this.outputChannel.appendLine(outputMessage);
 
         this.coverageWatcher = workspace.createFileSystemWatcher(blobPattern);
         this.coverageWatcher.onDidChange(this.loadCacheAndRender.bind(this));
@@ -169,14 +157,11 @@ export class CoverageService {
         this.coverageWatcher.onDidDelete(this.loadCacheAndRender.bind(this));
     }
 
-    private async handleEditorEvents(textEditors: TextEditor[]) {
+    private handleEditorEvents(textEditors: TextEditor[]) {
         try {
             this.updateServiceState(Status.rendering);
             this.statusBar.setLoading(true);
-            await this.renderer.renderCoverage(
-                this.cache,
-                textEditors,
-            );
+            this.renderer.renderCoverage(this.cache, textEditors);
             this.updateServiceState(Status.ready);
         } finally {
             this.statusBar.setLoading(false);
@@ -195,5 +180,12 @@ export class CoverageService {
         window.showWarningMessage(message.toString());
         this.outputChannel.appendLine(`[${Date.now()}][gutters]: Error ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][gutters]: Stacktrace ${stackTrace}`);
+
+        const crashReporter = new CrashReporter();
+
+        if (crashReporter.checkEnabled()) {
+            const [ sentryId, sentryPrompt ] = crashReporter.captureError(error);
+            this.outputChannel.appendLine(`[${Date.now()}][gutters]: ${sentryPrompt} ${sentryId}`);
+        }
     }
 }
