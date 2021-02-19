@@ -1,15 +1,13 @@
 import {
     OutputChannel,
-    Uri,
-    ViewColumn,
     window,
-    workspace,
 } from "vscode";
 import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
 import { CrashReporter } from "./crashreporter";
 import { StatusBarToggler } from "./statusbartoggler";
+import { PreviewPanel } from "./webview";
 export class Gutters {
     private coverage: Coverage;
     private outputChannel: OutputChannel;
@@ -42,17 +40,9 @@ export class Gutters {
             );
             if (!pickedReport) { throw new Error("Could not show Coverage Report file!"); }
 
-            // Construct the webview panel for the coverage report to live in
-            const previewPanel = window.createWebviewPanel(
-                "coverageReportPreview",
-                "Preview Coverage Report",
-                ViewColumn.One,
-            );
+            const previewPanel = new PreviewPanel(pickedReport);
 
-            // Read in the report html and send it to the webview
-            const reportUri = Uri.file(pickedReport);
-            const reportHtml = await workspace.openTextDocument(reportUri);
-            previewPanel.webview.html = reportHtml.getText();
+            await previewPanel.createWebView();
         } catch (error) {
             this.handleError("previewCoverageReport", error);
         }
