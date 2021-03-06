@@ -85,9 +85,9 @@ suite("Coverage Tests", function() {
 
         coverage.pickFile(["test1", "test2"], "nope")
             .then((value) => {
-                assert.ok(captureMessage == "Did not choose a file!");
+                assert.ok(captureMessage === "Did not choose a file!");
                 return done();
-            })
+            });
     });
 
     test("#pickFile: Should return string if filePaths is a string @unit", function(done) {

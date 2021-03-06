@@ -38,7 +38,7 @@ suite("FilesLoader Tests", function() {
         (vscode as any).window.showWarningMessage = showWarningMessage;
 
         await filesLoader.findCoverageFiles();
-        assert.ok(captureMessage == "Could not find a Coverage file!");
+        assert.ok(captureMessage === "Could not find a Coverage file!");
     });
 
     test("findCoverageFiles returns manual coverage paths if set @unit", async function() {
