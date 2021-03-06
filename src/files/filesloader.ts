@@ -1,6 +1,6 @@
 import {readFile} from "fs";
 import * as glob from "glob";
-import {workspace, WorkspaceFolder} from "vscode";
+import {window, workspace, WorkspaceFolder} from "vscode";
 import {Config} from "../extension/config";
 
 export class FilesLoader {
@@ -21,7 +21,10 @@ export class FilesLoader {
         } else {
             const fileNames = this.configStore.coverageFileNames;
             const files = await this.findCoverageInWorkspace(fileNames);
-            if (!files.size) { throw new Error("Could not find a Coverage file!"); }
+            if (!files.size) {
+                window.showWarningMessage("Could not find a Coverage file!");
+                return new Set();
+            }
             return files;
         }
     }
