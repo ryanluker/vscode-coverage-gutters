@@ -40,7 +40,7 @@ export class Gutters {
             );
             if (!pickedReport) {
                 window.showWarningMessage("Could not show Coverage Report file!");
-                return
+                return;
             }
 
             const previewPanel = new PreviewPanel(pickedReport);
