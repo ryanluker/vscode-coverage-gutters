@@ -1,5 +1,6 @@
 import * as assert from "assert";
 import * as fs from "fs";
+import * as vscode from "vscode";
 
 import {FilesLoader} from "../../src/files/filesloader";
 import {fakeConfig} from "../mocks/fakeConfig";
@@ -32,10 +33,12 @@ suite("FilesLoader Tests", function() {
         const filesLoader = new FilesLoader(fakeConfig);
         (filesLoader as any).findCoverageInWorkspace = async () => new Map();
 
-        return assert.rejects(
-            filesLoader.findCoverageFiles.bind(filesLoader),
-            Error("Could not find a Coverage file!"),
-        );
+        let captureMessage = "";
+        const showWarningMessage = async (message: string) => captureMessage=message; // tslint:disable-line
+        (vscode as any).window.showWarningMessage = showWarningMessage;
+
+        await filesLoader.findCoverageFiles();
+        assert.ok(captureMessage == "Could not find a Coverage file!");
     });
 
     test("findCoverageFiles returns manual coverage paths if set @unit", async function() {
