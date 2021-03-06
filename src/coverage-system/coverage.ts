@@ -40,7 +40,10 @@ export class Coverage {
                 fileQuickPicks,
                 {placeHolder},
             );
-            if (!item) { throw new Error("Did not choose a file!"); }
+            if (!item) {
+                window.showWarningMessage("Did not choose a file!");
+                return;
+            }
 
             pickedFile = item.description;
         }

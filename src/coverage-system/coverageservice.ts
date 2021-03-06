@@ -88,25 +88,21 @@ export class CoverageService {
     }
 
     private async loadCache() {
-        try {
-            this.updateServiceState(Status.loading);
-            const files = await this.filesLoader.findCoverageFiles();
-            this.outputChannel.appendLine(
-                `[${Date.now()}][coverageservice]: Loading ${files.size} file(s)`,
-            );
-            const dataFiles = await this.filesLoader.loadDataFiles(files);
-            this.outputChannel.appendLine(
-                `[${Date.now()}][coverageservice]: Loaded ${dataFiles.size} data file(s)`,
-            );
-            const dataCoverage = await this.coverageParser.filesToSections(dataFiles);
-            this.outputChannel.appendLine(
-                `[${Date.now()}][coverageservice]: Caching ${dataCoverage.size} coverage(s)`,
-            );
-            this.cache = dataCoverage;
-            this.updateServiceState(Status.ready);
-        } catch (error) {
-            this.handleError(error);
-        }
+        this.updateServiceState(Status.loading);
+        const files = await this.filesLoader.findCoverageFiles();
+        this.outputChannel.appendLine(
+            `[${Date.now()}][coverageservice]: Loading ${files.size} file(s)`,
+        );
+        const dataFiles = await this.filesLoader.loadDataFiles(files);
+        this.outputChannel.appendLine(
+            `[${Date.now()}][coverageservice]: Loaded ${dataFiles.size} data file(s)`,
+        );
+        const dataCoverage = await this.coverageParser.filesToSections(dataFiles);
+        this.outputChannel.appendLine(
+            `[${Date.now()}][coverageservice]: Caching ${dataCoverage.size} coverage(s)`,
+        );
+        this.cache = dataCoverage;
+        this.updateServiceState(Status.ready);
     }
 
     private updateServiceState(state: Status) {
@@ -172,20 +168,5 @@ export class CoverageService {
         this.editorWatcher = window.onDidChangeVisibleTextEditors(
             this.handleEditorEvents.bind(this),
         );
-    }
-
-    private handleError(error: Error) {
-        const message = error.message ? error.message : error;
-        const stackTrace = error.stack;
-        window.showWarningMessage(message.toString());
-        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Error ${message}`);
-        this.outputChannel.appendLine(`[${Date.now()}][gutters]: Stacktrace ${stackTrace}`);
-
-        const crashReporter = new CrashReporter();
-
-        if (crashReporter.checkEnabled()) {
-            const [ sentryId, sentryPrompt ] = crashReporter.captureError(error);
-            this.outputChannel.appendLine(`[${Date.now()}][gutters]: ${sentryPrompt} ${sentryId}`);
-        }
     }
 }

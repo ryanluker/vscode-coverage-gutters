@@ -75,16 +75,17 @@ suite("Coverage Tests", function() {
         const showQuickPick = async () => undefined; // tslint:disable-line
         (vscode as any).window.showQuickPick = showQuickPick;
 
+        let captureMessage = "";
+        const showWarningMessage = async (message: string) => captureMessage=message; // tslint:disable-line
+        (vscode as any).window.showWarningMessage = showWarningMessage;
+
         const coverage = new Coverage(
             fakeConfig,
         );
 
         coverage.pickFile(["test1", "test2"], "nope")
             .then((value) => {
-                return done(new Error("Expected error did not fire!"));
-            })
-            .catch((error) => {
-                assert.equal(error.message, "Did not choose a file!");
+                assert.ok(captureMessage === "Did not choose a file!");
                 return done();
             });
     });

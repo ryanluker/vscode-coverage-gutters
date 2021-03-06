@@ -5,7 +5,8 @@
         "outDir": "out",
         "alwaysStrict": true,
         "lib": [
-            "es6"
+            "es6",
+            "dom",
         ],
         "sourceMap": true,
         "rootDir": ".",

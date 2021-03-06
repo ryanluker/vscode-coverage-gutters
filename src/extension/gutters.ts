@@ -38,7 +38,10 @@ export class Gutters {
                 coverageReports,
                 "Choose a Coverage Report to preview.",
             );
-            if (!pickedReport) { throw new Error("Could not show Coverage Report file!"); }
+            if (!pickedReport) {
+                window.showWarningMessage("Could not show Coverage Report file!");
+                return;
+            }
 
             const previewPanel = new PreviewPanel(pickedReport);
 
@@ -71,7 +74,7 @@ export class Gutters {
             this.statusBar.toggle(false);
             this.coverageService.dispose();
         } catch (error) {
-            this.handleError("removeWatch", error, false);
+            this.handleError("removeWatch", error);
         }
     }
 
@@ -79,7 +82,7 @@ export class Gutters {
         try {
             this.coverageService.removeCoverageForCurrentEditor();
         } catch (error) {
-            this.handleError("removeCoverageForActiveFile", error, false);
+            this.handleError("removeCoverageForActiveFile", error);
         }
     }
 
@@ -88,21 +91,17 @@ export class Gutters {
             this.coverageService.dispose();
             this.statusBar.dispose();
         } catch (error) {
-            this.handleError("dispose", error, false);
+            this.handleError("dispose", error);
         }
     }
 
-    private handleError(area: string, error: Error, showMessage: boolean = true) {
+    private handleError(area: string, error: Error) {
         const message = error.message ? error.message : error;
         const stackTrace = error.stack;
-        if (showMessage) {
-            window.showWarningMessage(message.toString());
-        }
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
 
         const crashReporter = new CrashReporter();
-
         if (crashReporter.checkEnabled()) {
             const [ sentryId, sentryPrompt ] = crashReporter.captureError(error);
             this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${sentryPrompt} ${sentryId}`);
