@@ -13,21 +13,25 @@ export class Gutters {
     private outputChannel: OutputChannel;
     private statusBar: StatusBarToggler;
     private coverageService: CoverageService;
+    private crashReporter: CrashReporter;
 
     constructor(
         configStore: Config,
         coverage: Coverage,
         outputChannel: OutputChannel,
         statusBar: StatusBarToggler,
+        crashReporter: CrashReporter,
     ) {
         this.coverage = coverage;
         this.outputChannel = outputChannel;
         this.statusBar = statusBar;
+        this.crashReporter = crashReporter;
 
         this.coverageService = new CoverageService(
             configStore,
             this.outputChannel,
             statusBar,
+            crashReporter,
         );
     }
 
@@ -42,9 +46,7 @@ export class Gutters {
                 window.showWarningMessage("Could not show Coverage Report file!");
                 return;
             }
-
             const previewPanel = new PreviewPanel(pickedReport);
-
             await previewPanel.createWebView();
         } catch (error) {
             this.handleError("previewCoverageReport", error);
@@ -101,9 +103,8 @@ export class Gutters {
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
 
-        const crashReporter = new CrashReporter();
-        if (crashReporter.checkEnabled()) {
-            const [ sentryId, sentryPrompt ] = crashReporter.captureError(error);
+        if (this.crashReporter.checkEnabled()) {
+            const [ sentryId, sentryPrompt ] = this.crashReporter.captureError(error);
             this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${sentryPrompt} ${sentryId}`);
         }
     }

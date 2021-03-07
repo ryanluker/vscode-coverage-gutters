@@ -30,20 +30,24 @@ export class CoverageService {
     private outputChannel: OutputChannel;
     private filesLoader: FilesLoader;
     private renderer: Renderer;
+
     private coverageParser: CoverageParser;
     private coverageWatcher: FileSystemWatcher;
     private editorWatcher: Disposable;
     private sectionFinder: SectionFinder;
 
+    private crashReporter: CrashReporter;
     private cache: Map<string, Section>;
 
     constructor(
         configStore: Config,
         outputChannel: OutputChannel,
         statusBar: StatusBarToggler,
+        crashReporter: CrashReporter,
     ) {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
+        this.crashReporter = crashReporter;
         this.updateServiceState(Status.initializing);
         this.cache = new Map();
         this.filesLoader = new FilesLoader(configStore);
@@ -55,7 +59,10 @@ export class CoverageService {
             configStore,
             this.sectionFinder,
         );
-        this.coverageParser = new CoverageParser(this.outputChannel);
+        this.coverageParser = new CoverageParser(
+            this.outputChannel,
+            this.crashReporter,
+        );
         this.statusBar = statusBar;
     }
 

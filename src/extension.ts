@@ -7,17 +7,17 @@ import { Gutters } from "./extension/gutters";
 import { StatusBarToggler } from "./extension/statusbartoggler";
 
 export function activate(context: vscode.ExtensionContext) {
-    const crashReporter = new CrashReporter();
-
     const outputChannel = vscode.window.createOutputChannel("coverage-gutters");
     const configStore = new Config(context);
     const statusBarToggler = new StatusBarToggler(configStore);
     const coverage = new Coverage(configStore);
+    const crashReporter = new CrashReporter();
     const gutters = new Gutters(
         configStore,
         coverage,
         outputChannel,
         statusBarToggler,
+        crashReporter,
     );
 
     const previewCoverageReport = vscode.commands.registerCommand(

@@ -9,9 +9,11 @@ import {CoverageFile, CoverageType} from "./coveragefile";
 
 export class CoverageParser {
     private outputChannel: OutputChannel;
+    private crashReporter: CrashReporter;
 
-    constructor(outputChannel: OutputChannel) {
+    constructor(outputChannel: OutputChannel, crashReporter: CrashReporter) {
         this.outputChannel = outputChannel;
+        this.crashReporter = crashReporter;
     }
 
     /**
@@ -157,11 +159,8 @@ export class CoverageParser {
                 `[${Date.now()}][coverageparser][${system}]: Stacktrace: ${stackTrace}`,
             );
         }
-
-        const crashReporter = new CrashReporter();
-
-        if (crashReporter.checkEnabled()) {
-            const [ sentryId, sentryPrompt ] = crashReporter.captureError(error);
+        if (this.crashReporter.checkEnabled()) {
+            const [ sentryId, sentryPrompt ] = this.crashReporter.captureError(error);
             this.outputChannel.appendLine(`[${Date.now()}][coverageparser][${system}]: ${sentryPrompt} ${sentryId}`);
         }
     }
