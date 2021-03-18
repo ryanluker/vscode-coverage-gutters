@@ -1,5 +1,5 @@
 import {Section} from "lcov-parse";
-import {extname} from "path";
+import {basename} from "path";
 import {TextEditor, Uri, workspace} from "vscode";
 import {OutputChannel} from "vscode";
 import {Config} from "../extension/config";
@@ -116,7 +116,7 @@ export class SectionFinder {
         const editorFileAbs = normalizeFileName(fileName);
         const workspaceFile = normalizeFileName(workspaceFsPath);
         const editorFileRelative = editorFileAbs.substring(workspaceFile.length);
-        const workspaceFolderName = normalizeFileName(workspaceFolder.name);
+        const workspaceFolderName = normalizeFileName(basename(workspaceFsPath));
         return { relativePath: editorFileRelative, workspaceFolder: workspaceFolderName};
     }
 
