@@ -7,7 +7,6 @@
 	"settings": {
 		"coverage-gutters.showLineCoverage": true,
 		"coverage-gutters.coverageReportFileName": "index.html",
-		"search.useRipgrep": false,
 		"coverage-gutters.remotePathResolve": ["/var/www/", "./"]
 	}
 }
