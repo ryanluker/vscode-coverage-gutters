@@ -70,27 +70,34 @@ export class Config {
         const partialCoverageDarkBackgroundColour = rootConfig.get("partialHighlightDark") as string;
         const noCoverageLightBackgroundColour = rootConfig.get("noHighlightLight") as string;
         const noCoverageDarkBackgroundColour = rootConfig.get("noHighlightDark") as string;
-        const gutterIconPathDark = rootConfig.get("gutterIconPathDark") as string;
-        const gutterIconPathLight = rootConfig.get("gutterIconPathLight") as string;
-        const partialGutterIconPathDark = rootConfig.get("partialGutterIconPathDark") as string;
-        const partialGutterIconPathLight = rootConfig.get("partialGutterIconPathLight") as string;
-        const noGutterIconPathDark = rootConfig.get("noGutterIconPathDark") as string;
-        const noGutterIconPathLight = rootConfig.get("noGutterIconPathLight") as string;
         const showGutterCoverage = rootConfig.get("showGutterCoverage") as string;
         const showLineCoverage = rootConfig.get("showLineCoverage") as string;
         const showRulerCoverage = rootConfig.get("showRulerCoverage") as string;
+
+        const defaultIcons = {
+            gutterIconPathDark: "./app_images/gutter-icon-dark.svg",
+            gutterIconPathLight: "./app_images/gutter-icon-light.svg",
+            noGutterIconPathDark: "./app_images/no-gutter-icon-dark.svg",
+            noGutterIconPathLight: "./app_images/no-gutter-icon-light.svg",
+            partialGutterIconPathDark: "./app_images/partial-gutter-icon-dark.svg",
+            partialGutterIconPathLight: "./app_images/partial-gutter-icon-light.svg",
+        };
+
+        const getIcon = (name: string): string =>
+            rootConfig.get(name) as string ||
+            this.context.asAbsolutePath(defaultIcons[name]);
 
         // Setup info for decorations
         const fullDecoration: DecorationRenderOptions = {
             dark: {
                 backgroundColor: showLineCoverage ? coverageDarkBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(gutterIconPathDark) : "",
+                gutterIconPath: showGutterCoverage ? getIcon("gutterIconPathDark") : "",
                 overviewRulerColor: showRulerCoverage ? coverageDarkBackgroundColour : "",
             },
             isWholeLine: true,
             light: {
                 backgroundColor: showLineCoverage ? coverageLightBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(gutterIconPathLight) : "",
+                gutterIconPath: showGutterCoverage ? getIcon("gutterIconPathLight") : "",
                 overviewRulerColor: showRulerCoverage ? coverageLightBackgroundColour : "",
             },
             overviewRulerLane: OverviewRulerLane.Full,
@@ -99,13 +106,13 @@ export class Config {
         const partialDecoration: DecorationRenderOptions = {
             dark: {
                 backgroundColor: showLineCoverage ? partialCoverageDarkBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(partialGutterIconPathDark) : "",
+                gutterIconPath: showGutterCoverage ? getIcon("partialGutterIconPathDark") : "",
                 overviewRulerColor: showRulerCoverage ? partialCoverageDarkBackgroundColour : "",
             },
             isWholeLine: true,
             light: {
                 backgroundColor: showLineCoverage ? partialCoverageLightBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(partialGutterIconPathLight) : "",
+                gutterIconPath: showGutterCoverage ? getIcon("partialGutterIconPathLight") : "",
                 overviewRulerColor: showRulerCoverage ? partialCoverageLightBackgroundColour : "",
             },
             overviewRulerLane: OverviewRulerLane.Full,
@@ -114,13 +121,13 @@ export class Config {
         const noDecoration: DecorationRenderOptions = {
             dark: {
                 backgroundColor: showLineCoverage ? noCoverageDarkBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(noGutterIconPathDark) : "",
+                gutterIconPath: showGutterCoverage ? getIcon("noGutterIconPathDark") : "",
                 overviewRulerColor: showRulerCoverage ? noCoverageDarkBackgroundColour : "",
             },
             isWholeLine: true,
             light: {
                 backgroundColor: showLineCoverage ? noCoverageLightBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? this.context.asAbsolutePath(noGutterIconPathLight) : "",
+                gutterIconPath: showGutterCoverage ? getIcon("noGutterIconPathLight") : "",
                 overviewRulerColor: showRulerCoverage ? noCoverageLightBackgroundColour : "",
             },
             overviewRulerLane: OverviewRulerLane.Full,
