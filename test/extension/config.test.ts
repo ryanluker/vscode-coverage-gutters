@@ -8,6 +8,10 @@ const createTextEditorDecorationType = vscode.window.createTextEditorDecorationT
 const executeCommand = vscode.commands.executeCommand;
 const getConfiguration = vscode.workspace.getConfiguration;
 
+let showGutterCoverage: boolean;
+let iconPathDark: string;
+let iconPathLight: string;
+
 suite("Config Tests", function() {
     const fakeVscode: any = {
         createTextEditorDecorationType: (options) => {
@@ -27,6 +31,12 @@ suite("Config Tests", function() {
                         return ["test.xml", "lcov.info"];
                     } else if (key === "lcovname") {
                         return "lcov.info";
+                    } else if (key === "showGutterCoverage") {
+                        return showGutterCoverage;
+                    } else if (key.includes("IconPathDark")) {
+                        return iconPathDark;
+                    } else if (key.includes("IconPathLight")) {
+                        return iconPathLight;
                     }
                     return "123";
                 },
@@ -74,12 +84,25 @@ suite("Config Tests", function() {
         assert.equal(config.coverageFileNames.length, 3);
     });
 
-    test("Should remove gutter icons if path is blank, allows breakpoint usage @unit", function() {
+    test("Should remove gutter icons if showGutterCoverage is set to false, allows breakpoint usage @unit", function() {
+        showGutterCoverage = false;
         (vscode as any).window.createTextEditorDecorationType = (options) => {
             assert.equal("gutterIconPath" in options.dark, false);
             assert.equal("gutterIconPath" in options.light, false);
         };
-        fakeContext.asAbsolutePath = (options) => "";
         new Config(fakeContext); // tslint:disable-line
     });
+
+    test("Should set the gutter icon to the provided value if set @unit", function() {
+        showGutterCoverage = true;
+        iconPathDark = "/my/absolute/path/to/custom/icon-dark.svg";
+        iconPathLight = "";
+        (vscode as any).window.createTextEditorDecorationType = (options) => {
+            assert.equal(options.dark.gutterIconPath, iconPathDark);
+            assert.equal(options.light.gutterIconPath.includes("./app_images/"), true);
+        };
+        fakeContext.asAbsolutePath = (options) => options;
+        new Config(fakeContext); // tslint:disable-line
+    });
+
 });
