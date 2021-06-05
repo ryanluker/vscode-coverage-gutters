@@ -1,25 +1,34 @@
 name: Continuous Integration
 on:
-  schedule:
-    - cron:  '0 0 * * *'
-  pull_request:
-  push:
-    branches:
-      - master
+    schedule:
+        - cron: "0 0 * * *"
+    pull_request:
+    push:
+        branches:
+            - master
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [windows-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
-    env:
-      CI: true
-    steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: 14.x
-    - run: npm ci
-    - run: npm run build
-    - run: npm run test-unit
-    - run: npm run test-integration
+    build:
+        strategy:
+            matrix:
+                include:
+                    - os: macos-latest
+                      test-unit: test-unit
+                      test-integration: test-integration
+                    - os: windows-latest
+                      test-unit: test-unit
+                      test-integration: test-integration
+                    - os: ubuntu-latest
+                      test-unit: test-unit-headless
+                      test-integration: test-integration-headless
+        runs-on: ${{ matrix.os }}
+        env:
+            CI: true
+        steps:
+            - uses: actions/checkout@v1
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 14.x
+            - run: npm ci
+            - run: npm run build
+            - run: npm run ${{ matrix.test-unit }}
+            - run: npm run ${{ matrix.test-integration }}
