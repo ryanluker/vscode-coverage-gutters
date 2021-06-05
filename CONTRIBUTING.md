@@ -1,4 +1,5 @@
 - test backed code changes
+- tests can be ran from the command line inside the devcontainer by using the headless options
 - new code matches existing style (enforced via tslint)
 - bug fixes always welcome :)
 - new feature proposals go through a github issue
