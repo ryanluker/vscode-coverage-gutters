@@ -1,7 +1,7 @@
 name: Continuous Integration
 on:
   schedule:
-    - cron:  '0 0 * * *'
+    - cron: '0 0 * * *'
   pull_request:
   push:
     branches:
@@ -10,7 +10,16 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest, macOS-latest]
+        include:
+          - os: macos-latest
+            test-unit: test-unit
+            test-integration: test-integration
+          - os: windows-latest
+            test-unit: test-unit
+            test-integration: test-integration
+          - os: ubuntu-latest
+            test-unit: test-unit-headless
+            test-integration: test-integration-headless
     runs-on: ${{ matrix.os }}
     env:
       CI: true
@@ -21,5 +30,5 @@ jobs:
         node-version: 14.x
     - run: npm ci
     - run: npm run build
-    - run: npm run test-unit
-    - run: npm run test-integration
+    - run: npm run ${{ matrix.test-unit }}
+    - run: npm run ${{ matrix.test-integration }}
