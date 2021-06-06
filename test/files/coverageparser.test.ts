@@ -17,7 +17,7 @@ suite("CoverageParser Tests", function() {
             testSection.set(filename, "");
             return testSection;
         };
-        const coverageParsers = new CoverageParser({} as any, {} as any);
+        const coverageParsers = new CoverageParser({} as any);
         (coverageParsers as any).lcovExtract = lcovExtract;
 
         return coverageParsers.filesToSections(testFiles)
@@ -39,7 +39,7 @@ suite("CoverageParser Tests", function() {
             assert.equal(testFiles.has(filename), true);
             return new Map();
         };
-        const coverageParsers = new CoverageParser({} as any, {} as any);
+        const coverageParsers = new CoverageParser({} as any);
         (coverageParsers as any).xmlExtractClover = cloverExtract;
 
         return coverageParsers.filesToSections(testFiles)

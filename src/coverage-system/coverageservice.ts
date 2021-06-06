@@ -59,10 +59,7 @@ export class CoverageService {
             configStore,
             this.sectionFinder,
         );
-        this.coverageParser = new CoverageParser(
-            this.outputChannel,
-            this.crashReporter,
-        );
+        this.coverageParser = new CoverageParser(this.outputChannel);
         this.statusBar = statusBar;
     }
 

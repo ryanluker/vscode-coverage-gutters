@@ -4,16 +4,13 @@ import {parseContent as parseContentJacoco} from "jacoco-parse";
 import {Section, source} from "lcov-parse";
 import {OutputChannel} from "vscode";
 
-import { CrashReporter } from "../extension/crashreporter";
 import {CoverageFile, CoverageType} from "./coveragefile";
 
 export class CoverageParser {
     private outputChannel: OutputChannel;
-    private crashReporter: CrashReporter;
 
-    constructor(outputChannel: OutputChannel, crashReporter: CrashReporter) {
+    constructor(outputChannel: OutputChannel) {
         this.outputChannel = outputChannel;
-        this.crashReporter = crashReporter;
     }
 
     /**
@@ -159,10 +156,5 @@ export class CoverageParser {
                 `[${Date.now()}][coverageparser][${system}]: Stacktrace: ${stackTrace}`,
             );
         }
-        if (this.crashReporter.checkEnabled()) {
-            const [ sentryId, sentryPrompt ] = this.crashReporter.captureError(error);
-            this.outputChannel.appendLine(`[${Date.now()}][coverageparser][${system}]: ${sentryPrompt} ${sentryId}`);
-        }
     }
-
 }

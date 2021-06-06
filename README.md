@@ -25,7 +25,7 @@ https://github.com/ryanluker/vscode-coverage-gutters/issues
 Activating watch allows the extension to keep track of coverage changes and update it's cache. It also will automatically apply coverage to a file if some exists.
 
 **Display** (activated via command palette or shortcut key):
-Displays coverage for the current activate file only, does not update if the coverage files change.
+Displays coverage for the current activated file only, does not update if the coverage files change.
 
 **Preview Report** (activated via command palette):
 Shows you a html preview of your coverage reports in your editor.
