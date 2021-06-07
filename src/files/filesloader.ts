@@ -61,7 +61,6 @@ export class FilesLoader {
     }
 
     private findCoverageForFileName(fileName: string): Promise<Set<string>> {
-        const files = [];
         let actions: Array<Promise<Set<string>>> = new Array<Promise<Set<string>>>();
         if (workspace.workspaceFolders) {
             actions = workspace.workspaceFolders.map((workspaceFolder) => {
@@ -86,7 +85,7 @@ export class FilesLoader {
         workspaceFolder: WorkspaceFolder,
         fileName: string,
     ) {
-        return new Promise<Set<string>>((resolve, reject) => {
+        return new Promise<Set<string>>((resolve) => {
             glob(`${this.configStore.coverageBaseDir}/${fileName}`,
                 {
                     cwd: workspaceFolder.uri.fsPath,

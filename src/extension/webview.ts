@@ -43,7 +43,6 @@ export class PreviewPanel {
         }
 
         const newText = `${text.substring(0, tag)}${securityPolicyHeader}${text.substring(tag)}`;
-
         return newText;
     }
 }

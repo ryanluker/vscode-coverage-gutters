@@ -77,7 +77,7 @@ export class Coverage {
     }
 
     private globFind(workspaceFolder: WorkspaceFolder, fileName: string): Promise<string[]> {
-        return new Promise<string[]>((resolve, reject) => {
+        return new Promise<string[]>((resolve) => {
             glob(
                 `**/${fileName}`,
                 {
@@ -86,7 +86,7 @@ export class Coverage {
                     ignore: this.configStore.ignoredPathGlobs,
                     realpath: true,
                 },
-                (err, files) => {
+                (_err, files) => {
                     if (!files || !files.length) { return resolve([]); }
                     return resolve(files);
                 },

@@ -142,11 +142,9 @@ export class Config {
 
         // Assign the key and resolved fragment
         this.remotePathResolve = rootConfig.get("remotePathResolve") as string[];
-        const hasRemotePathResolve = !!this.remotePathResolve.length;
 
         // Add the manual coverage file path(s) if present
         this.manualCoverageFilePaths = rootConfig.get("manualCoverageFilePaths") as string[];
-        const hasManualCoverageFilePaths = !!this.manualCoverageFilePaths.length;
     }
 
     /**

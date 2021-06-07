@@ -1,13 +1,11 @@
-import {
-    OutputChannel,
-    window,
-} from "vscode";
+import { OutputChannel, window } from "vscode";
 import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
 import { CrashReporter } from "./crashreporter";
 import { StatusBarToggler } from "./statusbartoggler";
 import { PreviewPanel } from "./webview";
+
 export class Gutters {
     private coverage: Coverage;
     private outputChannel: OutputChannel;
