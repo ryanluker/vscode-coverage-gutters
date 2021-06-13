@@ -79,6 +79,7 @@ export class CoverageService {
         await this.displayForFile();
         this.listenToFileSystem();
         this.listenToEditorEvents();
+        this.handleActiveEditorEvent(window.activeTextEditor);
     }
 
     public async removeCoverageForCurrentEditor() {
@@ -168,9 +169,28 @@ export class CoverageService {
         }
     }
 
+    private handleActiveEditorEvent(textEditor: TextEditor | undefined) {
+        try {
+            if (!textEditor) {
+                return this.statusBar.setCoverage(undefined);
+            }
+            const [sections] = this.sectionFinder.findSectionsForEditor(textEditor, this.cache);
+            const covered = sections?.lines?.hit;
+            const total = sections?.lines?.found;
+
+            return this.statusBar.setCoverage(Math.round((covered / total) * 100 ));
+        } catch {
+            return this.statusBar.setCoverage(undefined);
+        }
+    }
+
     private listenToEditorEvents() {
         this.editorWatcher = window.onDidChangeVisibleTextEditors(
             this.handleEditorEvents.bind(this),
+        );
+
+        window.onDidChangeActiveTextEditor(
+            this.handleActiveEditorEvent.bind(this),
         );
     }
 }
