@@ -67,26 +67,23 @@ export class CoverageService {
         if (this.coverageWatcher) { this.coverageWatcher.dispose(); }
         if (this.editorWatcher) { this.editorWatcher.dispose(); }
         this.cache = new Map(); // reset cache to empty
-        const visibleEditors = window.visibleTextEditors;
-        this.renderer.renderCoverage(this.cache, visibleEditors);
+        this.renderer.renderCoverage(this.cache, window.visibleTextEditors);
     }
 
     public async displayForFile() {
-        await this.loadCacheAndRender();
+        await this.loadCacheAndProcess();
     }
 
     public async watchWorkspace() {
         await this.displayForFile();
         this.listenToFileSystem();
         this.listenToEditorEvents();
-        this.handleActiveEditorEvent(window.activeTextEditor);
     }
 
     public async removeCoverageForCurrentEditor() {
         try {
             this.statusBar.setLoading(true);
-            const visibleEditors = window.visibleTextEditors;
-            this.renderer.renderCoverage(new Map(), visibleEditors);
+            this.renderer.renderCoverage(new Map(), window.visibleTextEditors);
         } finally {
             this.statusBar.setLoading(false);
         }
@@ -115,13 +112,13 @@ export class CoverageService {
             `[${Date.now()}][coverageservice]: ${state}`);
     }
 
-    private async loadCacheAndRender() {
+    private async loadCacheAndProcess() {
         try {
             this.statusBar.setLoading(true);
             await this.loadCache();
             this.updateServiceState(Status.rendering);
-            const visibleEditors = window.visibleTextEditors;
-            this.renderer.renderCoverage(this.cache, visibleEditors);
+            this.renderer.renderCoverage(this.cache, window.visibleTextEditors);
+            this.setStatusBarCoverage(this.cache, window.activeTextEditor);
             this.updateServiceState(Status.ready);
         } finally {
             this.statusBar.setLoading(false);
@@ -153,30 +150,19 @@ export class CoverageService {
         this.outputChannel.appendLine(outputMessage);
 
         this.coverageWatcher = workspace.createFileSystemWatcher(blobPattern);
-        this.coverageWatcher.onDidChange(this.loadCacheAndRender.bind(this));
-        this.coverageWatcher.onDidCreate(this.loadCacheAndRender.bind(this));
-        this.coverageWatcher.onDidDelete(this.loadCacheAndRender.bind(this));
+        this.coverageWatcher.onDidChange(this.loadCacheAndProcess.bind(this));
+        this.coverageWatcher.onDidCreate(this.loadCacheAndProcess.bind(this));
+        this.coverageWatcher.onDidDelete(this.loadCacheAndProcess.bind(this));
     }
 
-    private handleEditorEvents(textEditors: TextEditor[]) {
-        try {
-            this.updateServiceState(Status.rendering);
-            this.statusBar.setLoading(true);
-            this.renderer.renderCoverage(this.cache, textEditors);
-            this.updateServiceState(Status.ready);
-        } finally {
-            this.statusBar.setLoading(false);
-        }
-    }
-
-    private handleActiveEditorEvent(textEditor: TextEditor | undefined) {
+    private setStatusBarCoverage(sections: Map<string, Section>, textEditor: TextEditor | undefined ) {
         try {
             if (!textEditor) {
                 return this.statusBar.setCoverage(undefined);
             }
-            const [sections] = this.sectionFinder.findSectionsForEditor(textEditor, this.cache);
-            const covered = sections?.lines?.hit;
-            const total = sections?.lines?.found;
+            const [fileCoverage] = this.sectionFinder.findSectionsForEditor(textEditor, sections);
+            const covered = fileCoverage?.lines?.hit;
+            const total = fileCoverage?.lines?.found;
 
             return this.statusBar.setCoverage(Math.round((covered / total) * 100 ));
         } catch {
@@ -184,13 +170,21 @@ export class CoverageService {
         }
     }
 
-    private listenToEditorEvents() {
-        this.editorWatcher = window.onDidChangeVisibleTextEditors(
-            this.handleEditorEvents.bind(this),
-        );
+    private handleEditorEvents() {
+        try {
+            this.updateServiceState(Status.rendering);
+            this.statusBar.setLoading(true);
+            this.renderer.renderCoverage(this.cache, window.visibleTextEditors || []);
+            this.setStatusBarCoverage(this.cache, window.activeTextEditor);
+            this.updateServiceState(Status.ready);
+        } finally {
+            this.statusBar.setLoading(false);
+        }
+    }
 
+    private listenToEditorEvents() {
         window.onDidChangeActiveTextEditor(
-            this.handleActiveEditorEvent.bind(this),
+            this.handleEditorEvents.bind(this),
         );
     }
 }
