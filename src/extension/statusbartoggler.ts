@@ -63,10 +63,6 @@ export class StatusBarToggler implements Disposable {
         this.statusBarItem.dispose();
     }
 
-    private getCoverageText() {
-        return [this.lineCoverage || "No", StatusBarToggler.coverageText].join(" ");
-    }
-
     /**
      * update
      * @description Updates the text and tooltip displayed by the StatusBarToggler
@@ -75,7 +71,7 @@ export class StatusBarToggler implements Disposable {
         if (this.isActive) {
             this.statusBarItem.command = StatusBarToggler.removeCommand;
             this.statusBarItem.tooltip = StatusBarToggler.removeWatchToolTip;
-            this.statusBarItem.text = this.getCoverageText();
+            this.statusBarItem.text = [this.lineCoverage || "No", StatusBarToggler.coverageText].join(" ");
         } else {
             this.statusBarItem.command = StatusBarToggler.watchCommand;
             this.statusBarItem.tooltip = StatusBarToggler.watchToolTip;
