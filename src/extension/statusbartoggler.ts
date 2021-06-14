@@ -6,9 +6,11 @@ export class StatusBarToggler implements Disposable {
     private static readonly removeCommand = "coverage-gutters.removeWatch";
     private static readonly watchText = "Watch";
     private static readonly coverageText = "Coverage";
-    private static readonly listIcon = "$(list-ordered)";
+    private static readonly listIcon = "$(list-ordered) ";
     private static readonly loadingIcon = "$(loading~spin) ";
-    private static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
+    private static readonly watchToolTip = "Coverage Gutters: Click to watch workspace.";
+    private static readonly removeWatchToolTip = "Coverage Gutters: Click to remove watch from workspace.";
+
     public isActive: boolean;
     public isLoading: boolean;
     public lineCoverage: string | undefined;
@@ -19,7 +21,7 @@ export class StatusBarToggler implements Disposable {
         this.statusBarItem = window.createStatusBarItem();
         this.statusBarItem.command = StatusBarToggler.watchCommand;
         this.statusBarItem.text = StatusBarToggler.watchText;
-        this.statusBarItem.tooltip = StatusBarToggler.toolTip;
+        this.statusBarItem.tooltip = StatusBarToggler.watchToolTip;
         this.configStore = configStore;
         this.isLoading = false;
         this.lineCoverage = undefined;
@@ -61,18 +63,25 @@ export class StatusBarToggler implements Disposable {
         this.statusBarItem.dispose();
     }
 
+    private getCoverageText() {
+        if (this.lineCoverage) {
+            return [StatusBarToggler.coverageText, this.lineCoverage].join(" ");
+        }
+        return ["No", StatusBarToggler.coverageText].join(" ");
+    }
+
     /**
      * update
-     * @description Updates the text displayed in the StatusBarToggler
+     * @description Updates the text and tooltip displayed by the StatusBarToggler
      */
     private update() {
         if (this.isActive) {
             this.statusBarItem.command = StatusBarToggler.removeCommand;
-            this.statusBarItem.text = this.lineCoverage ?
-            [StatusBarToggler.coverageText, this.lineCoverage].join(" ") :
-            ["No", StatusBarToggler.coverageText].join(" ");
+            this.statusBarItem.tooltip = StatusBarToggler.removeWatchToolTip;
+            this.statusBarItem.text = this.getCoverageText();
         } else {
             this.statusBarItem.command = StatusBarToggler.watchCommand;
+            this.statusBarItem.tooltip = StatusBarToggler.watchToolTip;
             this.statusBarItem.text = StatusBarToggler.watchText;
         }
         if (this.isLoading) {
