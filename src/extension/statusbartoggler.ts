@@ -64,10 +64,7 @@ export class StatusBarToggler implements Disposable {
     }
 
     private getCoverageText() {
-        if (this.lineCoverage) {
-            return [StatusBarToggler.coverageText, this.lineCoverage].join(" ");
-        }
-        return ["No", StatusBarToggler.coverageText].join(" ");
+        return [this.lineCoverage || "No", StatusBarToggler.coverageText].join(" ");
     }
 
     /**

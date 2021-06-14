@@ -41,13 +41,13 @@ suite("Status Bar Toggler Tests", () => {
         statusBarToggler.setLoading(false);
         assert.equal(statusBarToggler.statusText, "$(list-ordered) No Coverage");
         statusBarToggler.setCoverage(84);
-        assert.equal(statusBarToggler.statusText, "$(list-ordered) Coverage 84%");
+        assert.equal(statusBarToggler.statusText, "$(list-ordered) 84% Coverage");
         statusBarToggler.setCoverage(undefined);
         assert.equal(statusBarToggler.statusText, "$(list-ordered) No Coverage");
         statusBarToggler.setCoverage(50);
-        assert.equal(statusBarToggler.statusText, "$(list-ordered) Coverage 50%");
+        assert.equal(statusBarToggler.statusText, "$(list-ordered) 50% Coverage");
         statusBarToggler.setCoverage(0);
-        assert.equal(statusBarToggler.statusText, "$(list-ordered) Coverage 0%");
+        assert.equal(statusBarToggler.statusText, "$(list-ordered) 0% Coverage");
     });
 
     test("Should dispose when asked @unit", () => {
