@@ -5,9 +5,8 @@ export class StatusBarToggler implements Disposable {
     private static readonly watchCommand = "coverage-gutters.watchCoverageAndVisibleEditors";
     private static readonly removeCommand = "coverage-gutters.removeWatch";
     private static readonly watchText = "Watch";
-    private static readonly watchingText = "Watching";
-    private static readonly coverageText = "Coverage ";
-    private static readonly listIcon = "$(list-ordered) ";
+    private static readonly coverageText = "Coverage";
+    private static readonly listIcon = "$(list-ordered)";
     private static readonly loadingIcon = "$(loading~spin) ";
     private static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
     public isActive: boolean;
@@ -70,8 +69,8 @@ export class StatusBarToggler implements Disposable {
         if (this.isActive) {
             this.statusBarItem.command = StatusBarToggler.removeCommand;
             this.statusBarItem.text = this.lineCoverage ?
-            StatusBarToggler.coverageText + this.lineCoverage :
-            StatusBarToggler.watchingText;
+            [StatusBarToggler.coverageText, this.lineCoverage].join(" ") :
+            ["No", StatusBarToggler.coverageText].join(" ");
         } else {
             this.statusBarItem.command = StatusBarToggler.watchCommand;
             this.statusBarItem.text = StatusBarToggler.watchText;
