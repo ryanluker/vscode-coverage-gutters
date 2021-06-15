@@ -22,15 +22,15 @@ suite("Status Bar Toggler Tests", () => {
         statusBarToggler.toggle(true);
         assert.equal(statusBarToggler.statusText, "$(list-ordered) No Coverage");
         statusBarToggler.toggle(false);
-        assert.equal(statusBarToggler.statusText, "$(list-ordered) Watch");
+        assert.equal(statusBarToggler.statusText, "Watch");
     });
 
     test("Should show the spinner when setting the `isLoading` status @unit", () => {
         const statusBarToggler = new StatusBarToggler(fakeConfig);
         statusBarToggler.setLoading(true);
-        assert.equal(statusBarToggler.statusText, "$(loading~spin) Watch");
+        assert.equal(statusBarToggler.statusText, "$(loading~spin) Coverage");
         statusBarToggler.toggle(true);
-        assert.equal(statusBarToggler.statusText, "$(loading~spin) No Coverage");
+        assert.equal(statusBarToggler.statusText, "$(loading~spin) Coverage");
         statusBarToggler.setLoading(false);
         assert.equal(statusBarToggler.statusText, "$(list-ordered) No Coverage");
     });

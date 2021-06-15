@@ -6,8 +6,8 @@ export class StatusBarToggler implements Disposable {
     private static readonly removeCommand = "coverage-gutters.removeWatch";
     private static readonly watchText = "Watch";
     private static readonly coverageText = "Coverage";
-    private static readonly listIcon = "$(list-ordered) ";
-    private static readonly loadingIcon = "$(loading~spin) ";
+    private static readonly listIcon = "$(list-ordered)";
+    private static readonly loadingIcon = "$(loading~spin)";
     private static readonly watchToolTip = "Coverage Gutters: Click to watch workspace.";
     private static readonly removeWatchToolTip = "Coverage Gutters: Click to remove watch from workspace.";
 
@@ -63,24 +63,29 @@ export class StatusBarToggler implements Disposable {
         this.statusBarItem.dispose();
     }
 
+    private getStatusBarText() {
+        if (this.isLoading) {
+            return [StatusBarToggler.loadingIcon, StatusBarToggler.coverageText].join(" ");
+        }
+        if (this.isActive) {
+            return [StatusBarToggler.listIcon, this.lineCoverage || "No", StatusBarToggler.coverageText].join(" ");
+        }
+        return StatusBarToggler.watchText;
+    }
+
     /**
      * update
      * @description Updates the text and tooltip displayed by the StatusBarToggler
      */
     private update() {
+        this.statusBarItem.text = this.getStatusBarText();
+
         if (this.isActive) {
             this.statusBarItem.command = StatusBarToggler.removeCommand;
             this.statusBarItem.tooltip = StatusBarToggler.removeWatchToolTip;
-            this.statusBarItem.text = [this.lineCoverage || "No", StatusBarToggler.coverageText].join(" ");
         } else {
             this.statusBarItem.command = StatusBarToggler.watchCommand;
             this.statusBarItem.tooltip = StatusBarToggler.watchToolTip;
-            this.statusBarItem.text = StatusBarToggler.watchText;
-        }
-        if (this.isLoading) {
-            this.statusBarItem.text = StatusBarToggler.loadingIcon + this.statusBarItem.text;
-        } else {
-            this.statusBarItem.text = StatusBarToggler.listIcon + this.statusBarItem.text;
         }
     }
 }
