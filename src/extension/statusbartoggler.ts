@@ -2,13 +2,17 @@ import { Disposable, StatusBarItem, window } from "vscode";
 import { Config } from "./config";
 
 export class StatusBarToggler implements Disposable {
-    private static readonly watchCommand = "coverage-gutters.watchCoverageAndVisibleEditors";
-    private static readonly removeCommand = "coverage-gutters.removeWatch";
-    private static readonly watchText = "Watch";
     private static readonly coverageText = "Coverage";
-    private static readonly listIcon = "$(list-ordered)";
-    private static readonly loadingIcon = "$(loading~spin)";
+
+    private static readonly loadingText = ["$(loading~spin)", StatusBarToggler.coverageText].join(" ");
+
+    private static readonly idleIcon = "$(circle-large-outline)";
+
+    private static readonly watchCommand = "coverage-gutters.watchCoverageAndVisibleEditors";
+    private static readonly watchText = [StatusBarToggler.idleIcon, "Watch"].join(" ");
     private static readonly watchToolTip = "Coverage Gutters: Click to watch workspace.";
+
+    private static readonly removeCommand = "coverage-gutters.removeWatch";
     private static readonly removeWatchToolTip = "Coverage Gutters: Click to remove watch from workspace.";
 
     public isActive: boolean;
@@ -65,10 +69,10 @@ export class StatusBarToggler implements Disposable {
 
     private getStatusBarText() {
         if (this.isLoading) {
-            return [StatusBarToggler.loadingIcon, StatusBarToggler.coverageText].join(" ");
+            return StatusBarToggler.loadingText;
         }
         if (this.isActive) {
-            return [StatusBarToggler.listIcon, this.lineCoverage || "No", StatusBarToggler.coverageText].join(" ");
+            return [StatusBarToggler.idleIcon, this.lineCoverage || "No", StatusBarToggler.coverageText].join(" ");
         }
         return StatusBarToggler.watchText;
     }
