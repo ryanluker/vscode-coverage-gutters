@@ -2,15 +2,22 @@ import { Disposable, StatusBarItem, window } from "vscode";
 import { Config } from "./config";
 
 export class StatusBarToggler implements Disposable {
+    private static readonly coverageText = "Coverage";
+
+    private static readonly loadingText = ["$(loading~spin)", StatusBarToggler.coverageText].join(" ");
+
+    private static readonly idleIcon = "$(circle-large-outline)";
+
     private static readonly watchCommand = "coverage-gutters.watchCoverageAndVisibleEditors";
+    private static readonly watchText = [StatusBarToggler.idleIcon, "Watch"].join(" ");
+    private static readonly watchToolTip = "Coverage Gutters: Click to watch workspace.";
+
     private static readonly removeCommand = "coverage-gutters.removeWatch";
-    private static readonly watchText = "Watch";
-    private static readonly removeText = "Remove Watch";
-    private static readonly listIcon = "$(list-ordered) ";
-    private static readonly loadingIcon = "$(loading~spin) ";
-    private static readonly toolTip = "Coverage Gutters: Watch and Remove Helper";
+    private static readonly removeWatchToolTip = "Coverage Gutters: Click to remove watch from workspace.";
+
     public isActive: boolean;
     public isLoading: boolean;
+    public lineCoverage: string | undefined;
     private statusBarItem: StatusBarItem;
     private configStore: Config;
 
@@ -18,9 +25,10 @@ export class StatusBarToggler implements Disposable {
         this.statusBarItem = window.createStatusBarItem();
         this.statusBarItem.command = StatusBarToggler.watchCommand;
         this.statusBarItem.text = StatusBarToggler.watchText;
-        this.statusBarItem.tooltip = StatusBarToggler.toolTip;
+        this.statusBarItem.tooltip = StatusBarToggler.watchToolTip;
         this.configStore = configStore;
         this.isLoading = false;
+        this.lineCoverage = undefined;
 
         if (this.configStore.showStatusBarToggler) { this.statusBarItem.show(); }
     }
@@ -43,6 +51,15 @@ export class StatusBarToggler implements Disposable {
         this.update();
     }
 
+    public setCoverage(linePercentage: number | undefined ) {
+        if (Number.isFinite(linePercentage)) {
+            this.lineCoverage = `${linePercentage}%`;
+        } else {
+            this.lineCoverage = undefined;
+        }
+        this.update();
+    }
+
     /**
      * Cleans up the statusBarItem if asked to dispose
      */
@@ -50,22 +67,29 @@ export class StatusBarToggler implements Disposable {
         this.statusBarItem.dispose();
     }
 
+    private getStatusBarText() {
+        if (this.isLoading) {
+            return StatusBarToggler.loadingText;
+        }
+        if (this.isActive) {
+            return [StatusBarToggler.idleIcon, this.lineCoverage || "No", StatusBarToggler.coverageText].join(" ");
+        }
+        return StatusBarToggler.watchText;
+    }
+
     /**
      * update
-     * @description Updates the text displayed in the StatusBarToggler
+     * @description Updates the text and tooltip displayed by the StatusBarToggler
      */
     private update() {
+        this.statusBarItem.text = this.getStatusBarText();
+
         if (this.isActive) {
             this.statusBarItem.command = StatusBarToggler.removeCommand;
-            this.statusBarItem.text = StatusBarToggler.removeText;
+            this.statusBarItem.tooltip = StatusBarToggler.removeWatchToolTip;
         } else {
             this.statusBarItem.command = StatusBarToggler.watchCommand;
-            this.statusBarItem.text = StatusBarToggler.watchText;
-        }
-        if (this.isLoading) {
-            this.statusBarItem.text = StatusBarToggler.loadingIcon + this.statusBarItem.text;
-        } else {
-            this.statusBarItem.text = StatusBarToggler.listIcon + this.statusBarItem.text;
+            this.statusBarItem.tooltip = StatusBarToggler.watchToolTip;
         }
     }
 }

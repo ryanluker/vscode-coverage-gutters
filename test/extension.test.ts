@@ -1,7 +1,9 @@
 import * as assert from "assert";
 import { exec } from "child_process";
+import * as sinon from "sinon";
 import * as vscode from "vscode";
 import { ICoverageLines } from "../src/coverage-system/renderer";
+import { StatusBarToggler } from "../src/extension/statusbartoggler";
 
 suite("Extension Tests", function() {
     this.timeout(25000);
@@ -11,10 +13,6 @@ suite("Extension Tests", function() {
         // being set in the example.code-workspace setting file as the coverage report
         // is in the root of the node folder and not inside the default /coverage
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
-        if (!extension) {
-            throw new Error("Could not load extension");
-        }
 
         await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
         // Look to see if the webview is open and showing preview coverage
@@ -25,7 +23,7 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
         await waitForExtension(2000);
-        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        const extension = vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
         }
@@ -252,6 +250,46 @@ suite("Extension Tests", function() {
         });
 
         extension.exports.emptyLastCoverage();
+        return vscode.commands.executeCommand("coverage-gutters.removeWatch");
+    });
+
+    test(
+        "Run coverage and open files to see line coverage percentage in the status bar @integration",
+        async () => {
+        await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+        const setCoverageSpy = sinon.spy(StatusBarToggler.prototype, "setCoverage");
+
+        await vscode.commands.executeCommand("coverage-gutters.watchCoverageAndVisibleEditors");
+        await waitForExtension(1000);
+
+        const [testJSCoverage] = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
+        const testJSDocument = await vscode.workspace.openTextDocument(testJSCoverage);
+
+        setCoverageSpy.resetHistory();
+        await vscode.window.showTextDocument(testJSDocument, vscode.ViewColumn.One);
+
+        assert.strictEqual(setCoverageSpy.calledWith(84), true);
+        setCoverageSpy.resetHistory();
+
+        const [testJavaCoverage] = await vscode.workspace.findFiles("**/App.java", "**/node_modules/**");
+        const testJavaDocument = await vscode.workspace.openTextDocument(testJavaCoverage);
+
+        await vscode.window.showTextDocument(testJavaDocument,  vscode.ViewColumn.Two);
+
+        assert.strictEqual(setCoverageSpy.calledWith(57), true);
+        setCoverageSpy.resetHistory();
+
+        await vscode.commands.executeCommand("workbench.action.previousEditor");
+
+        assert.strictEqual(setCoverageSpy.calledWith(84), true);
+        setCoverageSpy.resetHistory();
+
+        await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+
+        assert.strictEqual(setCoverageSpy.calledWith(undefined), true);
+
+        setCoverageSpy.restore();
+        return vscode.commands.executeCommand("coverage-gutters.removeWatch");
     });
 });
 
