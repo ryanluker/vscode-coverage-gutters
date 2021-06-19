@@ -5,6 +5,7 @@ import * as path from "path";
 export function run(): Promise<void> {
     // Create the mocha test
     const mocha = new Mocha({
+        color: true,
         ui: "tdd",
     });
     // Apply regex to run subset of tests (integration vs unit)
@@ -12,7 +13,6 @@ export function run(): Promise<void> {
         const grepRE = new RegExp(process.env.MOCHA_GREP);
         mocha.grep(grepRE);
     }
-    mocha.useColors(true);
 
     const testsRoot = path.resolve(__dirname, "..");
     return new Promise((c, e) => {
