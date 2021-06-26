@@ -264,7 +264,7 @@
     ]
   },
   "devDependencies": {
-    "@types/chai": "4.1.7",
+    "@types/chai": "4.2.19",
     "@types/glob": "7.1.1",
     "@types/lodash": "4.14.126",
     "@types/mocha": "8.2.2",
@@ -274,7 +274,7 @@
     "@types/sinon-chai": "3.2.5",
     "@types/uuid": "8.0.0",
     "@types/vscode": "1.27.0",
-    "chai": "4.2.0",
+    "chai": "4.3.4",
     "cross-env": "5.2.0",
     "husky": "6.0.0",
     "lint-staged": "11.0.0",

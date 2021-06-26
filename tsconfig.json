@@ -10,7 +10,6 @@
             "dom",
         ],
         "sourceMap": true,
-		"skipLibCheck": true,
         "rootDir": ".",
         "strictNullChecks": true
     },
