@@ -1,13 +1,9 @@
-import chai from "chai";
+import { expect } from "chai";
 import { exec } from "child_process";
 import sinon from "sinon";
-import sinonChai from "sinon-chai";
 import * as vscode from "vscode";
 import { ICoverageLines } from "../src/coverage-system/renderer";
 import { StatusBarToggler } from "../src/extension/statusbartoggler";
-
-chai.use(sinonChai);
-const { expect } = chai;
 
 suite("Extension Tests", function() {
     this.timeout(25000);
