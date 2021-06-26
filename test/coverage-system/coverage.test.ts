@@ -1,5 +1,5 @@
-import * as assert from "assert";
-import * as fs from "fs";
+import assert from "assert";
+import fs from "fs";
 import * as vscode from "vscode";
 
 import {Coverage} from "../../src/coverage-system/coverage";

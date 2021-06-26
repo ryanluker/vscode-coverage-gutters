@@ -1,10 +1,12 @@
-import {assert} from "chai";
+import chai from "chai";
 import {
     findIntersect,
     isPathAbsolute,
     makePathSearchable,
     normalizeFileName,
 } from "../src/helpers";
+
+const { assert } = chai;
 
 suite("helper Tests", function() {
     test("Should normalize filenames properly @unit", function(done) {

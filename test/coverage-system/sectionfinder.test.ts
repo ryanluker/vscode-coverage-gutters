@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "assert";
 import { Section } from "lcov-parse";
 import { basename, join } from "path";
 import { TextEditor, Uri, workspace, WorkspaceFolder } from "vscode";

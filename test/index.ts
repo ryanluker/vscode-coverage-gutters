@@ -1,6 +1,8 @@
-import * as glob from "glob";
-import * as Mocha from "mocha";
-import * as path from "path";
+import chai from "chai";
+import glob from "glob";
+import Mocha from "mocha";
+import { resolve } from "path";
+import sinonChai from "sinon-chai";
 
 export function run(): Promise<void> {
     // Create the mocha test
@@ -8,20 +10,23 @@ export function run(): Promise<void> {
         color: true,
         ui: "tdd",
     });
+
+    chai.use(sinonChai);
+
     // Apply regex to run subset of tests (integration vs unit)
     if (process.env.MOCHA_GREP) {
         const grepRE = new RegExp(process.env.MOCHA_GREP);
         mocha.grep(grepRE);
     }
 
-    const testsRoot = path.resolve(__dirname, "..");
+    const testsRoot = resolve(__dirname, "..");
     return new Promise((c, e) => {
         glob("**/**.test.js", { cwd: testsRoot }, (err, files) => {
             if (err) {
                 return e(err);
             }
             // Add files to the test suite
-            files.forEach((f) => mocha.addFile(path.resolve(testsRoot, f)));
+            files.forEach((f) => mocha.addFile(resolve(testsRoot, f)));
             try {
                 // Run the mocha test
                 mocha.run((failures) => {

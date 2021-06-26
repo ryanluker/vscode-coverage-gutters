@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "assert";
 import { PreviewPanel } from "../../src/extension/webview";
 
 suite("Preview panel Tests", () => {
