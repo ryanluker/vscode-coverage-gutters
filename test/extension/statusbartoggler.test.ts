@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "assert";
 import { StatusBarToggler } from "../../src/extension/statusbartoggler";
 import { fakeConfig } from "../mocks/fakeConfig";
 

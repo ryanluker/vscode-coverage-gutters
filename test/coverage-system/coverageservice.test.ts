@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "assert";
 import { OutputChannel, workspace } from "vscode";
 
 import { CoverageService } from "../../src/coverage-system/coverageservice";

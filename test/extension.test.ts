@@ -1,9 +1,13 @@
-import * as assert from "assert";
+import chai from "chai";
 import { exec } from "child_process";
-import * as sinon from "sinon";
+import sinon from "sinon";
+import sinonChai from "sinon-chai";
 import * as vscode from "vscode";
 import { ICoverageLines } from "../src/coverage-system/renderer";
 import { StatusBarToggler } from "../src/extension/statusbartoggler";
+
+chai.use(sinonChai);
+const { expect } = chai;
 
 suite("Extension Tests", function() {
     this.timeout(25000);
@@ -18,7 +22,7 @@ suite("Extension Tests", function() {
         // Look to see if the webview is open and showing preview coverage
         await waitForExtension(2000);
         const reportView = vscode.workspace.textDocuments[0];
-        assert.equal(reportView.languageId, "html");
+        expect(reportView.languageId, "html");
     });
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
@@ -37,9 +41,9 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            assert.equal(3, cachedLines.full.length);
-            assert.equal(1, cachedLines.none.length);
-            assert.equal(1, cachedLines.partial.length);
+            expect(cachedLines.full.length).to.equal(3);
+            expect(cachedLines.none.length).to.equal(1);
+            expect(cachedLines.partial.length).to.equal(1);
         });
 
         extension.exports.emptyLastCoverage();
@@ -61,9 +65,9 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            assert.equal(14, cachedLines.full.length);
-            assert.equal(4, cachedLines.none.length);
-            assert.equal(7, cachedLines.partial.length);
+            expect(cachedLines.full.length).to.equal(14);
+            expect(cachedLines.none.length).to.equal(4);
+            expect(cachedLines.partial.length).to.equal(7);
         });
 
         extension.exports.emptyLastCoverage();
@@ -84,8 +88,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            assert.equal(3, cachedLines.full.length);
-            assert.equal(3, cachedLines.none.length);
+            expect(cachedLines.full.length).to.equal(3);
+            expect(cachedLines.none.length).to.equal(3);
         });
 
         extension.exports.emptyLastCoverage();
@@ -106,8 +110,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            assert.equal(4, cachedLines.full.length);
-            assert.equal(2, cachedLines.none.length);
+            expect(cachedLines.full.length).to.equal(4);
+            expect(cachedLines.none.length).to.equal(2);
         });
 
         extension.exports.emptyLastCoverage();
@@ -128,8 +132,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            assert.equal(2, cachedLines.full.length);
-            assert.equal(6, cachedLines.none.length);
+            expect(cachedLines.none.length).to.equal(6);
+            expect(cachedLines.full.length).to.equal(2);
         });
 
         extension.exports.emptyLastCoverage();
@@ -150,8 +154,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            assert.equal(3, cachedLines.full.length);
-            assert.equal(1, cachedLines.none.length);
+            expect(cachedLines.full.length).to.equal(3);
+            expect(cachedLines.none.length).to.equal(1);
         });
 
         extension.exports.emptyLastCoverage();
@@ -172,8 +176,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            assert.equal(4, cachedLines.full.length);
-            assert.equal(3, cachedLines.none.length);
+            expect(cachedLines.full.length).to.equal(4);
+            expect(cachedLines.none.length).to.equal(3);
         });
 
         extension.exports.emptyLastCoverage();
@@ -203,9 +207,9 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            assert.equal(14, cachedLines.full.length);
-            assert.equal(4, cachedLines.none.length);
-            assert.equal(7, cachedLines.partial.length);
+            expect(cachedLines.full.length).to.equal(14);
+            expect(cachedLines.none.length).to.equal(4);
+            expect(cachedLines.partial.length).to.equal(7);
         });
 
         extension.exports.emptyLastCoverage();
@@ -228,9 +232,9 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const jsCachedLines: ICoverageLines = getCachedLines();
-            assert.equal(14, jsCachedLines.full.length);
-            assert.equal(4, jsCachedLines.none.length);
-            assert.equal(7, jsCachedLines.partial.length);
+            expect(jsCachedLines.full.length).to.equal(14);
+            expect(jsCachedLines.none.length).to.equal(4);
+            expect(jsCachedLines.partial.length).to.equal(7);
         });
 
         extension.exports.emptyLastCoverage();
@@ -245,8 +249,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const javaCachedLines: ICoverageLines = getCachedLines();
-            assert.equal(4, javaCachedLines.full.length);
-            assert.equal(3, javaCachedLines.none.length);
+            expect(javaCachedLines.full.length).to.equal(4);
+            expect(javaCachedLines.none.length).to.equal(3);
         });
 
         extension.exports.emptyLastCoverage();
@@ -268,7 +272,7 @@ suite("Extension Tests", function() {
         setCoverageSpy.resetHistory();
         await vscode.window.showTextDocument(testJSDocument, vscode.ViewColumn.One);
 
-        assert.strictEqual(setCoverageSpy.calledWith(84), true);
+        expect(setCoverageSpy).to.be.calledWith(84);
         setCoverageSpy.resetHistory();
 
         const [testJavaCoverage] = await vscode.workspace.findFiles("**/App.java", "**/node_modules/**");
@@ -276,17 +280,17 @@ suite("Extension Tests", function() {
 
         await vscode.window.showTextDocument(testJavaDocument,  vscode.ViewColumn.Two);
 
-        assert.strictEqual(setCoverageSpy.calledWith(57), true);
+        expect(setCoverageSpy).to.be.calledWith(57);
         setCoverageSpy.resetHistory();
 
         await vscode.commands.executeCommand("workbench.action.previousEditor");
 
-        assert.strictEqual(setCoverageSpy.calledWith(84), true);
+        expect(setCoverageSpy).to.be.calledWith(84);
         setCoverageSpy.resetHistory();
 
         await vscode.commands.executeCommand("workbench.action.closeAllEditors");
 
-        assert.strictEqual(setCoverageSpy.calledWith(undefined), true);
+        expect(setCoverageSpy).to.be.calledWith(undefined);
 
         setCoverageSpy.restore();
         return vscode.commands.executeCommand("coverage-gutters.removeWatch");

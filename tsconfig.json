@@ -4,11 +4,13 @@
         "target": "es6",
         "outDir": "out",
         "alwaysStrict": true,
+		"esModuleInterop": true,
         "lib": [
             "es6",
             "dom",
         ],
         "sourceMap": true,
+		"skipLibCheck": true,
         "rootDir": ".",
         "strictNullChecks": true
     },

@@ -1,9 +1,11 @@
-import { assert } from "chai";
+import chai from "chai";
 import { Section } from "lcov-parse";
 import { DecorationOptions, Range, TextEditor, TextEditorDecorationType } from "vscode";
 import { Renderer } from "../../src/coverage-system/renderer";
 import { SectionFinder } from "../../src/coverage-system/sectionfinder";
 import { fakeConfig } from "../mocks/fakeConfig";
+
+const { assert } = chai;
 
 suite("Renderer Tests", function() {
     test("Constructor should setup properly @unit", function(done) {

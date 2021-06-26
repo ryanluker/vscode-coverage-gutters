@@ -1,5 +1,5 @@
 import { readFile } from "fs";
-import * as glob from "glob";
+import glob from "glob";
 import { basename } from "path";
 import {
     QuickPickItem,
