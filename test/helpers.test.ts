@@ -1,12 +1,10 @@
-import chai from "chai";
+import { expect } from "chai";
 import {
     findIntersect,
     isPathAbsolute,
     makePathSearchable,
     normalizeFileName,
 } from "../src/helpers";
-
-const { assert } = chai;
 
 suite("helper Tests", function() {
     test("Should normalize filenames properly @unit", function(done) {
@@ -21,7 +19,7 @@ suite("helper Tests", function() {
             {fileName: "/###/", expected: "#########"},
             {fileName: "\\/", expected: "######"},
         ].forEach((parameters) => {
-            assert.equal(normalizeFileName(parameters.fileName), parameters.expected);
+            expect(normalizeFileName(parameters.fileName)).to.equal(parameters.expected);
         });
         return done();
     });
@@ -40,7 +38,7 @@ suite("helper Tests", function() {
         ].forEach( (parameters) => {
             const testName = `base = '${parameters.base}'
                 and comparee = '${parameters.comparee}' -> '${parameters.expected}'`;
-            assert.equal(findIntersect(parameters.base, parameters.comparee), parameters.expected, testName);
+            expect(findIntersect(parameters.base, parameters.comparee)).to.equal(parameters.expected, testName);
         });
         return done();
     });
@@ -56,7 +54,7 @@ suite("helper Tests", function() {
             {path: "", expected: false},
         ].forEach( (parameters) => {
             const testName = `path = '${parameters.path}' -> '${parameters.expected}'`;
-            assert.equal(isPathAbsolute(parameters.path), parameters.expected, testName);
+            expect(isPathAbsolute(parameters.path)).to.equal(parameters.expected, testName);
         });
         return done();
     });
@@ -70,7 +68,7 @@ suite("helper Tests", function() {
             {path: "", expected: "/"},
         ].forEach( (parameters) => {
             const testName = `path = '${parameters.path}' -> '${parameters.expected}'`;
-            assert.equal(makePathSearchable(parameters.path), parameters.expected, testName);
+            expect(makePathSearchable(parameters.path)).to.equal(parameters.expected, testName);
         });
         return done();
     });
