@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import * as vscode from "vscode";
 
 import {Config} from "../../src/extension/config";
@@ -15,7 +15,7 @@ let iconPathLight: string;
 suite("Config Tests", function() {
     const fakeVscode: any = {
         createTextEditorDecorationType: (options) => {
-            assert.equal(Object.keys(options).length, 4);
+            expect(Object.keys(options)).to.have.lengthOf(4);
             return {};
         },
 
@@ -68,27 +68,27 @@ suite("Config Tests", function() {
     });
 
     test("Constructor should setup properly @unit", function() {
-        assert.doesNotThrow(() => {
+        expect(() => {
             new Config(fakeContext); // tslint:disable-line
-        });
+        }).not.to.throw();
     });
 
     test("Can get configStore after initialization @unit", function() {
         const config = new Config(fakeContext);
-        assert.notEqual(config.coverageFileNames, null);
+        expect(config.coverageFileNames).not.to.equal(null);
     });
 
     test("Can get coverage file names @unit", function() {
         const config = new Config(fakeContext);
         // Check that unique file names is being applied
-        assert.equal(config.coverageFileNames.length, 3);
+        expect(config.coverageFileNames).to.have.lengthOf(3);
     });
 
     test("Should remove gutter icons if showGutterCoverage is set to false, allows breakpoint usage @unit", function() {
         showGutterCoverage = false;
         (vscode as any).window.createTextEditorDecorationType = (options) => {
-            assert.equal("gutterIconPath" in options.dark, false);
-            assert.equal("gutterIconPath" in options.light, false);
+            expect(options.dark).to.not.have.any.keys("gutterIconPath");
+            expect(options.light).to.not.have.any.keys("gutterIconPath");
         };
         new Config(fakeContext); // tslint:disable-line
     });
@@ -98,8 +98,8 @@ suite("Config Tests", function() {
         iconPathDark = "/my/absolute/path/to/custom/icon-dark.svg";
         iconPathLight = "";
         (vscode as any).window.createTextEditorDecorationType = (options) => {
-            assert.equal(options.dark.gutterIconPath, iconPathDark);
-            assert.equal(options.light.gutterIconPath.includes("./app_images/"), true);
+            expect(options.dark.gutterIconPath).to.equal(iconPathDark);
+            expect(options.light.gutterIconPath).to.include("./app_images/");
         };
         fakeContext.asAbsolutePath = (options) => options;
         new Config(fakeContext); // tslint:disable-line
