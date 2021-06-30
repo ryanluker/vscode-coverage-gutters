@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import { PreviewPanel } from "../../src/extension/webview";
 
 suite("Preview panel Tests", () => {
@@ -18,7 +18,7 @@ suite("Preview panel Tests", () => {
 
         const textIncludesPolicy = previewPanel.addContentSecurityPolicy(reportWithHeadTag);
 
-        assert.equal(textIncludesPolicy.includes(securityPolicyHeader), true);
+        expect(textIncludesPolicy).to.include(securityPolicyHeader);
     });
 
     test("Should append content security policy to preview HTML when meta tag present @unit", () => {
@@ -38,7 +38,7 @@ suite("Preview panel Tests", () => {
 
         const textIncludesPolicy = previewPanel.addContentSecurityPolicy(reportWithMetaTag);
 
-        assert.equal(textIncludesPolicy.includes(securityPolicyHeader), true);
+        expect(textIncludesPolicy).to.include(securityPolicyHeader);
     });
 
     test("Should append content security policy to preview HTML without head nor meta tags @unit", () => {
@@ -55,6 +55,6 @@ suite("Preview panel Tests", () => {
 
         const textIncludesPolicy = previewPanel.addContentSecurityPolicy(reportWithoutTags);
 
-        assert.equal(textIncludesPolicy.includes(securityPolicyHeader), true);
+        expect(textIncludesPolicy).to.include(securityPolicyHeader);
     });
 });
