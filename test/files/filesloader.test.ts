@@ -3,7 +3,7 @@ import fs from "fs";
 import * as vscode from "vscode";
 
 import {FilesLoader} from "../../src/files/filesloader";
-import {fakeConfig} from "../mocks/fakeConfig";
+import stubConfig from "../stubs/Config";
 
 // Original functions
 const readFile = fs.readFile;
@@ -20,7 +20,7 @@ suite("FilesLoader Tests", function() {
         };
         (fs as any).readFile = readFile;
 
-        const filesLoader = new FilesLoader(fakeConfig);
+        const filesLoader = new FilesLoader(stubConfig);
         const testData = new Set(["file1", "file2"]);
         return filesLoader.loadDataFiles(testData)
             .then(function(mapData) {
@@ -30,7 +30,7 @@ suite("FilesLoader Tests", function() {
     });
 
     test("findCoverageFiles returns an error if no coverage file @unit", async function() {
-        const filesLoader = new FilesLoader(fakeConfig);
+        const filesLoader = new FilesLoader(stubConfig);
         (filesLoader as any).findCoverageInWorkspace = async () => new Map();
 
         let captureMessage = "";
@@ -43,8 +43,8 @@ suite("FilesLoader Tests", function() {
 
     test("findCoverageFiles returns manual coverage paths if set @unit", async function() {
         const coverageFiles = ["test.js", "test2.js"];
-        fakeConfig.manualCoverageFilePaths = coverageFiles;
-        const filesLoader = new FilesLoader(fakeConfig);
+        stubConfig.manualCoverageFilePaths = coverageFiles;
+        const filesLoader = new FilesLoader(stubConfig);
         const files = await filesLoader.findCoverageFiles();
         expect(new Set(coverageFiles)).to.deep.equal(files);
     });

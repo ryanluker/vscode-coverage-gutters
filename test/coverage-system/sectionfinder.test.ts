@@ -4,7 +4,7 @@ import { basename, join } from "path";
 import { TextEditor, Uri, workspace, WorkspaceFolder } from "vscode";
 
 import { SectionFinder } from "../../src/coverage-system/sectionfinder";
-import { fakeConfig } from "../mocks/fakeConfig";
+import stubConfig from "../stubs/Config";
 
 const getWorkspaceFolder = workspace.getWorkspaceFolder;
 
@@ -54,7 +54,7 @@ suite("SectionFinder Tests", function() {
         ],
     ]);
     const sectionFinder: SectionFinder = new SectionFinder(
-        fakeConfig,
+        stubConfig,
         fakeOutput,
     );
     const createWorkspaceFolderMock = (workspaceFolder: WorkspaceFolder): (uri: Uri) => WorkspaceFolder => {

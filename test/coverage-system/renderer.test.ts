@@ -3,18 +3,18 @@ import { Section } from "lcov-parse";
 import { DecorationOptions, Range, TextEditor, TextEditorDecorationType } from "vscode";
 import { Renderer } from "../../src/coverage-system/renderer";
 import { SectionFinder } from "../../src/coverage-system/sectionfinder";
-import { fakeConfig } from "../mocks/fakeConfig";
+import stubConfig from "../stubs/Config";
 
 suite("Renderer Tests", function() {
     test("Constructor should setup properly @unit", function(done) {
         const sectionFinder: SectionFinder = {} as SectionFinder;
-        expect(() => new Renderer(fakeConfig, sectionFinder)).not.to.throw();
+        expect(() => new Renderer(stubConfig, sectionFinder)).not.to.throw();
         return done();
     });
 
     test("renderCoverage should not error with empty map and empty TextEditor array @unit", function(done) {
         const sectionFinder: SectionFinder = {} as SectionFinder;
-        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
+        const renderer: Renderer = new Renderer(stubConfig, sectionFinder);
 
         renderer.renderCoverage(new Map<string, Section>(), new Array<TextEditor>());
         return done();
@@ -32,7 +32,7 @@ suite("Renderer Tests", function() {
                 return sections;
             },
         } as SectionFinder;
-        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
+        const renderer: Renderer = new Renderer(stubConfig, sectionFinder);
         const textEditor: TextEditor = {} as TextEditor;
 
         textEditor.setDecorations = function(
@@ -40,9 +40,9 @@ suite("Renderer Tests", function() {
             rangesOrOptions: Range[] | DecorationOptions[],
         ): void {
             const configArray = [
-                fakeConfig.fullCoverageDecorationType,
-                fakeConfig.noCoverageDecorationType,
-                fakeConfig.partialCoverageDecorationType,
+                stubConfig.fullCoverageDecorationType,
+                stubConfig.noCoverageDecorationType,
+                stubConfig.partialCoverageDecorationType,
             ];
             expect(configArray).to.include(decorationType);
             expect(rangesOrOptions).to.deep.equal([]);
@@ -55,7 +55,7 @@ suite("Renderer Tests", function() {
 
     test("removeDecorationsForEditor should not error @unit", function(done) {
         const sectionFinder: SectionFinder = {} as SectionFinder;
-        const renderer: Renderer = new Renderer(fakeConfig, sectionFinder);
+        const renderer: Renderer = new Renderer(stubConfig, sectionFinder);
         const textEditor: TextEditor = {} as TextEditor;
 
         textEditor.setDecorations = function(
@@ -63,9 +63,9 @@ suite("Renderer Tests", function() {
             rangesOrOptions: Range[] | DecorationOptions[],
         ): void {
             const configArray = [
-                fakeConfig.fullCoverageDecorationType,
-                fakeConfig.noCoverageDecorationType,
-                fakeConfig.partialCoverageDecorationType,
+                stubConfig.fullCoverageDecorationType,
+                stubConfig.noCoverageDecorationType,
+                stubConfig.partialCoverageDecorationType,
             ];
             expect(configArray).to.include(decorationType);
             expect(rangesOrOptions).to.deep.equal([]);
