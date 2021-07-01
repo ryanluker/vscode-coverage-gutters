@@ -18,7 +18,7 @@ suite("Extension Tests", function() {
         // Look to see if the webview is open and showing preview coverage
         await waitForExtension(2000);
         const reportView = vscode.workspace.textDocuments[0];
-        expect(reportView.languageId, "html");
+        expect(reportView.languageId).to.equal("html");
     });
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
