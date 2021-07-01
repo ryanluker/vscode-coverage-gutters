@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import {CoverageParser} from "../../src/files/coverageparser";
 
 suite("CoverageParser Tests", function() {
@@ -23,7 +23,7 @@ suite("CoverageParser Tests", function() {
         return coverageParsers.filesToSections(testFiles)
             .then((testSections) => {
                 // Check that we removed the duplicate coverage
-                assert.equal(testSections.size, 3);
+                expect(testSections.size).to.equal(3);
             });
     });
 
@@ -36,7 +36,7 @@ suite("CoverageParser Tests", function() {
         let wasCalled = false;
         const cloverExtract = async (filename) => {
             wasCalled = true;
-            assert.equal(testFiles.has(filename), true);
+            expect(testFiles.has(filename)).to.equal(true);
             return new Map();
         };
         const coverageParsers = new CoverageParser({} as any);
@@ -45,7 +45,7 @@ suite("CoverageParser Tests", function() {
         return coverageParsers.filesToSections(testFiles)
             .then(() => {
                 // Check that we called the clover extract
-                assert.equal(wasCalled, true);
+                expect(wasCalled).to.equal(true);
             });
     });
 });

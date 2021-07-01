@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import fs from "fs";
 import * as vscode from "vscode";
 
@@ -15,20 +15,16 @@ suite("Coverage Tests", function() {
         (vscode as any).window.showQuickPick = showQuickPick;
     });
 
-    test("Constructor should setup properly @unit", function(done) {
-        try {
+    test("Constructor should setup properly @unit", function() {
+        expect(() => {
             new Coverage(fakeConfig); // tslint:disable-line
-            return done();
-        } catch (e) {
-            assert.equal(1, 2);
-            return done();
-        }
+        }).not.to.throw();
     });
 
     test("#load: Should reject when readFile returns an error @unit", function(done) {
         // tslint:disable-next-line
         const readFile = function(path: string, cb) {
-            assert.equal(path, "pathtofile");
+            expect(path).to.equal("pathtofile");
             const error: NodeJS.ErrnoException = new Error("could not read from fs");
             return cb(error, Buffer.from(""));
         };
@@ -52,7 +48,7 @@ suite("Coverage Tests", function() {
     test("#load: Should return a data string @unit", function(done) {
         // tslint:disable-next-line
         const readFile = function(path: string, cb: (err: NodeJS.ErrnoException, data: Buffer) => void) {
-            assert.equal(path, "pathtofile");
+            expect(path).to.equal("pathtofile");
             return cb(undefined as any, Buffer.from("lcovhere"));
         };
         (fs as any).readFile = readFile;
@@ -63,7 +59,7 @@ suite("Coverage Tests", function() {
 
         coverage.load("pathtofile")
             .then(function(dataString) {
-                assert.equal(dataString, "lcovhere");
+                expect(dataString).to.equal("lcovhere");
                 return done();
             })
             .catch(function() {
@@ -85,7 +81,7 @@ suite("Coverage Tests", function() {
 
         coverage.pickFile(["test1", "test2"], "nope")
             .then((value) => {
-                assert.ok(captureMessage === "Did not choose a file!");
+                expect(captureMessage).to.equal("Did not choose a file!");
                 return done();
             });
     });
@@ -97,7 +93,7 @@ suite("Coverage Tests", function() {
 
         coverage.pickFile("123", "nope")
             .then((value) => {
-                assert.equal(value, "123");
+                expect(value).to.equal("123");
                 return done();
             })
             .catch((error) => {
@@ -112,7 +108,7 @@ suite("Coverage Tests", function() {
 
         coverage.pickFile(["123"], "nope")
             .then((value) => {
-                assert.equal(value, "123");
+                expect(value).to.equal("123");
                 return done();
             })
             .catch((error) => {

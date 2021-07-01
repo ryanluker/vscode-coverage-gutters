@@ -1,16 +1,14 @@
-import chai from "chai";
+import { expect } from "chai";
 import { Section } from "lcov-parse";
 import { DecorationOptions, Range, TextEditor, TextEditorDecorationType } from "vscode";
 import { Renderer } from "../../src/coverage-system/renderer";
 import { SectionFinder } from "../../src/coverage-system/sectionfinder";
 import { fakeConfig } from "../mocks/fakeConfig";
 
-const { assert } = chai;
-
 suite("Renderer Tests", function() {
     test("Constructor should setup properly @unit", function(done) {
         const sectionFinder: SectionFinder = {} as SectionFinder;
-        assert.doesNotThrow(() => new Renderer(fakeConfig, sectionFinder));
+        expect(() => new Renderer(fakeConfig, sectionFinder)).not.to.throw();
         return done();
     });
 
@@ -29,8 +27,8 @@ suite("Renderer Tests", function() {
                 functionTextEditor: TextEditor,
                 functionSections: Map<string, Section>,
             ): Section[] => {
-                assert.isNotNull(functionTextEditor);
-                assert.isNotNull(functionSections);
+                expect(functionTextEditor).not.to.equal(null);
+                expect(functionSections).not.to.equal(null);
                 return sections;
             },
         } as SectionFinder;
@@ -46,9 +44,8 @@ suite("Renderer Tests", function() {
                 fakeConfig.noCoverageDecorationType,
                 fakeConfig.partialCoverageDecorationType,
             ];
-            assert.include(configArray, decorationType);
-            assert.isArray(rangesOrOptions);
-            assert.equal(rangesOrOptions.length, 0);
+            expect(configArray).to.include(decorationType);
+            expect(rangesOrOptions).to.deep.equal([]);
         };
         const textEditorArray: TextEditor[] = new Array<TextEditor>();
         textEditorArray.push(textEditor);
@@ -70,9 +67,8 @@ suite("Renderer Tests", function() {
                 fakeConfig.noCoverageDecorationType,
                 fakeConfig.partialCoverageDecorationType,
             ];
-            assert.include(configArray, decorationType);
-            assert.isArray(rangesOrOptions);
-            assert.equal(rangesOrOptions.length, 0);
+            expect(configArray).to.include(decorationType);
+            expect(rangesOrOptions).to.deep.equal([]);
         };
         renderer.removeDecorationsForEditor(textEditor);
         return done();

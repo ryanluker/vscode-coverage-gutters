@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import { OutputChannel, workspace } from "vscode";
 
 import { CoverageService } from "../../src/coverage-system/coverageservice";
@@ -39,7 +39,7 @@ suite("CoverageService Tests", function() {
         };
         (service as any).listenToFileSystem();
 
-        assert.equal(globPassed, "{/path1,/path2}");
+        expect(globPassed).to.equal("{/path1,/path2}");
     });
 
     test("Should listen for coverage file names in workspace @unit", function() {
@@ -65,6 +65,6 @@ suite("CoverageService Tests", function() {
             const workspaceFolders = workspace.workspaceFolders.map((wf) => wf.uri.fsPath);
             prefix = `{${workspaceFolders}}/${prefix}`;
         }
-        assert.equal(globPassed, `${prefix}/{coverage.xml,custom-lcov.info}`);
+        expect(globPassed).to.equal(`${prefix}/{coverage.xml,custom-lcov.info}`);
     });
 });

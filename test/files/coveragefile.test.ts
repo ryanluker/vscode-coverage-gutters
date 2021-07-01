@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import {CoverageFile, CoverageType} from "../../src/files/coveragefile";
 
 suite("Coverage File Tests", function() {
@@ -17,11 +17,11 @@ suite("Coverage File Tests", function() {
             FNH:7
         `;
         const coverageFile = new CoverageFile(fakeLcovInfo);
-        assert.equal(coverageFile.type, CoverageType.LCOV);
+        expect(coverageFile.type).to.equal(CoverageType.LCOV);
     });
 
     test("Ignores empty file (#150) @unit", function() {
         const coverageFile = new CoverageFile("");
-        assert.equal(coverageFile.type, CoverageType.NONE);
+        expect(coverageFile.type).to.equal(CoverageType.NONE);
     });
 });

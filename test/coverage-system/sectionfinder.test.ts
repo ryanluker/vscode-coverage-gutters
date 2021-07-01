@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import { Section } from "lcov-parse";
 import { basename, join } from "path";
 import { TextEditor, Uri, workspace, WorkspaceFolder } from "vscode";
@@ -74,7 +74,7 @@ suite("SectionFinder Tests", function() {
             sectionMap,
         );
 
-        assert.equal(sections.length, 1);
+        expect(sections).to.have.lengthOf(1);
         return done();
     });
 
@@ -89,7 +89,7 @@ suite("SectionFinder Tests", function() {
             sectionMap,
         );
 
-        assert.equal(sections.length, 1);
+        expect(sections).to.have.lengthOf(1);
         return done();
     });
 });

@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import fs from "fs";
 import * as vscode from "vscode";
 
@@ -24,8 +24,8 @@ suite("FilesLoader Tests", function() {
         const testData = new Set(["file1", "file2"]);
         return filesLoader.loadDataFiles(testData)
             .then(function(mapData) {
-                assert.equal(2, mapData.size);
-                assert.equal("123", mapData.get("file1"));
+                expect(mapData.size).to.equal(2);
+                expect(mapData.get("file1")).to.equal("123");
             });
     });
 
@@ -38,7 +38,7 @@ suite("FilesLoader Tests", function() {
         (vscode as any).window.showWarningMessage = showWarningMessage;
 
         await filesLoader.findCoverageFiles();
-        assert.ok(captureMessage === "Could not find a Coverage file!");
+        expect(captureMessage).to.equal("Could not find a Coverage file!");
     });
 
     test("findCoverageFiles returns manual coverage paths if set @unit", async function() {
@@ -46,6 +46,6 @@ suite("FilesLoader Tests", function() {
         fakeConfig.manualCoverageFilePaths = coverageFiles;
         const filesLoader = new FilesLoader(fakeConfig);
         const files = await filesLoader.findCoverageFiles();
-        assert.deepStrictEqual(new Set(coverageFiles), files);
+        expect(new Set(coverageFiles)).to.deep.equal(files);
     });
 });
