@@ -37,9 +37,9 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            expect(cachedLines.full.length).to.equal(3);
-            expect(cachedLines.none.length).to.equal(1);
-            expect(cachedLines.partial.length).to.equal(1);
+            expect(cachedLines.full).to.have.lengthOf(3);
+            expect(cachedLines.none).to.have.lengthOf(1);
+            expect(cachedLines.partial).to.have.lengthOf(1);
         });
 
         extension.exports.emptyLastCoverage();
@@ -61,9 +61,9 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            expect(cachedLines.full.length).to.equal(14);
-            expect(cachedLines.none.length).to.equal(4);
-            expect(cachedLines.partial.length).to.equal(7);
+            expect(cachedLines.full).to.have.lengthOf(14);
+            expect(cachedLines.none).to.have.lengthOf(4);
+            expect(cachedLines.partial).to.have.lengthOf(7);
         });
 
         extension.exports.emptyLastCoverage();
@@ -84,8 +84,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            expect(cachedLines.full.length).to.equal(3);
-            expect(cachedLines.none.length).to.equal(3);
+            expect(cachedLines.full).to.have.lengthOf(3);
+            expect(cachedLines.none).to.have.lengthOf(3);
         });
 
         extension.exports.emptyLastCoverage();
@@ -106,8 +106,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            expect(cachedLines.full.length).to.equal(4);
-            expect(cachedLines.none.length).to.equal(2);
+            expect(cachedLines.full).to.have.lengthOf(4);
+            expect(cachedLines.none).to.have.lengthOf(2);
         });
 
         extension.exports.emptyLastCoverage();
@@ -128,8 +128,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            expect(cachedLines.none.length).to.equal(6);
-            expect(cachedLines.full.length).to.equal(2);
+            expect(cachedLines.none).to.have.lengthOf(6);
+            expect(cachedLines.full).to.have.lengthOf(2);
         });
 
         extension.exports.emptyLastCoverage();
@@ -150,8 +150,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            expect(cachedLines.full.length).to.equal(3);
-            expect(cachedLines.none.length).to.equal(1);
+            expect(cachedLines.full).to.have.lengthOf(3);
+            expect(cachedLines.none).to.have.lengthOf(1);
         });
 
         extension.exports.emptyLastCoverage();
@@ -172,8 +172,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            expect(cachedLines.full.length).to.equal(4);
-            expect(cachedLines.none.length).to.equal(3);
+            expect(cachedLines.full).to.have.lengthOf(4);
+            expect(cachedLines.none).to.have.lengthOf(3);
         });
 
         extension.exports.emptyLastCoverage();
@@ -203,9 +203,9 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const cachedLines: ICoverageLines = getCachedLines();
-            expect(cachedLines.full.length).to.equal(14);
-            expect(cachedLines.none.length).to.equal(4);
-            expect(cachedLines.partial.length).to.equal(7);
+            expect(cachedLines.full).to.have.lengthOf(14);
+            expect(cachedLines.none).to.have.lengthOf(4);
+            expect(cachedLines.partial).to.have.lengthOf(7);
         });
 
         extension.exports.emptyLastCoverage();
@@ -228,9 +228,9 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const jsCachedLines: ICoverageLines = getCachedLines();
-            expect(jsCachedLines.full.length).to.equal(14);
-            expect(jsCachedLines.none.length).to.equal(4);
-            expect(jsCachedLines.partial.length).to.equal(7);
+            expect(jsCachedLines.full).to.have.lengthOf(14);
+            expect(jsCachedLines.none).to.have.lengthOf(4);
+            expect(jsCachedLines.partial).to.have.lengthOf(7);
         });
 
         extension.exports.emptyLastCoverage();
@@ -245,8 +245,8 @@ suite("Extension Tests", function() {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const javaCachedLines: ICoverageLines = getCachedLines();
-            expect(javaCachedLines.full.length).to.equal(4);
-            expect(javaCachedLines.none.length).to.equal(3);
+            expect(javaCachedLines.full).to.have.lengthOf(4);
+            expect(javaCachedLines.none).to.have.lengthOf(3);
         });
 
         extension.exports.emptyLastCoverage();
