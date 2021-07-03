@@ -4,7 +4,6 @@ import {
     TextEditor,
 } from "vscode";
 import { Config } from "../extension/config";
-import { setLastCoverageLines } from "../extension/exportsapi";
 import { SectionFinder } from "./sectionfinder";
 
 export interface ICoverageLines {
@@ -58,9 +57,6 @@ export class Renderer {
 
             this.filterCoverage(foundSections, coverageLines);
             this.setDecorationsForEditor(textEditor, coverageLines);
-
-            // Cache last coverage lines for exports api
-            setLastCoverageLines(coverageLines);
         });
     }
 
@@ -79,7 +75,7 @@ export class Renderer {
         );
     }
 
-    private setDecorationsForEditor(
+    public setDecorationsForEditor(
         editor: TextEditor,
         coverage: ICoverageLines,
     ) {

@@ -1,9 +1,12 @@
-import { expect } from "chai";
+import {expect} from "chai";
 import fs from "fs";
+import sinon from "sinon";
 import * as vscode from "vscode";
 
 import {Coverage} from "../../src/coverage-system/coverage";
-import {fakeConfig} from "../mocks/fakeConfig";
+import {Config} from "../../src/extension/config";
+
+const stubConfig = sinon.createStubInstance(Config) as Config;
 
 // Original functions
 const readFile = fs.readFile;
@@ -17,7 +20,7 @@ suite("Coverage Tests", function() {
 
     test("Constructor should setup properly @unit", function() {
         expect(() => {
-            new Coverage(fakeConfig); // tslint:disable-line
+            new Coverage(stubConfig); // tslint:disable-line
         }).not.to.throw();
     });
 
@@ -31,7 +34,7 @@ suite("Coverage Tests", function() {
         (fs as any).readFile = readFile;
 
         const coverage = new Coverage(
-            fakeConfig,
+            stubConfig,
         );
 
         coverage.load("pathtofile")
@@ -54,7 +57,7 @@ suite("Coverage Tests", function() {
         (fs as any).readFile = readFile;
 
         const coverage = new Coverage(
-            fakeConfig,
+            stubConfig,
         );
 
         coverage.load("pathtofile")
@@ -76,7 +79,7 @@ suite("Coverage Tests", function() {
         (vscode as any).window.showWarningMessage = showWarningMessage;
 
         const coverage = new Coverage(
-            fakeConfig,
+            stubConfig,
         );
 
         coverage.pickFile(["test1", "test2"], "nope")
@@ -88,7 +91,7 @@ suite("Coverage Tests", function() {
 
     test("#pickFile: Should return string if filePaths is a string @unit", function(done) {
         const coverage = new Coverage(
-            fakeConfig,
+            stubConfig,
         );
 
         coverage.pickFile("123", "nope")
@@ -103,7 +106,7 @@ suite("Coverage Tests", function() {
 
     test("#pickFile: Should return string if filePaths is an array with one value @unit", function(done) {
         const coverage = new Coverage(
-            fakeConfig,
+            stubConfig,
         );
 
         coverage.pickFile(["123"], "nope")

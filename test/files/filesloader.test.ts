@@ -1,9 +1,12 @@
 import { expect } from "chai";
 import fs from "fs";
+import sinon from "sinon";
 import * as vscode from "vscode";
+import { Config } from "../../src/extension/config";
 
 import {FilesLoader} from "../../src/files/filesloader";
-import {fakeConfig} from "../mocks/fakeConfig";
+
+const stubConfig = sinon.createStubInstance(Config) as Config;
 
 // Original functions
 const readFile = fs.readFile;
@@ -20,7 +23,7 @@ suite("FilesLoader Tests", function() {
         };
         (fs as any).readFile = readFile;
 
-        const filesLoader = new FilesLoader(fakeConfig);
+        const filesLoader = new FilesLoader(stubConfig);
         const testData = new Set(["file1", "file2"]);
         return filesLoader.loadDataFiles(testData)
             .then(function(mapData) {
@@ -30,7 +33,8 @@ suite("FilesLoader Tests", function() {
     });
 
     test("findCoverageFiles returns an error if no coverage file @unit", async function() {
-        const filesLoader = new FilesLoader(fakeConfig);
+        stubConfig.manualCoverageFilePaths = [];
+        const filesLoader = new FilesLoader(stubConfig);
         (filesLoader as any).findCoverageInWorkspace = async () => new Map();
 
         let captureMessage = "";
@@ -43,8 +47,8 @@ suite("FilesLoader Tests", function() {
 
     test("findCoverageFiles returns manual coverage paths if set @unit", async function() {
         const coverageFiles = ["test.js", "test2.js"];
-        fakeConfig.manualCoverageFilePaths = coverageFiles;
-        const filesLoader = new FilesLoader(fakeConfig);
+        stubConfig.manualCoverageFilePaths = coverageFiles;
+        const filesLoader = new FilesLoader(stubConfig);
         const files = await filesLoader.findCoverageFiles();
         expect(new Set(coverageFiles)).to.deep.equal(files);
     });

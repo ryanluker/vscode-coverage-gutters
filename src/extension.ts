@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import { Coverage } from "./coverage-system/coverage";
 import { Config } from "./extension/config";
 import { CrashReporter } from "./extension/crashreporter";
-import { emptyLastCoverage, getLastCoverageLines } from "./extension/exportsapi";
 import { Gutters } from "./extension/gutters";
 import { StatusBarToggler } from "./extension/statusbartoggler";
 
@@ -48,10 +47,4 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(removeWatch);
     context.subscriptions.push(gutters);
     context.subscriptions.push(outputChannel);
-
-    // return exports api functions
-    return {
-        emptyLastCoverage,
-        getLastCoverageLines,
-    };
 }
