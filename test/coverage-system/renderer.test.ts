@@ -1,9 +1,12 @@
 import { expect } from "chai";
 import { Section } from "lcov-parse";
+import sinon from "sinon";
 import { DecorationOptions, Range, TextEditor, TextEditorDecorationType } from "vscode";
 import { Renderer } from "../../src/coverage-system/renderer";
 import { SectionFinder } from "../../src/coverage-system/sectionfinder";
-import stubConfig from "../stubs/Config";
+import { Config } from "../../src/extension/config";
+
+const stubConfig = sinon.createStubInstance(Config) as Config;
 
 suite("Renderer Tests", function() {
     test("Constructor should setup properly @unit", function(done) {

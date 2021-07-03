@@ -1,11 +1,13 @@
 import { expect } from "chai";
 import { Section } from "lcov-parse";
 import { basename, join } from "path";
+import sinon from "sinon";
 import { TextEditor, Uri, workspace, WorkspaceFolder } from "vscode";
 
 import { SectionFinder } from "../../src/coverage-system/sectionfinder";
-import stubConfig from "../stubs/Config";
+import { Config } from "../../src/extension/config";
 
+const stubConfig = sinon.createStubInstance(Config) as Config;
 const getWorkspaceFolder = workspace.getWorkspaceFolder;
 
 suite("SectionFinder Tests", function() {

@@ -8,23 +8,24 @@ import { StatusBarToggler } from "../src/extension/statusbartoggler";
 suite("Extension Tests", function() {
     this.timeout(25000);
 
+    setup(async () => {
+        // Allow time for the extension to load once before running tests
+        await wait(2000);
+    });
+
     test("Preview the coverage report in a new webview tab @integration", async () => {
         // Note: depends on "coverage-gutters.coverageReportFileName": "index.html",
         // being set in the example.code-workspace setting file as the coverage report
         // is in the root of the node folder and not inside the default /coverage
-        await waitForExtension(2000);
-
         await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
         // Look to see if the webview is open and showing preview coverage
-        await waitForExtension(2000);
+        await wait(500);
         const reportView = vscode.workspace.textDocuments[0];
         expect(reportView.languageId).to.equal("html");
     });
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
-        await waitForExtension(2000);
         const extension = vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -48,8 +49,6 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on node test file with large lcov.info file @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
-        await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -73,8 +72,6 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on python test file @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
-        await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -97,8 +94,6 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on php test file number 1 @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
-        await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -121,8 +116,6 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on php test file number 2 @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
-        await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -145,8 +138,6 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on php test file number 3 @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
-        await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -169,8 +160,6 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on java test file @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
-        await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -193,8 +182,6 @@ suite("Extension Tests", function() {
 
     test("Run display coverage on node test file with large code base @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
-        await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -227,8 +214,6 @@ suite("Extension Tests", function() {
 
     test("Run watch and open files to see coverage @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
-        await waitForExtension(2000);
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
         if (!extension) {
             throw new Error("Could not load extension");
@@ -253,7 +238,7 @@ suite("Extension Tests", function() {
         const testJavaDocument = await vscode.workspace.openTextDocument(testJavaCoverage[0]);
         await vscode.window.showTextDocument(testJavaDocument);
         await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
-        await waitForExtension(2000);
+        await wait(500);
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
@@ -273,7 +258,7 @@ suite("Extension Tests", function() {
             const setCoverageSpy = sinon.spy(StatusBarToggler.prototype, "setCoverage");
 
             await vscode.commands.executeCommand("coverage-gutters.watchCoverageAndVisibleEditors");
-            await waitForExtension(1000);
+            await wait(1000);
 
             const [testJSCoverage] = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
             const testJSDocument = await vscode.workspace.openTextDocument(testJSCoverage);
@@ -306,7 +291,7 @@ suite("Extension Tests", function() {
         });
 });
 
-async function waitForExtension(ms: number) {
+async function wait(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 

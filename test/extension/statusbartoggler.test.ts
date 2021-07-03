@@ -1,6 +1,9 @@
 import { expect } from "chai";
+import sinon from "sinon";
+import { Config } from "../../src/extension/config";
 import { StatusBarToggler } from "../../src/extension/statusbartoggler";
-import stubConfig from "../stubs/Config";
+
+const stubConfig = sinon.createStubInstance(Config) as Config;
 
 suite("Status Bar Toggler Tests", () => {
     test("Should toggle showStatusBarToggler command and message @unit", () => {

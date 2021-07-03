@@ -1,9 +1,12 @@
 import { expect } from "chai";
 import fs from "fs";
+import sinon from "sinon";
 import * as vscode from "vscode";
+import { Config } from "../../src/extension/config";
 
 import {FilesLoader} from "../../src/files/filesloader";
-import stubConfig from "../stubs/Config";
+
+const stubConfig = sinon.createStubInstance(Config) as Config;
 
 // Original functions
 const readFile = fs.readFile;
@@ -30,6 +33,7 @@ suite("FilesLoader Tests", function() {
     });
 
     test("findCoverageFiles returns an error if no coverage file @unit", async function() {
+        stubConfig.manualCoverageFilePaths = [];
         const filesLoader = new FilesLoader(stubConfig);
         (filesLoader as any).findCoverageInWorkspace = async () => new Map();
 

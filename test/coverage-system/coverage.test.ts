@@ -1,9 +1,12 @@
-import { expect } from "chai";
+import {expect} from "chai";
 import fs from "fs";
+import sinon from "sinon";
 import * as vscode from "vscode";
 
 import {Coverage} from "../../src/coverage-system/coverage";
-import stubConfig from "../stubs/Config";
+import {Config} from "../../src/extension/config";
+
+const stubConfig = sinon.createStubInstance(Config) as Config;
 
 // Original functions
 const readFile = fs.readFile;
