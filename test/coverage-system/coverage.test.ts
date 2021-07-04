@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import fs from "fs";
-import { afterEach } from "mocha";
 import sinon from "sinon";
 import * as vscode from "vscode";
 
@@ -10,7 +9,7 @@ import {Config} from "../../src/extension/config";
 const stubConfig = sinon.createStubInstance(Config) as Config;
 
 suite("Coverage Tests", () => {
-    afterEach(() => sinon.restore());
+    teardown(() => sinon.restore());
 
     test("Constructor should setup properly @unit", () => {
         expect(() => {

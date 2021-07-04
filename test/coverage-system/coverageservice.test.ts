@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { afterEach } from "mocha";
 import sinon from "sinon";
 import { FileSystemWatcher, OutputChannel, workspace } from "vscode";
 
@@ -18,7 +17,7 @@ const mockStatusBarToggler = {setLoading: () => {}} as StatusBarToggler;
 const mockCrashReporter = {} as CrashReporter;
 
 suite("CoverageService Tests", function() {
-    afterEach(() => sinon.restore());
+    teardown(() => sinon.restore());
 
     test("Should listen for all paths specified in manualCoverageFilePaths @unit", () => {
         const config: any = {
