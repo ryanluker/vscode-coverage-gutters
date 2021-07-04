@@ -1,8 +1,17 @@
+import CloverParser from "@cvrg-report/clover-json";
 import { expect } from "chai";
-import {CoverageParser} from "../../src/files/coverageparser";
+import { Section } from "lcov-parse";
+import sinon from "sinon";
+import { OutputChannel } from "vscode";
+import { CoverageParser } from "../../src/files/coverageparser";
 
-suite("CoverageParser Tests", function() {
-    test("filesToSections properly deduplicates coverages @unit", async function() {
+suite("CoverageParser Tests", () => {
+
+    teardown(() => sinon.restore());
+
+    const fakeOutputChannel = { appendLine: () => undefined } as unknown as OutputChannel;
+
+    test("filesToSections properly deduplicates coverages @unit", async () => {
         // Setup a map of test keys and data strings
         // Note: we include a duplicate key to test deduplication
         const testFiles = new Map();
@@ -11,41 +20,29 @@ suite("CoverageParser Tests", function() {
         testFiles.set("/file/222", "datastring222");
         testFiles.set("/file/123", "samestringhere");
 
-        // Mock lcovExtract
-        const lcovExtract = async (filename) => {
+        const coverageParsers = new CoverageParser(fakeOutputChannel);
+        sinon.stub(coverageParsers as any, "lcovExtract").callsFake(async (filename) => {
             const testSection = new Map();
             testSection.set(filename, "");
             return testSection;
-        };
-        const coverageParsers = new CoverageParser({} as any);
-        (coverageParsers as any).lcovExtract = lcovExtract;
+        });
 
-        return coverageParsers.filesToSections(testFiles)
-            .then((testSections) => {
-                // Check that we removed the duplicate coverage
-                expect(testSections.size).to.equal(3);
-            });
+        const testSections = await coverageParsers.filesToSections(testFiles);
+
+        // Check that we removed the duplicate coverage
+        expect(testSections.size).to.equal(3);
     });
 
-    test("filesToSections Correctly chooses the clover coverage format @unit", async function() {
+    test("filesToSections Correctly chooses the clover coverage format @unit", async () => {
         // Setup a map of test keys and data strings
         const testFiles = new Map();
         testFiles.set("/file/clover", "<?xml <coverage <project");
 
-        // Mock xmlExtract where we check we are called
-        let wasCalled = false;
-        const cloverExtract = async (filename) => {
-            wasCalled = true;
-            expect(testFiles.has(filename)).to.equal(true);
-            return new Map();
-        };
-        const coverageParsers = new CoverageParser({} as any);
-        (coverageParsers as any).xmlExtractClover = cloverExtract;
+        const stubClover = sinon.stub(CloverParser, "parseContent").resolves([{}] as Section[]);
+        const coverageParsers = new CoverageParser(fakeOutputChannel);
 
-        return coverageParsers.filesToSections(testFiles)
-            .then(() => {
-                // Check that we called the clover extract
-                expect(wasCalled).to.equal(true);
-            });
+        await coverageParsers.filesToSections(testFiles);
+
+        expect(stubClover).to.be.calledWith("<?xml <coverage <project");
     });
 });
