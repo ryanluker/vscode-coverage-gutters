@@ -6,7 +6,6 @@ import { OutputChannel } from "vscode";
 import { CoverageParser } from "../../src/files/coverageparser";
 
 suite("CoverageParser Tests", () => {
-
     teardown(() => sinon.restore());
 
     const fakeOutputChannel = { appendLine: () => undefined } as unknown as OutputChannel;
