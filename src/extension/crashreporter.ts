@@ -17,7 +17,7 @@ export class CrashReporter {
             Sentry.init({
                 defaultIntegrations: false,
                 dsn: "https://dfd1a0d586284b6b8710feef8a2928b3@o412074.ingest.sentry.io/5288283",
-                release: "vscode-coverage-gutters@2.7.4",
+                release: "vscode-coverage-gutters@2.8.0",
             });
             Sentry.configureScope(function(scope) {
                 // Generate a random string for this session
