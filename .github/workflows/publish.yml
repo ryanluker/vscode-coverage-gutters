@@ -4,7 +4,7 @@ on:
     tags:
       - "*"
 jobs:
-  deploy:
+  deploy-open-vsx:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,8 +16,17 @@ jobs:
         uses: HaaLeo/publish-vscode-extension@v0
         with:
           pat: ${{ secrets.OPEN_VSX_TOKEN }}
+  deploy-vs-marketplace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: npm ci && npm install
       - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v0
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com
+
