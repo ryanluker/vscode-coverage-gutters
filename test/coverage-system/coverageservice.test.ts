@@ -1,5 +1,6 @@
 import { expect } from "chai";
-import { OutputChannel, workspace } from "vscode";
+import sinon from "sinon";
+import { FileSystemWatcher, OutputChannel, workspace } from "vscode";
 
 import { CoverageService } from "../../src/coverage-system/coverageservice";
 import { CrashReporter } from "../../src/extension/crashreporter";
@@ -15,15 +16,10 @@ const mockFileWatcher = {
 const mockStatusBarToggler = {setLoading: () => {}} as StatusBarToggler;
 const mockCrashReporter = {} as CrashReporter;
 
-// Original functions
-const createFileSystemWatcher = workspace.createFileSystemWatcher;
-
 suite("CoverageService Tests", function() {
-    teardown(function() {
-        (workspace as any).createFileSystemWatcher = createFileSystemWatcher;
-    });
+    teardown(() => sinon.restore());
 
-    test("Should listen for all paths specified in manualCoverageFilePaths @unit", function() {
+    test("Should listen for all paths specified in manualCoverageFilePaths @unit", () => {
         const config: any = {
             manualCoverageFilePaths: [
                 "/path1",
@@ -32,17 +28,15 @@ suite("CoverageService Tests", function() {
         };
         const service = new CoverageService(config, mockOutputChannel, mockStatusBarToggler, mockCrashReporter);
 
-        let globPassed;
-        (workspace as any).createFileSystemWatcher = (glob) => {
-            globPassed = glob;
-            return mockFileWatcher;
-        };
+        const stubCreateFileSystemWatcher = sinon.stub(workspace, "createFileSystemWatcher")
+            .returns(mockFileWatcher as FileSystemWatcher);
+
         (service as any).listenToFileSystem();
 
-        expect(globPassed).to.equal("{/path1,/path2}");
+        expect(stubCreateFileSystemWatcher).to.be.calledWith("{/path1,/path2}");
     });
 
-    test("Should listen for coverage file names in workspace @unit", function() {
+    test("Should listen for coverage file names in workspace @unit", () => {
         const config: any = {
             coverageBaseDir: "custom/path/*",
             coverageFileNames: [
@@ -53,11 +47,9 @@ suite("CoverageService Tests", function() {
         };
         const service = new CoverageService(config, mockOutputChannel, mockStatusBarToggler, mockCrashReporter);
 
-        let globPassed;
-        (workspace as any).createFileSystemWatcher = (glob) => {
-            globPassed = glob;
-            return mockFileWatcher;
-        };
+        const stubCreateFileSystemWatcher = sinon.stub(workspace, "createFileSystemWatcher")
+            .returns(mockFileWatcher as FileSystemWatcher);
+
         (service as any).listenToFileSystem();
 
         let prefix = config.coverageBaseDir;
@@ -65,6 +57,6 @@ suite("CoverageService Tests", function() {
             const workspaceFolders = workspace.workspaceFolders.map((wf) => wf.uri.fsPath);
             prefix = `{${workspaceFolders}}/${prefix}`;
         }
-        expect(globPassed).to.equal(`${prefix}/{coverage.xml,custom-lcov.info}`);
+        expect(stubCreateFileSystemWatcher).to.be.calledWith(`${prefix}/{coverage.xml,custom-lcov.info}`);
     });
 });

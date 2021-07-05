@@ -1,29 +1,32 @@
 import { expect } from "chai";
+import sinon from "sinon";
 import * as vscode from "vscode";
 
-import {Config} from "../../src/extension/config";
-
-// Original functions
-const createTextEditorDecorationType = vscode.window.createTextEditorDecorationType;
-const executeCommand = vscode.commands.executeCommand;
-const getConfiguration = vscode.workspace.getConfiguration;
+import { Config } from "../../src/extension/config";
 
 let showGutterCoverage: boolean;
 let iconPathDark: string;
 let iconPathLight: string;
 
-suite("Config Tests", function() {
-    const fakeVscode: any = {
-        createTextEditorDecorationType: (options) => {
-            expect(Object.keys(options)).to.have.lengthOf(4);
-            return {};
+suite("Config Tests", () => {
+    const fakeContext: any = {
+        asAbsolutePath: () => {
+            return "123";
         },
+    };
 
-        executeCommand: () => {
-            return ;
-        },
+    let stubCreateTextEditorDecorationType: sinon.SinonStub;
+    const fakeCreateTextEditorDecorationType = (options: vscode.DecorationRenderOptions) => {
+        expect(Object.keys(options)).to.have.lengthOf(4);
+        return {} as vscode.TextEditorDecorationType;
+    };
 
-        getConfiguration: () => {
+    setup(() => {
+        stubCreateTextEditorDecorationType = sinon.stub(vscode.window, "createTextEditorDecorationType");
+
+        sinon.stub(vscode.commands, "executeCommand").callsFake(async () => undefined);
+
+        sinon.stub(vscode.workspace, "getConfiguration").callsFake(() => {
             return {
                 coverageFileNames: ["test.xml", "lcov.info"],
                 get: (key) => {
@@ -45,64 +48,64 @@ suite("Config Tests", function() {
                 test2: "test2",
                 test3: "test3",
                 xmlname: "name.xml",
-            };
-        },
-    };
-
-    const fakeContext: any = {
-        asAbsolutePath: () => {
-            return "123";
-        },
-    };
-
-    teardown(function() {
-        (vscode as any).window.createTextEditorDecorationType = createTextEditorDecorationType;
-        (vscode as any).commands.executeCommand = executeCommand;
-        (vscode as any).workspace.getConfiguration = getConfiguration;
+            } as unknown as vscode.WorkspaceConfiguration;
+        });
     });
 
-    setup(function() {
-        (vscode as any).window.createTextEditorDecorationType = fakeVscode.createTextEditorDecorationType;
-        (vscode as any).commands.executeCommand = fakeVscode.executeCommand;
-        (vscode as any).workspace.getConfiguration = fakeVscode.getConfiguration;
-    });
+    teardown(() => sinon.restore());
 
-    test("Constructor should setup properly @unit", function() {
+    test("Constructor should setup properly @unit", () => {
+        stubCreateTextEditorDecorationType.callsFake(
+            fakeCreateTextEditorDecorationType,
+        );
+
         expect(() => {
             new Config(fakeContext); // tslint:disable-line
         }).not.to.throw();
     });
 
-    test("Can get configStore after initialization @unit", function() {
+    test("Can get configStore after initialization @unit", () => {
+        stubCreateTextEditorDecorationType.callsFake(
+            fakeCreateTextEditorDecorationType,
+        );
+
         const config = new Config(fakeContext);
         expect(config.coverageFileNames).not.to.equal(null);
     });
 
-    test("Can get coverage file names @unit", function() {
+    test("Can get coverage file names @unit", () => {
+        stubCreateTextEditorDecorationType.callsFake(
+            fakeCreateTextEditorDecorationType,
+        );
+
         const config = new Config(fakeContext);
         // Check that unique file names is being applied
         expect(config.coverageFileNames).to.have.lengthOf(3);
     });
 
-    test("Should remove gutter icons if showGutterCoverage is set to false, allows breakpoint usage @unit", function() {
+    test("Should remove gutter icons if showGutterCoverage is set to false, allows breakpoint usage @unit", () => {
         showGutterCoverage = false;
-        (vscode as any).window.createTextEditorDecorationType = (options) => {
+
+        stubCreateTextEditorDecorationType.callsFake((options) => {
             expect(options.dark).to.not.have.any.keys("gutterIconPath");
             expect(options.light).to.not.have.any.keys("gutterIconPath");
-        };
+            return {} as vscode.TextEditorDecorationType;
+        });
+
         new Config(fakeContext); // tslint:disable-line
     });
 
-    test("Should set the gutter icon to the provided value if set @unit", function() {
+    test("Should set the gutter icon to the provided value if set @unit", () => {
         showGutterCoverage = true;
         iconPathDark = "/my/absolute/path/to/custom/icon-dark.svg";
         iconPathLight = "";
-        (vscode as any).window.createTextEditorDecorationType = (options) => {
-            expect(options.dark.gutterIconPath).to.equal(iconPathDark);
-            expect(options.light.gutterIconPath).to.include("./app_images/");
-        };
+        stubCreateTextEditorDecorationType.callsFake((options) => {
+            expect((options.dark as any).gutterIconPath).to.equal(iconPathDark);
+            expect((options.light as any).gutterIconPath).to.include("./app_images/");
+            return {} as vscode.TextEditorDecorationType;
+        });
+
         fakeContext.asAbsolutePath = (options) => options;
         new Config(fakeContext); // tslint:disable-line
     });
-
 });

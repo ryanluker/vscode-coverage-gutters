@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import { expect } from "chai";
 import fs from "fs";
 import sinon from "sinon";
 import * as vscode from "vscode";
@@ -8,114 +8,77 @@ import {Config} from "../../src/extension/config";
 
 const stubConfig = sinon.createStubInstance(Config) as Config;
 
-// Original functions
-const readFile = fs.readFile;
-const showQuickPick = vscode.window.showQuickPick;
+suite("Coverage Tests", () => {
+    teardown(() => sinon.restore());
 
-suite("Coverage Tests", function() {
-    teardown(function() {
-        (fs as any).readFile = readFile;
-        (vscode as any).window.showQuickPick = showQuickPick;
-    });
-
-    test("Constructor should setup properly @unit", function() {
+    test("Constructor should setup properly @unit", () => {
         expect(() => {
             new Coverage(stubConfig); // tslint:disable-line
         }).not.to.throw();
     });
 
-    test("#load: Should reject when readFile returns an error @unit", function(done) {
-        // tslint:disable-next-line
-        const readFile = function(path: string, cb) {
-            expect(path).to.equal("pathtofile");
-            const error: NodeJS.ErrnoException = new Error("could not read from fs");
-            return cb(error, Buffer.from(""));
-        };
-        (fs as any).readFile = readFile;
+    test("#load: Should reject when readFile returns an error @unit", async () => {
+        sinon.stub(fs, "readFile").callsFake(() => {
+            throw new Error("could not read from fs");
+        });
 
         const coverage = new Coverage(
             stubConfig,
         );
 
-        coverage.load("pathtofile")
-            .then(function() {
-                return done(new Error("Expected error did not fire!"));
-            })
-            .catch(function(error) {
-                if (error.name === "AssertionError") { return done(error); }
-                if (error.message === "could not read from fs") { return done(); }
-                return done(error);
-            });
+        try {
+            await coverage.load("pathtofile");
+        } catch (e) {
+            expect(e.message).to.equal("could not read from fs");
+        }
     });
 
-    test("#load: Should return a data string @unit", function(done) {
-        // tslint:disable-next-line
-        const readFile = function(path: string, cb: (err: NodeJS.ErrnoException, data: Buffer) => void) {
-            expect(path).to.equal("pathtofile");
-            return cb(undefined as any, Buffer.from("lcovhere"));
-        };
-        (fs as any).readFile = readFile;
+    test("#load: Should return a data string @unit", async () => {
+        const stubReadFile = sinon.stub(fs, "readFile").callsFake(
+            (_: string, cb: (err: NodeJS.ErrnoException, data: Buffer) => void) => {
+                return cb(undefined as any, Buffer.from("lcovhere"));
+            },
+        );
 
         const coverage = new Coverage(
             stubConfig,
         );
 
-        coverage.load("pathtofile")
-            .then(function(dataString) {
-                expect(dataString).to.equal("lcovhere");
-                return done();
-            })
-            .catch(function() {
-                return done(new Error("should not get here"));
-            });
+        const path = "pathtofile";
+        const dataString = await coverage.load(path);
+        expect(dataString).to.equal("lcovhere");
+        expect(stubReadFile).to.be.calledWith(path);
     });
 
-    test("#pickFile: Should return undefined if no item is picked @unit", function(done) {
-        const showQuickPick = async () => undefined; // tslint:disable-line
-        (vscode as any).window.showQuickPick = showQuickPick;
+    test("#pickFile: Should return undefined if no item is picked @unit", async () => {
 
-        let captureMessage = "";
-        const showWarningMessage = async (message: string) => captureMessage=message; // tslint:disable-line
-        (vscode as any).window.showWarningMessage = showWarningMessage;
+        sinon.stub(vscode.window, "showQuickPick").resolves(undefined);
+        const stubWarningMessage = sinon.stub(vscode.window, "showWarningMessage");
 
         const coverage = new Coverage(
             stubConfig,
         );
 
-        coverage.pickFile(["test1", "test2"], "nope")
-            .then((value) => {
-                expect(captureMessage).to.equal("Did not choose a file!");
-                return done();
-            });
+        await coverage.pickFile(["test1", "test2"], "nope");
+        expect(stubWarningMessage).to.be.calledWith("Did not choose a file!");
     });
 
-    test("#pickFile: Should return string if filePaths is a string @unit", function(done) {
+    test("#pickFile: Should return string if filePaths is a string @unit", async () => {
         const coverage = new Coverage(
             stubConfig,
         );
 
-        coverage.pickFile("123", "nope")
-            .then((value) => {
-                expect(value).to.equal("123");
-                return done();
-            })
-            .catch((error) => {
-                return done(error);
-            });
+        const value = await coverage.pickFile("123", "nope");
+
+        expect(value).to.equal("123");
     });
 
-    test("#pickFile: Should return string if filePaths is an array with one value @unit", function(done) {
+    test("#pickFile: Should return string if filePaths is an array with one value @unit", async () => {
         const coverage = new Coverage(
             stubConfig,
         );
 
-        coverage.pickFile(["123"], "nope")
-            .then((value) => {
-                expect(value).to.equal("123");
-                return done();
-            })
-            .catch((error) => {
-                return done(error);
-            });
+        const value = await coverage.pickFile(["123"], "nope");
+        expect(value).to.equal("123");
     });
 });
