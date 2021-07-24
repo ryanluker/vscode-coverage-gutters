@@ -38,6 +38,7 @@ See [examples directory](example) on how to setup a project.
 - [PHP](example/php)
 - [Python](example/python)
 - [Nodejs](example/node)
+- [Ruby](example/ruby)
 
 ## Tips and Tricks
 **Using Breakpoints**: Currently to both use the extension and code debugging breakpoints you need to disable the gutter coverage and enable the line coverage via the settings ( `coverage-gutters.showGutterCoverage` and `coverage-gutters.showLineCoverage` respectively).
