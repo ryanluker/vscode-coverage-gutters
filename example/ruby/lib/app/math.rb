@@ -4,9 +4,11 @@ module App
   # Math library for lists of strings
   class Math
     def self.sum(list = [''])
-      return 0 if list.empty?
-
-      list.map(&:to_i).sum
+      if list.empty?
+        0
+      else
+        list.map(&:to_i).sum
+      end
     end
   end
 end
