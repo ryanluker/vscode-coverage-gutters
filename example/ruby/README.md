@@ -42,7 +42,6 @@ Install dependancies
 ```console
   $ bundle install
 
-  Using rake 10.5.0
   Using app 0.1.0 from source at `.`
   Using bundler 1.17.3
   Using diff-lcs 1.4.4
@@ -56,7 +55,7 @@ Install dependancies
   Using simplecov_json_formatter 0.1.2
   Using simplecov 0.21.2
   Using simplecov-lcov 0.8.0
-  Bundle complete! 6 Gemfile dependencies, 14 gems now installed.
+  Bundle complete! 5 Gemfile dependencies, 13 gems now installed.
   Use `bundle info [gemname]` to see where a bundled gem is installed.
 ```
 

@@ -8,7 +8,6 @@ GEM
   specs:
     diff-lcs (1.4.4)
     docile (1.3.5)
-    rake (10.5.0)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
@@ -36,7 +35,6 @@ PLATFORMS
 DEPENDENCIES
   app!
   bundler (~> 1.17)
-  rake (~> 10.0)
   rspec (~> 3.0)
   simplecov (~> 0.21.2)
   simplecov-lcov (~> 0.8.0)
