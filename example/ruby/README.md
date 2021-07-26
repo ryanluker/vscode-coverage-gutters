@@ -13,7 +13,7 @@ require 'simplecov'
 require 'simplecov-lcov'
 
 SimpleCov::Formatter::LcovFormatter.config do |c|
-  c.report_with_single_file = true # vscode-coverage-gutters preffers a single file for lcov reporting
+  c.report_with_single_file = true # vscode-coverage-gutters prefers a single file for lcov reporting
   c.output_directory = 'coverage' # vscode-coverage-gutters default directory path is 'coverage'
   c.lcov_file_name = 'lcov.info' # vscode-coverage-gutters default report filename is 'lcov.info'
 end
@@ -29,4 +29,4 @@ end
 
 ## Usage
 
-That's it! I find this extention works well with [guard](https://github.com/guard/guard) and [guard-rspec](https://github.com/guard/guard-rspec) as it updates the gutters in real time when the test suite is executed.
+That's it! I find this extension works well with [guard](https://github.com/guard/guard) and [guard-rspec](https://github.com/guard/guard-rspec) as it updates the gutters in real time when the test suite is executed.
