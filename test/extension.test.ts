@@ -180,6 +180,29 @@ suite("Extension Tests", function() {
         decorationSpy.restore();
     });
 
+    test("Run display coverage on ruby test file @integration", async () => {
+      const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
+      const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+      if (!extension) {
+          throw new Error("Could not load extension");
+      }
+
+      const testCoverage = await vscode.workspace.findFiles("**/ruby/lib/app/math.rb", "**/node_modules/**");
+      const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
+      await vscode.window.showTextDocument(testDocument);
+      await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+
+      await checkCoverage(() => {
+          // Look for exact coverage on the ruby file
+          const cachedLines: ICoverageLines = decorationSpy.getCall(0).args[1];
+          expect(cachedLines.full).to.have.lengthOf(4);
+          expect(cachedLines.partial).to.have.lengthOf(1);
+          expect(cachedLines.none).to.have.lengthOf(1);
+      });
+
+      decorationSpy.restore();
+    });
+
     test("Run display coverage on node test file with large code base @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
         const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
