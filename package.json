@@ -51,7 +51,7 @@
         },
         "coverage-gutters.highlightdark": {
           "type": "string",
-          "default": "rgba(0, 146, 36, 0.2)",
+          "default": "rgba(0, 122, 30, 0.4)",
           "description": "dark themed highlight for code coverage"
         },
         "coverage-gutters.partialHighlightLight": {
@@ -61,7 +61,7 @@
         },
         "coverage-gutters.partialHighlightDark": {
           "type": "string",
-          "default": "rgba(149, 136, 0, 0.2)",
+          "default": "rgba(163, 149, 0, 0.4)",
           "description": "dark theme partial highlight for code coverage"
         },
         "coverage-gutters.noHighlightLight": {
@@ -71,7 +71,7 @@
         },
         "coverage-gutters.noHighlightDark": {
           "type": "string",
-          "default": "rgba(130, 0, 0, 0.2)",
+          "default": "rgba(163, 0, 0, 0.4)",
           "description": "dark theme partial highlight for code coverage"
         },
         "coverage-gutters.gutterIconPathLight": {
