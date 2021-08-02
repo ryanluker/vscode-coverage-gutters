@@ -206,7 +206,8 @@
       {
         "command": "coverage-gutters.removeCoverage",
         "key": "ctrl+shift+0",
-        "mac": "shift+cmd+0"
+        "mac": "shift+cmd+0",
+        "win": "ctrl+shift+backspace"
       }
     ],
     "menus": {
