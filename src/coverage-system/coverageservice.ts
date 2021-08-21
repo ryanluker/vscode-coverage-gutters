@@ -9,7 +9,6 @@ import {
 } from "vscode";
 
 import { Config } from "../extension/config";
-import { CrashReporter } from "../extension/crashreporter";
 import { StatusBarToggler } from "../extension/statusbartoggler";
 import { CoverageParser } from "../files/coverageparser";
 import { FilesLoader } from "../files/filesloader";
@@ -36,18 +35,15 @@ export class CoverageService {
     private editorWatcher: Disposable;
     private sectionFinder: SectionFinder;
 
-    private crashReporter: CrashReporter;
     private cache: Map<string, Section>;
 
     constructor(
         configStore: Config,
         outputChannel: OutputChannel,
         statusBar: StatusBarToggler,
-        crashReporter: CrashReporter,
     ) {
         this.configStore = configStore;
         this.outputChannel = outputChannel;
-        this.crashReporter = crashReporter;
         this.updateServiceState(Status.initializing);
         this.cache = new Map();
         this.filesLoader = new FilesLoader(configStore);
@@ -95,6 +91,9 @@ export class CoverageService {
         this.outputChannel.appendLine(
             `[${Date.now()}][coverageservice]: Loading ${files.size} file(s)`,
         );
+        this.outputChannel.appendLine(
+            `[${Date.now()}][coverageservice]: ${Array.from(files.values())}`,
+        );
         const dataFiles = await this.filesLoader.loadDataFiles(files);
         this.outputChannel.appendLine(
             `[${Date.now()}][coverageservice]: Loaded ${dataFiles.size} data file(s)`,
@@ -103,6 +102,10 @@ export class CoverageService {
         this.outputChannel.appendLine(
             `[${Date.now()}][coverageservice]: Caching ${dataCoverage.size} coverage(s)`,
         );
+        this.outputChannel.appendLine(
+            `[${Date.now()}][coverageservice]: ${JSON.stringify(Array.from(dataCoverage.values()))}`,
+        );
+
         this.cache = dataCoverage;
         this.updateServiceState(Status.ready);
     }

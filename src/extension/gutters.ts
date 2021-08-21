@@ -29,7 +29,6 @@ export class Gutters {
             configStore,
             this.outputChannel,
             statusBar,
-            crashReporter,
         );
     }
 
@@ -100,10 +99,6 @@ export class Gutters {
         const stackTrace = error.stack;
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
-
-        if (this.crashReporter.checkEnabled()) {
-            const [ sentryId, sentryPrompt ] = this.crashReporter.captureError(error);
-            this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${sentryPrompt} ${sentryId}`);
-        }
+        this.crashReporter.captureError(error);
     }
 }
