@@ -1,18 +1,26 @@
+import { extensions } from "vscode";
 import TelemetryReporter from "vscode-extension-telemetry";
 
 export class CrashReporter {
     private reporter: TelemetryReporter;
 
     constructor() {
-        this.reporter = new TelemetryReporter(
-            "vscode-coverage-gutters",
-            "2.9.0",
-            "c9a59792-25cc-4128-9c06-a44b9d4a1558",
-        );
+        const extension = extensions.getExtension("ryanluker.vscode-coverage-gutters")!;
+        const version = extension?.packageJSON.version;
+        const appInsightsKey = "c9a59792-25cc-4128-9c06-a44b9d4a1558";
+        this.reporter = new TelemetryReporter(extension.id, version, appInsightsKey);
     }
 
-    public captureError(error: Error): void {
-        this.reporter.sendTelemetryException(error);
+    public sendEvent(eventName: string): void {
+        this.reporter.sendTelemetryEvent(eventName);
+    }
+
+    public sendErrorEvent(eventName: string, error: Error): void {
+        const params = {
+            originalEventName: eventName,
+            stackTrace: error.stack ? error.stack : error.message,
+        };
+        this.reporter.sendTelemetryErrorEvent("ERROR", params);
     }
 
     public dispose(): void {

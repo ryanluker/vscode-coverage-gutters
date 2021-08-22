@@ -102,9 +102,6 @@ export class CoverageService {
         this.outputChannel.appendLine(
             `[${Date.now()}][coverageservice]: Caching ${dataCoverage.size} coverage(s)`,
         );
-        this.outputChannel.appendLine(
-            `[${Date.now()}][coverageservice]: ${JSON.stringify(Array.from(dataCoverage.values()))}`,
-        );
 
         this.cache = dataCoverage;
         this.updateServiceState(Status.ready);

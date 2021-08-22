@@ -16,7 +16,7 @@
   "bugs": "https://github.com/ryanluker/vscode-coverage-gutters/issues",
   "publisher": "ryanluker",
   "engines": {
-    "vscode": "^1.27.0"
+    "vscode": "^1.59.0"
   },
   "categories": [
     "Other"
@@ -274,7 +274,7 @@
     "@types/sinon": "10.0.2",
     "@types/sinon-chai": "3.2.5",
     "@types/uuid": "8.0.0",
-    "@types/vscode": "1.27.0",
+    "@types/vscode": "1.59.0",
     "chai": "4.3.4",
     "cross-env": "5.2.0",
     "husky": "6.0.0",
