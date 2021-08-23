@@ -99,6 +99,6 @@ export class Gutters {
         const stackTrace = error.stack;
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${message}`);
         this.outputChannel.appendLine(`[${Date.now()}][${area}]: ${stackTrace}`);
-        this.crashReporter.sendErrorEvent(area, error);
+        this.crashReporter.sendError(area, error);
     }
 }

@@ -15,12 +15,8 @@ export class CrashReporter {
         this.reporter.sendTelemetryEvent(eventName);
     }
 
-    public sendErrorEvent(eventName: string, error: Error): void {
-        const params = {
-            originalEventName: eventName,
-            stackTrace: error.stack ? error.stack : error.message,
-        };
-        this.reporter.sendTelemetryErrorEvent("ERROR", params);
+    public sendError(area: string, error: Error): void {
+        this.reporter.sendTelemetryException(error, {area});
     }
 
     public dispose(): void {
