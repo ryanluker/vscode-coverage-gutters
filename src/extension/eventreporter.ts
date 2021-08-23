@@ -1,7 +1,7 @@
 import { extensions } from "vscode";
 import TelemetryReporter from "vscode-extension-telemetry";
 
-export class CrashReporter {
+export class EventReporter {
     private reporter: TelemetryReporter;
 
     constructor() {
