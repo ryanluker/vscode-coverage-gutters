@@ -16,7 +16,11 @@ export class EventReporter {
     }
 
     public sendError(area: string, error: Error): void {
-        this.reporter.sendTelemetryException(error, {area});
+        const props = {
+            errorMessage: error.message,
+            stackTrace: error.stack ? error.stack : "",
+        };
+        this.reporter.sendTelemetryErrorEvent(`ERROR/${area}`, props);
     }
 
     public dispose(): void {
