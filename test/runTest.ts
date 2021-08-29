@@ -16,6 +16,7 @@ async function main() {
           launchArgs: [
             "example/example.code-workspace",
             "--disable-extensions",
+            "--disable-telemetry",
           ],
           vscodeExecutablePath,
         });
