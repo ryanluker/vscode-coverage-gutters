@@ -9,6 +9,6 @@
 		"coverage-gutters.coverageReportFileName": "index.html",
 		"coverage-gutters.remotePathResolve": ["/var/www/", "./"],
 		// Disable so we don't send events to app insights during testing
-		"telemtry.enableTelemetry": "false"
+		"telemtry.enableTelemetry": false
 	}
 }
