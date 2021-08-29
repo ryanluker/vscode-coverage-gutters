@@ -3,7 +3,6 @@ import sinon from "sinon";
 import { FileSystemWatcher, OutputChannel, workspace } from "vscode";
 
 import { CoverageService } from "../../src/coverage-system/coverageservice";
-import { CrashReporter } from "../../src/extension/crashreporter";
 import { StatusBarToggler } from "../../src/extension/statusbartoggler";
 
 const mockOutputChannel = {appendLine: (x) => {}} as OutputChannel;
@@ -14,7 +13,6 @@ const mockFileWatcher = {
     onDidDelete: (fn) => {},
 };
 const mockStatusBarToggler = {setLoading: () => {}} as StatusBarToggler;
-const mockCrashReporter = {} as CrashReporter;
 
 suite("CoverageService Tests", function() {
     teardown(() => sinon.restore());
@@ -26,7 +24,7 @@ suite("CoverageService Tests", function() {
                 "/path2",
             ],
         };
-        const service = new CoverageService(config, mockOutputChannel, mockStatusBarToggler, mockCrashReporter);
+        const service = new CoverageService(config, mockOutputChannel, mockStatusBarToggler);
 
         const stubCreateFileSystemWatcher = sinon.stub(workspace, "createFileSystemWatcher")
             .returns(mockFileWatcher as FileSystemWatcher);
@@ -45,7 +43,7 @@ suite("CoverageService Tests", function() {
             ],
             manualCoverageFilePaths: [],
         };
-        const service = new CoverageService(config, mockOutputChannel, mockStatusBarToggler, mockCrashReporter);
+        const service = new CoverageService(config, mockOutputChannel, mockStatusBarToggler);
 
         const stubCreateFileSystemWatcher = sinon.stub(workspace, "createFileSystemWatcher")
             .returns(mockFileWatcher as FileSystemWatcher);
