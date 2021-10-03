@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { Coverage } from "./coverage-system/coverage";
 import { Config } from "./extension/config";
-import { EventReporter } from "./extension/eventreporter";
 import { Gutters } from "./extension/gutters";
 import { StatusBarToggler } from "./extension/statusbartoggler";
 
@@ -10,13 +9,11 @@ export function activate(context: vscode.ExtensionContext) {
     const configStore = new Config(context);
     const statusBarToggler = new StatusBarToggler(configStore);
     const coverage = new Coverage(configStore);
-    const eventReporter = new EventReporter();
     const gutters = new Gutters(
         configStore,
         coverage,
         outputChannel,
         statusBarToggler,
-        eventReporter,
     );
 
     const previewCoverageReport = vscode.commands.registerCommand(
@@ -47,5 +44,4 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(removeWatch);
     context.subscriptions.push(gutters);
     context.subscriptions.push(outputChannel);
-    context.subscriptions.push(eventReporter);
 }
