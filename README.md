@@ -2,7 +2,7 @@
 [![Version](https://vsmarketplacebadge.apphb.com/version/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
 [![Installs](https://vsmarketplacebadge.apphb.com/installs/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
 [![Ratings](https://vsmarketplacebadge.apphb.com/rating/ryanluker.vscode-coverage-gutters.svg)](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
-[![Sponsor](https://img.shields.io/github/sponsors/ryanluker)](https://img.shields.io/github/sponsors/ryanluker)
+[![Sponsor](https://img.shields.io/github/sponsors/ryanluker)](https://github.com/sponsors/ryanluker)
 
 ## Call for Maintainers
 Looking for helpful people to assist with bugs, new features or performance improvements. The project has a full suite of tests and code linting, making it very new contributor friendly. Take a look at some of the open github issues and see if any catch your eye!  
