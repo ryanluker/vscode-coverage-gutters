@@ -32,8 +32,6 @@ suite("Config Tests", () => {
                 get: (key) => {
                     if (key === "coverageFileNames") {
                         return ["test.xml", "lcov.info"];
-                    } else if (key === "lcovname") {
-                        return "lcov.info";
                     } else if (key === "showGutterCoverage") {
                         return showGutterCoverage;
                     } else if (key.includes("IconPathDark")) {
@@ -43,11 +41,9 @@ suite("Config Tests", () => {
                     }
                     return "123";
                 },
-                lcovname: "lcov.info",
                 test1: "test1",
                 test2: "test2",
                 test3: "test3",
-                xmlname: "name.xml",
             } as unknown as vscode.WorkspaceConfiguration;
         });
     });
@@ -80,7 +76,7 @@ suite("Config Tests", () => {
 
         const config = new Config(fakeContext);
         // Check that unique file names is being applied
-        expect(config.coverageFileNames).to.have.lengthOf(3);
+        expect(config.coverageFileNames).to.have.lengthOf(2);
     });
 
     test("Should remove gutter icons if showGutterCoverage is set to false, allows breakpoint usage @unit", () => {

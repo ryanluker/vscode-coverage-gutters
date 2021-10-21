@@ -45,13 +45,9 @@ export class Config {
         const rootConfig = workspace.getConfiguration("coverage-gutters");
 
         // Basic configurations
-        // TODO: remove lcovname and xmlname in 3.0.0 release
-        const lcovName = rootConfig.get("lcovname") as string;
-        const xmlName = rootConfig.get("xmlname") as string;
         this.reportFileName = rootConfig.get("coverageReportFileName") as string;
         this.coverageBaseDir = rootConfig.get("coverageBaseDir") as string;
         this.coverageFileNames = rootConfig.get("coverageFileNames") as string[];
-        this.coverageFileNames.push(lcovName, xmlName);
         this.coverageFileNames = this.coverageFileNames.filter((name) => !!name.trim());
 
         // Make fileNames unique
