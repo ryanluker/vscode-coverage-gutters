@@ -34,16 +34,6 @@
     "configuration": {
       "title": "coverage-gutters",
       "properties": {
-        "coverage-gutters.lcovname": {
-          "type": "string",
-          "default": "lcov.info",
-          "description": "name of your lcov file"
-        },
-        "coverage-gutters.xmlname": {
-          "type": "string",
-          "default": "cov.xml",
-          "description": "name of your xml file"
-        },
         "coverage-gutters.highlightlight": {
           "type": "string",
           "default": "rgba(0, 255, 64, 0.2)",
