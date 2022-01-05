@@ -22,7 +22,7 @@ export class FilesLoader {
             const fileNames = this.configStore.coverageFileNames;
             const files = await this.findCoverageInWorkspace(fileNames);
             if (!files.size) {
-                window.showWarningMessage("Could not find a Coverage file!");
+                window.showWarningMessage("Could not find a Coverage file! Searched for " + fileNames.join(", "));
                 return new Set();
             }
             return files;
