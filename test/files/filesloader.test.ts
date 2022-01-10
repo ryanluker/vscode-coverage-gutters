@@ -27,13 +27,14 @@ suite("FilesLoader Tests", () => {
 
     test("findCoverageFiles returns an error if no coverage file @unit", async () => {
         stubConfig.manualCoverageFilePaths = [];
+        stubConfig.coverageFileNames = ["lcov.info"];
         const filesLoader = new FilesLoader(stubConfig);
         sinon.stub(filesLoader as any, "findCoverageInWorkspace").resolves(new Map());
 
         const stubShowWarningMessage = sinon.spy(vscode.window, "showWarningMessage");
 
         await filesLoader.findCoverageFiles();
-        expect(stubShowWarningMessage).to.be.calledWith("Could not find a Coverage file!");
+        expect(stubShowWarningMessage).to.be.calledWith("Could not find a Coverage file! Searched for lcov.info");
     });
 
     test("findCoverageFiles returns manual coverage paths if set @unit", async () => {
