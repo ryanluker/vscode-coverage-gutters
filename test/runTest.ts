@@ -1,6 +1,6 @@
-import {resolve} from "path";
+import { resolve } from "path";
 
-import { downloadAndUnzipVSCode, runTests } from "vscode-test";
+import { downloadAndUnzipVSCode, runTests } from "@vscode/test-electron";
 
 async function main() {
     try {
@@ -20,6 +20,9 @@ async function main() {
           ],
           vscodeExecutablePath,
         });
+
+        console.info("Success!");
+        process.exit(0);
     } catch (err) {
         console.error("Failed to run tests");
         process.exit(1);
