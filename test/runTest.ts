@@ -1,13 +1,11 @@
-import { resolve } from "path";
+import * as path from "path";
 
 import { downloadAndUnzipVSCode, runTests } from "@vscode/test-electron";
 
 async function main() {
     try {
-        const extensionDevelopmentPath = resolve(__dirname, "..", "..");
-
-        const extensionTestsPath = resolve(__dirname, "index");
-
+        const extensionDevelopmentPath = path.resolve(__dirname, "..", "..");
+        const extensionTestsPath = path.resolve(__dirname, "index");
         const vscodeExecutablePath = await downloadAndUnzipVSCode("insiders");
 
         await runTests({
