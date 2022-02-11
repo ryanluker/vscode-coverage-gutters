@@ -29,7 +29,7 @@ suite("Config Tests", () => {
         sinon.stub(vscode.workspace, "getConfiguration").callsFake(() => {
             return {
                 coverageFileNames: ["test.xml", "lcov.info"],
-                get: (key) => {
+                get: (key: any) => {
                     if (key === "coverageFileNames") {
                         return ["test.xml", "lcov.info"];
                     } else if (key === "showGutterCoverage") {
@@ -101,7 +101,7 @@ suite("Config Tests", () => {
             return {} as vscode.TextEditorDecorationType;
         });
 
-        fakeContext.asAbsolutePath = (options) => options;
+        fakeContext.asAbsolutePath = (options: any) => options;
         new Config(fakeContext); // tslint:disable-line
     });
 });

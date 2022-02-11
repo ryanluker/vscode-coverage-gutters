@@ -10,7 +10,7 @@ import { Config } from "../../src/extension/config";
 const stubConfig = sinon.createStubInstance(Config) as Config;
 const getWorkspaceFolder = workspace.getWorkspaceFolder;
 
-suite("SectionFinder Tests", function() {
+suite.only("SectionFinder Tests", function() {
     teardown(function() {
         (workspace as any).getWorkspaceFolder = getWorkspaceFolder;
     });

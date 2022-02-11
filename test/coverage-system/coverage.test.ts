@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import fs from "fs";
+import fs, { PathLike } from "fs";
 import sinon from "sinon";
 import * as vscode from "vscode";
 
@@ -28,14 +28,14 @@ suite("Coverage Tests", () => {
 
         try {
             await coverage.load("pathtofile");
-        } catch (e) {
+        } catch (e: any) {
             expect(e.message).to.equal("could not read from fs");
         }
     });
 
     test("#load: Should return a data string @unit", async () => {
         const stubReadFile = sinon.stub(fs, "readFile").callsFake(
-            (_: string, cb: (err: NodeJS.ErrnoException, data: Buffer) => void) => {
+            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer) => void) => {
                 return cb(undefined as any, Buffer.from("lcovhere"));
             },
         );

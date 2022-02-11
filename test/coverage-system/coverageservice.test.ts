@@ -8,9 +8,9 @@ import { StatusBarToggler } from "../../src/extension/statusbartoggler";
 const mockOutputChannel = {appendLine: (x) => {}} as OutputChannel;
 const mockFileWatcher = {
     dispose: () => {},
-    onDidChange: (fn) => {},
-    onDidCreate: (fn) => {},
-    onDidDelete: (fn) => {},
+    onDidChange: (fn: any) => {},
+    onDidCreate: (fn: any) => {},
+    onDidDelete: (fn: any) => {},
 };
 const mockStatusBarToggler = {setLoading: () => {}} as StatusBarToggler;
 
