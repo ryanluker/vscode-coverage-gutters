@@ -8,7 +8,7 @@ import {
 
 export class PreviewPanel {
     private pickedReport: string;
-    private previewPanel: WebviewPanel;
+    private previewPanel: WebviewPanel | undefined;
 
     constructor(pickedReport: string) {
         this.pickedReport = pickedReport;
@@ -31,7 +31,7 @@ export class PreviewPanel {
     }
 
     public dispose() {
-        this.previewPanel.dispose();
+        if (this.previewPanel) { this.previewPanel.dispose(); }
     }
 
     public addContentSecurityPolicy(text: string): string {

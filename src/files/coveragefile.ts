@@ -7,7 +7,7 @@ export enum CoverageType {
 }
 
 export class CoverageFile {
-    public type: CoverageType;
+    public type!: CoverageType;
     private file: string;
 
     constructor(file: string) {

@@ -31,8 +31,8 @@ export class CoverageService {
     private renderer: Renderer;
 
     private coverageParser: CoverageParser;
-    private coverageWatcher: FileSystemWatcher;
-    private editorWatcher: Disposable;
+    private coverageWatcher: FileSystemWatcher | undefined;
+    private editorWatcher: Disposable | undefined;
     private sectionFinder: SectionFinder;
 
     private cache: Map<string, Section>;

@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import fs from "fs";
+import fs, { PathLike } from "fs";
 import sinon from "sinon";
 import * as vscode from "vscode";
 import { Config } from "../../src/extension/config";
@@ -12,9 +12,11 @@ suite("FilesLoader Tests", () => {
     teardown(() => sinon.restore());
 
     test("loadDataFiles takes file paths and fetches their data strings @unit", async () => {
-        sinon.stub(fs, "readFile").callsFake((_: string, cb) => {
-            return cb(null, Buffer.from("123"));
-        });
+        sinon.stub(fs, "readFile").callsFake(
+            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer) => void) => {
+                return cb(null, Buffer.from("123"));
+            },
+        );
 
         const filesLoader = new FilesLoader(stubConfig);
         const testData = new Set(["file1", "file2"]);
