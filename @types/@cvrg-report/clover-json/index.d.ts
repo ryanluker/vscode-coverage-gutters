@@ -45,6 +45,6 @@ declare namespace parseClover {
     }
 }
 
-declare module "clover-json" {
+declare module "@cvrg-report/clover-json" {
     export = parseClover;
 }

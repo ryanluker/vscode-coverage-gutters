@@ -22,7 +22,7 @@ export class FilesLoader {
             const fileNames = this.configStore.coverageFileNames;
             const files = await this.findCoverageInWorkspace(fileNames);
             if (!files.size) {
-                window.showWarningMessage("Could not find a Coverage file!");
+                window.showWarningMessage("Could not find a Coverage file! Searched for " + fileNames.join(", "));
                 return new Set();
             }
             return files;
@@ -92,9 +92,16 @@ export class FilesLoader {
                     dot: true,
                     ignore: this.configStore.ignoredPathGlobs,
                     realpath: true,
+                    strict: false,
                 },
                 (err, files) => {
-                    if (!files || !files.length) { return resolve(new Set()); }
+                    if (!files || !files.length) {
+                        // Show any errors if no file was found.
+                        if (err) {
+                            window.showWarningMessage(`An error occured while looking for the coverage file ${err}`);
+                        }
+                        return resolve(new Set());
+                    }
                     const setFiles = new Set<string>();
                     files.forEach((file) => setFiles.add(file));
                     return resolve(setFiles);

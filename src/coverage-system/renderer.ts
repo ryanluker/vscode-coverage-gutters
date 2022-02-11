@@ -31,7 +31,7 @@ export class Renderer {
      */
     public renderCoverage(
         sections: Map<string, Section>,
-        textEditors: TextEditor[],
+        textEditors: readonly TextEditor[],
     ) {
         const coverageLines: ICoverageLines = {
             full: [],

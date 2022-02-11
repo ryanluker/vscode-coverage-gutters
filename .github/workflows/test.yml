@@ -12,14 +12,11 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            test-unit: test-unit
-            test-integration: test-integration
+            test: test
           - os: windows-latest
-            test-unit: test-unit
-            test-integration: test-integration
+            test: test
           - os: ubuntu-latest
-            test-unit: test-unit-headless
-            test-integration: test-integration-headless
+            test: test-headless
     runs-on: ${{ matrix.os }}
     env:
       CI: true
@@ -27,8 +24,7 @@ jobs:
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
       with:
-        node-version: 14.x
+        node-version: 16
     - run: npm ci
     - run: npm run build
-    - run: npm run ${{ matrix.test-unit }}
-    - run: npm run ${{ matrix.test-integration }}
+    - run: npm run ${{ matrix.test }}

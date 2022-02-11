@@ -40,7 +40,7 @@ export class Gutters {
             }
             const previewPanel = new PreviewPanel(pickedReport);
             await previewPanel.createWebView();
-        } catch (error) {
+        } catch (error: any) {
             this.handleError("previewCoverageReport", error);
         }
     }
@@ -48,7 +48,7 @@ export class Gutters {
     public async displayCoverageForActiveFile() {
         try {
             await this.coverageService.displayForFile();
-        } catch (error) {
+        } catch (error: any) {
             this.handleError("displayCoverageForActiveFile", error);
         }
     }
@@ -57,7 +57,7 @@ export class Gutters {
         try {
             this.statusBar.toggle(true);
             await this.coverageService.watchWorkspace();
-        } catch (error) {
+        } catch (error: any) {
             this.handleError("watchCoverageAndVisibleEditors", error);
         }
     }
@@ -67,7 +67,7 @@ export class Gutters {
             this.coverageService.removeCoverageForCurrentEditor();
             this.statusBar.toggle(false);
             this.coverageService.dispose();
-        } catch (error) {
+        } catch (error: any) {
             this.handleError("removeWatch", error);
         }
     }
@@ -75,7 +75,7 @@ export class Gutters {
     public removeCoverageForActiveFile() {
         try {
             this.coverageService.removeCoverageForCurrentEditor();
-        } catch (error) {
+        } catch (error: any) {
             this.handleError("removeCoverageForActiveFile", error);
         }
     }
@@ -84,7 +84,7 @@ export class Gutters {
         try {
             this.coverageService.dispose();
             this.statusBar.dispose();
-        } catch (error) {
+        } catch (error: any) {
             this.handleError("dispose", error);
         }
     }

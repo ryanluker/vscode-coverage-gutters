@@ -9,16 +9,16 @@ import {
 } from "vscode";
 
 export class Config {
-    public coverageBaseDir: string;
-    public coverageFileNames: string[];
-    public reportFileName: string;
-    public fullCoverageDecorationType: TextEditorDecorationType;
-    public partialCoverageDecorationType: TextEditorDecorationType;
-    public noCoverageDecorationType: TextEditorDecorationType;
-    public showStatusBarToggler: boolean;
-    public ignoredPathGlobs: string;
-    public remotePathResolve: string[];
-    public manualCoverageFilePaths: string[];
+    public coverageBaseDir!: string;
+    public coverageFileNames!: string[];
+    public reportFileName!: string;
+    public fullCoverageDecorationType!: TextEditorDecorationType;
+    public partialCoverageDecorationType!: TextEditorDecorationType;
+    public noCoverageDecorationType!: TextEditorDecorationType;
+    public showStatusBarToggler!: boolean;
+    public ignoredPathGlobs!: string;
+    public remotePathResolve!: string[];
+    public manualCoverageFilePaths!: string[];
 
     private context: ExtensionContext;
 
@@ -70,7 +70,15 @@ export class Config {
         const showLineCoverage = rootConfig.get("showLineCoverage") as string;
         const showRulerCoverage = rootConfig.get("showRulerCoverage") as string;
 
-        const defaultIcons = {
+        interface IDefaultIcons {
+            gutterIconPathDark: string;
+            gutterIconPathLight: string;
+            noGutterIconPathDark: string;
+            noGutterIconPathLight: string;
+            partialGutterIconPathDark: string;
+            partialGutterIconPathLight: string;
+        }
+        const defaultIcons: IDefaultIcons = {
             gutterIconPathDark: "./app_images/gutter-icon-dark.svg",
             gutterIconPathLight: "./app_images/gutter-icon-light.svg",
             noGutterIconPathDark: "./app_images/no-gutter-icon-dark.svg",
@@ -79,7 +87,7 @@ export class Config {
             partialGutterIconPathLight: "./app_images/partial-gutter-icon-light.svg",
         };
 
-        const getIcon = (name: string): string =>
+        const getIcon = (name: keyof IDefaultIcons): string =>
             rootConfig.get(name) as string ||
             this.context.asAbsolutePath(defaultIcons[name]);
 

@@ -22,12 +22,13 @@ suite("SectionFinder Tests", function() {
         dispose: () => {},
         hide: () => {},
         name: "fake",
+        replace: () => {},
         show: () => {},
     };
     const filename = "test123.ts";
     const title = `00-${filename}`;
     const testFolderPath = "/path/to/test/folder";
-    const filePath = join(testFolderPath, "test123.ts");
+    const filePath = testFolderPath + "/test123.ts";
     const testWorkspaceFolder: WorkspaceFolder = {
         index: 0,
         name: basename(testFolderPath),

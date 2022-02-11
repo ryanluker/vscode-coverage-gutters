@@ -15,7 +15,7 @@ export class StatusBarToggler implements Disposable {
     private static readonly removeCommand = "coverage-gutters.removeWatch";
     private static readonly removeWatchToolTip = "Coverage Gutters: Click to remove watch from workspace.";
 
-    public isActive: boolean;
+    public isActive: boolean | undefined;
     public isLoading: boolean;
     public lineCoverage: string | undefined;
     private statusBarItem: StatusBarItem;
