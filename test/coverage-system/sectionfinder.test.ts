@@ -10,7 +10,7 @@ import { Config } from "../../src/extension/config";
 const stubConfig = sinon.createStubInstance(Config) as Config;
 const getWorkspaceFolder = workspace.getWorkspaceFolder;
 
-suite.only("SectionFinder Tests", function() {
+suite("SectionFinder Tests", function() {
     teardown(function() {
         (workspace as any).getWorkspaceFolder = getWorkspaceFolder;
     });
@@ -28,7 +28,7 @@ suite.only("SectionFinder Tests", function() {
     const filename = "test123.ts";
     const title = `00-${filename}`;
     const testFolderPath = "/path/to/test/folder";
-    const filePath = join(testFolderPath, "test123.ts");
+    const filePath = testFolderPath + "/test123.ts";
     const testWorkspaceFolder: WorkspaceFolder = {
         index: 0,
         name: basename(testFolderPath),
