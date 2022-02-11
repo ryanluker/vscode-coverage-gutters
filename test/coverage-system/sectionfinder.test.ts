@@ -22,6 +22,7 @@ suite("SectionFinder Tests", function() {
         dispose: () => {},
         hide: () => {},
         name: "fake",
+        replace: () => {},
         show: () => {},
     };
     const filename = "test123.ts";
