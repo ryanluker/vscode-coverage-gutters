@@ -1,0 +1,4 @@
+{
+  "dotnet-test-explorer.testArguments": "/p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info",
+  "dotnet-test-explorer.testProjectPath": "**/*.Tests.csproj"
+}
