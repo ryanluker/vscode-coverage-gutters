@@ -4,7 +4,6 @@ import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
 import { StatusBarToggler } from "./statusbartoggler";
 import * as vscode from 'vscode';
-import { normalizeFileName } from "../helpers";
 
 export class Gutters {
     private coverage: Coverage;
@@ -33,15 +32,18 @@ export class Gutters {
             const coverageReports = await this.coverage.findReports();
             const pickedReport = await this.coverage.pickFile(
                 coverageReports,
-                "Choose a Coverage Report to preview.",
+                "Choose a Coverage Report to pfffreview.",
             );
             if (!pickedReport) {
                 window.showWarningMessage("Could not show Coverage Report file!");
                 return;
             }
 
-            // TODO:  Figure out how to convert pickedReport to a relative path+filename
-            // My js/ts experience are coming up on 72 hours of coding.  I'm not sure how to do this.
+            // TODO:  Figure out how to convert pickedReport to a workspace relative filename.
+            // Right now the livePreview.start.internalPreview.atFile is called with "false" as
+            // the second parameter.  This means that the file specified has an absolute path.
+            // See the Live Preview extension source code:
+            //      https://github.com/microsoft/vscode-livepreview/blob/3be1e2eb5c8a7b51aa4a88275ad73bb4d923432b/src/extension.ts#L169
             const livePreview = vscode.extensions.getExtension('ms-vscode.live-server');
             // is the ext loaded and ready?
             if (livePreview?.isActive === false) {

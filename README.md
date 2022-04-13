@@ -48,6 +48,9 @@ See [examples directory](example) on how to setup a project.
 ## Requirements
 - vscode 1.27.0 and up
 - macos, linux or windows
+- Requires Live Preview extension
+  - vscode extension id: ms-vscode.live-server
+  - v0.2.12 or higher
 
 ## Extension Settings
 See extension setting options in IDE.
