@@ -3,7 +3,7 @@ import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
 import { StatusBarToggler } from "./statusbartoggler";
-import { PreviewPanel } from "./webview";
+import * as vscode from 'vscode';
 
 export class Gutters {
     private coverage: Coverage;
@@ -32,14 +32,34 @@ export class Gutters {
             const coverageReports = await this.coverage.findReports();
             const pickedReport = await this.coverage.pickFile(
                 coverageReports,
-                "Choose a Coverage Report to preview.",
+                "Choose a Coverage Report to pfffreview.",
             );
             if (!pickedReport) {
                 window.showWarningMessage("Could not show Coverage Report file!");
                 return;
             }
-            const previewPanel = new PreviewPanel(pickedReport);
-            await previewPanel.createWebView();
+
+            // TODO:  Figure out how to convert pickedReport to a workspace relative filename.
+            // Right now the livePreview.start.internalPreview.atFile is called with "false" as
+            // the second parameter.  This means that the file specified has an absolute path.
+            // See the Live Preview extension source code:
+            //      https://github.com/microsoft/vscode-livepreview/blob/3be1e2eb5c8a7b51aa4a88275ad73bb4d923432b/src/extension.ts#L169
+            const livePreview = vscode.extensions.getExtension('ms-vscode.live-server');
+            // is the ext loaded and ready?
+            if (livePreview?.isActive === false) {
+                livePreview.activate().then(
+                    function () {
+                        console.log("Extension activated");
+                        vscode.commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
+                    },
+                    function () {
+                        console.log("Extension activation failed");
+                    }
+                );
+            } else {
+                vscode.commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
+            }
+
         } catch (error: any) {
             this.handleError("previewCoverageReport", error);
         }
