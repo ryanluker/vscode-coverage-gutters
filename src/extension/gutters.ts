@@ -3,7 +3,8 @@ import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
 import { StatusBarToggler } from "./statusbartoggler";
-import { PreviewPanel } from "./webview";
+import * as vscode from 'vscode';
+import { normalizeFileName } from "../helpers";
 
 export class Gutters {
     private coverage: Coverage;
@@ -38,8 +39,25 @@ export class Gutters {
                 window.showWarningMessage("Could not show Coverage Report file!");
                 return;
             }
-            const previewPanel = new PreviewPanel(pickedReport);
-            await previewPanel.createWebView();
+
+            // TODO:  Figure out how to convert pickedReport to a relative path+filename
+            // My js/ts experience are coming up on 72 hours of coding.  I'm not sure how to do this.
+            const livePreview = vscode.extensions.getExtension('ms-vscode.live-server');
+            // is the ext loaded and ready?
+            if (livePreview?.isActive === false) {
+                livePreview.activate().then(
+                    function () {
+                        console.log("Extension activated");
+                        vscode.commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
+                    },
+                    function () {
+                        console.log("Extension activation failed");
+                    }
+                );
+            } else {
+                vscode.commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
+            }
+
         } catch (error: any) {
             this.handleError("previewCoverageReport", error);
         }
