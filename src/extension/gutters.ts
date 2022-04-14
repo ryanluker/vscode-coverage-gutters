@@ -32,7 +32,7 @@ export class Gutters {
             const coverageReports = await this.coverage.findReports();
             const pickedReport = await this.coverage.pickFile(
                 coverageReports,
-                "Choose a Coverage Report to preview.",
+                "Choose a Coverage Report to pfffreview.",
             );
             if (!pickedReport) {
                 window.showWarningMessage("Could not show Coverage Report file!");
