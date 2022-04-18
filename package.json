@@ -16,7 +16,7 @@
   "bugs": "https://github.com/ryanluker/vscode-coverage-gutters/issues",
   "publisher": "ryanluker",
   "engines": {
-    "vscode": "^1.59.0",
+    "vscode": "^1.66.0",
     "node": "^16.11.0"
   },
   "categories": [
@@ -130,7 +130,8 @@
             "lcov.info",
             "cov.xml",
             "coverage.xml",
-            "jacoco.xml"
+            "jacoco.xml",
+            "coverage.cobertura.xml"
           ],
           "description": "coverage file names for the extension to automatically look for"
         },
@@ -264,7 +265,7 @@
     "@types/sinon": "10.0.11",
     "@types/sinon-chai": "3.2.8",
     "@types/uuid": "8.3.4",
-    "@types/vscode": "1.64.0",
+    "@types/vscode": "1.66.0",
     "@vscode/test-electron": "2.1.2",
     "chai": "4.3.6",
     "cross-env": "7.0.3",
@@ -273,7 +274,7 @@
     "mocha": "9.2.0",
     "sinon": "13.0.1",
     "sinon-chai": "3.7.0",
-    "tslint": "5.16.0",
+    "tslint": "^5.16.0",
     "typescript": "4.5.5"
   },
   "dependencies": {
@@ -283,5 +284,8 @@
     "jacoco-parse": "2.0.1",
     "lcov-parse": "1.0.0",
     "uuid": "8.3.2"
-  }
+  },
+  "extensionDependencies": [
+    "ms-vscode.live-server"
+  ]
 }

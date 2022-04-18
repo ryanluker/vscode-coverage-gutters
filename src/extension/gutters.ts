@@ -1,9 +1,9 @@
+import { commands, extensions } from "vscode";
 import { OutputChannel, window } from "vscode";
 import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
 import { StatusBarToggler } from "./statusbartoggler";
-import * as vscode from 'vscode';
 
 export class Gutters {
     private coverage: Coverage;
@@ -43,21 +43,21 @@ export class Gutters {
             // Right now the livePreview.start.internalPreview.atFile is called with "false" as
             // the second parameter.  This means that the file specified has an absolute path.
             // See the Live Preview extension source code:
-            //      https://github.com/microsoft/vscode-livepreview/blob/3be1e2eb5c8a7b51aa4a88275ad73bb4d923432b/src/extension.ts#L169
-            const livePreview = vscode.extensions.getExtension('ms-vscode.live-server');
+// https://github.com/microsoft/vscode-livepreview/blob/3be1e2eb5c8a7b51aa4a88275ad73bb4d923432b/src/extension.ts#L169
+            const livePreview = extensions.getExtension("ms-vscode.live-server");
             // is the ext loaded and ready?
             if (livePreview?.isActive === false) {
                 livePreview.activate().then(
-                    function () {
+                    function() {
                         console.log("Extension activated");
-                        vscode.commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
+                        commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
                     },
-                    function () {
+                    function() {
                         console.log("Extension activation failed");
-                    }
+                    },
                 );
             } else {
-                vscode.commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
+                commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
             }
 
         } catch (error: any) {
