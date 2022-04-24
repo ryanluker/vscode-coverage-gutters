@@ -14,3 +14,4 @@ composer.lock
 composer.phar
 *.pyc
 target
+.gitpod.yml
