@@ -43,7 +43,8 @@ export class Gutters {
             // Right now the livePreview.start.internalPreview.atFile is called with "false" as
             // the second parameter.  This means that the file specified has an absolute path.
             // See the Live Preview extension source code:
-// https://github.com/microsoft/vscode-livepreview/blob/3be1e2eb5c8a7b51aa4a88275ad73bb4d923432b/src/extension.ts#L169
+            // https://github.com/microsoft/vscode-livepreview/blob/
+            // 3be1e2eb5c8a7b51aa4a88275ad73bb4d923432b/src/extension.ts#L169
             const livePreview = extensions.getExtension("ms-vscode.live-server");
             // is the ext loaded and ready?
             if (livePreview?.isActive === false) {

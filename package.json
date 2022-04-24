@@ -274,7 +274,7 @@
     "mocha": "9.2.0",
     "sinon": "13.0.1",
     "sinon-chai": "3.7.0",
-    "tslint": "^5.16.0",
+    "tslint": "5.16.0",
     "typescript": "4.5.5"
   },
   "dependencies": {
