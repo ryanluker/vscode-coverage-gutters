@@ -1,6 +1,6 @@
 import {
   downloadAndUnzipVSCode,
-  resolveCliPathFromVSCodeExecutablePath,
+  resolveCliArgsFromVSCodeExecutablePath,
   runTests,
 } from "@vscode/test-electron";
 import * as cp from "child_process";
@@ -11,10 +11,10 @@ async function main() {
         const extensionDevelopmentPath = path.resolve(__dirname, "..", "..");
         const extensionTestsPath = path.resolve(__dirname, "index");
         const vscodeExecutablePath = await downloadAndUnzipVSCode("insiders");
-        const cliPath = resolveCliPathFromVSCodeExecutablePath(vscodeExecutablePath, "linux-x64");
 
         // Add the dependent extension for test coverage preview functionality
-        cp.spawnSync(cliPath, ["--install-extension", "ms-vscode.live-server"], {
+        const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
+        cp.spawnSync(cli, [...args, "--install-extension", "ms-vscode.live-server"], {
           encoding: "utf-8",
           stdio: "inherit",
         });
