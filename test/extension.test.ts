@@ -19,9 +19,10 @@ suite("Extension Tests", function() {
         // is in the root of the node folder and not inside the default /coverage
         await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
         // Look to see if the webview is open and showing preview coverage
-        await wait(500);
-        const reportView = vscode.workspace.textDocuments[0];
-        expect(reportView.languageId).to.equal("html");
+        await checkCoverage(() => {
+            const livePreview = vscode.extensions.getExtension("ms-vscode.live-server");
+            expect(livePreview?.isActive).to.equal(true);
+        });
     });
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
