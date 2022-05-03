@@ -236,8 +236,8 @@
     "*"
   ],
   "scripts": {
-    "lint": "eslint './src/**/*.ts' './test/**/*.ts'",
-    "pretty": "eslint --fix './src/**/*.ts' './test/**/*.ts'",
+    "lint": "eslint --ext .ts",
+    "pretty": "eslint --fix --ext .ts",
     "pre-commit": "lint-staged",
     "test": "npm run compile && node ./out/test/runTest.js",
     "test-headless": "xvfb-run -a npm run test",
