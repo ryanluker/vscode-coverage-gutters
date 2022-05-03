@@ -236,8 +236,8 @@
     "*"
   ],
   "scripts": {
-    "lint": "tslint './src/**/*.ts' './test/**/*.ts'",
-    "pretty": "tslint --fix './src/**/*.ts' './test/**/*.ts'",
+    "lint": "eslint './src/**/*.ts' './test/**/*.ts'",
+    "pretty": "eslint --fix './src/**/*.ts' './test/**/*.ts'",
     "pre-commit": "lint-staged",
     "test": "npm run compile && node ./out/test/runTest.js",
     "test-headless": "xvfb-run -a npm run test",
@@ -253,7 +253,7 @@
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
-      "tslint --fix"
+      "eslint --fix"
     ]
   },
   "devDependencies": {
@@ -277,7 +277,6 @@
     "mocha": "9.2.0",
     "sinon": "13.0.1",
     "sinon-chai": "3.7.0",
-    "tslint": "5.16.0",
     "typescript": "4.5.5"
   },
   "dependencies": {
