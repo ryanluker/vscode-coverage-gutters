@@ -83,6 +83,7 @@ export class CoverageParser {
                     const sections = await this.convertSectionsToMap(data);
                     return resolve(sections);
                 }, true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
                 checkError(error);
             }
@@ -105,6 +106,7 @@ export class CoverageParser {
                     const sections = await this.convertSectionsToMap(data);
                     return resolve(sections);
                 });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
                 checkError(error);
             }
@@ -116,6 +118,7 @@ export class CoverageParser {
             const data = await parseContentClover(xmlFile);
             const sections = await this.convertSectionsToMap(data);
             return sections;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             error.message = `filename: ${filename} ${error.message}`;
             this.handleError("clover-parse", error);
@@ -139,6 +142,7 @@ export class CoverageParser {
                     const sections = await this.convertSectionsToMap(data);
                     return resolve(sections);
                 });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
                 checkError(error);
             }
