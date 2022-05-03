@@ -46,7 +46,7 @@ export class StatusBarToggler implements Disposable {
         this.update();
     }
 
-    public setLoading(loading: boolean = !this.isLoading) {
+    public setLoading(loading = !this.isLoading) {
         this.isLoading = loading;
         this.update();
     }
