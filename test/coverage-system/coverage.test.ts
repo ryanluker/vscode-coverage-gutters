@@ -13,7 +13,7 @@ suite("Coverage Tests", () => {
 
     test("Constructor should setup properly @unit", () => {
         expect(() => {
-            new Coverage(stubConfig); // tslint:disable-line
+            new Coverage(stubConfig);
         }).not.to.throw();
     });
 
