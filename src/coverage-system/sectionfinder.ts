@@ -60,15 +60,22 @@ export class SectionFinder {
      * @param section data section to check against filename
      * @param editorFileRelative normalized relative path (against workspace folder) of editor filename, starts with ###
      * @param workspaceFolderName workspace folder name
+     * @returns true if this section matches (applies to) the provided editorRelativeFile
      */
     private checkSection(section: Section, editorFileRelative: string, workspaceFolderName: string): boolean {
-        // Check if we need to swap any fragments of the file path with a remote fragment
-        // IE: /var/www/ -> /home/me/
-        const sectionFileName = this.resolveFileName(section.file);
-        if (!isPathAbsolute(sectionFileName)) {
-            return this.checkSectionRelative(sectionFileName, editorFileRelative);
-        } else {
-            return this.checkSectionAbsolute(sectionFileName, editorFileRelative, workspaceFolderName);
+        try {
+            // Check if we need to swap any fragments of the file path with a remote fragment
+            // IE: /var/www/ -> /home/me/
+            const sectionFileName = this.resolveFileName(section.file);
+            if (!isPathAbsolute(sectionFileName)) {
+                return this.checkSectionRelative(sectionFileName, editorFileRelative);
+            } else {
+                return this.checkSectionAbsolute(sectionFileName, editorFileRelative, workspaceFolderName);
+            }
+        } catch (error) {
+            const checkSectionError = `[${Date.now()}][renderer]: ignoring section: error from check: ${error}`;
+            this.outputChannel.appendLine(checkSectionError);
+            return false;
         }
     }
 
