@@ -56,7 +56,7 @@ suite("Config Tests", () => {
         );
 
         expect(() => {
-            new Config(fakeContext); // tslint:disable-line
+            new Config(fakeContext);
         }).not.to.throw();
     });
 
@@ -88,7 +88,7 @@ suite("Config Tests", () => {
             return {} as vscode.TextEditorDecorationType;
         });
 
-        new Config(fakeContext); // tslint:disable-line
+        new Config(fakeContext);
     });
 
     test("Should set the gutter icon to the provided value if set @unit", () => {
@@ -102,6 +102,6 @@ suite("Config Tests", () => {
         });
 
         fakeContext.asAbsolutePath = (options: any) => options;
-        new Config(fakeContext); // tslint:disable-line
+        new Config(fakeContext);
     });
 });

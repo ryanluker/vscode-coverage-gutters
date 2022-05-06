@@ -63,7 +63,7 @@ export class Coverage {
         return Promise.all(actions)
             .then((coverageInWorkspaceFolders) => {
                 // Spread first array to properly concat the file arrays from the globFind
-                return new Array().concat(...coverageInWorkspaceFolders);
+                return new Array<string>().concat(...coverageInWorkspaceFolders);
             });
     }
 

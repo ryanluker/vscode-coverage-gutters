@@ -12,5 +12,4 @@ appveyor.yml
 example/**
 .vscodeignore
 types/**
-tslint.json
 promo_images/**
