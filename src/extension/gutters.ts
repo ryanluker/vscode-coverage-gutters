@@ -61,6 +61,7 @@ export class Gutters {
                 commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
             }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             this.handleError("previewCoverageReport", error);
         }
@@ -69,6 +70,7 @@ export class Gutters {
     public async displayCoverageForActiveFile() {
         try {
             await this.coverageService.displayForFile();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             this.handleError("displayCoverageForActiveFile", error);
         }
@@ -78,6 +80,7 @@ export class Gutters {
         try {
             this.statusBar.toggle(true);
             await this.coverageService.watchWorkspace();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             this.handleError("watchCoverageAndVisibleEditors", error);
         }
@@ -88,6 +91,7 @@ export class Gutters {
             this.coverageService.removeCoverageForCurrentEditor();
             this.statusBar.toggle(false);
             this.coverageService.dispose();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             this.handleError("removeWatch", error);
         }
@@ -96,6 +100,7 @@ export class Gutters {
     public removeCoverageForActiveFile() {
         try {
             this.coverageService.removeCoverageForCurrentEditor();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             this.handleError("removeCoverageForActiveFile", error);
         }
@@ -105,6 +110,7 @@ export class Gutters {
         try {
             this.coverageService.dispose();
             this.statusBar.dispose();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             this.handleError("dispose", error);
         }
