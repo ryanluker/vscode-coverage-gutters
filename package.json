@@ -162,6 +162,10 @@
         "title": "Coverage Gutters: Display Coverage"
       },
       {
+        "command": "coverage-gutters.toggleCoverage",
+        "title": "Coverage Gutters: Toggle Coverage"
+      },
+      {
         "command": "coverage-gutters.watchCoverageAndVisibleEditors",
         "title": "Coverage Gutters: Watch"
       },

@@ -76,6 +76,15 @@ export class Gutters {
         }
     }
 
+    public async toggleCoverageForActiveFile() {
+        try {
+            await this.coverageService.toggleCoverage();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            this.handleError("toggleCoverageForActiveFile", error);
+        }
+    }
+
     public async watchCoverageAndVisibleEditors() {
         try {
             this.statusBar.toggle(true);
