@@ -285,7 +285,7 @@
   },
   "dependencies": {
     "@cvrg-report/clover-json": "0.3.2",
-    "cobertura-parse": "github:fschwaiger/cobertura-parse#82b0333cb1580f6f337b5d44b04e2f5ca8711b7e",
+    "cobertura-parse": "fschwaiger/cobertura-parse#82b0333cb1580f6f337b5d44b04e2f5ca8711b7e",
     "glob": "7.2.0",
     "jacoco-parse": "2.0.1",
     "lcov-parse": "1.0.0",

@@ -31,7 +31,7 @@ suite("CoverageService Tests", function() {
 
         (service as any).listenToFileSystem();
 
-        expect(stubCreateFileSystemWatcher).to.be.calledWith("{/path1,/path2}");
+        expect(stubCreateFileSystemWatcher.calledWith("{/path1,/path2}"));
     });
 
     test("Should listen for coverage file names in workspace @unit", () => {
@@ -55,6 +55,6 @@ suite("CoverageService Tests", function() {
             const workspaceFolders = workspace.workspaceFolders.map((wf) => wf.uri.fsPath);
             prefix = `{${workspaceFolders}}/${prefix}`;
         }
-        expect(stubCreateFileSystemWatcher).to.be.calledWith(`${prefix}/{coverage.xml,custom-lcov.info}`);
+        expect(stubCreateFileSystemWatcher.calledWith(`${prefix}/{coverage.xml,custom-lcov.info}`));
     });
 });

@@ -47,7 +47,7 @@ suite("Coverage Tests", () => {
         const path = "pathtofile";
         const dataString = await coverage.load(path);
         expect(dataString).to.equal("lcovhere");
-        expect(stubReadFile).to.be.calledWith(path);
+        expect(stubReadFile.calledWith(path));
     });
 
     test("#pickFile: Should return undefined if no item is picked @unit", async () => {
@@ -60,7 +60,7 @@ suite("Coverage Tests", () => {
         );
 
         await coverage.pickFile(["test1", "test2"], "nope");
-        expect(stubWarningMessage).to.be.calledWith("Did not choose a file!");
+        expect(stubWarningMessage.calledWith("Did not choose a file!"));
     });
 
     test("#pickFile: Should return string if filePaths is a string @unit", async () => {
