@@ -290,7 +290,7 @@ suite("Extension Tests", function() {
             setCoverageSpy.resetHistory();
             await vscode.window.showTextDocument(testJSDocument, vscode.ViewColumn.One);
 
-            expect(setCoverageSpy).to.be.calledWith(84);
+            expect(setCoverageSpy.calledWith(84))
             setCoverageSpy.resetHistory();
 
             const [testJavaCoverage] = await vscode.workspace.findFiles("**/App.java", "**/node_modules/**");
@@ -298,17 +298,17 @@ suite("Extension Tests", function() {
 
             await vscode.window.showTextDocument(testJavaDocument,  vscode.ViewColumn.Two);
 
-            expect(setCoverageSpy).to.be.calledWith(57);
+            expect(setCoverageSpy.calledWith(57));
             setCoverageSpy.resetHistory();
 
             await vscode.commands.executeCommand("workbench.action.previousEditor");
 
-            expect(setCoverageSpy).to.be.calledWith(84);
+            expect(setCoverageSpy.calledWith(84));
             setCoverageSpy.resetHistory();
 
             await vscode.commands.executeCommand("workbench.action.closeAllEditors");
 
-            expect(setCoverageSpy).to.be.calledWith(undefined);
+            expect(setCoverageSpy.calledWith(undefined));
 
             setCoverageSpy.restore();
             return vscode.commands.executeCommand("coverage-gutters.removeWatch");

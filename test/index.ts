@@ -1,8 +1,6 @@
-import chai from "chai";
 import glob from "glob";
 import Mocha from "mocha";
 import { resolve } from "path";
-import sinonChai from "sinon-chai";
 
 export function run(): Promise<void> {
     // Create the mocha test
@@ -10,8 +8,6 @@ export function run(): Promise<void> {
         color: true,
         ui: "tdd",
     });
-
-    chai.use(sinonChai);
 
     // Apply regex to run subset of tests (integration vs unit)
     if (process.env.MOCHA_GREP) {
