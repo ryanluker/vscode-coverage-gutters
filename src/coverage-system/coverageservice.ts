@@ -29,6 +29,7 @@ export class CoverageService {
     private outputChannel: OutputChannel;
     private filesLoader: FilesLoader;
     private renderer: Renderer;
+    private isCoverageDisplayed = false;
 
     private coverageParser: CoverageParser;
     private coverageWatcher: FileSystemWatcher | undefined;
@@ -68,6 +69,15 @@ export class CoverageService {
 
     public async displayForFile() {
         await this.loadCacheAndProcess();
+        this.isCoverageDisplayed = true;
+    }
+
+    public async toggleCoverage() {
+        if (this.isCoverageDisplayed) {
+            this.removeCoverageForCurrentEditor();
+        } else {
+            await this.displayForFile();
+        }
     }
 
     public async watchWorkspace() {
@@ -82,6 +92,7 @@ export class CoverageService {
             this.renderer.renderCoverage(new Map(), window.visibleTextEditors);
         } finally {
             this.statusBar.setLoading(false);
+            this.isCoverageDisplayed = false;
         }
     }
 

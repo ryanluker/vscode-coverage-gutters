@@ -24,6 +24,10 @@ export function activate(context: vscode.ExtensionContext) {
         "coverage-gutters.displayCoverage",
         gutters.displayCoverageForActiveFile.bind(gutters),
     );
+    const toggle = vscode.commands.registerCommand(
+        "coverage-gutters.toggleCoverage",
+        gutters.toggleCoverageForActiveFile.bind(gutters),
+    );
     const watch = vscode.commands.registerCommand(
         "coverage-gutters.watchCoverageAndVisibleEditors",
         gutters.watchCoverageAndVisibleEditors.bind(gutters),
@@ -40,6 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(previewCoverageReport);
     context.subscriptions.push(remove);
     context.subscriptions.push(display);
+    context.subscriptions.push(toggle);
     context.subscriptions.push(watch);
     context.subscriptions.push(removeWatch);
     context.subscriptions.push(gutters);

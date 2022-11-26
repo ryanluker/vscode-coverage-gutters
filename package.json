@@ -162,6 +162,10 @@
         "title": "Coverage Gutters: Display Coverage"
       },
       {
+        "command": "coverage-gutters.toggleCoverage",
+        "title": "Coverage Gutters: Toggle Coverage"
+      },
+      {
         "command": "coverage-gutters.watchCoverageAndVisibleEditors",
         "title": "Coverage Gutters: Watch"
       },
@@ -200,6 +204,11 @@
         "key": "ctrl+shift+0",
         "mac": "shift+cmd+0",
         "win": "ctrl+shift+backspace"
+      },
+      {
+        "command": "coverage-gutters.toggleCoverage",
+        "key": "ctrl+shift+5",
+        "mac": "shift+cmd+5"
       }
     ],
     "menus": {

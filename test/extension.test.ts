@@ -90,6 +90,44 @@ suite("Extension Tests", function() {
             expect(cachedLines.none).to.have.lengthOf(3);
         });
 
+        await vscode.commands.executeCommand("coverage-gutters.removeCoverage");
+        decorationSpy.restore();
+    });
+
+    test("Run toggle coverage on python test file x2 @integration", async () => {
+        // Set up the spies to allow for detecting proper code flows
+        const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
+        const removalSpy = sinon.spy(Renderer.prototype, "removeDecorationsForEditor");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
+
+        const testCoverage = await vscode.workspace.findFiles("**/bar/a.py", "**/node_modules/**");
+        const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
+        await vscode.window.showTextDocument(testDocument);
+
+        // Toggle coverage on
+        await vscode.commands.executeCommand("coverage-gutters.toggleCoverage");
+        await checkCoverage(() => {
+            // Look for exact coverage on the file
+            const cachedLines: ICoverageLines = decorationSpy.getCall(0).args[1];
+            expect(cachedLines.full).to.have.lengthOf(3);
+            expect(cachedLines.none).to.have.lengthOf(3);
+        });
+
+        // Toggle coverage off
+        await vscode.commands.executeCommand("coverage-gutters.toggleCoverage");
+        // Check that renderSections was called with empty Map
+        await checkCoverage(() => {
+            // Check for remove coverage being called twice
+            const coverageRemovalCalls = removalSpy.getCalls();
+            expect(coverageRemovalCalls).to.have.length(2);
+            // Check for the coverage display being called once
+            const coverageAdditionCalls = decorationSpy.getCalls();
+            expect(coverageAdditionCalls).to.have.length(1);
+        });
+
         decorationSpy.restore();
     });
 
