@@ -242,7 +242,7 @@
     }
   },
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "scripts": {
     "lint": "eslint --ext .ts",
