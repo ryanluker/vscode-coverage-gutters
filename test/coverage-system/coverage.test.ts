@@ -63,22 +63,22 @@ suite("Coverage Tests", () => {
         expect(stubWarningMessage.calledWith("Did not choose a file!"));
     });
 
-    test("#pickFile: Should return string if filePaths is a string @unit", async () => {
+    test("#pickFile: Should return vscode.uri if filePaths is a string @unit", async () => {
         const coverage = new Coverage(
             stubConfig,
         );
 
         const value = await coverage.pickFile("123", "nope");
 
-        expect(value).to.equal("123");
+        expect(value?.path).to.equal("/123");
     });
 
-    test("#pickFile: Should return string if filePaths is an array with one value @unit", async () => {
+    test("#pickFile: Should return vscode.uri if filePaths is an array with one value @unit", async () => {
         const coverage = new Coverage(
             stubConfig,
         );
 
         const value = await coverage.pickFile(["123"], "nope");
-        expect(value).to.equal("123");
+        expect(value?.path).to.equal("/123");
     });
 });

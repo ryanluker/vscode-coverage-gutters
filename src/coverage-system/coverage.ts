@@ -6,6 +6,7 @@ import {
     window,
     workspace,
     WorkspaceFolder,
+    Uri
 } from "vscode";
 
 import { Config } from "../extension/config";
@@ -22,7 +23,7 @@ export class Coverage {
      * Displays the quick picker vscode modal and lets the user choose a file path
      * Note: if only one path is given it will return early and not prompt.
      */
-    public async pickFile(filePaths: string[] | string, placeHolder: string): Promise<string | undefined> {
+    public async pickFile(filePaths: string[] | string, placeHolder: string): Promise<Uri | undefined> {
         let pickedFile: string | undefined;
         if (typeof filePaths === "string") {
             pickedFile = filePaths;
@@ -47,7 +48,7 @@ export class Coverage {
 
             pickedFile = item.description;
         }
-        return pickedFile;
+        return pickedFile ? Uri.file(pickedFile) : undefined;
     }
 
     public findReports(): Promise<string[]> {
