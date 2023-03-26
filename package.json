@@ -117,7 +117,7 @@
         "coverage-gutters.manualCoverageFilePaths": {
           "type": "array",
           "default": [],
-          "description": "take manual control over the absolute path to your coverage file(s)"
+          "description": "take manual control over the absolute path to your coverage file(s). NOTE: this path must be the full absolute path, there is no support for the predefined path variables."
         },
         "coverage-gutters.coverageBaseDir": {
           "type": "string",
