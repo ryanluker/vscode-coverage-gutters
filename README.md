@@ -66,6 +66,8 @@ See extension setting options in IDE.
 ## About the Maintainers
 If you are interested in what else we work on, checkout the maintainers below!  
 https://luker.dev  
+https://github.com/mattseddon  
+https://github.com/timagixe  
 https://www.spodymek.com/  
 https://www.kayode.tech/  
 https://huddleco.com.au/  
