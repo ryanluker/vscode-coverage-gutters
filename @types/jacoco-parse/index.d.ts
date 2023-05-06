@@ -49,6 +49,6 @@ declare namespace parse {
     }
 }
 
-declare module "jacoco-parse" {
+declare module "@7sean68/jacoco-parse" {
     export = parse;
 }

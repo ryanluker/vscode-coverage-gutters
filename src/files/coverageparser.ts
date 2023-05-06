@@ -1,6 +1,6 @@
 import {parseContent as parseContentClover} from "@cvrg-report/clover-json";
 import {parseContent as parseContentCobertura} from "cobertura-parse";
-import {parseContent as parseContentJacoco} from "jacoco-parse";
+import {parseContent as parseContentJacoco} from "@7sean68/jacoco-parse";
 import {Section, source} from "lcov-parse";
 import {OutputChannel} from "vscode";
 
