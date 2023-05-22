@@ -219,6 +219,45 @@ suite("Extension Tests", function() {
         decorationSpy.restore();
     });
 
+    test("Run display coverage on java files from jacoco-aggregate report @integration", async () => {
+        const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
+
+        const modules = [
+            {
+                id: 1,
+                linesCovered: 12,
+                linesNotCovered: 0,
+            },
+            {
+                id: 2,
+                linesCovered: 2,
+                linesNotCovered: 1,
+            },
+        ];
+
+        for (let i = 0; i < modules.length; i++) {
+            const { id, linesCovered, linesNotCovered } =  modules[i];
+            const path =  `**/praveen/samples/jacoco/multimodule/Module${id}Class.java`
+            const testCoverage = await vscode.workspace.findFiles(path, "**/node_modules/**");
+            const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
+            await vscode.window.showTextDocument(testDocument);
+            await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+
+            await checkCoverage(() => {
+                // Look for exact coverage on the file
+                const cachedLines: ICoverageLines = decorationSpy.getCall(i).args[1];
+                expect(cachedLines.full).to.have.lengthOf(linesCovered);
+                expect(cachedLines.none).to.have.lengthOf(linesNotCovered);
+            });
+        }
+
+        decorationSpy.restore();
+    });
+
     test("Run display coverage on ruby test file @integration", async () => {
       const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
       const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
