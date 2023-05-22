@@ -37,95 +37,115 @@
       "properties": {
         "coverage-gutters.highlightlight": {
           "type": "string",
+          "scope": "resource",
           "default": "rgba(0, 255, 64, 0.2)",
           "description": "light themed highlight for code coverage"
         },
         "coverage-gutters.highlightdark": {
           "type": "string",
+          "scope": "resource",
           "default": "rgba(0, 122, 30, 0.4)",
           "description": "dark themed highlight for code coverage"
         },
         "coverage-gutters.partialHighlightLight": {
           "type": "string",
+          "scope": "resource",
           "default": "rgba(255, 235, 0, 0.2)",
           "description": "light theme partial highlight for code coverage"
         },
         "coverage-gutters.partialHighlightDark": {
           "type": "string",
+          "scope": "resource",
           "default": "rgba(163, 149, 0, 0.4)",
           "description": "dark theme partial highlight for code coverage"
         },
         "coverage-gutters.noHighlightLight": {
           "type": "string",
+          "scope": "resource",
           "default": "rgba(255, 0, 0, 0.2)",
           "description": "light theme partial highlight for code coverage"
         },
         "coverage-gutters.noHighlightDark": {
           "type": "string",
+          "scope": "resource",
           "default": "rgba(163, 0, 0, 0.4)",
           "description": "dark theme partial highlight for code coverage"
         },
         "coverage-gutters.gutterIconPathLight": {
           "type": "string",
+          "scope": "resource",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for full coverage"
         },
         "coverage-gutters.gutterIconPathDark": {
           "type": "string",
+          "scope": "resource",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for full coverage"
         },
         "coverage-gutters.partialGutterIconPathLight": {
           "type": "string",
+          "scope": "resource",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for partial coverage"
         },
         "coverage-gutters.partialGutterIconPathDark": {
           "type": "string",
+          "scope": "resource",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for partial coverage"
         },
         "coverage-gutters.noGutterIconPathLight": {
           "type": "string",
+          "scope": "resource",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for no coverage"
         },
         "coverage-gutters.noGutterIconPathDark": {
           "type": "string",
+          "scope": "resource",
           "description": "path to an icon (svg, png, etc) for displaying in the gutter for no coverage"
         },
         "coverage-gutters.showLineCoverage": {
           "type": "boolean",
           "default": false,
-          "description": "show or hide the line coverage"
+          "description": "show or hide the line coverage",
+          "scope": "resource"
         },
         "coverage-gutters.showRulerCoverage": {
           "type": "boolean",
+          "scope": "resource",
           "default": false,
           "description": "show or hide the ruler coverage"
         },
         "coverage-gutters.showGutterCoverage": {
           "type": "boolean",
+          "scope": "resource",
           "default": true,
           "description": "show or hide the gutter coverage"
         },
         "coverage-gutters.ignoredPathGlobs": {
           "type": "string",
+          "scope": "resource",
           "default": "**/{node_modules,venv,.venv,vendor}/**",
           "description": "paths that will be ignored by the extension"
         },
         "coverage-gutters.remotePathResolve": {
           "type": "array",
+          "scope": "resource",
           "default": [],
           "description": "helps with coverage generated outside the local file system by swapping fragments of remote paths with local ones (EG ['/var/www/', '/home/project/']). See https://github.com/ryanluker/vscode-coverage-gutters/issues/201 for more info."
         },
         "coverage-gutters.manualCoverageFilePaths": {
           "type": "array",
+          "scope": "resource",
           "default": [],
           "description": "take manual control over the absolute path to your coverage file(s). NOTE: this path must be the full absolute path, there is no support for the predefined path variables."
         },
         "coverage-gutters.coverageBaseDir": {
           "type": "string",
+          "scope": "resource",
           "default": "**",
           "description": "workspaceFolder relative path or glob that will be used for coverage file lookup `${coverageBaseDir}/{${coverageFileNames}}`"
         },
         "coverage-gutters.coverageFileNames": {
           "type": "array",
+          "scope": "resource",
           "default": [
             "lcov.info",
             "cov.xml",
@@ -137,16 +157,19 @@
         },
         "coverage-gutters.coverageReportFileName": {
           "type": "string",
+          "scope": "resource",
           "default": "coverage/**/index.html",
           "description": "default coverage report file names(can be glob style) to look for when using the preview command"
         },
         "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": {
           "type": "boolean",
+          "scope": "resource",
           "default": true,
           "description": "enable or disable the status bar item"
         },
         "coverage-gutters.customizable.context-menu": {
           "type": "boolean",
+          "scope": "resource",
           "default": true,
           "description": "enable or disable quick commands in the context menu"
         }
