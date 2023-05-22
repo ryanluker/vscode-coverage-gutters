@@ -64,10 +64,15 @@ See extension setting options in IDE.
 ## Contribution Guidelines
 ### [Guidelines](/CONTRIBUTING.md)
 
-## About Me
-If you are interested in what else I work on, checkout my website or github profile!  
+## About the Maintainers
+If you are interested in what else we work on, checkout the maintainers below!  
 https://luker.dev  
-https://github.com/ryanluker  
+https://github.com/mattseddon  
+https://github.com/timagixe  
+https://www.spodymek.com/  
+https://www.kayode.tech/  
+https://huddleco.com.au/  
+
 
 -----------------------------------------------------------------------------------------------------------
 
