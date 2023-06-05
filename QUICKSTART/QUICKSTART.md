@@ -31,7 +31,7 @@
 
 * Generation of the coverage report is language specific and beyond the scope of this extension.
 
-The extension assumes these two files are located somewhere in your workspace.  These are settings (covered later) to let you customize where **Coverage Gutters** look for both of these files.
+The extension assumes these two files are located somewhere in your workspace.  There are settings (covered later) to let you customize where **Coverage Gutters** will look for both of these files.
 
 </details>
 
