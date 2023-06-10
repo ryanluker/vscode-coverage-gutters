@@ -11,8 +11,6 @@ async function main() {
     try {
         const extensionDevelopmentPath = path.resolve(__dirname, "..", "..");
         const extensionTestsPath = path.resolve(__dirname, "index");
-        // Use insiders for testing latest vscode api against integration tests
-        const vscodeExecutablePath = await downloadAndUnzipVSCode();
 
         // Add the dependent extension for test coverage preview functionality
         const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
@@ -26,7 +24,6 @@ async function main() {
           extensionDevelopmentPath,
           extensionTestsPath,
           launchArgs: ["example/example.code-workspace"],
-          vscodeExecutablePath,
         }
 
         // Use win64 instead of win32 for testing Windows
