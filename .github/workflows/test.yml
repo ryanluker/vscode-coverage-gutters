@@ -13,7 +13,7 @@ jobs:
         include:
           - os: macos-latest
             test: test
-          - os: windows-2022
+          - os: windows-latest
             test: test
           - os: ubuntu-latest
             test: test-headless
