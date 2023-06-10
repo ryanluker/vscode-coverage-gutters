@@ -3,6 +3,7 @@ import {
   resolveCliArgsFromVSCodeExecutablePath,
   runTests,
 } from "@vscode/test-electron";
+import { TestOptions } from "@vscode/test-electron/out/runTest";
 import * as cp from "child_process";
 import * as path from "path";
 
@@ -21,7 +22,7 @@ async function main() {
         });
 
         // Default test options for gutters testing
-        const testOptions = {
+        const options: TestOptions = {
           extensionDevelopmentPath,
           extensionTestsPath,
           launchArgs: ["example/example.code-workspace"],
@@ -30,10 +31,10 @@ async function main() {
 
         // Use win64 instead of win32 for testing Windows
         if (process.platform === 'win32') {
-          testOptions.platform = "win32-x64-archive"
+          options.platform = "win32-x64-archive"
         }
 
-        await runTests(testOptions);
+        await runTests(options);
 
         console.info("Success!");
         process.exit(0);
