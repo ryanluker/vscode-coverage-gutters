@@ -20,12 +20,20 @@ async function main() {
           stdio: "inherit",
         });
 
-        await runTests({
+        // Default test options for gutters testing
+        const testOptions = {
           extensionDevelopmentPath,
           extensionTestsPath,
           launchArgs: ["example/example.code-workspace"],
           vscodeExecutablePath,
-        });
+        }
+
+        // Use win64 instead of win32 for testing Windows
+        if (process.platform === 'win32') {
+          testOptions.platform = "win32-x64-archive"
+        }
+
+        await runTests(testOptions);
 
         console.info("Success!");
         process.exit(0);
