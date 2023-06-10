@@ -11,10 +11,10 @@ async function main() {
         const extensionDevelopmentPath = path.resolve(__dirname, "..", "..");
         const extensionTestsPath = path.resolve(__dirname, "index");
 
-        let vscodeExecutablePath;
         // Use win64 instead of win32 for testing Windows
+        let vscodeExecutablePath;
         if (process.platform === 'win32') {
-          vscodeExecutablePath = await downloadAndUnzipVSCode("win32-x64-archive");
+          vscodeExecutablePath = await downloadAndUnzipVSCode(undefined, "win32-x64-archive");
         } else {
           vscodeExecutablePath = await downloadAndUnzipVSCode();
         }
