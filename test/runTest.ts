@@ -3,7 +3,6 @@ import {
   resolveCliArgsFromVSCodeExecutablePath,
   runTests,
 } from "@vscode/test-electron";
-import { TestOptions } from "@vscode/test-electron/out/runTest";
 import * as cp from "child_process";
 import * as path from "path";
 
@@ -11,6 +10,14 @@ async function main() {
     try {
         const extensionDevelopmentPath = path.resolve(__dirname, "..", "..");
         const extensionTestsPath = path.resolve(__dirname, "index");
+
+        // Use win64 instead of win32 for testing Windows
+        if (process.platform === 'win32') {
+          const vscodeExecutablePath = await downloadAndUnzipVSCode("win32-x64-archive");
+        } else {
+          const vscodeExecutablePath = await downloadAndUnzipVSCode();
+        }
+
 
         // Add the dependent extension for test coverage preview functionality
         const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
@@ -20,18 +27,12 @@ async function main() {
         });
 
         // Default test options for gutters testing
-        const options: TestOptions = {
+        await runTests({
           extensionDevelopmentPath,
           extensionTestsPath,
           launchArgs: ["example/example.code-workspace"],
-        }
-
-        // Use win64 instead of win32 for testing Windows
-        if (process.platform === 'win32') {
-          options.platform = "win32-x64-archive"
-        }
-        console.log(options);
-        await runTests(options);
+          vscodeExecutablePath,
+        });
 
         console.info("Success!");
         process.exit(0);
