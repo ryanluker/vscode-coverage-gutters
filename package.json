@@ -300,7 +300,7 @@
     "@types/vscode": "1.66.0",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
-    "@vscode/test-electron": "2.1.2",
+    "@vscode/test-electron": "2.3.3",
     "chai": "4.3.6",
     "cross-env": "7.0.3",
     "eslint": "^8.14.0",

@@ -10,14 +10,7 @@ async function main() {
     try {
         const extensionDevelopmentPath = path.resolve(__dirname, "..", "..");
         const extensionTestsPath = path.resolve(__dirname, "index");
-
-        // Use win64 instead of win32 for testing Windows
-        let vscodeExecutablePath;
-        if (process.platform === 'win32') {
-          vscodeExecutablePath = await downloadAndUnzipVSCode(undefined, "win32-x64-archive");
-        } else {
-          vscodeExecutablePath = await downloadAndUnzipVSCode();
-        }
+        const vscodeExecutablePath = await downloadAndUnzipVSCode();
         // Add the dependent extension for test coverage preview functionality
         const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
         cp.spawnSync(cli, [...args, "--install-extension", "ms-vscode.live-server"], {
