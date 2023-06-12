@@ -11,11 +11,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-12
+          - os: macos-latest
             test: test
-          - os: windows-2022
+          - os: windows-latest
             test: test
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             test: test-headless
     runs-on: ${{ matrix.os }}
     env:
