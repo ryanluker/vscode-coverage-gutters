@@ -175,7 +175,7 @@ export class CoverageService {
             const covered = fileCoverage?.lines?.hit;
             const total = fileCoverage?.lines?.found;
 
-            return this.statusBar.setCoverage(Math.round((covered / total) * 100 ));
+            return this.statusBar.setCoverage(Math.floor((covered / total) * 100 ));
         } catch {
             return this.statusBar.setCoverage(undefined);
         }
