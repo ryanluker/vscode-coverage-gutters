@@ -117,7 +117,7 @@ export class Renderer {
             return;
         }
         section.lines.details
-        .filter((detail) => detail.line >= 0)
+        .filter((detail) => detail.line > 0)
         .forEach((detail) => {
             const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
             if (detail.hit > 0) {
@@ -143,7 +143,7 @@ export class Renderer {
             return;
         }
         section.branches.details
-        .filter((detail) => detail.taken === 0 && detail.line >= 0)
+        .filter((detail) => detail.taken === 0 && detail.line > 0)
         .forEach((detail) => {
             const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
             // Evaluates to true if at least one element in range is equal to partialRange
