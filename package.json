@@ -71,36 +71,6 @@
           "default": "rgba(163, 0, 0, 0.4)",
           "description": "dark theme partial highlight for code coverage"
         },
-        "coverage-gutters.gutterIconPathLight": {
-          "type": "string",
-          "scope": "resource",
-          "description": "path to an icon (svg, png, etc) for displaying in the gutter for full coverage"
-        },
-        "coverage-gutters.gutterIconPathDark": {
-          "type": "string",
-          "scope": "resource",
-          "description": "path to an icon (svg, png, etc) for displaying in the gutter for full coverage"
-        },
-        "coverage-gutters.partialGutterIconPathLight": {
-          "type": "string",
-          "scope": "resource",
-          "description": "path to an icon (svg, png, etc) for displaying in the gutter for partial coverage"
-        },
-        "coverage-gutters.partialGutterIconPathDark": {
-          "type": "string",
-          "scope": "resource",
-          "description": "path to an icon (svg, png, etc) for displaying in the gutter for partial coverage"
-        },
-        "coverage-gutters.noGutterIconPathLight": {
-          "type": "string",
-          "scope": "resource",
-          "description": "path to an icon (svg, png, etc) for displaying in the gutter for no coverage"
-        },
-        "coverage-gutters.noGutterIconPathDark": {
-          "type": "string",
-          "scope": "resource",
-          "description": "path to an icon (svg, png, etc) for displaying in the gutter for no coverage"
-        },
         "coverage-gutters.showLineCoverage": {
           "type": "boolean",
           "default": false,
@@ -299,8 +269,8 @@
     "@types/sinon-chai": "^3.2.8",
     "@types/uuid": "^8.3.4",
     "@types/vscode": "1.66.0",
-    "@typescript-eslint/eslint-plugin": "^5.22.0",
-    "@typescript-eslint/parser": "^5.22.0",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
     "@vscode/test-electron": "^2.3.8",
     "chai": "^4.3.6",
     "cross-env": "^7.0.3",
