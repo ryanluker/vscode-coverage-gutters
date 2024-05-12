@@ -5,8 +5,9 @@ import * as vscode from "vscode";
 import { Config } from "../../src/extension/config";
 
 let showGutterCoverage: boolean;
-let iconPathDark: string;
-let iconPathLight: string;
+let highlightdark: string;
+let highlightlight: string;
+
 
 suite("Config Tests", () => {
     const fakeContext: any = {
@@ -34,10 +35,10 @@ suite("Config Tests", () => {
                         return ["test.xml", "lcov.info"];
                     } else if (key === "showGutterCoverage") {
                         return showGutterCoverage;
-                    } else if (key.includes("IconPathDark")) {
-                        return iconPathDark;
-                    } else if (key.includes("IconPathLight")) {
-                        return iconPathLight;
+                    } else if (["highlightdark", "partialHighlightDark", "noHighlightDark"].includes(key)) {
+                        return highlightdark;
+                    } else if (["highlightlight", "partialHighlightLight", "noHighlightLight"].includes(key)) {
+                        return highlightlight;
                     }
                     return "123";
                 },
@@ -91,13 +92,15 @@ suite("Config Tests", () => {
         new Config(fakeContext);
     });
 
-    test("Should set the gutter icon to the provided value if set @unit", () => {
+    test("Should set the gutter icon colour to the provided value if set @unit", () => {
         showGutterCoverage = true;
-        iconPathDark = "/my/absolute/path/to/custom/icon-dark.svg";
-        iconPathLight = "";
+        highlightdark = "rgb(255, 0, 0)";
+        highlightlight = "rgb(0, 0, 255)";
+
+        const preamble = /^image\/svg\+xml;base64,/;
         stubCreateTextEditorDecorationType.callsFake((options) => {
-            expect((options.dark as any).gutterIconPath).to.equal(iconPathDark);
-            expect((options.light as any).gutterIconPath).to.include("./app_images/");
+            expect(((options.dark as any).gutterIconPath as any).path).to.be.a('string').and.match(preamble).and.satisfy((icn: string) => atob(icn.replace(preamble, '')).includes(highlightdark));
+            expect(((options.light as any).gutterIconPath as any).path).to.be.a('string').and.match(preamble).and.satisfy((icn: string) => atob(icn.replace(preamble, '')).includes(highlightlight));
             return {} as vscode.TextEditorDecorationType;
         });
 

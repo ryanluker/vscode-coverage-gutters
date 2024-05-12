@@ -116,19 +116,18 @@ export class Renderer {
         if (!section || !section.lines) {
             return;
         }
-        // TODO cleanup this area by using maps, filters, etc
-        section.lines.details.forEach((detail) => {
-            if (detail.line < 0) { return; }
+        section.lines.details
+        .filter((detail) => detail.line > 0)
+        .forEach((detail) => {
             const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
             if (detail.hit > 0) {
-                if (coverageLines.none.find((range) => range.isEqual(lineRange))) {
-                    // remove all none coverage, for this line, if one full exists
-                    coverageLines.none = coverageLines.none.filter((range) => !range.isEqual(lineRange));
+                // Evaluates to true if at least one element in range is equal to LineRange
+                if (coverageLines.none.some((range) => range.isEqual(lineRange))) {
+                    coverageLines.none = coverageLines.none.filter((range) => !range.isEqual(lineRange))
                 }
                 coverageLines.full.push(lineRange);
             } else {
-                const fullExists = coverageLines.full.find((range) => range.isEqual(lineRange));
-                if (!fullExists) {
+                if (!coverageLines.full.some((range) => range.isEqual(lineRange))) {
                     // only add a none coverage if no full ones exist
                     coverageLines.none.push(lineRange);
                 }
@@ -143,16 +142,14 @@ export class Renderer {
         if (!section || !section.branches) {
             return;
         }
-        // TODO cleanup this area by using maps, filters, etc
-        section.branches.details.forEach((detail) => {
-            if (detail.taken === 0) {
-                if (detail.line < 0) { return; }
-                const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
-                if (coverageLines.full.find((range) => range.isEqual(partialRange))) {
-                    // remove full coverage if partial is a better match
-                    coverageLines.full = coverageLines.full.filter((range) => !range.isEqual(partialRange));
-                    coverageLines.partial.push(partialRange);
-                }
+        section.branches.details
+        .filter((detail) => detail.taken === 0 && detail.line > 0)
+        .forEach((detail) => {
+            const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
+            // Evaluates to true if at least one element in range is equal to partialRange
+            if (coverageLines.full.some((range) => range.isEqual(partialRange))){
+                coverageLines.full = coverageLines.full.filter((range) => !range.isEqual(partialRange));
+                coverageLines.partial.push(partialRange);
             }
         });
     }

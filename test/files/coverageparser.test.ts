@@ -42,6 +42,6 @@ suite("CoverageParser Tests", () => {
 
         await coverageParsers.filesToSections(testFiles);
 
-        expect(stubClover).to.be.calledWith("<?xml <coverage <project");
+        expect(stubClover.calledWith("<?xml <coverage <project"));
     });
 });

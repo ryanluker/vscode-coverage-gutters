@@ -6,6 +6,7 @@ import {
     TextEditorDecorationType,
     window,
     workspace,
+    Uri
 } from "vscode";
 
 export class Config {
@@ -70,38 +71,37 @@ export class Config {
         const showLineCoverage = rootConfig.get("showLineCoverage") as string;
         const showRulerCoverage = rootConfig.get("showRulerCoverage") as string;
 
-        interface IDefaultIcons {
-            gutterIconPathDark: string;
-            gutterIconPathLight: string;
-            noGutterIconPathDark: string;
-            noGutterIconPathLight: string;
-            partialGutterIconPathDark: string;
-            partialGutterIconPathLight: string;
-        }
-        const defaultIcons: IDefaultIcons = {
-            gutterIconPathDark: "./app_images/gutter-icon-dark.svg",
-            gutterIconPathLight: "./app_images/gutter-icon-light.svg",
-            noGutterIconPathDark: "./app_images/no-gutter-icon-dark.svg",
-            noGutterIconPathLight: "./app_images/no-gutter-icon-light.svg",
-            partialGutterIconPathDark: "./app_images/partial-gutter-icon-dark.svg",
-            partialGutterIconPathLight: "./app_images/partial-gutter-icon-light.svg",
-        };
+        const makeIcon = (colour: string): string | Uri => {
+            colour = colour
+                .trim()
+                .replace(/&/g, '&amp;')
+                .replace(/'/g, '&apos;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\r\n/g, '&#13;')
+                .replace(/[\r\n]/g, '&#13;');
+            if (!colour) {
+                return "";
+            }
 
-        const getIcon = (name: keyof IDefaultIcons): string =>
-            rootConfig.get(name) as string ||
-            this.context.asAbsolutePath(defaultIcons[name]);
+            const svg = '<svg width="32" height="48" viewPort="0 0 32 48" xmlns="http://www.w3.org/2000/svg"><polygon points="16,0 32,0 32,48 16,48" fill="' + colour + '"/></svg>';
+
+            const icon = 'data:image/svg+xml;base64,' + Buffer.from(svg).toString('base64');
+            return Uri.parse(icon);
+        }
 
         // Setup info for decorations
         const fullDecoration: DecorationRenderOptions = {
             dark: {
                 backgroundColor: showLineCoverage ? coverageDarkBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? getIcon("gutterIconPathDark") : "",
+                gutterIconPath: showGutterCoverage ? makeIcon(coverageDarkBackgroundColour) : "",
                 overviewRulerColor: showRulerCoverage ? coverageDarkBackgroundColour : "",
             },
             isWholeLine: true,
             light: {
                 backgroundColor: showLineCoverage ? coverageLightBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? getIcon("gutterIconPathLight") : "",
+                gutterIconPath: showGutterCoverage ? makeIcon(coverageLightBackgroundColour) : "",
                 overviewRulerColor: showRulerCoverage ? coverageLightBackgroundColour : "",
             },
             overviewRulerLane: OverviewRulerLane.Full,
@@ -110,13 +110,13 @@ export class Config {
         const partialDecoration: DecorationRenderOptions = {
             dark: {
                 backgroundColor: showLineCoverage ? partialCoverageDarkBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? getIcon("partialGutterIconPathDark") : "",
+                gutterIconPath: showGutterCoverage ? makeIcon(partialCoverageDarkBackgroundColour) : "",
                 overviewRulerColor: showRulerCoverage ? partialCoverageDarkBackgroundColour : "",
             },
             isWholeLine: true,
             light: {
                 backgroundColor: showLineCoverage ? partialCoverageLightBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? getIcon("partialGutterIconPathLight") : "",
+                gutterIconPath: showGutterCoverage ? makeIcon(partialCoverageLightBackgroundColour) : "",
                 overviewRulerColor: showRulerCoverage ? partialCoverageLightBackgroundColour : "",
             },
             overviewRulerLane: OverviewRulerLane.Full,
@@ -125,13 +125,13 @@ export class Config {
         const noDecoration: DecorationRenderOptions = {
             dark: {
                 backgroundColor: showLineCoverage ? noCoverageDarkBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? getIcon("noGutterIconPathDark") : "",
+                gutterIconPath: showGutterCoverage ? makeIcon(noCoverageDarkBackgroundColour) : "",
                 overviewRulerColor: showRulerCoverage ? noCoverageDarkBackgroundColour : "",
             },
             isWholeLine: true,
             light: {
                 backgroundColor: showLineCoverage ? noCoverageLightBackgroundColour : "",
-                gutterIconPath: showGutterCoverage ? getIcon("noGutterIconPathLight") : "",
+                gutterIconPath: showGutterCoverage ? makeIcon(noCoverageLightBackgroundColour) : "",
                 overviewRulerColor: showRulerCoverage ? noCoverageLightBackgroundColour : "",
             },
             overviewRulerLane: OverviewRulerLane.Full,

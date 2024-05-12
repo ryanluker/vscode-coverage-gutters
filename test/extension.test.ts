@@ -90,6 +90,44 @@ suite("Extension Tests", function() {
             expect(cachedLines.none).to.have.lengthOf(3);
         });
 
+        await vscode.commands.executeCommand("coverage-gutters.removeCoverage");
+        decorationSpy.restore();
+    });
+
+    test("Run toggle coverage on python test file x2 @integration", async () => {
+        // Set up the spies to allow for detecting proper code flows
+        const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
+        const removalSpy = sinon.spy(Renderer.prototype, "removeDecorationsForEditor");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
+
+        const testCoverage = await vscode.workspace.findFiles("**/bar/a.py", "**/node_modules/**");
+        const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
+        await vscode.window.showTextDocument(testDocument);
+
+        // Toggle coverage on
+        await vscode.commands.executeCommand("coverage-gutters.toggleCoverage");
+        await checkCoverage(() => {
+            // Look for exact coverage on the file
+            const cachedLines: ICoverageLines = decorationSpy.getCall(0).args[1];
+            expect(cachedLines.full).to.have.lengthOf(3);
+            expect(cachedLines.none).to.have.lengthOf(3);
+        });
+
+        // Toggle coverage off
+        await vscode.commands.executeCommand("coverage-gutters.toggleCoverage");
+        // Check that renderSections was called with empty Map
+        await checkCoverage(() => {
+            // Check for remove coverage being called twice
+            const coverageRemovalCalls = removalSpy.getCalls();
+            expect(coverageRemovalCalls).to.have.length(2);
+            // Check for the coverage display being called once
+            const coverageAdditionCalls = decorationSpy.getCalls();
+            expect(coverageAdditionCalls).to.have.length(1);
+        });
+
         decorationSpy.restore();
     });
 
@@ -177,6 +215,45 @@ suite("Extension Tests", function() {
             expect(cachedLines.full).to.have.lengthOf(4);
             expect(cachedLines.none).to.have.lengthOf(3);
         });
+
+        decorationSpy.restore();
+    });
+
+    test("Run display coverage on java files from jacoco-aggregate report @integration", async () => {
+        const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
+        const extension = await vscode.extensions.getExtension("ryanluker.vscode-coverage-gutters");
+        if (!extension) {
+            throw new Error("Could not load extension");
+        }
+
+        const modules = [
+            {
+                id: 1,
+                linesCovered: 12,
+                linesNotCovered: 0,
+            },
+            {
+                id: 2,
+                linesCovered: 2,
+                linesNotCovered: 1,
+            },
+        ];
+
+        for (let i = 0; i < modules.length; i++) {
+            const { id, linesCovered, linesNotCovered } =  modules[i];
+            const path =  `**/praveen/samples/jacoco/multimodule/Module${id}Class.java`
+            const testCoverage = await vscode.workspace.findFiles(path, "**/node_modules/**");
+            const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
+            await vscode.window.showTextDocument(testDocument);
+            await vscode.commands.executeCommand("coverage-gutters.displayCoverage");
+
+            await checkCoverage(() => {
+                // Look for exact coverage on the file
+                const cachedLines: ICoverageLines = decorationSpy.getCall(i).args[1];
+                expect(cachedLines.full).to.have.lengthOf(linesCovered);
+                expect(cachedLines.none).to.have.lengthOf(linesNotCovered);
+            });
+        }
 
         decorationSpy.restore();
     });
@@ -290,7 +367,7 @@ suite("Extension Tests", function() {
             setCoverageSpy.resetHistory();
             await vscode.window.showTextDocument(testJSDocument, vscode.ViewColumn.One);
 
-            expect(setCoverageSpy).to.be.calledWith(84);
+            expect(setCoverageSpy.calledWith(84))
             setCoverageSpy.resetHistory();
 
             const [testJavaCoverage] = await vscode.workspace.findFiles("**/App.java", "**/node_modules/**");
@@ -298,17 +375,17 @@ suite("Extension Tests", function() {
 
             await vscode.window.showTextDocument(testJavaDocument,  vscode.ViewColumn.Two);
 
-            expect(setCoverageSpy).to.be.calledWith(57);
+            expect(setCoverageSpy.calledWith(57));
             setCoverageSpy.resetHistory();
 
             await vscode.commands.executeCommand("workbench.action.previousEditor");
 
-            expect(setCoverageSpy).to.be.calledWith(84);
+            expect(setCoverageSpy.calledWith(84));
             setCoverageSpy.resetHistory();
 
             await vscode.commands.executeCommand("workbench.action.closeAllEditors");
 
-            expect(setCoverageSpy).to.be.calledWith(undefined);
+            expect(setCoverageSpy.calledWith(undefined));
 
             setCoverageSpy.restore();
             return vscode.commands.executeCommand("coverage-gutters.removeWatch");

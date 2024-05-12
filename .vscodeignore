@@ -1,15 +1,29 @@
-.vscode/**
-.vscode-test/**
+# Remove some folders fromt the output
 out/test/**
 out/example/**
-test/**
+
+# Codebase files
 src/**
 **/*.map
-.gitignore
-tsconfig.json
-.travis.yml
-appveyor.yml
+
+# Example projects
 example/**
-.vscodeignore
-types/**
+
+# Marketing images for vscode marketplace
 promo_images/**
+
+# Development files and folders
+.devcontainer
+.github
+.husky
+.vscodeignore
+.gitignore
+.vscode/**
+.vscode-test/**
+
+# Typescript files
+@types
+tsconfig.json
+
+# Test files
+test/**
