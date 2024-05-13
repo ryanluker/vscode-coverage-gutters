@@ -35,7 +35,8 @@ Shows you a html preview of your coverage reports in your editor.
 See [examples directory](example) on how to setup a project.
 
 - [Java](example/java)
-- [Multimodule Java](example/multimodule-java)
+  - [Java with Gradle](example/java-gradle)
+  - [Multimodule Java](example/multimodule-java)
 - [PHP](example/php)
 - [Python](example/python)
 - [Nodejs](example/node)
