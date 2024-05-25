@@ -1,4 +1,4 @@
-# Remove some folders fromt the output
+# Remove some folders from the output
 out/test/**
 out/example/**
 
