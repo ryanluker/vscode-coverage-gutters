@@ -1,29 +1,38 @@
-import {
-  downloadAndUnzipVSCode,
-  resolveCliArgsFromVSCodeExecutablePath,
-  runTests,
-} from "@vscode/test-electron";
 import * as cp from "child_process";
 import * as path from "path";
+import {
+    downloadAndUnzipVSCode,
+    resolveCliArgsFromVSCodeExecutablePath,
+    runTests,
+} from "@vscode/test-electron";
 
 async function main() {
     try {
         const extensionDevelopmentPath = path.resolve(__dirname, "..", "..");
         const extensionTestsPath = path.resolve(__dirname, "index");
-        const vscodeExecutablePath = await downloadAndUnzipVSCode();
+
         // Add the dependent extension for test coverage preview functionality
-        const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
-        cp.spawnSync(cli, [...args, "--install-extension", "ms-vscode.live-server"], {
-          encoding: "utf-8",
-          stdio: "inherit",
-        });
+        const vscodeExecutablePath = await downloadAndUnzipVSCode("insiders");
+        const [cliPath, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
+
+        // Use cp.spawn / cp.exec for custom setup
+        // Note: shell true is needed to fix an issue with install-extension (on windows)
+        // https://github.com/microsoft/vscode-test/issues/266#issuecomment-2085723194
+        const output = cp.spawnSync(
+            cliPath,
+            [...args, "--install-extension", "ms-vscode.live-server"],
+            {shell: process.platform === 'win32'},
+        );
+
+        // Useful for debugging failing dependant extension installs
+        console.info(output);
 
         // Default test options for gutters testing
         await runTests({
-          extensionDevelopmentPath,
-          extensionTestsPath,
-          launchArgs: ["example/example.code-workspace"],
-          vscodeExecutablePath,
+            vscodeExecutablePath,
+            extensionDevelopmentPath,
+            extensionTestsPath,
+            launchArgs: ["example/example.code-workspace"],
         });
 
         console.info("Success!");
