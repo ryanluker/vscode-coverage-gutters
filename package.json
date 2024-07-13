@@ -92,7 +92,7 @@
         "coverage-gutters.ignoredPathGlobs": {
           "type": "string",
           "scope": "resource",
-          "default": "**/{node_modules,venv,.venv,vendor}/**",
+          "default": "**/{node_modules,venv,vendor,.*}/**",
           "description": "paths that will be ignored by the extension"
         },
         "coverage-gutters.remotePathResolve": {
