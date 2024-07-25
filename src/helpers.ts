@@ -1,3 +1,4 @@
+import { normalize } from "path";
 
 /**
  * Finds the matching suffixes of the string, stripping off the non-matching starting characters.
@@ -28,7 +29,9 @@ export function findIntersect(base: string, comparee: string): string {
  * @param fileName File name to remove OS specific features
  */
 export function normalizeFileName(fileName: string): string {
-    let name = fileName;
+    // properly handle relative file path bits
+    // See #351 https://github.com/ryanluker/vscode-coverage-gutters/issues/351
+    let name = normalize(fileName);
     // make file path relative and OS independent
     name = name.toLocaleLowerCase();
     // remove all file slashes
