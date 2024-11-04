@@ -2,18 +2,24 @@ import { Disposable, StatusBarItem, window } from "vscode";
 import { Config } from "./config";
 
 export class StatusBarToggler implements Disposable {
-    private static readonly coverageText = "Coverage";
-
-    private static readonly loadingText = ["$(loading~spin)", StatusBarToggler.coverageText].join(" ");
+    private static readonly loadingText = ["$(loading~spin)", "Coverage"].join(
+        " "
+    );
 
     private static readonly idleIcon = "$(circle-large-outline)";
 
-    private static readonly watchCommand = "coverage-gutters.watchCoverageAndVisibleEditors";
-    private static readonly watchText = [StatusBarToggler.idleIcon, "Watch"].join(" ");
-    private static readonly watchToolTip = "Coverage Gutters: Click to watch workspace.";
+    private static readonly watchCommand =
+        "coverage-gutters.watchCoverageAndVisibleEditors";
+    private static readonly watchText = [
+        StatusBarToggler.idleIcon,
+        "Watch",
+    ].join(" ");
+    private static readonly watchToolTip =
+        "Coverage Gutters: Click to watch workspace.";
 
     private static readonly removeCommand = "coverage-gutters.removeWatch";
-    private static readonly removeWatchToolTip = "Coverage Gutters: Click to remove watch from workspace.";
+    private static readonly removeWatchToolTip =
+        "Coverage Gutters: Click to remove watch from workspace.";
 
     public isActive: boolean | undefined;
     public isLoading: boolean;
@@ -30,7 +36,9 @@ export class StatusBarToggler implements Disposable {
         this.isLoading = false;
         this.lineCoverage = undefined;
 
-        if (this.configStore.showStatusBarToggler) { this.statusBarItem.show(); }
+        if (this.configStore.showStatusBarToggler) {
+            this.statusBarItem.show();
+        }
     }
 
     public get statusText() {
@@ -51,7 +59,7 @@ export class StatusBarToggler implements Disposable {
         this.update();
     }
 
-    public setCoverage(linePercentage: number | undefined ) {
+    public setCoverage(linePercentage: number | undefined) {
         if (Number.isFinite(linePercentage)) {
             this.lineCoverage = `${linePercentage}%`;
         } else {
@@ -72,7 +80,13 @@ export class StatusBarToggler implements Disposable {
             return StatusBarToggler.loadingText;
         }
         if (this.isActive) {
-            return [StatusBarToggler.idleIcon, this.lineCoverage || "No", StatusBarToggler.coverageText].join(" ");
+            const activeText = [StatusBarToggler.idleIcon, "File"];
+            if (this.lineCoverage && this.lineCoverage !== "0%") {
+                activeText.push(this.lineCoverage, "Covered");
+            } else {
+                activeText.push("Uncovered");
+            }
+            return activeText.join(" ");
         }
         return StatusBarToggler.watchText;
     }
