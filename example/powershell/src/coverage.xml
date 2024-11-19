@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.1//EN" "report.dtd"[]>
+<report name="Pester (10/30/2024 19:40:04)">
+  <sessioninfo id="this" start="1730317204286" dump="1730317204714" />
+  <package name=".">
+    <class name="Appointment" sourcefilename="Appointment.psm1">
+      <method name="New-Appointment" desc="()" line="14">
+        <counter type="INSTRUCTION" missed="0" covered="1" />
+        <counter type="LINE" missed="0" covered="1" />
+        <counter type="METHOD" missed="0" covered="1" />
+      </method>
+      <method name="Appointment" desc="()" line="25">
+        <counter type="INSTRUCTION" missed="9" covered="3" />
+        <counter type="LINE" missed="9" covered="3" />
+        <counter type="METHOD" missed="0" covered="1" />
+      </method>
+      <method name="IsPastAppointment" desc="()" line="53">
+        <counter type="INSTRUCTION" missed="0" covered="1" />
+        <counter type="LINE" missed="0" covered="1" />
+        <counter type="METHOD" missed="0" covered="1" />
+      </method>
+      <counter type="INSTRUCTION" missed="9" covered="5" />
+      <counter type="LINE" missed="9" covered="5" />
+      <counter type="METHOD" missed="0" covered="3" />
+      <counter type="CLASS" missed="0" covered="1" />
+    </class>
+    <class name="Calendar" sourcefilename="Calendar.psm1">
+      <method name="Get-Calendar" desc="()" line="22">
+        <counter type="INSTRUCTION" missed="1" covered="2" />
+        <counter type="LINE" missed="1" covered="2" />
+        <counter type="METHOD" missed="0" covered="1" />
+      </method>
+      <method name="Calendar" desc="()" line="37">
+        <counter type="INSTRUCTION" missed="0" covered="3" />
+        <counter type="LINE" missed="0" covered="3" />
+        <counter type="METHOD" missed="0" covered="1" />
+      </method>
+      <method name="AddAppointment" desc="()" line="44">
+        <counter type="INSTRUCTION" missed="3" covered="0" />
+        <counter type="LINE" missed="3" covered="0" />
+        <counter type="METHOD" missed="1" covered="0" />
+      </method>
+      <counter type="INSTRUCTION" missed="4" covered="5" />
+      <counter type="LINE" missed="4" covered="5" />
+      <counter type="METHOD" missed="1" covered="2" />
+      <counter type="CLASS" missed="0" covered="1" />
+    </class>
+    <sourcefile name="Appointment.psm1">
+      <line nr="14" mi="0" ci="1" mb="0" cb="0" />
+      <line nr="25" mi="0" ci="1" mb="0" cb="0" />
+      <line nr="26" mi="0" ci="1" mb="0" cb="0" />
+      <line nr="27" mi="0" ci="1" mb="0" cb="0" />
+      <line nr="32" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="33" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="34" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="39" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="40" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="41" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="46" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="47" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="48" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="53" mi="0" ci="1" mb="0" cb="0" />
+      <counter type="INSTRUCTION" missed="9" covered="5" />
+      <counter type="LINE" missed="9" covered="5" />
+      <counter type="METHOD" missed="0" covered="3" />
+      <counter type="CLASS" missed="0" covered="1" />
+    </sourcefile>
+    <sourcefile name="Calendar.psm1">
+      <line nr="22" mi="0" ci="1" mb="0" cb="0" />
+      <line nr="24" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="26" mi="0" ci="1" mb="0" cb="0" />
+      <line nr="37" mi="0" ci="1" mb="0" cb="0" />
+      <line nr="38" mi="0" ci="1" mb="0" cb="0" />
+      <line nr="39" mi="0" ci="1" mb="0" cb="0" />
+      <line nr="44" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="49" mi="1" ci="0" mb="0" cb="0" />
+      <line nr="50" mi="1" ci="0" mb="0" cb="0" />
+      <counter type="INSTRUCTION" missed="4" covered="5" />
+      <counter type="LINE" missed="4" covered="5" />
+      <counter type="METHOD" missed="1" covered="2" />
+      <counter type="CLASS" missed="0" covered="1" />
+    </sourcefile>
+    <counter type="INSTRUCTION" missed="13" covered="10" />
+    <counter type="LINE" missed="13" covered="10" />
+    <counter type="METHOD" missed="1" covered="5" />
+    <counter type="CLASS" missed="0" covered="2" />
+  </package>
+  <counter type="INSTRUCTION" missed="13" covered="10" />
+  <counter type="LINE" missed="13" covered="10" />
+  <counter type="METHOD" missed="1" covered="5" />
+  <counter type="CLASS" missed="0" covered="2" />
+</report>
