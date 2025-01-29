@@ -30,7 +30,7 @@
     "xml",
     "multi-root ready"
   ],
-  "main": "./out/src/extension",
+  "main": "./dist/extension",
   "contributes": {
     "configuration": {
       "title": "coverage-gutters",
@@ -242,17 +242,22 @@
     "lint": "eslint --ext .ts",
     "pretty": "eslint --fix --ext .ts",
     "pre-commit": "lint-staged",
-    "test": "npm run compile && node ./out/test/runTest.js",
+    "test": "npm run compile-tests && node ./out/test/runTest.js",
     "test-headless": "xvfb-run -a npm run test",
     "test-unit": "cross-env MOCHA_GREP=@unit npm test --silent",
     "test-unit-headless": "xvfb-run -a npm run test-unit",
     "test-integration": "cross-env MOCHA_GREP=@integration npm test --silent",
     "test-integration-headless": "xvfb-run -a npm run test-integration",
-    "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "compile-tests": "tsc -p . --outDir out",
     "build": "npm install && npm run lint && npm run compile",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "compile": "npm run check-types && node esbuild.js",
+    "check-types": "tsc --noEmit",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "vscode:prepublish": "npm run package",
+    "package": "npm run check-types && node esbuild.js --production"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -274,6 +279,7 @@
     "@vscode/test-electron": "^2.3.10",
     "chai": "^4.3.6",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.24.2",
     "eslint": "^8.14.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.3",
