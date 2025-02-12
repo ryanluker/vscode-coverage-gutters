@@ -30,7 +30,7 @@
     "xml",
     "multi-root ready"
   ],
-  "main": "./dist/extension",
+  "main": "./out/src/extension",
   "contributes": {
     "configuration": {
       "title": "coverage-gutters",
