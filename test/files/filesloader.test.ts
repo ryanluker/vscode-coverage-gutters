@@ -4,6 +4,7 @@ import sinon from "sinon";
 import * as vscode from "vscode";
 import { Config } from "../../src/extension/config";
 
+import path from "path";
 import { FilesLoader } from "../../src/files/filesloader";
 
 const stubConfig = sinon.createStubInstance(Config) as Config;
@@ -40,10 +41,34 @@ suite("FilesLoader Tests", () => {
     });
 
     test("findCoverageFiles returns manual coverage paths if set @unit", async () => {
-        const coverageFiles = ["test.js", "test2.js"];
+        const nodeTestFile = path.resolve(__dirname, "..", "..", "..", "example", "node", "lcov.info")
+        const rubyTestFile = path.resolve(__dirname, "..", "..", "..", "example", "ruby", "lcov.info")
+        const coverageFiles = [
+            nodeTestFile,
+            rubyTestFile,
+        ];
         stubConfig.manualCoverageFilePaths = coverageFiles;
         const filesLoader = new FilesLoader(stubConfig);
         const files = await filesLoader.findCoverageFiles();
         expect(new Set(coverageFiles)).to.deep.equal(files);
+    });
+
+    test("findCoverageFiles returns only manual coverage paths that exist @unit", async () => {
+        const nodeTestFile = path.resolve(__dirname, "..", "..", "..", "example", "node", "lcov.info")
+        const unknownTestFile = path.resolve(__dirname, "..", "..", "..", "example", "unknown", "lcov.info")
+        const rubyTestFile = path.resolve(__dirname, "..", "..", "..", "example", "ruby", "lcov.info")
+        const coverageFiles = [
+            nodeTestFile,
+            unknownTestFile,
+            rubyTestFile,
+        ];
+        stubConfig.manualCoverageFilePaths = coverageFiles;
+        const filesLoader = new FilesLoader(stubConfig);
+        const files = await filesLoader.findCoverageFiles();
+        expect(new Set([
+            nodeTestFile,
+            // unknownTestFile does not exist so it should not be included
+            rubyTestFile,
+        ])).to.deep.equal(files);
     });
 });
