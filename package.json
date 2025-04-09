@@ -30,7 +30,7 @@
     "xml",
     "multi-root ready"
   ],
-  "main": "./out/src/extension",
+  "main": "./dist/extension",
   "contributes": {
     "configuration": {
       "title": "coverage-gutters",
@@ -242,13 +242,9 @@
     "lint": "eslint --ext .ts",
     "pretty": "eslint --fix --ext .ts",
     "pre-commit": "lint-staged",
-    "test": "npm run compile-tests && node ./out/test/runTest.js",
-    "test-headless": "xvfb-run -a npm run test",
-    "test-unit": "cross-env MOCHA_GREP=@unit npm test --silent",
-    "test-unit-headless": "xvfb-run -a npm run test-unit",
-    "test-integration": "cross-env MOCHA_GREP=@integration npm test --silent",
-    "test-integration-headless": "xvfb-run -a npm run test-integration",
     "compile-tests": "tsc -p . --outDir out",
+    "pretest": "npm run compile-tests",
+    "test": "vscode-test",
     "build": "npm install && npm run lint && npm run compile",
     "prepare": "husky install",
     "compile": "npm run check-types && node esbuild.js",
@@ -276,7 +272,8 @@
     "@types/vscode": "1.66.0",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
-    "@vscode/test-electron": "^2.3.10",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.5.1",
     "chai": "^4.3.6",
     "cross-env": "^7.0.3",
     "esbuild": "^0.24.2",
@@ -284,6 +281,7 @@
     "husky": "^7.0.4",
     "lint-staged": "^12.3.3",
     "mocha": "^10.2.0",
+    "npm-run-all": "^4.1.5",
     "sinon": "^17.0.1",
     "sinon-chai": "^3.7.0",
     "typescript": "^5.3.3"
