@@ -8,7 +8,7 @@ import {
 
 async function main() {
     try {
-        const extensionDevelopmentPath = path.resolve(__dirname, "..", "..");
+        const extensionDevelopmentPath = path.resolve(__dirname, "../../");
         const extensionTestsPath = path.resolve(__dirname, "index");
 
         // Add the dependent extension for test coverage preview functionality
