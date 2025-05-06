@@ -1,7 +1,7 @@
-import {readFile} from "fs";
+import { existsSync, readFile } from "fs";
 import glob from "glob";
-import {window, workspace, WorkspaceFolder} from "vscode";
-import {Config} from "../extension/config";
+import { window, workspace, WorkspaceFolder } from "vscode";
+import { Config } from "../extension/config";
 
 export class FilesLoader {
     private configStore: Config;
@@ -17,7 +17,14 @@ export class FilesLoader {
     public async findCoverageFiles(): Promise<Set<string>> {
         // Developers can manually define their absolute coverage paths
         if (this.configStore.manualCoverageFilePaths.length) {
-            return new Set(this.configStore.manualCoverageFilePaths);
+            const existingFiles = this.configStore.manualCoverageFilePaths.filter((file) => {
+                if (!existsSync(file)) {
+                    window.showWarningMessage(`manualCoverageFilePaths contains "${file}" which does not exist!`);
+                    return false;
+                }
+                return true;
+            });
+            return new Set(existingFiles);
         } else {
             const fileNames = this.configStore.coverageFileNames;
             const files = await this.findCoverageInWorkspace(fileNames);
