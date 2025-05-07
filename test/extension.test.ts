@@ -345,7 +345,7 @@ suite("Extension Tests", function () {
             const setCoverageSpy = sinon.spy(StatusBarToggler.prototype, "setCoverage");
 
             await vscode.commands.executeCommand("coverage-gutters.watchCoverageAndVisibleEditors");
-            await wait(2000);
+            await wait(500);
 
             const [testJSCoverage] = await vscode.workspace.findFiles("**/test-coverage.js", "**/node_modules/**");
             const testJSDocument = await vscode.workspace.openTextDocument(testJSCoverage);
