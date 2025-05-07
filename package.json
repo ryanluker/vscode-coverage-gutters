@@ -244,7 +244,7 @@
     "pre-commit": "lint-staged",
     "compile-tests": "tsc -p . --outDir out",
     "pretest": "npm run compile-tests",
-    "test": "vscode-test",
+    "test": "node ./out/test/runTest.js",
     "build": "npm install && npm run lint && npm run compile",
     "prepare": "husky install",
     "compile": "npm run check-types && node esbuild.js",
