@@ -8,7 +8,7 @@ import {
 
 async function main() {
     try {
-        const extensionDevelopmentPath = path.resolve(__dirname, "..", "..");
+        const extensionDevelopmentPath = path.resolve(__dirname, "../../");
         const extensionTestsPath = path.resolve(__dirname, "index");
 
         // Add the dependent extension for test coverage preview functionality
@@ -21,7 +21,11 @@ async function main() {
         const output = cp.spawnSync(
             cliPath,
             [...args, "--install-extension", "ms-vscode.live-server"],
-            {shell: process.platform === 'win32'},
+            {
+                shell: process.platform === 'win32',
+                encoding: 'utf-8',
+                stdio: 'inherit'
+            },
         );
 
         // Useful for debugging failing dependant extension installs

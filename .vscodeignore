@@ -1,6 +1,6 @@
-# Remove some folders from the output
-out/test/**
-out/example/**
+# Remove some folders from the build output
+out/**
+node_modules/**
 
 # Codebase files
 src/**
@@ -20,6 +20,7 @@ promo_images/**
 .gitignore
 .vscode/**
 .vscode-test/**
+esbuild.js
 
 # Typescript files
 @types

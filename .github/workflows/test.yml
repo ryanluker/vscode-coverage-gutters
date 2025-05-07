@@ -9,22 +9,20 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        include:
-          - os: macos-latest
-            test: test
-          - os: windows-latest
-            test: test
-          - os: ubuntu-latest
-            test: test-headless
+        os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    env:
-      CI: true
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install Node.js
+      uses: actions/setup-node@v4
       with:
-        node-version: 18
-    - run: npm ci
+        node-version: 22.x
+    - run: npm install
     - run: npm run build
-    - run: npm run ${{ matrix.test }}
+    - run: xvfb-run -a npm test
+      if: runner.os == 'Linux'
+    - run: npm test
+      if: runner.os != 'Linux'
