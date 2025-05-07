@@ -13,9 +13,9 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            test: test
+            test: test-headless
           - os: windows-latest
-            test: test
+            test: test-headless
           - os: ubuntu-latest
             test: test-headless
     runs-on: ${{ matrix.os }}
