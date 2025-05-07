@@ -16,9 +16,12 @@ async function main() {
         const [cliPath, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
 
         // Use cp.spawn / cp.exec for custom setup
+        // Note: shell true is needed to fix an issue with install-extension (on windows)
+        // https://github.com/microsoft/vscode-test/issues/266#issuecomment-2085723194
         const output = cp.spawnSync(
             cliPath,
-            [...args, "--install-extension", "ms-vscode.live-server"]
+            [...args, "--install-extension", "ms-vscode.live-server"],
+            {shell: process.platform === 'win32'},
         );
 
         // Useful for debugging failing dependant extension installs
