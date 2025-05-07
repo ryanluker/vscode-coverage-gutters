@@ -276,7 +276,7 @@
     "@vscode/test-electron": "^2.5.2",
     "chai": "^4.3.6",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.24.2",
+    "esbuild": "^0.25.0",
     "eslint": "^8.14.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.3",
