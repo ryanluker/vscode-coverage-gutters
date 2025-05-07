@@ -21,7 +21,11 @@ async function main() {
         const output = cp.spawnSync(
             cliPath,
             [...args, "--install-extension", "ms-vscode.live-server"],
-            {shell: process.platform === 'win32'},
+            {
+                shell: process.platform === 'win32',
+                encoding: 'utf-8',
+                stdio: 'inherit'
+            },
         );
 
         // Useful for debugging failing dependant extension installs
