@@ -16,7 +16,7 @@ jobs:
           - os: windows-latest
             test: test
           - os: ubuntu-latest
-            test: test-headless
+            test: test
     runs-on: ${{ matrix.os }}
     env:
       CI: true
