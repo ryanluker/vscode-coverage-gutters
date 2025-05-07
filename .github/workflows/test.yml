@@ -21,6 +21,7 @@ jobs:
       with:
         node-version: 22.x
     - run: npm install
+    - run: npm run build
     - run: xvfb-run -a npm test
       if: runner.os == 'Linux'
     - run: npm test
