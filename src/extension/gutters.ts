@@ -1,9 +1,10 @@
-import { commands, extensions } from "vscode";
-import { OutputChannel, window } from "vscode";
+import { commands, extensions, window, OutputChannel } from "vscode";
 import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
 import { StatusBarToggler } from "./statusbartoggler";
+
+export const PREVIEW_COMMAND = "livePreview.start.internalPreview.atFile";
 
 export class Gutters {
     private coverage: Coverage;
@@ -29,6 +30,15 @@ export class Gutters {
 
     public async previewCoverageReport() {
         try {
+            const livePreview = this.getLiveServerExtension();
+            if (!livePreview) {
+                await window.showErrorMessage("Live Preview extension not installed", {
+                    modal: true,
+                    detail: "The ms-vscode.live-server extension must be installed to preview the coverage report."
+                }, "Ok");
+                return;
+            }
+
             const coverageReports = await this.coverage.findReports();
             const pickedReport = await this.coverage.pickFile(
                 coverageReports,
@@ -39,27 +49,18 @@ export class Gutters {
                 return;
             }
 
+            // is the ext loaded and ready?
+            if (livePreview.isActive === false) {
+                await livePreview.activate();
+            }
+
             // TODO:  Figure out how to convert pickedReport to a workspace relative filename.
             // Right now the livePreview.start.internalPreview.atFile is called with "false" as
             // the second parameter.  This means that the file specified has an absolute path.
             // See the Live Preview extension source code:
             // https://github.com/microsoft/vscode-livepreview/blob/
             // 3be1e2eb5c8a7b51aa4a88275ad73bb4d923432b/src/extension.ts#L169
-            const livePreview = extensions.getExtension("ms-vscode.live-server");
-            // is the ext loaded and ready?
-            if (livePreview?.isActive === false) {
-                livePreview.activate().then(
-                    function() {
-                        console.log("Extension activated");
-                        commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
-                    },
-                    function() {
-                        console.log("Extension activation failed");
-                    },
-                );
-            } else {
-                commands.executeCommand("livePreview.start.internalPreview.atFile", pickedReport, false);
-            }
+            await commands.executeCommand(PREVIEW_COMMAND, pickedReport, false);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
@@ -123,6 +124,10 @@ export class Gutters {
         } catch (error: any) {
             this.handleError("dispose", error);
         }
+    }
+
+    getLiveServerExtension() {
+        return extensions.getExtension("ms-vscode.live-server");
     }
 
     private handleError(area: string, error: Error) {

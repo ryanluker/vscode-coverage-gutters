@@ -65,7 +65,7 @@ You need two extensions to get started.  Installation via CLI or Quick Open work
 </details>
 
 <details>
-<summary>Live Preview - ms-vscode.live-server</summary>
+<summary>Optional - Live Preview - ms-vscode.live-server</summary>
 
 -----
 
@@ -104,7 +104,7 @@ After the extensions are installed, you need to get your coverage files.
      * `coverage.xml`
      * `jacoco.xml`
      * `coverage.cobertura.xml`
-  
+
   2. Customizable file name.  You may use any filename you like, but the file must be a Clover, Cobertura, Jacoco, or LCov format file.
 
   3. Generating a coverage file is language specific.
@@ -155,9 +155,9 @@ After the extensions are installed, you need to get your coverage files.
 
 -----
 
-  * Directory where the **coverage file** is located.  
+* Directory where the **coverage file** is located.
 
-* Default is "`**`" which is the entire workspace.  
+* Default is "`**`" which is the entire workspace.
 
 * To prevent searching through the entire workspace, you can limit **coverage gutters* to a specific folder.
 

@@ -7,7 +7,7 @@
         "alwaysStrict": true,
         "importHelpers": true,
         "forceConsistentCasingInFileNames": true,
-		"esModuleInterop": true,
+        "esModuleInterop": true,
         "lib": [
             "es6",
             "dom",
