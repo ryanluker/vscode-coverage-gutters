@@ -1,48 +1,57 @@
-import * as cp from "child_process";
 import * as path from "path";
 import {
-    downloadAndUnzipVSCode,
-    resolveCliArgsFromVSCodeExecutablePath,
     runTests,
+    runVSCodeCommand,
 } from "@vscode/test-electron";
 
 async function main() {
     try {
+        const vscodeVersion = "insiders";
         const extensionDevelopmentPath = path.resolve(__dirname, "../../");
         const extensionTestsPath = path.resolve(__dirname, "index");
 
-        // Add the dependent extension for test coverage preview functionality
-        const vscodeExecutablePath = await downloadAndUnzipVSCode("insiders");
-        const [cliPath, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
+        // Ensure live-server is not installed
+        await runVSCodeCommand(
+            ["--uninstall-extension", "ms-vscode.live-server"],
+            { version: vscodeVersion, extensionDevelopmentPath }
+        ).catch(() => {
+            // Ignore, this will happen when first setting up an environment
+            // or when the test process dies when running tests without the
+            // optional dependency installed.
+        });
 
-        // Use cp.spawn / cp.exec for custom setup
-        // Note: shell true is needed to fix an issue with install-extension (on windows)
-        // https://github.com/microsoft/vscode-test/issues/266#issuecomment-2085723194
-        const output = cp.spawnSync(
-            cliPath,
-            [...args, "--install-extension", "ms-vscode.live-server"],
-            {
-                shell: process.platform === 'win32',
-                encoding: 'utf-8',
-                stdio: 'inherit'
-            },
-        );
-
-        // Useful for debugging failing dependant extension installs
-        console.info(output);
-
-        // Default test options for gutters testing
+        // Run tests without live server installed
         await runTests({
-            vscodeExecutablePath,
+            version: vscodeVersion,
             extensionDevelopmentPath,
             extensionTestsPath,
             launchArgs: ["example/example.code-workspace"],
+            extensionTestsEnv: {
+                TEST_FILTER: "no-live-server"
+            }
+        })
+
+        await runVSCodeCommand(
+            ["--install-extension", "ms-vscode.live-server"],
+            { version: vscodeVersion, extensionDevelopmentPath }
+        );
+
+        // Default test options for gutters testing
+        await runTests({
+            version: vscodeVersion,
+            extensionDevelopmentPath,
+            extensionTestsPath,
+            launchArgs: ["example/example.code-workspace"],
+            extensionTestsEnv: {
+                TEST_FILTER: "live-server"
+            }
         });
 
         console.info("Success!");
         process.exit(0);
     } catch (err) {
         console.error("Failed to run tests");
+        console.error(err);
         process.exit(1);
     }
 }
