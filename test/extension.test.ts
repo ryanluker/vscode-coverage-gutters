@@ -1,17 +1,38 @@
 import { expect } from "chai";
 import { exec } from "child_process";
 import sinon from "sinon";
-import { after } from "mocha";
+import { after, afterEach } from "mocha";
 import * as vscode from "vscode";
 import { ICoverageLines, Renderer } from "../src/coverage-system/renderer";
 import { StatusBarToggler } from "../src/extension/statusbartoggler";
 
 suite("Extension Tests", function () {
+    afterEach(() => {
+        // Clear mocks after each test to avoid cascading failures due to one test failing
+        sinon.restore();
+    });
+
     after(() => {
         vscode.window.showInformationMessage('All tests done!');
     });
 
-    test("Preview the coverage report in a new webview tab @integration", async () => {
+    test("Preview the coverage report in a new webview tab without live server @integration", async function() {
+        if (process.env.TEST_FILTER == "live-server") return this.skip();
+
+        const toastSpy = sinon.spy(vscode.window, "showErrorMessage");
+
+        await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
+
+        expect(toastSpy.callCount).to.equal(1);
+        const call = toastSpy.getCall(0);
+        expect(call.args[0]).to.equal("Live Preview extension not installed");
+
+        toastSpy.restore();
+    });
+
+    test("Preview the coverage report in a new webview tab with live server @integration", async function() {
+        if (process.env.TEST_FILTER == "no-live-server") return this.skip();
+
         // Note: depends on "coverage-gutters.coverageReportFileName": "index.html",
         // being set in the example.code-workspace setting file as the coverage report
         // is in the root of the node folder and not inside the default /coverage
