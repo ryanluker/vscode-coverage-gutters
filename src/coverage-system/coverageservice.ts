@@ -194,8 +194,10 @@ export class CoverageService {
     }
 
     private listenToEditorEvents() {
-        this.editorWatcher = window.onDidChangeVisibleTextEditors(
+        this.editorWatcher = window.onDidChangeActiveTextEditor(
             this.handleEditorEvents.bind(this),
         );
+
+
     }
 }
