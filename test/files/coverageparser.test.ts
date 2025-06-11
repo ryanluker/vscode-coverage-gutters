@@ -8,28 +8,26 @@ import { CoverageParser } from "../../src/files/coverageparser";
 suite("CoverageParser Tests", () => {
     teardown(() => sinon.restore());
 
-    const fakeOutputChannel = { appendLine: () => undefined } as unknown as OutputChannel;
+    const fakeOutputChannel = {
+        appendLine: () => undefined,
+    } as unknown as OutputChannel;
 
-    test("filesToSections properly deduplicates coverages @unit", async () => {
-        // Setup a map of test keys and data strings
-        // Note: we include a duplicate key to test deduplication
+    test("filesToSections properly combines coverages @unit", async () => {
         const testFiles = new Map();
-        testFiles.set("/file/123", "datastringhere");
-        testFiles.set("/file/111", "datastring111");
-        testFiles.set("/file/222", "datastring222");
-        testFiles.set("/file/123", "samestringhere");
+
+        testFiles.set(
+            "/unit.lcov",
+            "TN:test line\nSF: ./dup-coverage.js\nLF: 1\nLH: 0\nDA: 1,0\nBRF:0\nBRH:0\nend_of_record"
+        );
+        testFiles.set(
+            "/integration.lcov",
+            "TN:test line\nSF: ./dup-coverage.js\nLF: 1\nLH: 1\nDA: 1,1\nBRF:0\nBRH:0\nend_of_record"
+        );
 
         const coverageParsers = new CoverageParser(fakeOutputChannel);
-        sinon.stub(coverageParsers as any, "lcovExtract").callsFake(async (filename) => {
-            const testSection = new Map();
-            testSection.set(filename, "");
-            return testSection;
-        });
-
         const testSections = await coverageParsers.filesToSections(testFiles);
 
-        // Check that we removed the duplicate coverage
-        expect(testSections.size).to.equal(3);
+        expect(testSections.size).to.equal(2);
     });
 
     test("filesToSections Correctly chooses the clover coverage format @unit", async () => {
