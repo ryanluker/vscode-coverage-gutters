@@ -54,11 +54,12 @@ export class CoverageParser {
     }
 
     private async convertSectionsToMap(
+        coverageFilename: string,
         data: Section[],
     ): Promise<Map<string, Section>> {
         const sections = new Map<string, Section>();
         const addToSectionsMap = async (section: Section) => {
-            sections.set(section.title + "::" + section.file, section);
+            sections.set([coverageFilename, section.title, section.file].join("::"), section);
         };
 
         // convert the array of sections into an unique map
@@ -67,11 +68,11 @@ export class CoverageParser {
         return sections;
     }
 
-    private xmlExtractCobertura(filename: string, xmlFile: string) {
+    private xmlExtractCobertura(coverageFilename: string, xmlFile: string) {
         return new Promise<Map<string, Section>>((resolve) => {
             const checkError = (err: Error) => {
                 if (err) {
-                    err.message = `filename: ${filename} ${err.message}`;
+                    err.message = `filename: ${coverageFilename} ${err.message}`;
                     this.handleError("cobertura-parse", err);
                     return resolve(new Map<string, Section>());
                 }
@@ -80,7 +81,7 @@ export class CoverageParser {
             try {
                 parseContentCobertura(xmlFile, async (err, data) => {
                     checkError(err);
-                    const sections = await this.convertSectionsToMap(data);
+                    const sections = await this.convertSectionsToMap(coverageFilename,data);
                     return resolve(sections);
                 }, true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,11 +91,11 @@ export class CoverageParser {
         });
     }
 
-    private xmlExtractJacoco(filename: string, xmlFile: string) {
+    private xmlExtractJacoco(coverageFilename: string, xmlFile: string) {
         return new Promise<Map<string, Section>>((resolve) => {
             const checkError = (err: Error) => {
                 if (err) {
-                    err.message = `filename: ${filename} ${err.message}`;
+                    err.message = `filename: ${coverageFilename} ${err.message}`;
                     this.handleError("jacoco-parse", err);
                     return resolve(new Map<string, Section>());
                 }
@@ -103,7 +104,7 @@ export class CoverageParser {
             try {
                 parseContentJacoco(xmlFile, async (err, data) => {
                     checkError(err);
-                    const sections = await this.convertSectionsToMap(data);
+                    const sections = await this.convertSectionsToMap(coverageFilename, data);
                     return resolve(sections);
                 });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,24 +114,24 @@ export class CoverageParser {
         });
     }
 
-    private async xmlExtractClover(filename: string, xmlFile: string) {
+    private async xmlExtractClover(coverageFilename: string, xmlFile: string) {
         try {
             const data = await parseContentClover(xmlFile);
-            const sections = await this.convertSectionsToMap(data);
+            const sections = await this.convertSectionsToMap(coverageFilename, data);
             return sections;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
-            error.message = `filename: ${filename} ${error.message}`;
+            error.message = `filename: ${coverageFilename} ${error.message}`;
             this.handleError("clover-parse", error);
             return new Map<string, Section>();
         }
     }
 
-    private lcovExtract(filename: string, lcovFile: string) {
+    private lcovExtract(coverageFilename: string, lcovFile: string) {
         return new Promise<Map<string, Section>>((resolve) => {
             const checkError = (err: Error) => {
                 if (err) {
-                    err.message = `filename: ${filename} ${err.message}`;
+                    err.message = `filename: ${coverageFilename} ${err.message}`;
                     this.handleError("lcov-parse", err);
                     return resolve(new Map<string, Section>());
                 }
@@ -139,7 +140,7 @@ export class CoverageParser {
             try {
                 source(lcovFile, async (err, data) => {
                     checkError(err);
-                    const sections = await this.convertSectionsToMap(data);
+                    const sections = await this.convertSectionsToMap(coverageFilename, data);
                     return resolve(sections);
                 });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
