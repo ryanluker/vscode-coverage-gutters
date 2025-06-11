@@ -243,7 +243,7 @@
     "pretty": "eslint --fix --ext .ts",
     "pre-commit": "lint-staged",
     "compile-tests": "tsc -p . --outDir out",
-    "pretest": "npm run compile-tests",
+    "pretest": "npm run compile-tests && node ./out/test/createTestPackageJson.js",
     "test": "node ./out/test/runTest.js",
     "build": "npm install && npm run lint && npm run compile",
     "prepare": "husky install",

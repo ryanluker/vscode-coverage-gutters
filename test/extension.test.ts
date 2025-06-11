@@ -34,6 +34,7 @@ suite("Extension Tests", function () {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
             if (spyCall) {
                 const cachedLines: ICoverageLines = spyCall.args[1];
                 expect(cachedLines.full).to.have.lengthOf(3);
@@ -55,6 +56,7 @@ suite("Extension Tests", function () {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
             if (spyCall) {
                 const cachedLines: ICoverageLines = spyCall.args[1];
                 expect(cachedLines.full).to.have.lengthOf(14);
@@ -76,6 +78,7 @@ suite("Extension Tests", function () {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
             if (spyCall) {
                 const cachedLines: ICoverageLines = spyCall.args[1];
                 expect(cachedLines.full).to.have.lengthOf(3);
@@ -138,6 +141,7 @@ suite("Extension Tests", function () {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
             if (spyCall) {
                 const cachedLines: ICoverageLines = spyCall.args[1];
                 expect(cachedLines.full).to.have.lengthOf(4);
@@ -159,6 +163,7 @@ suite("Extension Tests", function () {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
             if (spyCall) {
                 const cachedLines: ICoverageLines = spyCall.args[1];
                 expect(cachedLines.none).to.have.lengthOf(6);
@@ -180,6 +185,7 @@ suite("Extension Tests", function () {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
             if (spyCall) {
                 const cachedLines: ICoverageLines = spyCall.args[1];
                 expect(cachedLines.full).to.have.lengthOf(3);
@@ -201,6 +207,7 @@ suite("Extension Tests", function () {
         await checkCoverage(() => {
             // Look for exact coverage on the file
             const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
             if (spyCall) {
                 const cachedLines: ICoverageLines = spyCall.args[1];
                 expect(cachedLines.full).to.have.lengthOf(4);
@@ -237,8 +244,10 @@ suite("Extension Tests", function () {
 
             await checkCoverage(() => {
                 // Look for exact coverage on the file
-                if (decorationSpy.getCall(i)) {
-                    const cachedLines: ICoverageLines = decorationSpy.getCall(i).args[1];
+                const spyCall = decorationSpy.getCall(i);
+                expect(spyCall).to.not.be.null;
+                if (spyCall) {
+                    const cachedLines: ICoverageLines = spyCall.args[1];
                     expect(cachedLines.full).to.have.lengthOf(linesCovered);
                     expect(cachedLines.none).to.have.lengthOf(linesNotCovered);
                 }
@@ -258,8 +267,10 @@ suite("Extension Tests", function () {
 
         await checkCoverage(() => {
             // Look for exact coverage on the ruby file
-            if (decorationSpy.getCall(0)) {
-                const cachedLines: ICoverageLines = decorationSpy.getCall(0).args[1];
+            const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
+            if (spyCall) {
+                const cachedLines: ICoverageLines = spyCall.args[1];
                 expect(cachedLines.full).to.have.lengthOf(4);
                 expect(cachedLines.partial).to.have.lengthOf(1);
                 expect(cachedLines.none).to.have.lengthOf(1);
@@ -288,8 +299,10 @@ suite("Extension Tests", function () {
 
         await checkCoverage(() => {
             // Look for exact coverage on the file
-            if (decorationSpy.getCall(0)) {
-                const cachedLines: ICoverageLines = decorationSpy.getCall(0).args[1];
+            const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
+            if (spyCall) {
+                const cachedLines: ICoverageLines = spyCall.args[1];
                 expect(cachedLines.full).to.have.lengthOf(14);
                 expect(cachedLines.none).to.have.lengthOf(4);
                 expect(cachedLines.partial).to.have.lengthOf(7);
@@ -309,9 +322,11 @@ suite("Extension Tests", function () {
         await vscode.window.showTextDocument(testJSDocument);
 
         await checkCoverage(() => {
-            if (decorationSpy.getCall(0)) {
+            const spyCall = decorationSpy.getCall(0);
+            expect(spyCall).to.not.be.null;
+            if (spyCall) {
                 // Look for exact coverage on the file
-                const jsCachedLines: ICoverageLines = decorationSpy.getCall(0).args[1];
+                const jsCachedLines: ICoverageLines = spyCall.args[1];
                 expect(jsCachedLines.full).to.have.lengthOf(14);
                 expect(jsCachedLines.none).to.have.lengthOf(4);
                 expect(jsCachedLines.partial).to.have.lengthOf(7);
@@ -326,9 +341,11 @@ suite("Extension Tests", function () {
         await wait(500);
 
         await checkCoverage(() => {
-            if (decorationSpy.getCall(1)) {
+            const spyCall = decorationSpy.getCall(1);
+            expect(spyCall).to.not.be.null;
+            if (spyCall) {
                 // Look for exact coverage on the file
-                const javaCachedLines: ICoverageLines = decorationSpy.getCall(1).args[1];
+                const javaCachedLines: ICoverageLines = spyCall.args[1];
                 expect(javaCachedLines.full).to.have.lengthOf(4);
                 expect(javaCachedLines.none).to.have.lengthOf(3);
             }
@@ -353,25 +370,25 @@ suite("Extension Tests", function () {
             setCoverageSpy.resetHistory();
             await vscode.window.showTextDocument(testJSDocument, vscode.ViewColumn.One);
 
-            expect(setCoverageSpy.calledWith(84))
+            expect(setCoverageSpy.calledWith(84)).to.be.true;
             setCoverageSpy.resetHistory();
 
             const [testJavaCoverage] = await vscode.workspace.findFiles("**/App.java", "**/node_modules/**");
             const testJavaDocument = await vscode.workspace.openTextDocument(testJavaCoverage);
 
-            await vscode.window.showTextDocument(testJavaDocument, vscode.ViewColumn.Two);
+            await vscode.window.showTextDocument(testJavaDocument, vscode.ViewColumn.Two, false);
 
-            expect(setCoverageSpy.calledWith(57));
+            expect(setCoverageSpy.calledWith(57)).to.be.true;
             setCoverageSpy.resetHistory();
 
             await vscode.commands.executeCommand("workbench.action.previousEditor");
 
-            expect(setCoverageSpy.calledWith(84));
+            expect(setCoverageSpy.calledWith(84)).to.be.true;
             setCoverageSpy.resetHistory();
 
             await vscode.commands.executeCommand("workbench.action.closeAllEditors");
 
-            expect(setCoverageSpy.calledWith(undefined));
+            expect(setCoverageSpy.calledWith(undefined)).to.be.true;
 
             setCoverageSpy.restore();
             return vscode.commands.executeCommand("coverage-gutters.removeWatch");
