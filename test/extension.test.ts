@@ -1,26 +1,69 @@
 import { expect } from "chai";
 import { exec } from "child_process";
 import sinon from "sinon";
-import { after } from "mocha";
+import { after, afterEach } from "mocha";
 import * as vscode from "vscode";
 import { ICoverageLines, Renderer } from "../src/coverage-system/renderer";
 import { StatusBarToggler } from "../src/extension/statusbartoggler";
+import { Gutters, PREVIEW_COMMAND } from "../src/extension/gutters";
 
 suite("Extension Tests", function () {
+    const disposables: vscode.Disposable[] = [];
+
+    afterEach(() => {
+        // Clear mocks after each test to avoid cascading failures due to one test failing
+        sinon.restore();
+
+        // Also clear any disposables
+        disposables.forEach(d => d.dispose());
+        disposables.length = 0;
+    });
+
     after(() => {
         vscode.window.showInformationMessage('All tests done!');
     });
 
-    test("Preview the coverage report in a new webview tab @integration", async () => {
+    test("Preview the coverage report without live server extension @integration", async function() {
+        const getLiveServerStub = sinon.stub(Gutters.prototype, "getLiveServerExtension");
+        getLiveServerStub.returns(undefined);
+
+        const toastStub = sinon.stub(vscode.window, "showErrorMessage");
+
+        await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
+
+        expect(toastStub.callCount).to.equal(1);
+        const call = toastStub.getCall(0);
+        expect(call.args[0]).to.equal("Live Preview extension not installed");
+    });
+
+    test("Preview the coverage report with live server installed but inactive @integration", async function() {
+        const getLiveServerStub = sinon.stub(Gutters.prototype, "getLiveServerExtension");
+        const liveServer = { isActive: false, activate: () => { liveServer.isActive = true; } };
+        getLiveServerStub.returns(liveServer as never);
+
+        const doPreviewStub = sinon.stub();
+        disposables.push(vscode.commands.registerCommand(PREVIEW_COMMAND, doPreviewStub));
+
         // Note: depends on "coverage-gutters.coverageReportFileName": "index.html",
         // being set in the example.code-workspace setting file as the coverage report
         // is in the root of the node folder and not inside the default /coverage
         await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
-        // Look to see if the webview is open and showing preview coverage
-        await checkCoverage(() => {
-            const livePreview = vscode.extensions.getExtension("ms-vscode.live-server");
-            expect(livePreview?.isActive).to.equal(true);
-        });
+        expect(liveServer.isActive).to.equal(true);
+        expect(doPreviewStub.callCount).to.equal(1);
+    });
+
+    test("Preview the coverage report with live server @integration", async function() {
+        const getLiveServerStub = sinon.stub(Gutters.prototype, "getLiveServerExtension");
+        getLiveServerStub.returns({ isActive: true } as never);
+
+        const doPreviewStub = sinon.stub();
+        disposables.push(vscode.commands.registerCommand(PREVIEW_COMMAND, doPreviewStub));
+
+        // Note: depends on "coverage-gutters.coverageReportFileName": "index.html",
+        // being set in the example.code-workspace setting file as the coverage report
+        // is in the root of the node folder and not inside the default /coverage
+        await vscode.commands.executeCommand("coverage-gutters.previewCoverageReport");
+        expect(doPreviewStub.callCount).to.equal(1);
     });
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
