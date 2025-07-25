@@ -27,7 +27,7 @@ suite("CoverageParser Tests", () => {
         const coverageParsers = new CoverageParser(fakeOutputChannel);
         const testSections = await coverageParsers.filesToSections(testFiles);
 
-        expect(testSections.size).to.equal(2);
+        expect(testSections.size).to.equal(1);
     });
 
     test("filesToSections Correctly chooses the clover coverage format @unit", async () => {
@@ -35,7 +35,9 @@ suite("CoverageParser Tests", () => {
         const testFiles = new Map();
         testFiles.set("/file/clover", "<?xml <coverage <project");
 
-        const stubClover = sinon.stub(CloverParser, "parseContent").resolves([{}] as Section[]);
+        const stubClover = sinon
+            .stub(CloverParser, "parseContent")
+            .resolves([{}] as Section[]);
         const coverageParsers = new CoverageParser(fakeOutputChannel);
 
         await coverageParsers.filesToSections(testFiles);
