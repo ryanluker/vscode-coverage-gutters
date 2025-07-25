@@ -83,7 +83,7 @@ suite("CoverageParser Tests", () => {
         const testSections = await coverageParsers.filesToSections(testFiles);
 
         expect(testSections.size).to.equal(1);
-        const section = testSections.get("./test-coverage.js");
+        const section = testSections.get("::./test-coverage.js");
         expect(section?.lines).to.deep.equal({
             details: [
                 { line: 1, hit: 2 },

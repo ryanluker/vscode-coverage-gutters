@@ -20,79 +20,79 @@ export class CoverageParser {
     public async filesToSections(
         files: Map<string, string>
     ): Promise<Map<string, Section>> {
-        let coverages = new Map<string, Section>();
+        const coverages = new Map<string, Section>();
 
         for (const file of files) {
             const fileName = file[0];
             const fileContent = file[1];
 
-            // file is an array
-            let coverage = new Map<string, Section>();
-
             // get coverage file type
             const coverageFile = new CoverageFile(fileContent);
             switch (coverageFile.type) {
                 case CoverageType.CLOVER:
-                    coverage = await this.xmlExtractClover(
+                    await this.xmlExtractClover(
+                        coverages,
                         fileName,
                         fileContent
                     );
                     break;
                 case CoverageType.JACOCO:
-                    coverage = await this.xmlExtractJacoco(
+                    await this.xmlExtractJacoco(
+                        coverages,
                         fileName,
                         fileContent
                     );
                     break;
                 case CoverageType.COBERTURA:
-                    coverage = await this.xmlExtractCobertura(
+                    await this.xmlExtractCobertura(
+                        coverages,
                         fileName,
                         fileContent
                     );
                     break;
                 case CoverageType.LCOV:
-                    coverage = await this.lcovExtract(fileName, fileContent);
+                    this.lcovExtract(coverages, fileName, fileContent);
                     break;
                 default:
                     break;
             }
-
-            // add new coverage map to existing coverages generated so far
-            coverages = new Map([...coverages, ...coverage]);
         }
-
-        if (files.size <= 1) {
-            return coverages;
-        }
-
-        return this.mergeCoverageSections(coverages);
+        return coverages;
     }
 
-    private async convertSectionsToMap(
-        coverageFilename: string,
+    private async addSections(
+        coverages: Map<string, Section>,
         data: Section[]
-    ): Promise<Map<string, Section>> {
-        const sections = new Map<string, Section>();
+    ): Promise<void[]> {
         const addToSectionsMap = async (section: Section) => {
-            sections.set(
-                [coverageFilename, section.title, section.file].join("::"),
-                section
-            );
+            const key = [section.title, section.file].join("::");
+            const existingSection = coverages.get(key);
+
+            if (!existingSection) {
+                coverages.set(key, section);
+                return;
+            }
+
+            const mergedSection = this.mergeSections(existingSection, section);
+            coverages.set(key, mergedSection);
         };
 
         // convert the array of sections into an unique map
         const addPromises = data.map(addToSectionsMap);
-        await Promise.all(addPromises);
-        return sections;
+        return await Promise.all(addPromises);
     }
 
-    private xmlExtractCobertura(coverageFilename: string, xmlFile: string) {
-        return new Promise<Map<string, Section>>((resolve) => {
+    private xmlExtractCobertura(
+        coverages: Map<string, Section>,
+        coverageFilename: string,
+        xmlFile: string
+    ) {
+        return new Promise<void>((resolve) => {
             const checkError = (err: Error) => {
                 if (err) {
                     err.message = `filename: ${coverageFilename} ${err.message}`;
                     this.handleError("cobertura-parse", err);
-                    return resolve(new Map<string, Section>());
+                    return resolve();
                 }
             };
 
@@ -101,11 +101,8 @@ export class CoverageParser {
                     xmlFile,
                     async (err, data) => {
                         checkError(err);
-                        const sections = await this.convertSectionsToMap(
-                            coverageFilename,
-                            data
-                        );
-                        return resolve(sections);
+                        await this.addSections(coverages, data);
+                        return resolve();
                     },
                     true
                 );
@@ -116,24 +113,25 @@ export class CoverageParser {
         });
     }
 
-    private xmlExtractJacoco(coverageFilename: string, xmlFile: string) {
-        return new Promise<Map<string, Section>>((resolve) => {
+    private xmlExtractJacoco(
+        coverages: Map<string, Section>,
+        coverageFilename: string,
+        xmlFile: string
+    ) {
+        return new Promise<void>((resolve) => {
             const checkError = (err: Error) => {
                 if (err) {
                     err.message = `filename: ${coverageFilename} ${err.message}`;
                     this.handleError("jacoco-parse", err);
-                    return resolve(new Map<string, Section>());
+                    return resolve();
                 }
             };
 
             try {
                 parseContentJacoco(xmlFile, async (err, data) => {
                     checkError(err);
-                    const sections = await this.convertSectionsToMap(
-                        coverageFilename,
-                        data
-                    );
-                    return resolve(sections);
+                    await this.addSections(coverages, data);
+                    return resolve();
                 });
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
@@ -142,14 +140,14 @@ export class CoverageParser {
         });
     }
 
-    private async xmlExtractClover(coverageFilename: string, xmlFile: string) {
+    private async xmlExtractClover(
+        coverages: Map<string, Section>,
+        coverageFilename: string,
+        xmlFile: string
+    ) {
         try {
             const data = await parseContentClover(xmlFile);
-            const sections = await this.convertSectionsToMap(
-                coverageFilename,
-                data
-            );
-            return sections;
+            await this.addSections(coverages, data);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             error.message = `filename: ${coverageFilename} ${error.message}`;
@@ -158,24 +156,25 @@ export class CoverageParser {
         }
     }
 
-    private lcovExtract(coverageFilename: string, lcovFile: string) {
-        return new Promise<Map<string, Section>>((resolve) => {
+    private lcovExtract(
+        coverages: Map<string, Section>,
+        coverageFilename: string,
+        lcovFile: string
+    ) {
+        return new Promise<void>((resolve) => {
             const checkError = (err: Error) => {
                 if (err) {
                     err.message = `filename: ${coverageFilename} ${err.message}`;
                     this.handleError("lcov-parse", err);
-                    return resolve(new Map<string, Section>());
+                    return resolve();
                 }
             };
 
             try {
                 source(lcovFile, async (err, data) => {
                     checkError(err);
-                    const sections = await this.convertSectionsToMap(
-                        coverageFilename,
-                        data
-                    );
-                    return resolve(sections);
+                    await this.addSections(coverages, data);
+                    return resolve();
                 });
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
@@ -184,32 +183,15 @@ export class CoverageParser {
         });
     }
 
-    private mergeCoverageSections(
-        coverages: Map<string, Section>
-    ): Map<string, Section> {
-        const mergedCoverages = new Map<string, Section>();
-        for (const coverage of coverages.values()) {
-            const existingCoverage = mergedCoverages.get(coverage.file);
+    private mergeSections(existingSection: Section, section: Section): Section {
+        const lines = this.mergeLineCoverage(existingSection, section);
+        const branches = this.mergeBranchCoverage(existingSection, section);
 
-            if (!existingCoverage) {
-                mergedCoverages.set(coverage.file, coverage);
-                continue;
-            }
-
-            const lines = this.mergeLineCoverage(existingCoverage, coverage);
-            const branches = this.mergeBranchCoverage(
-                existingCoverage,
-                coverage
-            );
-
-            mergedCoverages.set(coverage.file, {
-                ...existingCoverage,
-                lines,
-                branches,
-            });
-        }
-
-        return mergedCoverages;
+        return {
+            ...existingSection,
+            lines,
+            branches,
+        };
     }
 
     private mergeLineCoverage(
@@ -221,7 +203,7 @@ export class CoverageParser {
         const seen = new Set();
         const hits = new Set(
             coverage.lines.details
-                .filter(({ hit }) => hit)
+                .filter(({ hit }) => hit > 0)
                 .map(({ line }) => line)
         );
 
@@ -244,9 +226,11 @@ export class CoverageParser {
             .filter(({ line }) => !seen.has(line))
             .map((line) => {
                 found += 1;
+
                 if (line.hit > 0) {
                     hit += 1;
                 }
+
                 details.push(line);
             });
 
@@ -272,7 +256,7 @@ export class CoverageParser {
             line: number;
             block: number;
             branch: number;
-        }) => `${branch.line}-${branch.block}-${branch.branch}`;
+        }) => [branch.line, branch.block, branch.branch].join(":");
 
         const taken = new Set(
             coverage.branches.details
@@ -300,9 +284,11 @@ export class CoverageParser {
             .filter((branch) => !seen.has(getKey(branch)))
             .map((branch) => {
                 found += 1;
+
                 if (branch.taken > 0) {
                     hit += 1;
                 }
+
                 details.push(branch);
             });
 
