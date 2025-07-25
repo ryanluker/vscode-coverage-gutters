@@ -1,15 +1,15 @@
 {
-    "name": "example",
-    "version": "1.0.0",
-    "description": "",
-    "main": "test-coverage.js",
-    "scripts": {
-        "test": "istanbul cover --dir ./coverage/unit -x \"./test-coverage.js\" ./node_modules/mocha/bin/_mocha -- -R spec test-unit.js && istanbul cover --dir ./coverage/integration -x \"./test-coverage.js\" ./node_modules/mocha/bin/_mocha -- -R spec test-integration.js"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "istanbul": "0.4.5",
-        "mocha": "^10.2.0"
-    }
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test-coverage.js",
+  "scripts": {
+    "test": "istanbul cover -x \"./test-coverage.js\" ./node_modules/mocha/bin/_mocha -- -R spec test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "istanbul": "0.4.5",
+    "mocha": "^10.2.0"
+  }
 }
