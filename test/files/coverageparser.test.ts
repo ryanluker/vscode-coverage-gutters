@@ -8,28 +8,112 @@ import { CoverageParser } from "../../src/files/coverageparser";
 suite("CoverageParser Tests", () => {
     teardown(() => sinon.restore());
 
-    const fakeOutputChannel = { appendLine: () => undefined } as unknown as OutputChannel;
+    const fakeOutputChannel = {
+        appendLine: () => undefined,
+    } as unknown as OutputChannel;
 
-    test("filesToSections properly deduplicates coverages @unit", async () => {
-        // Setup a map of test keys and data strings
-        // Note: we include a duplicate key to test deduplication
+    test("filesToSections properly combines coverages @unit", async () => {
         const testFiles = new Map();
-        testFiles.set("/file/123", "datastringhere");
-        testFiles.set("/file/111", "datastring111");
-        testFiles.set("/file/222", "datastring222");
-        testFiles.set("/file/123", "samestringhere");
+        const fileUnderTest = "./test-coverage.js";
+
+        testFiles.set(
+            "/unit/lcov.info",
+            `TN:
+            SF:${fileUnderTest}
+            FN:1,test
+            FNF:1
+            FNH:1
+            FNDA:2,test
+            DA:1,1
+            DA:2,2
+            DA:3,0
+            DA:6,2
+            DA:7,0
+            DA:10,2
+            DA:11,1
+            DA:14,1
+            DA:15,1
+            LF:9
+            LH:7
+            BRDA:2,1,0,0
+            BRDA:2,1,1,2
+            BRDA:6,2,0,0
+            BRDA:6,2,1,2
+            BRDA:10,3,0,1
+            BRDA:10,3,1,1
+            BRDA:14,4,0,1
+            BRDA:14,4,1,0
+            BRF:8
+            BRH:5
+            end_of_record`
+        );
+        testFiles.set(
+            "./integration/lcov.info",
+            `TN:
+            SF:${fileUnderTest}
+            FN:1,test
+            FNF:1
+            FNH:1
+            FNDA:1,test
+            DA:1,1
+            DA:2,1
+            DA:3,1
+            DA:6,0
+            DA:7,0
+            DA:10,0
+            DA:11,0
+            DA:14,0
+            DA:15,0
+            LF:9
+            LH:3
+            BRDA:2,1,0,1
+            BRDA:2,1,1,0
+            BRDA:6,2,0,0
+            BRDA:6,2,1,0
+            BRDA:10,3,0,0
+            BRDA:10,3,1,0
+            BRDA:14,4,0,0
+            BRDA:14,4,1,0
+            BRF:8
+            BRH:1
+            end_of_record`
+        );
 
         const coverageParsers = new CoverageParser(fakeOutputChannel);
-        sinon.stub(coverageParsers as any, "lcovExtract").callsFake(async (filename) => {
-            const testSection = new Map();
-            testSection.set(filename, "");
-            return testSection;
-        });
-
         const testSections = await coverageParsers.filesToSections(testFiles);
 
-        // Check that we removed the duplicate coverage
-        expect(testSections.size).to.equal(3);
+        expect(testSections.size).to.equal(1);
+        const section = testSections.get("::./test-coverage.js");
+        expect(section?.lines).to.deep.equal({
+            details: [
+                { line: 1, hit: 2 },
+                { line: 2, hit: 3 },
+                { line: 3, hit: 1 },
+                { line: 6, hit: 2 },
+                { line: 7, hit: 0 },
+                { line: 10, hit: 2 },
+                { line: 11, hit: 1 },
+                { line: 14, hit: 1 },
+                { line: 15, hit: 1 },
+            ],
+            hit: 8,
+            found: 9,
+        });
+
+        expect(section?.branches).to.deep.equal({
+            details: [
+                { line: 2, block: 1, branch: 0, taken: 1 },
+                { line: 2, block: 1, branch: 1, taken: 2 },
+                { line: 6, block: 2, branch: 0, taken: 0 },
+                { line: 6, block: 2, branch: 1, taken: 2 },
+                { line: 10, block: 3, branch: 0, taken: 1 },
+                { line: 10, block: 3, branch: 1, taken: 1 },
+                { line: 14, block: 4, branch: 0, taken: 1 },
+                { line: 14, block: 4, branch: 1, taken: 0 },
+            ],
+            hit: 6,
+            found: 8,
+        });
     });
 
     test("filesToSections Correctly chooses the clover coverage format @unit", async () => {
@@ -37,7 +121,9 @@ suite("CoverageParser Tests", () => {
         const testFiles = new Map();
         testFiles.set("/file/clover", "<?xml <coverage <project");
 
-        const stubClover = sinon.stub(CloverParser, "parseContent").resolves([{}] as Section[]);
+        const stubClover = sinon
+            .stub(CloverParser, "parseContent")
+            .resolves([{}] as Section[]);
         const coverageParsers = new CoverageParser(fakeOutputChannel);
 
         await coverageParsers.filesToSections(testFiles);
