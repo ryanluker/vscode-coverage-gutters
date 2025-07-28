@@ -22,10 +22,7 @@ export class CoverageParser {
     ): Promise<Map<string, Section>> {
         const coverages = new Map<string, Section>();
 
-        for (const file of files) {
-            const fileName = file[0];
-            const fileContent = file[1];
-
+        for (const [fileName, fileContent] of files) {
             // get coverage file type
             const coverageFile = new CoverageFile(fileContent);
             switch (coverageFile.type) {
@@ -152,7 +149,6 @@ export class CoverageParser {
         } catch (error: any) {
             error.message = `filename: ${coverageFilename} ${error.message}`;
             this.handleError("clover-parse", error);
-            return new Map<string, Section>();
         }
     }
 
