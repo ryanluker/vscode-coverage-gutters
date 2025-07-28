@@ -143,6 +143,12 @@
           "scope": "resource",
           "default": true,
           "description": "enable or disable quick commands in the context menu"
+        },
+        "coverage-gutters.watchOnActivate": {
+          "type": "boolean",
+          "scope":"resource",
+          "default": false,
+          "description": "automatically watch coverage files and visible editors on extension activation (workspace open)"
         }
       }
     },
