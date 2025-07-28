@@ -49,4 +49,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(removeWatch);
     context.subscriptions.push(gutters);
     context.subscriptions.push(outputChannel);
+
+    if (configStore.watchOnActivate) {
+        gutters.watchCoverageAndVisibleEditors();
+    }
 }

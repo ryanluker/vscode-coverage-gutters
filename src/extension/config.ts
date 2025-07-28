@@ -20,6 +20,7 @@ export class Config {
     public ignoredPathGlobs!: string;
     public remotePathResolve!: string[];
     public manualCoverageFilePaths!: string[];
+    public watchOnActivate!: boolean;
 
     private context: ExtensionContext;
 
@@ -149,6 +150,8 @@ export class Config {
 
         // Add the manual coverage file path(s) if present
         this.manualCoverageFilePaths = rootConfig.get("manualCoverageFilePaths") as string[];
+
+        this.watchOnActivate = rootConfig.get("watchOnActivate") as boolean;
     }
 
     /**
