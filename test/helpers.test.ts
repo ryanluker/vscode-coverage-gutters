@@ -18,6 +18,10 @@ suite("helper Tests", function() {
             {fileName: "a/A/", expected: "a###a###"},
             {fileName: "/###/", expected: "#########"},
             {fileName: "\\/", expected: "######"},
+            {
+                expected: "###home###lt###projects###libfuzz###json-c###arraylist.c",
+                fileName: "/home/lt/projects/libfuzz/json-c/build/../arraylist.c",
+            },
         ].forEach((parameters) => {
             expect(normalizeFileName(parameters.fileName)).to.equal(parameters.expected);
         });
