@@ -300,8 +300,5 @@
     "lcov-parse": "1.0.0",
     "tslib": "2.4.0",
     "uuid": "8.3.2"
-  },
-  "extensionDependencies": [
-    "ms-vscode.live-server"
-  ]
+  }
 }
