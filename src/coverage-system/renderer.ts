@@ -139,7 +139,8 @@ export class Renderer {
             }
             
             const range = new Range(lineNumber, 0, lineNumber, 0);
-            const paddedHitCount = hitCount.toString().padStart(paddingWidth, '\u00A0');
+            const displayValue = hitCount > 1000 ? '>1000' : hitCount.toString();
+            const paddedHitCount = displayValue.padStart(paddingWidth, '\u00A0');
             
             hitCountDecorations.push({
                 range,
