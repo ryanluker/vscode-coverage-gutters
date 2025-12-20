@@ -5,10 +5,20 @@ import { Section } from "lcov-parse";
 import {
     BranchCoverageCodeLensProvider,
     BranchCoverageHoverProvider,
+    RegionHighlighter,
 } from "../../src/coverage-system/branchcoverageproviders";
 
 suite("Branch Coverage Providers Tests", () => {
-    teardown(() => sinon.restore());
+    let regionHighlighter: RegionHighlighter;
+
+    setup(() => {
+        regionHighlighter = new RegionHighlighter();
+    });
+
+    teardown(() => {
+        regionHighlighter.dispose();
+        sinon.restore();
+    });
 
     const mockSection: Section = {
         title: "test",
@@ -84,7 +94,7 @@ suite("Branch Coverage Providers Tests", () => {
     });
 
     test("Hover provider returns branch details for partial coverage lines @unit", () => {
-        const provider = new BranchCoverageHoverProvider();
+        const provider = new BranchCoverageHoverProvider(regionHighlighter);
         const coverageData = new Map<string, Section>();
         coverageData.set("test::file", mockSection);
         provider.updateCoverageData(coverageData);
@@ -104,7 +114,7 @@ suite("Branch Coverage Providers Tests", () => {
     });
 
     test("Hover provider returns null for lines without branches @unit", () => {
-        const provider = new BranchCoverageHoverProvider();
+        const provider = new BranchCoverageHoverProvider(regionHighlighter);
         const coverageData = new Map<string, Section>();
         coverageData.set("test::file", mockSection);
         provider.updateCoverageData(coverageData);
@@ -132,7 +142,7 @@ suite("Branch Coverage Providers Tests", () => {
             },
         };
 
-        const provider = new BranchCoverageHoverProvider();
+        const provider = new BranchCoverageHoverProvider(regionHighlighter);
         const coverageData = new Map<string, Section>();
         coverageData.set("test::file", sectionWithMissingBranches);
         provider.updateCoverageData(coverageData);

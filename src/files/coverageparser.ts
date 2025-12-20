@@ -101,11 +101,100 @@ export class CoverageParser {
             };
 
             try {
+                // Pre-parse Cobertura XML to extract per-line condition coverage details
+                const coberturaConditionsByFile = new Map<
+                    string,
+                    Record<number, {
+                        coveragePercent: number;
+                        edgesCovered: number;
+                        edgesTotal: number;
+                        conditions: Array<{ number: number; type: string; coveragePercent: number }>;
+                    }>
+                >();
+
+                // Lightweight XML scan to track current filename and line conditions
+                let currentFilename: string | undefined;
+                const classOpenRegex = /<class\s+[^>]*filename="([^"]+)"[^>]*>/g;
+                // Match <line> with optional condition-coverage attribute and nested content
+                const lineRegex = new RegExp(
+                    `<line\\s+number="(\\d+)"[^>]*?` +
+                    `(?:condition-coverage="(\\d+)%\\s*\\((\\d+)/(\\d+)\\)")?` +
+                    `[^>]*>([\\s\\S]*?)<\\/line>`,
+                    'g'
+                );
+                const conditionRegex = /<condition\s+number="(\d+)"\s+type="([^"]+)"\s+coverage="(\d+)%"\s*\/?>/g;
+
+                // Iterate through the XML string to capture classes and their lines
+                // First pass: mark class ranges and process nested lines within
+                // For simplicity, we'll walk the XML string sequentially.
+                let index = 0;
+                while (index < xmlFile.length) {
+                    // Find next class or line
+                    classOpenRegex.lastIndex = index;
+                    const classMatch = classOpenRegex.exec(xmlFile);
+                    if (classMatch && (classMatch.index >= index)) {
+                        currentFilename = classMatch[1];
+                        if (!coberturaConditionsByFile.has(currentFilename)) {
+                            coberturaConditionsByFile.set(currentFilename, {});
+                        }
+                        index = classOpenRegex.lastIndex;
+                        continue;
+                    }
+
+                    // Process lines using the current filename context
+                    lineRegex.lastIndex = index;
+                    const lineMatch = lineRegex.exec(xmlFile);
+                    if (lineMatch && (lineMatch.index >= index)) {
+                        const lineNumber = Number(lineMatch[1]);
+                        const covPercent = lineMatch[2] ? Number(lineMatch[2]) : 0;
+                        const edgesCovered = lineMatch[3] ? Number(lineMatch[3]) : 0;
+                        const edgesTotal = lineMatch[4] ? Number(lineMatch[4]) : 0;
+                        const lineInner = lineMatch[5] || "";
+
+                        const conditions: Array<{ number: number; type: string; coveragePercent: number }> = [];
+                        let condMatch: RegExpExecArray | null;
+                        conditionRegex.lastIndex = 0;
+                        while ((condMatch = conditionRegex.exec(lineInner)) !== null) {
+                            conditions.push({
+                                number: Number(condMatch[1]),
+                                type: condMatch[2],
+                                coveragePercent: Number(condMatch[3]),
+                            });
+                        }
+                        if (currentFilename) {
+                            const fileMap = coberturaConditionsByFile.get(currentFilename)!;
+                            fileMap[lineNumber] = {
+                                coveragePercent: covPercent,
+                                edgesCovered,
+                                edgesTotal,
+                                conditions,
+                            };
+                        }
+
+                        index = lineRegex.lastIndex;
+                        continue;
+                    }
+
+                    // Advance to avoid infinite loop
+                    index += 1;
+                }
+
                 parseContentCobertura(
                     xmlFile,
                     async (err, data) => {
                         checkError(err);
-                        await this.addSections(coverages, data);
+                        // Attach Cobertura conditions metadata to each section by filename
+                        const augmented = data.map((section) => {
+                            const sectionWithMeta = section as Section & {
+                                __coberturaConditionsByLine?: Record<number, { coveragePercent: number; edgesCovered: number; edgesTotal: number; conditions: Array<{ number: number; type: string; coveragePercent: number }> }>;
+                            };
+                            const fileMap = coberturaConditionsByFile.get(section.file);
+                            if (fileMap) {
+                                sectionWithMeta.__coberturaConditionsByLine = fileMap;
+                            }
+                            return sectionWithMeta;
+                        });
+                        await this.addSections(coverages, augmented);
                         return resolve();
                     },
                     true

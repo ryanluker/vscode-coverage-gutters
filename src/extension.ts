@@ -3,6 +3,7 @@ import { Coverage } from "./coverage-system/coverage";
 import {
     BranchCoverageCodeLensProvider,
     BranchCoverageHoverProvider,
+    RegionHighlighter,
 } from "./coverage-system/branchcoverageproviders";
 import { Config } from "./extension/config";
 import { Gutters } from "./extension/gutters";
@@ -20,9 +21,12 @@ export function activate(context: vscode.ExtensionContext) {
         statusBarToggler,
     );
 
+    // Create region highlighter for LLVM coverage regions
+    const regionHighlighter = new RegionHighlighter();
+
     // Register branch coverage providers
     const branchCodeLensProvider = new BranchCoverageCodeLensProvider();
-    const branchHoverProvider = new BranchCoverageHoverProvider();
+    const branchHoverProvider = new BranchCoverageHoverProvider(regionHighlighter);
 
     const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(
         { scheme: "file" },
@@ -72,6 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(outputChannel);
     context.subscriptions.push(codeLensProviderDisposable);
     context.subscriptions.push(hoverProviderDisposable);
+    context.subscriptions.push(regionHighlighter);
 
     if (configStore.watchOnActivate) {
         gutters.watchCoverageAndVisibleEditors();
