@@ -47,8 +47,15 @@ export class CoverageParser {
                         fileContent
                     );
                     break;
+                case CoverageType.LLVM_COV_JSON:
+                    await this.jsonExtractLlvmCov(
+                        coverages,
+                        fileName,
+                        fileContent
+                    );
+                    break;
                 case CoverageType.LCOV:
-                    this.lcovExtract(coverages, fileName, fileContent);
+                    await this.lcovExtract(coverages, fileName, fileContent);
                     break;
                 default:
                     break;
@@ -303,4 +310,190 @@ export class CoverageParser {
             );
         }
     }
+
+    private async jsonExtractLlvmCov(
+        coverages: Map<string, Section>,
+        coverageFilename: string,
+        jsonFile: string
+    ) {
+        return new Promise<void>((resolve) => {
+            try {
+                const jsonData = JSON.parse(jsonFile);
+                const sections = this.transformLlvmCovToSections(jsonData);
+                
+                if (sections.length === 0) {
+                    this.outputChannel.appendLine(
+                        `[${Date.now()}][coverageparser][llvm-cov]: No coverage data found in ${coverageFilename}`
+                    );
+                } else {
+                    this.outputChannel.appendLine(
+                        `[${Date.now()}][coverageparser][llvm-cov]: Parsed ${sections.length} section(s) from ${coverageFilename}`
+                    );
+                }
+
+                this.addSections(coverages, sections).then(() => resolve()).catch((error) => {
+                    const err = error as Error;
+                    err.message = `filename: ${coverageFilename} ${err.message}`;
+                    this.handleError("llvm-cov-parse", err);
+                    resolve();
+                });
+            } catch (error: unknown) {
+                const err = error as Error;
+                err.message = `filename: ${coverageFilename} ${err.message}`;
+                this.handleError("llvm-cov-parse", err);
+                return resolve();
+            }
+        });
+    }
+
+    /**
+     * Transforms LLVM-cov JSON format to normalized Section format
+     * LLVM-cov JSON structure:
+     * {
+     *   "data": [
+     *     {
+     *       "files": [
+     *         {
+     *           "filename": "path/to/file.cpp",
+     *           "segments": [[line, col, count, hasCount, isRegionEntry, isGapRegion], ...],
+     *           "branches": [[startLine, startCol, endLine, endCol, count, falseCount, blockId, branchId, type], ...]
+     *         }
+     *       ]
+     *     }
+     *   ]
+     * }
+     */
+    private transformLlvmCovToSections(jsonData: unknown): Section[] {
+        const sections: Section[] = [];
+
+        type LlvmCovSegment = [number, number, number, boolean, boolean?, boolean?];
+        type LlvmCovBranch = [number, number, number, number, number, number, number, number, unknown?];
+        type LlvmCovFile = {
+            filename: string;
+            segments?: unknown;
+            branches?: unknown;
+        };
+        type LlvmCovDataEntry = { files?: unknown };
+        type LlvmCovJson = { data?: unknown };
+
+        const parsed = jsonData as LlvmCovJson;
+        if (!Array.isArray(parsed?.data)) {
+            return sections;
+        }
+
+        for (const entry of parsed.data as LlvmCovDataEntry[]) {
+            if (!Array.isArray(entry?.files)) {
+                continue;
+            }
+
+            for (const file of entry.files as LlvmCovFile[]) {
+                if (!file || typeof file.filename !== "string") {
+                    continue;
+                }
+                const section: Section = {
+                    title: "llvm-cov",
+                    file: file.filename,
+                    lines: {
+                        details: [],
+                        found: 0,
+                        hit: 0,
+                    },
+                    functions: {
+                        details: [],
+                        found: 0,
+                        hit: 0,
+                    },
+                    branches: {
+                        details: [],
+                        found: 0,
+                        hit: 0,
+                    },
+                };
+
+                // Process segments to extract line coverage
+                 // Segment format: [line, col, count, hasCount, isRegionEntry, isGapRegion]
+                const lineHits = new Map<number, number>();
+                // Keep raw LLVM segment entries by line for region-wise hover details
+                const llvmSegmentsByLine: Record<number, Array<{ col: number; count: number; hasCount: boolean; isRegionEntry: boolean; isGapRegion: boolean }>> = {};
+                if (Array.isArray(file.segments)) {
+                    for (const segment of file.segments as LlvmCovSegment[]) {
+                        if (!Array.isArray(segment) || segment.length < 4) {
+                            continue;
+                        }
+                        const [line, col, count, hasCount, isRegionEntry, isGapRegion] = segment;
+                        if (typeof line !== "number" || line <= 0 || !hasCount) {
+                            continue;
+                        }
+                        const existingHit = lineHits.get(line) || 0;
+                        lineHits.set(line, Math.max(existingHit, count > 0 ? 1 : 0));
+                        if (!llvmSegmentsByLine[line]) {
+                            llvmSegmentsByLine[line] = [];
+                        }
+                        llvmSegmentsByLine[line].push({
+                            col: Number(col) || 0,
+                            count: Number(count) || 0,
+                            hasCount: !!hasCount,
+                            isRegionEntry: !!isRegionEntry,
+                            isGapRegion: !!isGapRegion,
+                        });
+                    }
+                }
+
+                // Convert line hits to coverage details
+                const lineDetails: Array<{line: number, hit: number}> = [];
+                for (const [line, hit] of lineHits.entries()) {
+                    lineDetails.push({ line, hit });
+                    section.lines.found += 1;
+                    if (hit > 0) {
+                        section.lines.hit += 1;
+                    }
+                }
+                section.lines.details = lineDetails;
+
+                // Process branches
+                 // Branch format: [startLine, startCol, endLine, endCol, count, falseCount, blockId, branchId, type]
+                if (Array.isArray(file.branches)) {
+                    for (const branch of file.branches as LlvmCovBranch[]) {
+                        if (!Array.isArray(branch) || branch.length < 8) {
+                            continue;
+                        }
+                        const [startLine, , , , count, falseCount, blockId, branchId] = branch;
+                        if (typeof startLine !== "number" || typeof blockId !== "number" || typeof branchId !== "number") {
+                            continue;
+                        }
+                        const trueDetail = {
+                            line: startLine,
+                            block: blockId,
+                            branch: branchId * 2, // edge 0 (true)
+                            taken: Number(count) > 0 ? 1 : 0,
+                        };
+                        const falseDetail = {
+                            line: startLine,
+                            block: blockId,
+                            branch: branchId * 2 + 1, // edge 1 (false)
+                            taken: Number(falseCount) > 0 ? 1 : 0,
+                        };
+
+                        section.branches!.details.push(trueDetail);
+                        section.branches!.details.push(falseDetail);
+                        section.branches!.found += 2;
+                        if (trueDetail.taken > 0) { section.branches!.hit += 1; }
+                        if (falseDetail.taken > 0) { section.branches!.hit += 1; }
+                    }
+                }
+
+                // Attach raw LLVM segment data for hover providers (non-standard extension)
+                type SectionWithSegments = Section & {
+                    __llvmSegmentsByLine?: Record<number, Array<{ col: number; count: number; hasCount: boolean; isRegionEntry: boolean; isGapRegion: boolean }>>;
+                };
+                const sectionWithSegments: SectionWithSegments = section;
+                sectionWithSegments.__llvmSegmentsByLine = llvmSegmentsByLine;
+
+                sections.push(sectionWithSegments);
+            }
+        }
+
+        return sections;
+    }
+
 }

@@ -15,6 +15,10 @@ import { FilesLoader } from "../files/filesloader";
 import { Renderer } from "./renderer";
 import { SectionFinder } from "./sectionfinder";
 
+interface BranchCoverageProvider {
+    updateCoverageData(data: Map<string, Section>): void;
+}
+
 enum Status {
     ready = "READY",
     initializing = "INITIALIZING",
@@ -37,6 +41,8 @@ export class CoverageService {
     private sectionFinder: SectionFinder;
 
     private cache: Map<string, Section>;
+    private branchCoverageCodeLensProvider: BranchCoverageProvider | undefined;
+    private branchCoverageHoverProvider: BranchCoverageProvider | undefined;
 
     constructor(
         configStore: Config,
@@ -58,6 +64,24 @@ export class CoverageService {
         );
         this.coverageParser = new CoverageParser(this.outputChannel);
         this.statusBar = statusBar;
+    }
+
+    public getCache(): Map<string, Section> {
+        return this.cache;
+    }
+
+    public setProviders(codeLensProvider: BranchCoverageProvider, hoverProvider: BranchCoverageProvider) {
+        this.branchCoverageCodeLensProvider = codeLensProvider;
+        this.branchCoverageHoverProvider = hoverProvider;
+    }
+
+    public notifyProvidersOfCoverageUpdate() {
+        if (this.branchCoverageCodeLensProvider) {
+            this.branchCoverageCodeLensProvider.updateCoverageData(this.cache);
+        }
+        if (this.branchCoverageHoverProvider) {
+            this.branchCoverageHoverProvider.updateCoverageData(this.cache);
+        }
     }
 
     public dispose() {
@@ -130,6 +154,7 @@ export class CoverageService {
             this.updateServiceState(Status.rendering);
             this.renderer.renderCoverage(this.cache, window.visibleTextEditors);
             this.setStatusBarCoverage(this.cache, window.activeTextEditor);
+            this.notifyProvidersOfCoverageUpdate();
             this.updateServiceState(Status.ready);
         } finally {
             this.statusBar.setLoading(false);
@@ -187,6 +212,7 @@ export class CoverageService {
             this.statusBar.setLoading(true);
             this.renderer.renderCoverage(this.cache, window.visibleTextEditors || []);
             this.setStatusBarCoverage(this.cache, window.activeTextEditor);
+            this.notifyProvidersOfCoverageUpdate();
             this.updateServiceState(Status.ready);
         } finally {
             this.statusBar.setLoading(false);

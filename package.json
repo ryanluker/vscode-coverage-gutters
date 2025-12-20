@@ -122,7 +122,8 @@
             "coverage.xml",
             "cobertura.xml",
             "jacoco.xml",
-            "coverage.cobertura.xml"
+            "coverage.cobertura.xml",
+            "llvm-cov.json"
           ],
           "description": "coverage file names for the extension to automatically look for"
         },
@@ -253,13 +254,13 @@
     "test": "node ./out/test/runTest.js",
     "build": "npm install && npm run lint && npm run compile",
     "prepare": "husky install",
-    "compile": "npm run check-types && node esbuild.js",
+    "compile": "npm run check-types && node esbuild.mjs",
     "check-types": "tsc --noEmit",
     "watch": "npm-run-all -p watch:*",
-    "watch:esbuild": "node esbuild.js --watch",
+    "watch:esbuild": "node esbuild.mjs --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
     "vscode:prepublish": "npm run package",
-    "package": "npm run check-types && node esbuild.js --production"
+    "package": "npm run check-types && node esbuild.mjs --production"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

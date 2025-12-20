@@ -10,7 +10,9 @@ declare namespace parse {
         block: number,
         branch: number,
         line: number,
-        taken: number
+        taken: number,
+        condition_coverage?: number,  // percentage of condition branches taken (0-100)
+        missing_branches?: number[]   // line numbers of untaken branches
     }
 
     interface FunctionDetail {

@@ -4,6 +4,7 @@ export enum CoverageType {
     CLOVER,
     COBERTURA,
     JACOCO,
+    LLVM_COV_JSON, // LLVM coverage JSON format
 }
 
 export class CoverageFile {
@@ -31,6 +32,17 @@ export class CoverageFile {
             possibleType = CoverageType.JACOCO;
         } else if (file.includes("<?xml")) {
             possibleType = CoverageType.COBERTURA;
+        } else if (file.trim().startsWith("{") || file.trim().startsWith("[")) {
+            // LLVM coverage JSON format (starts with { or [)
+            try {
+                JSON.parse(file);
+                possibleType = CoverageType.LLVM_COV_JSON;
+            } catch {
+                // Not valid JSON, treat as LCOV
+                if (file !== "") {
+                    possibleType = CoverageType.LCOV;
+                }
+            }
         } else if (file !== "") {
             possibleType = CoverageType.LCOV;
         }

@@ -3,6 +3,8 @@ import { expect } from "chai";
 import { Section } from "lcov-parse";
 import sinon from "sinon";
 import { OutputChannel } from "vscode";
+import * as fs from "fs";
+import * as path from "path";
 import { CoverageParser } from "../../src/files/coverageparser";
 
 suite("CoverageParser Tests", () => {
@@ -129,5 +131,35 @@ suite("CoverageParser Tests", () => {
         await coverageParsers.filesToSections(testFiles);
 
         expect(stubClover.calledWith("<?xml <coverage <project"));
+    });
+
+    test("parses C example Cobertura XML (gcovr) @integration", async () => {
+        const xmlPath = path.join(__dirname, "..", "..", "..", "example", "c", "coverage.xml");
+        const xmlContent = fs.readFileSync(xmlPath, "utf8");
+        const files = new Map<string, string>([[xmlPath, xmlContent]]);
+
+        const parser = new CoverageParser(fakeOutputChannel);
+        const sections = await parser.filesToSections(files);
+
+        expect(sections.size).to.be.greaterThan(0);
+        const first = Array.from(sections.values())[0];
+        expect(first.lines.found).to.be.greaterThan(0);
+        expect(first.branches?.found).to.be.greaterThan(0);
+    });
+
+    test("parses C++ LLVM JSON export @integration", async () => {
+        const jsonPath = path.join(__dirname, "..", "..", "..", "example", "cpp", "llvm-cov.json");
+        const jsonContent = fs.readFileSync(jsonPath, "utf8");
+        const files = new Map<string, string>([[jsonPath, jsonContent]]);
+
+        const parser = new CoverageParser(fakeOutputChannel);
+        const sections = await parser.filesToSections(files);
+
+        expect(sections.size).to.be.greaterThan(0);
+        const first = Array.from(sections.values())[0];
+        expect(first.lines.found).to.be.greaterThan(0);
+        expect(first.branches?.found).to.be.greaterThan(0);
+        // Ensure LLVM segments were attached for region hovers
+        expect((first as any).__llvmSegmentsByLine).to.not.be.undefined;
     });
 });

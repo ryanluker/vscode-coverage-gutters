@@ -1,5 +1,9 @@
 import * as vscode from "vscode";
 import { Coverage } from "./coverage-system/coverage";
+import {
+    BranchCoverageCodeLensProvider,
+    BranchCoverageHoverProvider,
+} from "./coverage-system/branchcoverageproviders";
 import { Config } from "./extension/config";
 import { Gutters } from "./extension/gutters";
 import { StatusBarToggler } from "./extension/statusbartoggler";
@@ -15,6 +19,23 @@ export function activate(context: vscode.ExtensionContext) {
         outputChannel,
         statusBarToggler,
     );
+
+    // Register branch coverage providers
+    const branchCodeLensProvider = new BranchCoverageCodeLensProvider();
+    const branchHoverProvider = new BranchCoverageHoverProvider();
+
+    const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(
+        { scheme: "file" },
+        branchCodeLensProvider,
+    );
+
+    const hoverProviderDisposable = vscode.languages.registerHoverProvider(
+        { scheme: "file" },
+        branchHoverProvider,
+    );
+
+    // Pass providers to gutters so they can be updated when coverage changes
+    gutters.setProviders(branchCodeLensProvider, branchHoverProvider);
 
     const previewCoverageReport = vscode.commands.registerCommand(
         "coverage-gutters.previewCoverageReport",
@@ -49,6 +70,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(removeWatch);
     context.subscriptions.push(gutters);
     context.subscriptions.push(outputChannel);
+    context.subscriptions.push(codeLensProviderDisposable);
+    context.subscriptions.push(hoverProviderDisposable);
 
     if (configStore.watchOnActivate) {
         gutters.watchCoverageAndVisibleEditors();

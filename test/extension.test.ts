@@ -8,6 +8,8 @@ import { StatusBarToggler } from "../src/extension/statusbartoggler";
 import { Gutters, PREVIEW_COMMAND } from "../src/extension/gutters";
 
 suite("Extension Tests", function () {
+    // Allow slower runs in headless environments
+    this.timeout(10000);
     const disposables: vscode.Disposable[] = [];
 
     afterEach(() => {
