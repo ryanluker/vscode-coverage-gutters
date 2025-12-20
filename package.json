@@ -89,6 +89,12 @@
           "default": true,
           "description": "show or hide the gutter coverage"
         },
+        "coverage-gutters.showExplorerCoverage": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": true,
+          "description": "show coverage percentage badges next to files in the explorer"
+        },
         "coverage-gutters.ignoredPathGlobs": {
           "type": "string",
           "scope": "resource",

@@ -18,6 +18,7 @@ export class Gutters {
     private coverageService: CoverageService;
     private branchCodeLensProvider: BranchCoverageProvider | undefined;
     private branchHoverProvider: BranchCoverageProvider | undefined;
+    private fileDecorationProvider: { updateCoverageData(data: Map<string, Section>): void } | undefined;
 
     constructor(
         configStore: Config,
@@ -39,6 +40,11 @@ export class Gutters {
         this.branchCodeLensProvider = codeLensProvider;
         this.branchHoverProvider = hoverProvider;
         this.coverageService.setProviders(codeLensProvider, hoverProvider);
+    }
+
+    public setFileDecorationProvider(provider: { updateCoverageData(data: Map<string, Section>): void }) {
+        this.fileDecorationProvider = provider;
+        this.coverageService.setFileDecorationProvider(provider);
     }
 
     public async previewCoverageReport() {

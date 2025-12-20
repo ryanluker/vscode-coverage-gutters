@@ -21,6 +21,7 @@ export class Config {
     public remotePathResolve!: string[];
     public manualCoverageFilePaths!: string[];
     public watchOnActivate!: boolean;
+    public showExplorerCoverage!: boolean;
 
     private context: ExtensionContext;
 
@@ -69,6 +70,7 @@ export class Config {
         const noCoverageLightBackgroundColour = rootConfig.get("noHighlightLight") as string;
         const noCoverageDarkBackgroundColour = rootConfig.get("noHighlightDark") as string;
         const showGutterCoverage = rootConfig.get("showGutterCoverage") as string;
+        this.showExplorerCoverage = rootConfig.get("showExplorerCoverage") as boolean;
         const showLineCoverage = rootConfig.get("showLineCoverage") as string;
         const showRulerCoverage = rootConfig.get("showRulerCoverage") as string;
 

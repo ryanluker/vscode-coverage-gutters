@@ -43,6 +43,7 @@ export class CoverageService {
     private cache: Map<string, Section>;
     private branchCoverageCodeLensProvider: BranchCoverageProvider | undefined;
     private branchCoverageHoverProvider: BranchCoverageProvider | undefined;
+    private fileDecorationProvider: { updateCoverageData(data: Map<string, Section>): void } | undefined;
 
     constructor(
         configStore: Config,
@@ -75,12 +76,19 @@ export class CoverageService {
         this.branchCoverageHoverProvider = hoverProvider;
     }
 
+    public setFileDecorationProvider(provider: { updateCoverageData(data: Map<string, Section>): void }) {
+        this.fileDecorationProvider = provider;
+    }
+
     public notifyProvidersOfCoverageUpdate() {
         if (this.branchCoverageCodeLensProvider) {
             this.branchCoverageCodeLensProvider.updateCoverageData(this.cache);
         }
         if (this.branchCoverageHoverProvider) {
             this.branchCoverageHoverProvider.updateCoverageData(this.cache);
+        }
+        if (this.fileDecorationProvider) {
+            this.fileDecorationProvider.updateCoverageData(this.cache);
         }
     }
 

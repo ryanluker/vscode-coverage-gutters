@@ -5,6 +5,7 @@ import {
     BranchCoverageHoverProvider,
     RegionHighlighter,
 } from "./coverage-system/branchcoverageproviders";
+import { CoverageFileDecorationProvider } from "./coverage-system/filedecorationprovider";
 import { Config } from "./extension/config";
 import { Gutters } from "./extension/gutters";
 import { StatusBarToggler } from "./extension/statusbartoggler";
@@ -27,6 +28,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Register branch coverage providers
     const branchCodeLensProvider = new BranchCoverageCodeLensProvider();
     const branchHoverProvider = new BranchCoverageHoverProvider(regionHighlighter);
+    const fileDecorationProvider = new CoverageFileDecorationProvider(configStore, outputChannel);
 
     const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(
         { scheme: "file" },
@@ -38,8 +40,13 @@ export function activate(context: vscode.ExtensionContext) {
         branchHoverProvider,
     );
 
+    const fileDecorationDisposable = vscode.window.registerFileDecorationProvider(
+        fileDecorationProvider,
+    );
+
     // Pass providers to gutters so they can be updated when coverage changes
     gutters.setProviders(branchCodeLensProvider, branchHoverProvider);
+    gutters.setFileDecorationProvider(fileDecorationProvider);
 
     const previewCoverageReport = vscode.commands.registerCommand(
         "coverage-gutters.previewCoverageReport",
@@ -76,6 +83,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(outputChannel);
     context.subscriptions.push(codeLensProviderDisposable);
     context.subscriptions.push(hoverProviderDisposable);
+    context.subscriptions.push(fileDecorationDisposable);
+    context.subscriptions.push(fileDecorationProvider);
     context.subscriptions.push(regionHighlighter);
 
     if (configStore.watchOnActivate) {
