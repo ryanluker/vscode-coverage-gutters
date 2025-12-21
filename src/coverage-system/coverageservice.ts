@@ -17,6 +17,7 @@ import { SectionFinder } from "./sectionfinder";
 
 interface BranchCoverageProvider {
     updateCoverageData(data: Map<string, Section>): void;
+    clearCoverageData(): void;
 }
 
 enum Status {
@@ -92,6 +93,15 @@ export class CoverageService {
         }
     }
 
+    public clearProvidersData() {
+        if (this.branchCoverageCodeLensProvider) {
+            this.branchCoverageCodeLensProvider.clearCoverageData();
+        }
+        if (this.branchCoverageHoverProvider) {
+            this.branchCoverageHoverProvider.clearCoverageData();
+        }
+    }
+
     public dispose() {
         if (this.coverageWatcher) { this.coverageWatcher.dispose(); }
         if (this.editorWatcher) { this.editorWatcher.dispose(); }
@@ -122,6 +132,7 @@ export class CoverageService {
         try {
             this.statusBar.setLoading(true);
             this.renderer.renderCoverage(new Map(), window.visibleTextEditors);
+            this.clearProvidersData();
         } finally {
             this.statusBar.setLoading(false);
             this.isCoverageDisplayed = false;

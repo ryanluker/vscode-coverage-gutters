@@ -7,6 +7,7 @@ import { StatusBarToggler } from "./statusbartoggler";
 
 interface BranchCoverageProvider {
     updateCoverageData(data: Map<string, Section>): void;
+    clearCoverageData(): void;
 }
 
 export const PREVIEW_COMMAND = "livePreview.start.internalPreview.atFile";

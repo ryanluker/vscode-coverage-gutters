@@ -70,6 +70,11 @@ export class BranchCoverageCodeLensProvider implements vscode.CodeLensProvider {
         this.onDidChangeCodeLensesEmitter.fire();
     }
 
+    public clearCoverageData() {
+        this.coverageData.clear();
+        this.onDidChangeCodeLensesEmitter.fire();
+    }
+
     public provideCodeLenses(
         document: vscode.TextDocument
     ): vscode.CodeLens[] {
@@ -150,6 +155,10 @@ export class BranchCoverageHoverProvider implements vscode.HoverProvider {
 
     public updateCoverageData(coverageData: Map<string, Section>) {
         this.coverageData = coverageData;
+    }
+
+    public clearCoverageData() {
+        this.coverageData.clear();
     }
 
     public provideHover(

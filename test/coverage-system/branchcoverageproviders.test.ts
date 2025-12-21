@@ -178,4 +178,50 @@ suite("Branch Coverage Providers Tests", () => {
         // Should still match after normalization
         expect(codeLenses).to.not.be.empty;
     });
+
+    test("CodeLens provider clearCoverageData removes all coverage data @unit", () => {
+        const provider = new BranchCoverageCodeLensProvider();
+        const coverageData = new Map<string, Section>();
+        coverageData.set("test::file", mockSection);
+        provider.updateCoverageData(coverageData);
+
+        const mockDocument = {
+            uri: { fsPath: "/path/to/test.js" },
+        } as unknown as TextDocument;
+
+        // Initially should have CodeLens
+        let codeLenses = provider.provideCodeLenses(mockDocument);
+        expect(codeLenses.length).to.equal(1);
+
+        // Clear the data
+        provider.clearCoverageData();
+
+        // After clearing, should have no CodeLens
+        codeLenses = provider.provideCodeLenses(mockDocument);
+        expect(codeLenses.length).to.equal(0);
+    });
+
+    test("Hover provider clearCoverageData removes all coverage data @unit", () => {
+        const provider = new BranchCoverageHoverProvider(regionHighlighter);
+        const coverageData = new Map<string, Section>();
+        coverageData.set("test::file", mockSection);
+        provider.updateCoverageData(coverageData);
+
+        const mockDocument = {
+            uri: { fsPath: "/path/to/test.js" },
+        } as unknown as TextDocument;
+
+        const position = new Position(0, 0); // Line 1
+        
+        // Initially should have hover
+        let hover = provider.provideHover(mockDocument, position);
+        expect(hover).to.not.be.null;
+
+        // Clear the data
+        provider.clearCoverageData();
+
+        // After clearing, should have no hover
+        hover = provider.provideHover(mockDocument, position);
+        expect(hover).to.be.null;
+    });
 });
