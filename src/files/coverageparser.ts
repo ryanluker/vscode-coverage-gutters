@@ -101,7 +101,7 @@ export class CoverageParser {
             };
 
             try {
-                // Pre-parse Cobertura XML to extract per-line condition coverage details
+                // Pre-parse Cobertura XML to extract per-line condition coverage details and branch hit counts
                 const coberturaConditionsByFile = new Map<
                     string,
                     Record<number, {
@@ -110,6 +110,12 @@ export class CoverageParser {
                         edgesTotal: number;
                         conditions: Array<{ number: number; type: string; coveragePercent: number }>;
                     }>
+                >();
+
+                // Extract branch hit counts from Cobertura XML
+                const branchHitCountsByFile = new Map<
+                    string,
+                    Record<number, Array<{ branchNum: number; hits: number }>>
                 >();
 
                 // Lightweight XML scan to track current filename and line conditions
@@ -123,6 +129,7 @@ export class CoverageParser {
                     'g'
                 );
                 const conditionRegex = /<condition\s+number="(\d+)"\s+type="([^"]+)"\s+coverage="(\d+)%"\s*\/?>/g;
+                const branchRegex = /<branch\s+number="(\d+)"\s+type="[^"]*"\s+hits="(\d+)"/g;
 
                 // Iterate through the XML string to capture classes and their lines
                 // First pass: mark class ranges and process nested lines within
@@ -161,6 +168,18 @@ export class CoverageParser {
                                 coveragePercent: Number(condMatch[3]),
                             });
                         }
+
+                        // Extract branch hit counts from this line
+                        const branches: Array<{ branchNum: number; hits: number }> = [];
+                        branchRegex.lastIndex = 0;
+                        let branchMatch: RegExpExecArray | null;
+                        while ((branchMatch = branchRegex.exec(lineInner)) !== null) {
+                            branches.push({
+                                branchNum: Number(branchMatch[1]),
+                                hits: Number(branchMatch[2]),
+                            });
+                        }
+
                         if (currentFilename) {
                             const fileMap = coberturaConditionsByFile.get(currentFilename)!;
                             fileMap[lineNumber] = {
@@ -169,6 +188,14 @@ export class CoverageParser {
                                 edgesTotal,
                                 conditions,
                             };
+
+                            // Store branch hit counts
+                            if (branches.length > 0) {
+                                if (!branchHitCountsByFile.has(currentFilename)) {
+                                    branchHitCountsByFile.set(currentFilename, {});
+                                }
+                                branchHitCountsByFile.get(currentFilename)![lineNumber] = branches;
+                            }
                         }
 
                         index = lineRegex.lastIndex;
@@ -183,14 +210,48 @@ export class CoverageParser {
                     xmlFile,
                     async (err, data) => {
                         checkError(err);
-                        // Attach Cobertura conditions metadata to each section by filename
+                        // Attach Cobertura conditions metadata and branch hit counts to each section by filename
                         const augmented = data.map((section) => {
                             const sectionWithMeta = section as Section & {
                                 __coberturaConditionsByLine?: Record<number, { coveragePercent: number; edgesCovered: number; edgesTotal: number; conditions: Array<{ number: number; type: string; coveragePercent: number }> }>;
+                                __branchHitCounts?: Record<number, Array<{ branchNum: number; hits: number }>>;
                             };
                             const fileMap = coberturaConditionsByFile.get(section.file);
                             if (fileMap) {
                                 sectionWithMeta.__coberturaConditionsByLine = fileMap;
+                            }
+                            const branchMap = branchHitCountsByFile.get(section.file);
+                            if (branchMap && section.branches && section.branches.details) {
+                                sectionWithMeta.__branchHitCounts = branchMap;
+                                // Apply actual branch hit counts to the section by line
+                                for (const branch of section.branches.details) {
+                                    const branchesOnLine = branchMap[branch.line];
+                                    if (branchesOnLine && branchesOnLine.length > 0) {
+                                        // Try to find matching branch by number
+                                        for (const hitBranch of branchesOnLine) {
+                                            // The branch.branch might be (branchNum * 2) or similar, try different matching strategies
+                                            if (branch.branch === hitBranch.branchNum || 
+                                                branch.branch === hitBranch.branchNum * 2 ||
+                                                branch.branch === hitBranch.branchNum * 2 + 1 ||
+                                                Math.floor(branch.branch / 2) === hitBranch.branchNum) {
+                                                branch.taken = hitBranch.hits;
+                                                break;
+                                            }
+                                        }
+                                        // If no match found and only one branch on this line, use it
+                                        if (branch.taken === 0 || branch.taken === 1) {
+                                            if (branchesOnLine.length === 1) {
+                                                branch.taken = branchesOnLine[0].hits;
+                                            } else if (branchesOnLine.length === 2) {
+                                                // For two branches, assign based on branch index (0 -> first, 1 -> second)
+                                                const branchIndex = branch.branch % 2;
+                                                if (branchIndex < branchesOnLine.length) {
+                                                    branch.taken = branchesOnLine[branchIndex].hits;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                             return sectionWithMeta;
                         });
@@ -350,19 +411,21 @@ export class CoverageParser {
             branch: number;
         }) => [branch.line, branch.block, branch.branch].join(":");
 
-        const taken = new Set(
-            coverage.branches.details
-                .filter(({ taken }) => taken > 0)
-                .map(getKey)
-        );
+        // Create a map of branch keys to their taken counts from the new coverage
+        const branchTakenMap = new Map<string, number>();
+        coverage.branches.details.forEach((branch) => {
+            const key = getKey(branch);
+            branchTakenMap.set(key, branch.taken);
+        });
 
         const details = existingCoverage.branches.details.map((branch) => {
             const key = getKey(branch);
             found += 1;
             seen.add(key);
 
-            if (taken.has(key)) {
-                branch.taken += 1;
+            const newTaken = branchTakenMap.get(key);
+            if (newTaken !== undefined) {
+                branch.taken += newTaken;
             }
 
             if (branch.taken > 0) {
@@ -407,23 +470,59 @@ export class CoverageParser {
     ) {
         return new Promise<void>((resolve) => {
             try {
-                const jsonData = JSON.parse(jsonFile);
-                const sections = this.transformLlvmCovToSections(jsonData);
+                const parsed = JSON.parse(jsonFile);
+                let sections: Section[] = [];
+
+                // Prefer LLVM-cov JSON structure if present
+                sections = this.transformLlvmCovToSections(parsed);
+
+                // Fallback: gcovr JSON structure { files: [{ file, lines: [{ line_number, count, branches: [{count}...] }] }] }
+                if (sections.length === 0 && typeof parsed === "object" && parsed !== null && Array.isArray(parsed.files)) {
+                    const gcovrFiles = parsed.files as Array<{ file: string; lines: Array<{ line_number: number; count: number; branches?: Array<{ count: number }> }> }>;
+                    for (const f of gcovrFiles) {
+                        if (!f || typeof f.file !== "string") continue;
+                        const section: Section = {
+                            title: "gcovr-json",
+                            file: f.file,
+                            lines: { details: [], found: 0, hit: 0 },
+                            functions: { details: [], found: 0, hit: 0 },
+                            branches: { details: [], found: 0, hit: 0 },
+                        };
+                        for (const ln of f.lines || []) {
+                            const lineNo = Number(ln.line_number);
+                            if (!lineNo || lineNo <= 0) continue;
+                            const hit = ln.count > 0 ? 1 : 0;
+                            section.lines.details.push({ line: lineNo, hit });
+                            section.lines.found += 1;
+                            if (hit > 0) section.lines.hit += 1;
+                            // Branches: synthesize branch entries per line
+                            if (Array.isArray(ln.branches)) {
+                                ln.branches.forEach((b, idx) => {
+                                    const taken = Number(b.count) || 0;
+                                    section.branches!.details.push({ line: lineNo, block: 0, branch: idx, taken });
+                                    section.branches!.found += 1;
+                                    if (taken > 0) section.branches!.hit += 1;
+                                });
+                            }
+                        }
+                        sections.push(section);
+                    }
+                }
                 
                 if (sections.length === 0) {
                     this.outputChannel.appendLine(
-                        `[${Date.now()}][coverageparser][llvm-cov]: No coverage data found in ${coverageFilename}`
+                        `[${Date.now()}][coverageparser][json]: No coverage data found in ${coverageFilename}`
                     );
                 } else {
                     this.outputChannel.appendLine(
-                        `[${Date.now()}][coverageparser][llvm-cov]: Parsed ${sections.length} section(s) from ${coverageFilename}`
+                        `[${Date.now()}][coverageparser][json]: Parsed ${sections.length} section(s) from ${coverageFilename}`
                     );
                 }
 
                 this.addSections(coverages, sections).then(() => resolve()).catch((error) => {
                     const err = error as Error;
                     err.message = `filename: ${coverageFilename} ${err.message}`;
-                    this.handleError("llvm-cov-parse", err);
+                    this.handleError("json-parse", err);
                     resolve();
                 });
             } catch (error: unknown) {
@@ -554,13 +653,13 @@ export class CoverageParser {
                             line: startLine,
                             block: blockId,
                             branch: branchId * 2, // edge 0 (true)
-                            taken: Number(count) > 0 ? 1 : 0,
+                            taken: Number(count),
                         };
                         const falseDetail = {
                             line: startLine,
                             block: blockId,
                             branch: branchId * 2 + 1, // edge 1 (false)
-                            taken: Number(falseCount) > 0 ? 1 : 0,
+                            taken: Number(falseCount),
                         };
 
                         section.branches!.details.push(trueDetail);

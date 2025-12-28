@@ -189,65 +189,67 @@ export class BranchCoverageHoverProvider implements vscode.HoverProvider {
                     (detail) => detail.taken > 0
                 ).length;
                 const percentage = Math.round((takenBranches / totalBranches) * 100);
+                
                 markdownContent.appendMarkdown(
                     `**Branch Coverage:** ${takenBranches}/${totalBranches} branches taken (${percentage}%)\n\n`
                 );
 
-                const notTakenBranches = branchesOnLine.filter((detail) => detail.taken === 0);
-                if (notTakenBranches.length > 0) {
-                    // Prefer Cobertura condition details when available
-                    type SectionWithCobertura = Section & {
-                        __coberturaConditionsByLine?: Record<number, { coveragePercent: number; edgesCovered: number; edgesTotal: number; conditions: Array<{ number: number; type: string; coveragePercent: number }> }>;
-                    };
-                    const cobSection = section as SectionWithCobertura;
-                    const condInfo = cobSection.__coberturaConditionsByLine?.[lineNum];
+                // Show all branches with their hit counts
+                // Prefer Cobertura condition details when available
+                type SectionWithCobertura = Section & {
+                    __coberturaConditionsByLine?: Record<number, { coveragePercent: number; edgesCovered: number; edgesTotal: number; conditions: Array<{ number: number; type: string; coveragePercent: number }> }>;
+                };
+                const cobSection = section as SectionWithCobertura;
+                const condInfo = cobSection.__coberturaConditionsByLine?.[lineNum];
 
-                    markdownContent.appendMarkdown("**Branches not executed:**\n\n");
-                    if (condInfo) {
-                        // Show precise condition coverage context from Cobertura
-                        const missingEdges = Math.max(0, condInfo.edgesTotal - condInfo.edgesCovered);
+                markdownContent.appendMarkdown("**All Branches:**\n\n");
+                if (condInfo) {
+                    // Show precise condition coverage context from Cobertura
+                    const missingEdges = Math.max(0, condInfo.edgesTotal - condInfo.edgesCovered);
+                    markdownContent.appendMarkdown(
+                        `- Condition coverage: ${condInfo.coveragePercent}% (${condInfo.edgesCovered}/${condInfo.edgesTotal})\n`
+                    );
+                    if (missingEdges > 0) {
                         markdownContent.appendMarkdown(
-                            `- Condition coverage: ${condInfo.coveragePercent}% (${condInfo.edgesCovered}/${condInfo.edgesTotal})\n`
+                            `- Missing edges: ${missingEdges} (short-circuited or untested paths)\n`
                         );
-                        if (missingEdges > 0) {
+                    }
+                    if (condInfo.conditions && condInfo.conditions.length) {
+                        markdownContent.appendMarkdown("- Per-condition details:\n");
+                        condInfo.conditions.forEach((c) => {
                             markdownContent.appendMarkdown(
-                                `- Missing edges: ${missingEdges} (short-circuited or untested paths)\n`
-                            );
-                        }
-                        if (condInfo.conditions && condInfo.conditions.length) {
-                            markdownContent.appendMarkdown("- Per-condition details:\n");
-                            condInfo.conditions.forEach((c) => {
-                                markdownContent.appendMarkdown(
-                                    `  • condition #${c.number} (${c.type}): ${c.coveragePercent}%\n`
-                                );
-                            });
-                        }
-                    } else {
-                        // Fallback: do not display undefined block, show branch id only
-                        notTakenBranches.forEach((branch) => {
-                            const branchId = (branch as { branch?: number }).branch;
-                            markdownContent.appendMarkdown(
-                                `- Branch ${branchId ?? "(unknown)"} not executed\n`
+                                `  • condition #${c.number} (${c.type}): ${c.coveragePercent}%\n`
                             );
                         });
                     }
-
-                    // If missing_branches metadata exists, surface line numbers
-                    if (notTakenBranches[0].missing_branches) {
-                        const missingLines = new Set<number>();
-                        notTakenBranches.forEach((branch) => {
-                            branch.missing_branches?.forEach((line) => missingLines.add(line));
-                        });
-                        const sorted = Array.from(missingLines).sort((a, b) => a - b);
-                        if (sorted.length) {
-                            markdownContent.appendMarkdown("\n**Missing branch lines:** ");
-                            markdownContent.appendMarkdown(sorted.join(", "));
-                            markdownContent.appendMarkdown("\n");
-                        }
-                    }
-
-                    markdownContent.appendMarkdown("\n");
+                } else {
+                    // Show all branches with hit counts
+                    branchesOnLine.forEach((branch) => {
+                        const branchId = (branch as { branch?: number }).branch;
+                        const hitCount = branch.taken;
+                        const status = hitCount > 0 ? '✓' : '✗';
+                        markdownContent.appendMarkdown(
+                            `- ${status} Branch ${branchId ?? "(unknown)"}: ${hitCount} hit${hitCount !== 1 ? 's' : ''}\n`
+                        );
+                    });
                 }
+
+                // If missing_branches metadata exists, surface line numbers
+                const notTakenBranches = branchesOnLine.filter((detail) => detail.taken === 0);
+                if (notTakenBranches.length > 0 && notTakenBranches[0].missing_branches) {
+                    const missingLines = new Set<number>();
+                    notTakenBranches.forEach((branch) => {
+                        branch.missing_branches?.forEach((line) => missingLines.add(line));
+                    });
+                    const sorted = Array.from(missingLines).sort((a, b) => a - b);
+                    if (sorted.length) {
+                        markdownContent.appendMarkdown("\n**Missing branch lines:** ");
+                        markdownContent.appendMarkdown(sorted.join(", "));
+                        markdownContent.appendMarkdown("\n");
+                    }
+                }
+
+                markdownContent.appendMarkdown("\n");
                 appended = true;
             }
         }
