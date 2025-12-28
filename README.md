@@ -17,7 +17,7 @@ https://github.com/ryanluker/vscode-coverage-gutters/issues
 ![Coverage Gutters features watch](promo_images/coverage-gutters-features-1.gif)
 
 - Supports any language as long as you can generate a lcov style coverage file
-- **[NEW] Support for C/C++ coverage formats**: Cobertura XML (gcovr) and LLVM-cov JSON
+- **[NEW] Support for C/C++/Rust coverage formats**: Cobertura XML (gcovr) and LLVM-cov JSON
 - **[NEW] Branch coverage details**: CodeLens display and hover tooltips showing branch execution + missing branches
 - **[NEW] LLVM region counts**: Hover shows per-line region execution counts from LLVM JSON exports
 - Extensive logging and insight into operations via the output logs
@@ -53,6 +53,7 @@ See [examples directory](example) on how to setup a project.
 - [DotNet](example/dotnet)
 - [C](example/c) **(NEW)** - Cobertura XML via gcovr
 - [C++](example/cpp) **(NEW)** - Cobertura XML (gcovr) & LLVM-cov JSON
+- [Rust](example/rust) **(NEW)** - LLVM-cov JSON via cargo-tarpaulin or cargo-llvm-cov
 
 ## Tips and Tricks
 **Using Breakpoints**: Currently to both use the extension and code debugging breakpoints, you need to disable the gutter coverage and enable the line coverage via the settings ( `coverage-gutters.showGutterCoverage` and `coverage-gutters.showLineCoverage` respectively).

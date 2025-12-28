@@ -28,6 +28,7 @@
     "code coverage",
     "lcov",
     "xml",
+    "rust",
     "multi-root ready"
   ],
   "main": "./dist/extension",
