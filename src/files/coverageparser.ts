@@ -1,9 +1,11 @@
+import path from "path";
 import { parseContent as parseContentClover } from "@cvrg-report/clover-json";
 import { parseContent as parseContentCobertura } from "cobertura-parse";
 import { parseContent as parseContentJacoco } from "@7sean68/jacoco-parse";
 import { Section, source } from "lcov-parse";
 import { OutputChannel } from "vscode";
 
+import { isPathAbsolute } from "../helpers";
 import { CoverageFile, CoverageType } from "./coveragefile";
 
 export class CoverageParser {
@@ -101,6 +103,7 @@ export class CoverageParser {
             };
 
             try {
+                const coberturaSources = this.extractCoberturaSources(xmlFile);
                 // Pre-parse Cobertura XML to extract per-line condition coverage details and branch hit counts
                 const coberturaConditionsByFile = new Map<
                     string,
@@ -255,16 +258,43 @@ export class CoverageParser {
                             }
                             return sectionWithMeta;
                         });
-                        await this.addSections(coverages, augmented);
+                        const expandedSections = augmented.flatMap((section) =>
+                            this.expandCoberturaSection(section, coberturaSources),
+                        );
+                        await this.addSections(coverages, expandedSections);
                         return resolve();
-                    },
-                    true
+                    }
                 );
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
                 checkError(error);
             }
         });
+    }
+
+    private expandCoberturaSection(section: Section, sources: string[]): Section[] {
+        const uniqueSources = Array.from(new Set(sources.map((source) => source.trim()).filter(Boolean)));
+
+        if (!uniqueSources.length || isPathAbsolute(section.file)) {
+            return [section];
+        }
+
+        const expanded = uniqueSources.map((sourcePath) => {
+            const absolutePath = path.join(sourcePath, section.file);
+            return {
+                ...section,
+                file: absolutePath,
+            } as Section;
+        });
+
+        // Keep the original relative entry so existing matching logic still works,
+        // but also return absolute variants rooted at <sources> for remote paths.
+        return [section, ...expanded];
+    }
+
+    private extractCoberturaSources(xmlFile: string): string[] {
+        const matches = Array.from(xmlFile.matchAll(/<source>([^<]+)<\/source>/g));
+        return matches.map(([, source]) => source.trim()).filter(Boolean);
     }
 
     private xmlExtractJacoco(

@@ -147,6 +147,32 @@ suite("CoverageParser Tests", () => {
         expect(first.branches?.found).to.be.greaterThan(0);
     });
 
+    test("applies Cobertura <source> roots to files @integration", async () => {
+        const xmlPath = path.join(__dirname, "..", "..", "..", "example", "python", "cov.xml");
+        const xmlContent = fs.readFileSync(xmlPath, "utf8");
+        const files = new Map<string, string>([[xmlPath, xmlContent]]);
+
+        const parser = new CoverageParser(fakeOutputChannel);
+        const sections = await parser.filesToSections(files);
+
+        const normalizedFiles = Array.from(sections.values()).map((section) => path.normalize(section.file));
+        // The cov.xml has <source>/workspaces/vscode-coverage-gutters/example/python</source>
+        // and files like python/foobar/tests/bar/a.py, so we should find both the relative paths
+        // (from cobertura-parse) and the source-rooted absolute paths
+        const relativePath = path.normalize(path.join("python", "foobar", "tests", "bar", "a.py"));
+        const sourceRootedPath = path.normalize(path.join(
+            "/workspaces/vscode-coverage-gutters/example/python",
+            "python",
+            "foobar",
+            "tests",
+            "bar",
+            "a.py",
+        ));
+
+        expect(normalizedFiles).to.include(relativePath);
+        expect(normalizedFiles).to.include(sourceRootedPath);
+    });
+
     test("parses C++ LLVM JSON export @integration", async () => {
         const jsonPath = path.join(__dirname, "..", "..", "..", "example", "cpp", "llvm-cov.json");
         const jsonContent = fs.readFileSync(jsonPath, "utf8");
