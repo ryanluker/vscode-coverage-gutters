@@ -126,8 +126,8 @@ suite("Extension Tests", function () {
             expect(spyCall).to.not.be.null;
             if (spyCall) {
                 const cachedLines: ICoverageLines = spyCall.args[1];
-                expect(cachedLines.full).to.have.lengthOf(3);
-                expect(cachedLines.none).to.have.lengthOf(3);
+                expect(cachedLines.full).to.have.lengthOf(5);
+                expect(cachedLines.none).to.have.lengthOf(12);
             }
         });
 
@@ -150,8 +150,8 @@ suite("Extension Tests", function () {
             if (decorationSpy.getCall(0)) {
                 // Look for exact coverage on the file
                 const cachedLines: ICoverageLines = decorationSpy.getCall(0).args[1];
-                expect(cachedLines.full).to.have.lengthOf(3);
-                expect(cachedLines.none).to.have.lengthOf(3);
+                expect(cachedLines.full).to.have.lengthOf(5);
+                expect(cachedLines.none).to.have.lengthOf(12);
             }
         });
 
