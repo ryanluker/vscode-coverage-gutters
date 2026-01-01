@@ -1,9 +1,11 @@
+import path from "path";
 import { parseContent as parseContentClover } from "@cvrg-report/clover-json";
 import { parseContent as parseContentCobertura } from "cobertura-parse";
 import { parseContent as parseContentJacoco } from "@7sean68/jacoco-parse";
 import { Section, source } from "lcov-parse";
 import { OutputChannel } from "vscode";
 
+import { isPathAbsolute } from "../helpers";
 import { CoverageFile, CoverageType } from "./coveragefile";
 
 export class CoverageParser {
@@ -47,8 +49,15 @@ export class CoverageParser {
                         fileContent
                     );
                     break;
+                case CoverageType.LLVM_COV_JSON:
+                    await this.jsonExtractLlvmCov(
+                        coverages,
+                        fileName,
+                        fileContent
+                    );
+                    break;
                 case CoverageType.LCOV:
-                    this.lcovExtract(coverages, fileName, fileContent);
+                    await this.lcovExtract(coverages, fileName, fileContent);
                     break;
                 default:
                     break;
@@ -94,20 +103,198 @@ export class CoverageParser {
             };
 
             try {
+                const coberturaSources = this.extractCoberturaSources(xmlFile);
+                // Pre-parse Cobertura XML to extract per-line condition coverage details and branch hit counts
+                const coberturaConditionsByFile = new Map<
+                    string,
+                    Record<number, {
+                        coveragePercent: number;
+                        edgesCovered: number;
+                        edgesTotal: number;
+                        conditions: Array<{ number: number; type: string; coveragePercent: number }>;
+                    }>
+                >();
+
+                // Extract branch hit counts from Cobertura XML
+                const branchHitCountsByFile = new Map<
+                    string,
+                    Record<number, Array<{ branchNum: number; hits: number }>>
+                >();
+
+                // Lightweight XML scan to track current filename and line conditions
+                let currentFilename: string | undefined;
+                const classOpenRegex = /<class\s+[^>]*filename="([^"]+)"[^>]*>/g;
+                // Match <line> with optional condition-coverage attribute and nested content
+                const lineRegex = new RegExp(
+                    `<line\\s+number="(\\d+)"[^>]*?` +
+                    `(?:condition-coverage="(\\d+)%\\s*\\((\\d+)/(\\d+)\\)")?` +
+                    `[^>]*>([\\s\\S]*?)<\\/line>`,
+                    'g'
+                );
+                const conditionRegex = /<condition\s+number="(\d+)"\s+type="([^"]+)"\s+coverage="(\d+)%"\s*\/?>/g;
+                const branchRegex = /<branch\s+number="(\d+)"\s+type="[^"]*"\s+hits="(\d+)"/g;
+
+                // Iterate through the XML string to capture classes and their lines
+                // First pass: mark class ranges and process nested lines within
+                // For simplicity, we'll walk the XML string sequentially.
+                let index = 0;
+                while (index < xmlFile.length) {
+                    // Find next class or line
+                    classOpenRegex.lastIndex = index;
+                    const classMatch = classOpenRegex.exec(xmlFile);
+                    if (classMatch && (classMatch.index >= index)) {
+                        currentFilename = classMatch[1];
+                        if (!coberturaConditionsByFile.has(currentFilename)) {
+                            coberturaConditionsByFile.set(currentFilename, {});
+                        }
+                        index = classOpenRegex.lastIndex;
+                        continue;
+                    }
+
+                    // Process lines using the current filename context
+                    lineRegex.lastIndex = index;
+                    const lineMatch = lineRegex.exec(xmlFile);
+                    if (lineMatch && (lineMatch.index >= index)) {
+                        const lineNumber = Number(lineMatch[1]);
+                        const covPercent = lineMatch[2] ? Number(lineMatch[2]) : 0;
+                        const edgesCovered = lineMatch[3] ? Number(lineMatch[3]) : 0;
+                        const edgesTotal = lineMatch[4] ? Number(lineMatch[4]) : 0;
+                        const lineInner = lineMatch[5] || "";
+
+                        const conditions: Array<{ number: number; type: string; coveragePercent: number }> = [];
+                        let condMatch: RegExpExecArray | null;
+                        conditionRegex.lastIndex = 0;
+                        while ((condMatch = conditionRegex.exec(lineInner)) !== null) {
+                            conditions.push({
+                                number: Number(condMatch[1]),
+                                type: condMatch[2],
+                                coveragePercent: Number(condMatch[3]),
+                            });
+                        }
+
+                        // Extract branch hit counts from this line
+                        const branches: Array<{ branchNum: number; hits: number }> = [];
+                        branchRegex.lastIndex = 0;
+                        let branchMatch: RegExpExecArray | null;
+                        while ((branchMatch = branchRegex.exec(lineInner)) !== null) {
+                            branches.push({
+                                branchNum: Number(branchMatch[1]),
+                                hits: Number(branchMatch[2]),
+                            });
+                        }
+
+                        if (currentFilename) {
+                            const fileMap = coberturaConditionsByFile.get(currentFilename)!;
+                            fileMap[lineNumber] = {
+                                coveragePercent: covPercent,
+                                edgesCovered,
+                                edgesTotal,
+                                conditions,
+                            };
+
+                            // Store branch hit counts
+                            if (branches.length > 0) {
+                                if (!branchHitCountsByFile.has(currentFilename)) {
+                                    branchHitCountsByFile.set(currentFilename, {});
+                                }
+                                branchHitCountsByFile.get(currentFilename)![lineNumber] = branches;
+                            }
+                        }
+
+                        index = lineRegex.lastIndex;
+                        continue;
+                    }
+
+                    // Advance to avoid infinite loop
+                    index += 1;
+                }
+
                 parseContentCobertura(
                     xmlFile,
                     async (err, data) => {
                         checkError(err);
-                        await this.addSections(coverages, data);
+                        // Attach Cobertura conditions metadata and branch hit counts to each section by filename
+                        const augmented = data.map((section) => {
+                            const sectionWithMeta = section as Section & {
+                                __coberturaConditionsByLine?: Record<number, { coveragePercent: number; edgesCovered: number; edgesTotal: number; conditions: Array<{ number: number; type: string; coveragePercent: number }> }>;
+                                __branchHitCounts?: Record<number, Array<{ branchNum: number; hits: number }>>;
+                            };
+                            const fileMap = coberturaConditionsByFile.get(section.file);
+                            if (fileMap) {
+                                sectionWithMeta.__coberturaConditionsByLine = fileMap;
+                            }
+                            const branchMap = branchHitCountsByFile.get(section.file);
+                            if (branchMap && section.branches && section.branches.details) {
+                                sectionWithMeta.__branchHitCounts = branchMap;
+                                // Apply actual branch hit counts to the section by line
+                                for (const branch of section.branches.details) {
+                                    const branchesOnLine = branchMap[branch.line];
+                                    if (branchesOnLine && branchesOnLine.length > 0) {
+                                        // Try to find matching branch by number
+                                        for (const hitBranch of branchesOnLine) {
+                                            // The branch.branch might be (branchNum * 2) or similar, try different matching strategies
+                                            if (branch.branch === hitBranch.branchNum || 
+                                                branch.branch === hitBranch.branchNum * 2 ||
+                                                branch.branch === hitBranch.branchNum * 2 + 1 ||
+                                                Math.floor(branch.branch / 2) === hitBranch.branchNum) {
+                                                branch.taken = hitBranch.hits;
+                                                break;
+                                            }
+                                        }
+                                        // If no match found and only one branch on this line, use it
+                                        if (branch.taken === 0 || branch.taken === 1) {
+                                            if (branchesOnLine.length === 1) {
+                                                branch.taken = branchesOnLine[0].hits;
+                                            } else if (branchesOnLine.length === 2) {
+                                                // For two branches, assign based on branch index (0 -> first, 1 -> second)
+                                                const branchIndex = branch.branch % 2;
+                                                if (branchIndex < branchesOnLine.length) {
+                                                    branch.taken = branchesOnLine[branchIndex].hits;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return sectionWithMeta;
+                        });
+                        const expandedSections = augmented.flatMap((section) =>
+                            this.expandCoberturaSection(section, coberturaSources),
+                        );
+                        await this.addSections(coverages, expandedSections);
                         return resolve();
-                    },
-                    true
+                    }
                 );
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
                 checkError(error);
             }
         });
+    }
+
+    private expandCoberturaSection(section: Section, sources: string[]): Section[] {
+        const uniqueSources = Array.from(new Set(sources.map((source) => source.trim()).filter(Boolean)));
+
+        if (!uniqueSources.length || isPathAbsolute(section.file)) {
+            return [section];
+        }
+
+        const expanded = uniqueSources.map((sourcePath) => {
+            const absolutePath = path.join(sourcePath, section.file);
+            return {
+                ...section,
+                file: absolutePath,
+            } as Section;
+        });
+
+        // Keep the original relative entry so existing matching logic still works,
+        // but also return absolute variants rooted at <sources> for remote paths.
+        return [section, ...expanded];
+    }
+
+    private extractCoberturaSources(xmlFile: string): string[] {
+        const matches = Array.from(xmlFile.matchAll(/<source>([^<]+)<\/source>/g));
+        return matches.map(([, source]) => source.trim()).filter(Boolean);
     }
 
     private xmlExtractJacoco(
@@ -254,19 +441,21 @@ export class CoverageParser {
             branch: number;
         }) => [branch.line, branch.block, branch.branch].join(":");
 
-        const taken = new Set(
-            coverage.branches.details
-                .filter(({ taken }) => taken > 0)
-                .map(getKey)
-        );
+        // Create a map of branch keys to their taken counts from the new coverage
+        const branchTakenMap = new Map<string, number>();
+        coverage.branches.details.forEach((branch) => {
+            const key = getKey(branch);
+            branchTakenMap.set(key, branch.taken);
+        });
 
         const details = existingCoverage.branches.details.map((branch) => {
             const key = getKey(branch);
             found += 1;
             seen.add(key);
 
-            if (taken.has(key)) {
-                branch.taken += 1;
+            const newTaken = branchTakenMap.get(key);
+            if (newTaken !== undefined) {
+                branch.taken += newTaken;
             }
 
             if (branch.taken > 0) {
@@ -303,4 +492,226 @@ export class CoverageParser {
             );
         }
     }
+
+    private async jsonExtractLlvmCov(
+        coverages: Map<string, Section>,
+        coverageFilename: string,
+        jsonFile: string
+    ) {
+        return new Promise<void>((resolve) => {
+            try {
+                const parsed = JSON.parse(jsonFile);
+                let sections: Section[] = [];
+
+                // Prefer LLVM-cov JSON structure if present
+                sections = this.transformLlvmCovToSections(parsed);
+
+                // Fallback: gcovr JSON structure { files: [{ file, lines: [{ line_number, count, branches: [{count}...] }] }] }
+                if (sections.length === 0 && typeof parsed === "object" && parsed !== null && Array.isArray(parsed.files)) {
+                    const gcovrFiles = parsed.files as Array<{ file: string; lines: Array<{ line_number: number; count: number; branches?: Array<{ count: number }> }> }>;
+                    for (const f of gcovrFiles) {
+                        if (!f || typeof f.file !== "string") continue;
+                        const section: Section = {
+                            title: "gcovr-json",
+                            file: f.file,
+                            lines: { details: [], found: 0, hit: 0 },
+                            functions: { details: [], found: 0, hit: 0 },
+                            branches: { details: [], found: 0, hit: 0 },
+                        };
+                        for (const ln of f.lines || []) {
+                            const lineNo = Number(ln.line_number);
+                            if (!lineNo || lineNo <= 0) continue;
+                            const hit = ln.count > 0 ? 1 : 0;
+                            section.lines.details.push({ line: lineNo, hit });
+                            section.lines.found += 1;
+                            if (hit > 0) section.lines.hit += 1;
+                            // Branches: synthesize branch entries per line
+                            if (Array.isArray(ln.branches)) {
+                                ln.branches.forEach((b, idx) => {
+                                    const taken = Number(b.count) || 0;
+                                    section.branches!.details.push({ line: lineNo, block: 0, branch: idx, taken });
+                                    section.branches!.found += 1;
+                                    if (taken > 0) section.branches!.hit += 1;
+                                });
+                            }
+                        }
+                        sections.push(section);
+                    }
+                }
+                
+                if (sections.length === 0) {
+                    this.outputChannel.appendLine(
+                        `[${Date.now()}][coverageparser][json]: No coverage data found in ${coverageFilename}`
+                    );
+                } else {
+                    this.outputChannel.appendLine(
+                        `[${Date.now()}][coverageparser][json]: Parsed ${sections.length} section(s) from ${coverageFilename}`
+                    );
+                }
+
+                this.addSections(coverages, sections).then(() => resolve()).catch((error) => {
+                    const err = error as Error;
+                    err.message = `filename: ${coverageFilename} ${err.message}`;
+                    this.handleError("json-parse", err);
+                    resolve();
+                });
+            } catch (error: unknown) {
+                const err = error as Error;
+                err.message = `filename: ${coverageFilename} ${err.message}`;
+                this.handleError("llvm-cov-parse", err);
+                return resolve();
+            }
+        });
+    }
+
+    /**
+     * Transforms LLVM-cov JSON format to normalized Section format
+     * LLVM-cov JSON structure:
+     * {
+     *   "data": [
+     *     {
+     *       "files": [
+     *         {
+     *           "filename": "path/to/file.cpp",
+     *           "segments": [[line, col, count, hasCount, isRegionEntry, isGapRegion], ...],
+     *           "branches": [[startLine, startCol, endLine, endCol, count, falseCount, blockId, branchId, type], ...]
+     *         }
+     *       ]
+     *     }
+     *   ]
+     * }
+     */
+    private transformLlvmCovToSections(jsonData: unknown): Section[] {
+        const sections: Section[] = [];
+
+        type LlvmCovSegment = [number, number, number, boolean, boolean?, boolean?];
+        type LlvmCovBranch = [number, number, number, number, number, number, number, number, unknown?];
+        type LlvmCovFile = {
+            filename: string;
+            segments?: unknown;
+            branches?: unknown;
+        };
+        type LlvmCovDataEntry = { files?: unknown };
+        type LlvmCovJson = { data?: unknown };
+
+        const parsed = jsonData as LlvmCovJson;
+        if (!Array.isArray(parsed?.data)) {
+            return sections;
+        }
+
+        for (const entry of parsed.data as LlvmCovDataEntry[]) {
+            if (!Array.isArray(entry?.files)) {
+                continue;
+            }
+
+            for (const file of entry.files as LlvmCovFile[]) {
+                if (!file || typeof file.filename !== "string") {
+                    continue;
+                }
+                const section: Section = {
+                    title: "llvm-cov",
+                    file: file.filename,
+                    lines: {
+                        details: [],
+                        found: 0,
+                        hit: 0,
+                    },
+                    functions: {
+                        details: [],
+                        found: 0,
+                        hit: 0,
+                    },
+                    branches: {
+                        details: [],
+                        found: 0,
+                        hit: 0,
+                    },
+                };
+
+                // Process segments to extract line coverage
+                 // Segment format: [line, col, count, hasCount, isRegionEntry, isGapRegion]
+                const lineHits = new Map<number, number>();
+                // Keep raw LLVM segment entries by line for region-wise hover details
+                const llvmSegmentsByLine: Record<number, Array<{ col: number; count: number; hasCount: boolean; isRegionEntry: boolean; isGapRegion: boolean }>> = {};
+                if (Array.isArray(file.segments)) {
+                    for (const segment of file.segments as LlvmCovSegment[]) {
+                        if (!Array.isArray(segment) || segment.length < 4) {
+                            continue;
+                        }
+                        const [line, col, count, hasCount, isRegionEntry, isGapRegion] = segment;
+                        if (typeof line !== "number" || line <= 0 || !hasCount) {
+                            continue;
+                        }
+                        const existingHit = lineHits.get(line) || 0;
+                        lineHits.set(line, Math.max(existingHit, count > 0 ? 1 : 0));
+                        if (!llvmSegmentsByLine[line]) {
+                            llvmSegmentsByLine[line] = [];
+                        }
+                        llvmSegmentsByLine[line].push({
+                            col: Number(col) || 0,
+                            count: Number(count) || 0,
+                            hasCount: !!hasCount,
+                            isRegionEntry: !!isRegionEntry,
+                            isGapRegion: !!isGapRegion,
+                        });
+                    }
+                }
+
+                // Convert line hits to coverage details
+                const lineDetails: Array<{line: number, hit: number}> = [];
+                for (const [line, hit] of lineHits.entries()) {
+                    lineDetails.push({ line, hit });
+                    section.lines.found += 1;
+                    if (hit > 0) {
+                        section.lines.hit += 1;
+                    }
+                }
+                section.lines.details = lineDetails;
+
+                // Process branches
+                 // Branch format: [startLine, startCol, endLine, endCol, count, falseCount, blockId, branchId, type]
+                if (Array.isArray(file.branches)) {
+                    for (const branch of file.branches as LlvmCovBranch[]) {
+                        if (!Array.isArray(branch) || branch.length < 8) {
+                            continue;
+                        }
+                        const [startLine, , , , count, falseCount, blockId, branchId] = branch;
+                        if (typeof startLine !== "number" || typeof blockId !== "number" || typeof branchId !== "number") {
+                            continue;
+                        }
+                        const trueDetail = {
+                            line: startLine,
+                            block: blockId,
+                            branch: branchId * 2, // edge 0 (true)
+                            taken: Number(count),
+                        };
+                        const falseDetail = {
+                            line: startLine,
+                            block: blockId,
+                            branch: branchId * 2 + 1, // edge 1 (false)
+                            taken: Number(falseCount),
+                        };
+
+                        section.branches!.details.push(trueDetail);
+                        section.branches!.details.push(falseDetail);
+                        section.branches!.found += 2;
+                        if (trueDetail.taken > 0) { section.branches!.hit += 1; }
+                        if (falseDetail.taken > 0) { section.branches!.hit += 1; }
+                    }
+                }
+
+                // Attach raw LLVM segment data for hover providers (non-standard extension)
+                type SectionWithSegments = Section & {
+                    __llvmSegmentsByLine?: Record<number, Array<{ col: number; count: number; hasCount: boolean; isRegionEntry: boolean; isGapRegion: boolean }>>;
+                };
+                const sectionWithSegments: SectionWithSegments = section;
+                sectionWithSegments.__llvmSegmentsByLine = llvmSegmentsByLine;
+
+                sections.push(sectionWithSegments);
+            }
+        }
+
+        return sections;
+    }
+
 }

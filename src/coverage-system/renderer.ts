@@ -103,53 +103,51 @@ export class Renderer {
         sections: Section[],
         coverageLines: ICoverageLines,
     ) {
-        sections.forEach((section) => {
-            this.filterLineCoverage(section, coverageLines);
-            this.filterBranchCoverage(section, coverageLines);
-        });
-    }
+        // Aggregate coverage by line number to avoid duplicate entries when the same
+        // file appears in multiple coverage reports (absolute and relative paths,
+        // or when multiple test suites report the same file).
+        const lineState = new Map<number, "full" | "partial" | "none">();
 
-    private filterLineCoverage(
-        section: Section,
-        coverageLines: ICoverageLines,
-    ) {
-        if (!section || !section.lines) {
-            return;
-        }
-        section.lines.details
-        .filter((detail) => detail.line > 0)
-        .forEach((detail) => {
-            const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
-            if (detail.hit > 0) {
-                // Evaluates to true if at least one element in range is equal to LineRange
-                if (coverageLines.none.some((range) => range.isEqual(lineRange))) {
-                    coverageLines.none = coverageLines.none.filter((range) => !range.isEqual(lineRange))
-                }
-                coverageLines.full.push(lineRange);
-            } else {
-                if (!coverageLines.full.some((range) => range.isEqual(lineRange))) {
-                    // only add a none coverage if no full ones exist
-                    coverageLines.none.push(lineRange);
-                }
+        sections.forEach((section) => {
+            if (section?.lines?.details) {
+                section.lines.details
+                    .filter((detail) => detail.line > 0)
+                    .forEach((detail) => {
+                        const current = lineState.get(detail.line);
+                        if (detail.hit > 0) {
+                            // Keep partial precedence if it was already marked
+                            if (current !== "partial") {
+                                lineState.set(detail.line, "full");
+                            }
+                        } else if (!current) {
+                            // Only set none if we have not seen coverage for the line
+                            lineState.set(detail.line, "none");
+                        }
+                    });
+            }
+
+            if (section?.branches?.details) {
+                section.branches.details
+                    .filter((detail) => detail.line > 0 && detail.taken === 0)
+                    .forEach((detail) => {
+                        // Branch misses trump any previous state for the line
+                        lineState.set(detail.line, "partial");
+                    });
             }
         });
-    }
 
-    private filterBranchCoverage(
-        section: Section,
-        coverageLines: ICoverageLines,
-    ) {
-        if (!section || !section.branches) {
-            return;
-        }
-        section.branches.details
-        .filter((detail) => detail.taken === 0 && detail.line > 0)
-        .forEach((detail) => {
-            const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
-            // Evaluates to true if at least one element in range is equal to partialRange
-            if (coverageLines.full.some((range) => range.isEqual(partialRange))){
-                coverageLines.full = coverageLines.full.filter((range) => !range.isEqual(partialRange));
-                coverageLines.partial.push(partialRange);
+        coverageLines.full = [];
+        coverageLines.none = [];
+        coverageLines.partial = [];
+
+        lineState.forEach((state, line) => {
+            const range = new Range(line - 1, 0, line - 1, 0);
+            if (state === "full") {
+                coverageLines.full.push(range);
+            } else if (state === "none") {
+                coverageLines.none.push(range);
+            } else {
+                coverageLines.partial.push(range);
             }
         });
     }
