@@ -24,12 +24,5 @@ jobs:
     - run: npm run build
     - run: xvfb-run -a npm test
       if: runner.os == 'Linux'
-    - run: |
-        for i in {1..3}; do
-          npm test
-          if [ $i -eq 3 ]; then
-            echo "Command failed after 3 attempts."
-            exit 1
-          fi
-        done
+    - run: npm test
       if: runner.os != 'Linux'
