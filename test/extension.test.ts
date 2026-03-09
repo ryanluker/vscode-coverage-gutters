@@ -9,11 +9,6 @@ import { Gutters, PREVIEW_COMMAND } from "../src/extension/gutters";
 
 suite("Extension Tests", function () {
     const disposables: vscode.Disposable[] = [];
-    
-    // Adds a couple extra retries as the macos nightly builds can sometimes 
-    // fail on the E2E tests.
-    this.retries(3);
-    
     afterEach(() => {
         // Clear mocks after each test to avoid cascading failures due to one test failing
         sinon.restore();
