@@ -8,7 +8,8 @@ import { StatusBarToggler } from "../src/extension/statusbartoggler";
 import { Gutters, PREVIEW_COMMAND } from "../src/extension/gutters";
 
 suite("Extension Tests", function () {
-    const disposables: v
+    const disposables: vscode.Disposable[] = [];
+
     afterEach(() => {
         // Clear mocks after each test to avoid cascading failures due to one test failing
         sinon.restore();
@@ -70,6 +71,8 @@ suite("Extension Tests", function () {
         // can sometimes fail on this E2E test.
         this.retries(3);
 
+        const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
+        expect(true).to.be.false
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
         expect(true).to.be.false;
         const testCoverage = await vscode.workspace.findFiles("**/remote-test-coverage.js", "**/node_modules/**");
