@@ -73,8 +73,7 @@ suite("Extension Tests", function () {
 
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
         expect(true).to.be.false
-        const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-        expect(true).to.be.false;
+
         const testCoverage = await vscode.workspace.findFiles("**/remote-test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
