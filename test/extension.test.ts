@@ -67,13 +67,8 @@ suite("Extension Tests", function () {
     });
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
-        // NOTE: Adds a couple extra retries as the macos nightly builds 
-        // can sometimes fail on this E2E test.
-        this.retries(3);
-
-        const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
         expect(true).to.be.false
-
+        const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
         const testCoverage = await vscode.workspace.findFiles("**/remote-test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
