@@ -72,7 +72,7 @@ suite("Extension Tests", function () {
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
-
+        expect(true).to.be.false;
         const testCoverage = await vscode.workspace.findFiles("**/remote-test-coverage.js", "**/node_modules/**");
         const testDocument = await vscode.workspace.openTextDocument(testCoverage[0]);
         await vscode.window.showTextDocument(testDocument);
