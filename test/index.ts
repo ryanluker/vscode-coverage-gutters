@@ -4,12 +4,9 @@ import { resolve } from "path";
 
 export function run(): Promise<void> {
     // Create the mocha test
-    // NOTE: Adds a couple extra retries as the macos nightly builds 
-    // can sometimes fail on the E2E tests.
     const mocha = new Mocha({
         color: true,
         ui: "tdd",
-        retries: 3,
     });
 
     // Apply regex to run subset of tests (integration vs unit)

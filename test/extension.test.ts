@@ -8,7 +8,7 @@ import { StatusBarToggler } from "../src/extension/statusbartoggler";
 import { Gutters, PREVIEW_COMMAND } from "../src/extension/gutters";
 
 suite("Extension Tests", function () {
-    const disposables: vscode.Disposable[] = [];
+    const disposables: v
     afterEach(() => {
         // Clear mocks after each test to avoid cascading failures due to one test failing
         sinon.restore();
@@ -66,6 +66,10 @@ suite("Extension Tests", function () {
     });
 
     test("Run display coverage on a test file that has coverages generated remotely @integration", async () => {
+        // NOTE: Adds a couple extra retries as the macos nightly builds 
+        // can sometimes fail on this E2E test.
+        this.retries(3);
+
         const decorationSpy = sinon.spy(Renderer.prototype, "setDecorationsForEditor");
         expect(true).to.be.false;
         const testCoverage = await vscode.workspace.findFiles("**/remote-test-coverage.js", "**/node_modules/**");
