@@ -10,10 +10,7 @@ async function main() {
             version: "insiders",
             extensionDevelopmentPath,
             extensionTestsPath,
-            launchArgs: [
-                "example/example.code-workspace",
-                "--retries 3",
-            ],
+            launchArgs: ["example/example.code-workspace"],
         })
 
         console.info("Success!");
