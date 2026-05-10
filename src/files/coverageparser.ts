@@ -21,39 +21,42 @@ export class CoverageParser {
         files: Map<string, string>
     ): Promise<Map<string, Section>> {
         const coverages = new Map<string, Section>();
+        const parsePromises: Promise<Section[]>[] = [];
 
         for (const [fileName, fileContent] of files) {
             // get coverage file type
             const coverageFile = new CoverageFile(fileContent);
             switch (coverageFile.type) {
                 case CoverageType.CLOVER:
-                    await this.xmlExtractClover(
-                        coverages,
+                    parsePromises.push(this.xmlExtractClover(
                         fileName,
                         fileContent
-                    );
+                    ));
                     break;
                 case CoverageType.JACOCO:
-                    await this.xmlExtractJacoco(
-                        coverages,
+                    parsePromises.push(this.xmlExtractJacoco(
                         fileName,
                         fileContent
-                    );
+                    ));
                     break;
                 case CoverageType.COBERTURA:
-                    await this.xmlExtractCobertura(
-                        coverages,
+                    parsePromises.push(this.xmlExtractCobertura(
                         fileName,
                         fileContent
-                    );
+                    ));
                     break;
                 case CoverageType.LCOV:
-                    this.lcovExtract(coverages, fileName, fileContent);
+                    parsePromises.push(this.lcovExtract(fileName, fileContent));
                     break;
                 default:
                     break;
             }
         }
+
+        const results = await Promise.all(parsePromises);
+        const flattenedSections = results.reduce((acc, val) => acc.concat(val), []);
+        await this.addSections(coverages, flattenedSections);
+
         return coverages;
     }
 
@@ -80,16 +83,15 @@ export class CoverageParser {
     }
 
     private xmlExtractCobertura(
-        coverages: Map<string, Section>,
         coverageFilename: string,
         xmlFile: string
     ) {
-        return new Promise<void>((resolve) => {
+        return new Promise<Section[]>((resolve) => {
             const checkError = (err: Error) => {
                 if (err) {
                     err.message = `filename: ${coverageFilename} ${err.message}`;
                     this.handleError("cobertura-parse", err);
-                    return resolve();
+                    return resolve([]);
                 }
             };
 
@@ -98,8 +100,7 @@ export class CoverageParser {
                     xmlFile,
                     async (err, data) => {
                         checkError(err);
-                        await this.addSections(coverages, data);
-                        return resolve();
+                        return resolve(data);
                     },
                     true
                 );
@@ -111,24 +112,22 @@ export class CoverageParser {
     }
 
     private xmlExtractJacoco(
-        coverages: Map<string, Section>,
         coverageFilename: string,
         xmlFile: string
     ) {
-        return new Promise<void>((resolve) => {
+        return new Promise<Section[]>((resolve) => {
             const checkError = (err: Error) => {
                 if (err) {
                     err.message = `filename: ${coverageFilename} ${err.message}`;
                     this.handleError("jacoco-parse", err);
-                    return resolve();
+                    return resolve([]);
                 }
             };
 
             try {
                 parseContentJacoco(xmlFile, async (err, data) => {
                     checkError(err);
-                    await this.addSections(coverages, data);
-                    return resolve();
+                    return resolve(data);
                 });
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
@@ -138,39 +137,37 @@ export class CoverageParser {
     }
 
     private async xmlExtractClover(
-        coverages: Map<string, Section>,
         coverageFilename: string,
         xmlFile: string
-    ) {
+    ): Promise<Section[]> {
         try {
             const data = await parseContentClover(xmlFile);
-            await this.addSections(coverages, data);
+            return data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             error.message = `filename: ${coverageFilename} ${error.message}`;
             this.handleError("clover-parse", error);
+            return [];
         }
     }
 
     private lcovExtract(
-        coverages: Map<string, Section>,
         coverageFilename: string,
         lcovFile: string
     ) {
-        return new Promise<void>((resolve) => {
+        return new Promise<Section[]>((resolve) => {
             const checkError = (err: Error) => {
                 if (err) {
                     err.message = `filename: ${coverageFilename} ${err.message}`;
                     this.handleError("lcov-parse", err);
-                    return resolve();
+                    return resolve([]);
                 }
             };
 
             try {
                 source(lcovFile, async (err, data) => {
                     checkError(err);
-                    await this.addSections(coverages, data);
-                    return resolve();
+                    return resolve(data);
                 });
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (error: any) {
