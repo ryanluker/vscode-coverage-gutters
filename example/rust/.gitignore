@@ -1,0 +1,11 @@
+# Rust build artifacts
+target/
+Cargo.lock
+
+# Coverage files
+*.profraw
+*.profdata
+
+# IDE
+.vscode/*
+!.vscode/settings.json

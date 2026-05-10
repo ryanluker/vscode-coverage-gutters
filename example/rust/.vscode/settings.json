@@ -1,0 +1,12 @@
+{
+    "coverage-gutters.coverageFileNames": [
+        "llvm-cov.json",
+        "cobertura.json",
+        "cobertura.xml",
+        "lcov.info",
+        "cov.xml",
+        "jacoco.xml"
+    ],
+    "coverage-gutters.showLineCoverage": true,
+    "coverage-gutters.showRulerCoverage": true
+}

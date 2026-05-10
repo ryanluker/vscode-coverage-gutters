@@ -15,6 +15,11 @@ import { FilesLoader } from "../files/filesloader";
 import { Renderer } from "./renderer";
 import { SectionFinder } from "./sectionfinder";
 
+interface BranchCoverageProvider {
+    updateCoverageData(data: Map<string, Section>): void;
+    clearCoverageData(): void;
+}
+
 enum Status {
     ready = "READY",
     initializing = "INITIALIZING",
@@ -37,6 +42,9 @@ export class CoverageService {
     private sectionFinder: SectionFinder;
 
     private cache: Map<string, Section>;
+    private branchCoverageCodeLensProvider: BranchCoverageProvider | undefined;
+    private branchCoverageHoverProvider: BranchCoverageProvider | undefined;
+    private fileDecorationProvider: { updateCoverageData(data: Map<string, Section>): void } | undefined;
 
     constructor(
         configStore: Config,
@@ -58,6 +66,40 @@ export class CoverageService {
         );
         this.coverageParser = new CoverageParser(this.outputChannel);
         this.statusBar = statusBar;
+    }
+
+    public getCache(): Map<string, Section> {
+        return this.cache;
+    }
+
+    public setProviders(codeLensProvider: BranchCoverageProvider, hoverProvider: BranchCoverageProvider) {
+        this.branchCoverageCodeLensProvider = codeLensProvider;
+        this.branchCoverageHoverProvider = hoverProvider;
+    }
+
+    public setFileDecorationProvider(provider: { updateCoverageData(data: Map<string, Section>): void }) {
+        this.fileDecorationProvider = provider;
+    }
+
+    public notifyProvidersOfCoverageUpdate() {
+        if (this.branchCoverageCodeLensProvider) {
+            this.branchCoverageCodeLensProvider.updateCoverageData(this.cache);
+        }
+        if (this.branchCoverageHoverProvider) {
+            this.branchCoverageHoverProvider.updateCoverageData(this.cache);
+        }
+        if (this.fileDecorationProvider) {
+            this.fileDecorationProvider.updateCoverageData(this.cache);
+        }
+    }
+
+    public clearProvidersData() {
+        if (this.branchCoverageCodeLensProvider) {
+            this.branchCoverageCodeLensProvider.clearCoverageData();
+        }
+        if (this.branchCoverageHoverProvider) {
+            this.branchCoverageHoverProvider.clearCoverageData();
+        }
     }
 
     public dispose() {
@@ -90,6 +132,7 @@ export class CoverageService {
         try {
             this.statusBar.setLoading(true);
             this.renderer.renderCoverage(new Map(), window.visibleTextEditors);
+            this.clearProvidersData();
         } finally {
             this.statusBar.setLoading(false);
             this.isCoverageDisplayed = false;
@@ -130,6 +173,7 @@ export class CoverageService {
             this.updateServiceState(Status.rendering);
             this.renderer.renderCoverage(this.cache, window.visibleTextEditors);
             this.setStatusBarCoverage(this.cache, window.activeTextEditor);
+            this.notifyProvidersOfCoverageUpdate();
             this.updateServiceState(Status.ready);
         } finally {
             this.statusBar.setLoading(false);
@@ -187,6 +231,7 @@ export class CoverageService {
             this.statusBar.setLoading(true);
             this.renderer.renderCoverage(this.cache, window.visibleTextEditors || []);
             this.setStatusBarCoverage(this.cache, window.activeTextEditor);
+            this.notifyProvidersOfCoverageUpdate();
             this.updateServiceState(Status.ready);
         } finally {
             this.statusBar.setLoading(false);

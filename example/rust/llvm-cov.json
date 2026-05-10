@@ -1,0 +1,209 @@
+{
+  "data": [
+    {
+      "files": [
+        {
+          "branches": [
+            [19, 9, 19, 14, 2, 0, 0, 0, 4],
+            [22, 9, 22, 14, 2, 0, 0, 0, 4],
+            [34, 9, 34, 14, 1, 1, 0, 0, 4],
+            [40, 9, 40, 14, 2, 0, 0, 0, 4],
+            [48, 5, 48, 16, 1, 0, 0, 0, 4],
+            [49, 13, 49, 21, 1, 1, 0, 0, 4],
+            [51, 13, 51, 21, 0, 1, 0, 0, 4],
+            [54, 9, 54, 31, 1, 0, 0, 0, 4],
+            [59, 9, 59, 14, 2, 0, 0, 0, 4],
+            [60, 9, 60, 14, 2, 0, 0, 0, 4],
+            [70, 9, 70, 16, 2, 0, 0, 0, 4]
+          ],
+          "expansions": [],
+          "filename": "/workspaces/vscode-coverage-gutters/example/rust/src/lib.rs",
+          "segments": [
+            [2, 0, 2, 1, 0, false, false],
+            [2, 5, 2, 20, 2, true, true],
+            [3, 4, 3, 9, 2, true, true],
+            [3, 10, 3, 11, 2, true, false],
+            [4, 4, 4, 9, 2, true, true],
+            [5, 0, 5, 1, 1, true, false],
+            [7, 0, 7, 1, 0, false, false],
+            [8, 5, 8, 23, 2, true, true],
+            [9, 4, 9, 9, 2, true, true],
+            [10, 4, 10, 9, 2, true, false],
+            [11, 0, 11, 1, 1, true, false],
+            [13, 0, 13, 1, 0, false, false],
+            [14, 5, 14, 21, 2, true, true],
+            [15, 4, 15, 9, 2, true, true],
+            [16, 4, 16, 9, 2, true, false],
+            [17, 0, 17, 1, 1, true, false],
+            [19, 5, 19, 31, 2, true, true],
+            [20, 8, 20, 12, 2, true, true],
+            [22, 8, 22, 31, 2, true, false],
+            [23, 0, 23, 1, 1, true, false],
+            [25, 0, 25, 1, 0, false, false],
+            [26, 5, 26, 18, 1, true, true],
+            [27, 8, 27, 9, 1, true, false],
+            [28, 0, 28, 1, 0, true, false],
+            [29, 8, 29, 18, 1, true, false],
+            [31, 4, 31, 9, 1, true, false],
+            [32, 0, 32, 1, 1, true, false],
+            [34, 0, 34, 1, 0, false, false],
+            [35, 5, 35, 14, 1, true, true],
+            [36, 8, 36, 13, 1, true, false],
+            [38, 8, 38, 13, 0, true, false],
+            [40, 8, 40, 13, 1, true, false],
+            [42, 4, 42, 9, 1, true, false],
+            [43, 0, 43, 1, 1, true, false],
+            [45, 0, 45, 1, 0, false, false],
+            [46, 5, 46, 14, 1, true, true],
+            [47, 8, 47, 13, 1, true, false],
+            [49, 8, 49, 13, 0, true, false],
+            [51, 8, 51, 13, 1, true, false],
+            [53, 4, 53, 9, 1, true, false],
+            [54, 0, 54, 1, 1, true, false],
+            [73, 4, 73, 24, 2, true, true],
+            [74, 8, 74, 28, 2, true, false],
+            [76, 4, 76, 24, 2, true, true],
+            [77, 8, 77, 28, 2, true, false],
+            [79, 4, 79, 24, 2, true, true],
+            [80, 8, 80, 28, 2, true, false],
+            [82, 4, 82, 24, 2, true, true],
+            [83, 8, 83, 36, 1, true, true],
+            [84, 12, 84, 16, 1, true, false],
+            [87, 4, 87, 24, 1, true, true],
+            [88, 8, 88, 28, 1, true, false],
+            [90, 4, 90, 24, 1, true, true],
+            [91, 8, 91, 28, 1, true, false],
+            [93, 4, 93, 24, 1, true, true],
+            [94, 8, 94, 28, 1, true, false],
+            [96, 4, 96, 24, 1, true, true],
+            [97, 8, 97, 28, 1, true, false]
+          ],
+          "summary": {
+            "branches": {
+              "count": 11,
+              "covered": 7,
+              "notcovered": 4,
+              "percent": 63.636363636363636
+            },
+            "functions": {
+              "count": 8,
+              "covered": 8,
+              "percent": 100
+            },
+            "lines": {
+              "count": 57,
+              "covered": 51,
+              "notcovered": 6,
+              "percent": 89.473684210526316
+            },
+            "regions": {
+              "count": 98,
+              "covered": 88,
+              "notcovered": 10,
+              "percent": 89.795918367346939
+            }
+          }
+        }
+      ],
+      "functions": [
+        {
+          "branches": [],
+          "count": 2,
+          "filenames": [
+            "/workspaces/vscode-coverage-gutters/example/rust/src/lib.rs"
+          ],
+          "name": "add"
+        },
+        {
+          "branches": [],
+          "count": 2,
+          "filenames": [
+            "/workspaces/vscode-coverage-gutters/example/rust/src/lib.rs"
+          ],
+          "name": "subtract"
+        },
+        {
+          "branches": [],
+          "count": 2,
+          "filenames": [
+            "/workspaces/vscode-coverage-gutters/example/rust/src/lib.rs"
+          ],
+          "name": "multiply"
+        },
+        {
+          "branches": [[34, 9, 34, 14, 1, 1, 0, 0, 4]],
+          "count": 2,
+          "filenames": [
+            "/workspaces/vscode-coverage-gutters/example/rust/src/lib.rs"
+          ],
+          "name": "divide"
+        },
+        {
+          "branches": [
+            [48, 5, 48, 16, 1, 0, 0, 0, 4],
+            [49, 13, 49, 21, 1, 1, 0, 0, 4],
+            [51, 13, 51, 21, 0, 1, 0, 0, 4]
+          ],
+          "count": 1,
+          "filenames": [
+            "/workspaces/vscode-coverage-gutters/example/rust/src/lib.rs"
+          ],
+          "name": "factorial"
+        },
+        {
+          "branches": [
+            [54, 9, 54, 31, 1, 0, 0, 0, 4]
+          ],
+          "count": 1,
+          "filenames": [
+            "/workspaces/vscode-coverage-gutters/example/rust/src/lib.rs"
+          ],
+          "name": "is_prime"
+        },
+        {
+          "branches": [],
+          "count": 2,
+          "filenames": [
+            "/workspaces/vscode-coverage-gutters/example/rust/src/lib.rs"
+          ],
+          "name": "max"
+        },
+        {
+          "branches": [],
+          "count": 2,
+          "filenames": [
+            "/workspaces/vscode-coverage-gutters/example/rust/src/lib.rs"
+          ],
+          "name": "min"
+        }
+      ],
+      "totals": {
+        "branches": {
+          "count": 11,
+          "covered": 7,
+          "notcovered": 4,
+          "percent": 63.636363636363636
+        },
+        "functions": {
+          "count": 8,
+          "covered": 8,
+          "percent": 100
+        },
+        "lines": {
+          "count": 57,
+          "covered": 51,
+          "notcovered": 6,
+          "percent": 89.473684210526316
+        },
+        "regions": {
+          "count": 98,
+          "covered": 88,
+          "notcovered": 10,
+          "percent": 89.795918367346939
+        }
+      }
+    }
+  ],
+  "type": "llvm.coverage.json.export",
+  "version": "2.0.1"
+}

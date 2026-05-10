@@ -1,8 +1,14 @@
 import { commands, extensions, window, OutputChannel } from "vscode";
+import { Section } from "lcov-parse";
 import { Coverage } from "../coverage-system/coverage";
 import { CoverageService } from "../coverage-system/coverageservice";
 import { Config } from "./config";
 import { StatusBarToggler } from "./statusbartoggler";
+
+interface BranchCoverageProvider {
+    updateCoverageData(data: Map<string, Section>): void;
+    clearCoverageData(): void;
+}
 
 export const PREVIEW_COMMAND = "livePreview.start.internalPreview.atFile";
 
@@ -11,6 +17,9 @@ export class Gutters {
     private outputChannel: OutputChannel;
     private statusBar: StatusBarToggler;
     private coverageService: CoverageService;
+    private branchCodeLensProvider: BranchCoverageProvider | undefined;
+    private branchHoverProvider: BranchCoverageProvider | undefined;
+    private fileDecorationProvider: { updateCoverageData(data: Map<string, Section>): void } | undefined;
 
     constructor(
         configStore: Config,
@@ -26,6 +35,17 @@ export class Gutters {
             this.outputChannel,
             statusBar,
         );
+    }
+
+    public setProviders(codeLensProvider: BranchCoverageProvider, hoverProvider: BranchCoverageProvider) {
+        this.branchCodeLensProvider = codeLensProvider;
+        this.branchHoverProvider = hoverProvider;
+        this.coverageService.setProviders(codeLensProvider, hoverProvider);
+    }
+
+    public setFileDecorationProvider(provider: { updateCoverageData(data: Map<string, Section>): void }) {
+        this.fileDecorationProvider = provider;
+        this.coverageService.setFileDecorationProvider(provider);
     }
 
     public async previewCoverageReport() {

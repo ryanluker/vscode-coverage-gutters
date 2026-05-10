@@ -6,11 +6,20 @@ async function main() {
         const extensionDevelopmentPath = path.resolve(__dirname, "../../out");
         const extensionTestsPath = path.resolve(__dirname, "index");
 
+        // Add chrome flags to improve stability on CI (especially Windows/macOS) and keep
+        // the workspace launch arg last.
+        const launchArgs = [
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--disable-features=CalculateNativeWinOcclusion",
+            "example/example.code-workspace",
+        ];
+
         await runTests({
             version: "insiders",
             extensionDevelopmentPath,
             extensionTestsPath,
-            launchArgs: ["example/example.code-workspace"],
+            launchArgs,
         })
 
         console.info("Success!");
