@@ -16,11 +16,13 @@ export class Config {
     public fullCoverageDecorationType!: TextEditorDecorationType;
     public partialCoverageDecorationType!: TextEditorDecorationType;
     public noCoverageDecorationType!: TextEditorDecorationType;
+    public hitCountDecorationType!: TextEditorDecorationType;
     public showStatusBarToggler!: boolean;
     public ignoredPathGlobs!: string;
     public remotePathResolve!: string[];
     public manualCoverageFilePaths!: string[];
     public watchOnActivate!: boolean;
+    public showHitCounts!: boolean;
 
     private context: ExtensionContext;
 
@@ -71,6 +73,8 @@ export class Config {
         const showGutterCoverage = rootConfig.get("showGutterCoverage") as string;
         const showLineCoverage = rootConfig.get("showLineCoverage") as string;
         const showRulerCoverage = rootConfig.get("showRulerCoverage") as string;
+        this.showHitCounts = rootConfig.get("showHitCounts") as boolean;
+        const hitCountColor = rootConfig.get("hitCountColor") as string;
 
         const makeIcon = (colour: string): string | Uri => {
             colour = colour
@@ -138,12 +142,19 @@ export class Config {
             overviewRulerLane: OverviewRulerLane.Full,
         };
 
+        const hitCountDecoration: DecorationRenderOptions = {
+            before: {
+                color: hitCountColor,
+            }
+        };
+
         this.cleanupEmptyGutterIcons(fullDecoration, partialDecoration, noDecoration);
 
         // Generate decorations
         this.noCoverageDecorationType = window.createTextEditorDecorationType(noDecoration);
         this.partialCoverageDecorationType = window.createTextEditorDecorationType(partialDecoration);
         this.fullCoverageDecorationType = window.createTextEditorDecorationType(fullDecoration);
+        this.hitCountDecorationType = window.createTextEditorDecorationType(hitCountDecoration);
 
         // Assign the key and resolved fragment
         this.remotePathResolve = rootConfig.get("remotePathResolve") as string[];
