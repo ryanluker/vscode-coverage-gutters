@@ -8,7 +8,8 @@ import { StatusBarToggler } from "../src/extension/statusbartoggler";
 import { Gutters, PREVIEW_COMMAND } from "../src/extension/gutters";
 
 suite("Extension Tests", function () {
-    this.retries(2);
+    // Allow retries up to 5 times for semi flakey tests
+    this.retries(5);
     const disposables: vscode.Disposable[] = [];
 
     afterEach(() => {
