@@ -1,0 +1,23 @@
+name: Run Tests
+on:
+  workflow_call:
+    inputs:
+      runner-type:
+        required: true
+        type: string
+jobs:
+  run-tests:
+    runs-on: ${{ inputs.runner-type }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+    - run: npm install
+    - run: npm run build
+    - run: xvfb-run -a npm test
+      if: runner.os == 'Linux'
+    - run: npm test
+      if: runner.os != 'Linux'
