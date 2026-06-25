@@ -2,9 +2,11 @@ name: Continuous Integration
 on:
   schedule:
     # Weekly on Mondays for Windows / Mac
-    - cron: '0 0 * * 1'
+    - cron: '0 13 * * 1'
+      timezone: 'America/Vancouver'
     # Nightly builds for Linux (cheapest)
-    - cron: '0 0 * * *'
+    - cron: '0 13 * * *'
+      timezone: 'America/Vancouver'
   pull_request:
   push:
     branches:
