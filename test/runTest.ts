@@ -19,8 +19,12 @@ async function main() {
         process.exit(0);
     } catch (err) {
         if (retries <= maxRetries) {
-            retries++;
-            main();
+            // Provide a small wait between failure runs
+            console.info("Error on run ${retries} with ${err}")
+            setTimeout(1000, () => {
+                retries++;
+                main();
+            });
         } else {
             console.error("Failed to run tests");
             console.error(err);
