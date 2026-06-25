@@ -18,15 +18,17 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    if: github.event_name != 'schedule' || (github.event.schedule == '0 15 * * 1' && matrix.os != 'ubuntu-latest') || (github.event.schedule == '0 15 * * *' && matrix.os == 'ubuntu-latest')
     steps:
-    - name: Checkout repo
+    - name: Checkout
       uses: actions/checkout@v4
-    - name: Run test suite
-      # Properly considers the following use cases:
-      # 1) Manual action run
-      # 2) Weekly scheduled run for Mac and Windows
-      # 3) Nightly scheduled run for Linux
-      if: github.event_name != 'schedule' || (github.event.schedule == '0 15 * * 1' && matrix.os != 'ubuntu-latest') || (github.event.schedule == '0 15 * * *' && matrix.os == 'ubuntu-latest')
-      uses: ./.github/workflows/run_tests
+    - name: Install Node.js
+      uses: actions/setup-node@v4
       with:
-        runner-type: ${{ matrix.os }}
+        node-version: 22.x
+    - run: npm install
+    - run: npm run build
+    - run: xvfb-run -a npm test
+      if: runner.os == 'Linux'
+    - run: npm test
+      if: runner.os != 'Linux'
