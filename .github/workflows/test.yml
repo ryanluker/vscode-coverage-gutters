@@ -1,7 +1,12 @@
 name: Continuous Integration
 on:
   schedule:
-    - cron: '0 0 * * *'
+    # Weekly on Mondays for Windows / Mac
+    - cron: '0 13 * * 1'
+      timezone: 'America/Vancouver'
+    # Nightly builds for Linux (cheapest)
+    - cron: '0 13 * * *'
+      timezone: 'America/Vancouver'
   pull_request:
   push:
     branches:
@@ -12,6 +17,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
+    if: |
+      github.event_name != 'schedule' ||
+      (github.event.schedule == '0 0 * * *' && matrix.os == 'ubuntu-latest') ||
+      (github.event.schedule == '0 0 * * 1' && matrix.os != 'ubuntu-latest')
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
