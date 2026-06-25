@@ -18,6 +18,8 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
     - name: Run test suite
       # Properly considers the following use cases:
       # 1) Manual action run
