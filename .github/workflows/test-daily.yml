@@ -1,13 +1,16 @@
-name: Run Tests
+name: Continuous Daily Integration
 on:
-  workflow_call:
-    inputs:
-      runner-type:
-        required: true
-        type: string
+  schedule:
+    # Nightly builds for Linux (cheapest)
+    - cron: '0 8 * * *'
+      timezone: 'America/Vancouver'
+  pull_request:
+  push:
+    branches:
+      - master
 jobs:
-  run-tests:
-    runs-on: ${{ inputs.runner-type }}
+  build:
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -18,6 +21,3 @@ jobs:
     - run: npm install
     - run: npm run build
     - run: xvfb-run -a npm test
-      if: runner.os == 'Linux'
-    - run: npm test
-      if: runner.os != 'Linux'
