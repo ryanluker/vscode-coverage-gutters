@@ -1,0 +1,27 @@
+name: Continuous Weekly Integration
+on:
+  schedule:
+    # Weekly on Mondays for Windows / Mac
+    - cron: '0 8 * * 1'
+      timezone: 'America/Vancouver'
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+    - run: npm install
+    - run: npm run build
+    - run: npm test
