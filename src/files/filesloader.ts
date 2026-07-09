@@ -1,7 +1,11 @@
-import { existsSync, readFile } from "fs";
+import { existsSync } from "fs";
+import { readFile } from "fs/promises";
 import glob from "glob";
+import { promisify } from "util";
 import { window, workspace, WorkspaceFolder } from "vscode";
 import { Config } from "../extension/config";
+
+const globAsync = promisify(glob);
 
 export class FilesLoader {
     private configStore: Config;
@@ -41,28 +45,27 @@ export class FilesLoader {
      * @param files files that are to turned into data strings
      */
     public async loadDataFiles(files: Set<string>): Promise<Map<string, string>> {
-        // Load the files and convert into data strings
-        const dataFiles = new Map<string, string>();
-        for (const file of files) {
-            dataFiles.set(file, await this.load(file));
-        }
-        return dataFiles;
+        // Load all files in parallel for better performance
+        const loadPromises = Array.from(files).map(async (file) => {
+            const data = await this.load(file);
+            return [file, data] as const;
+        });
+
+        const results = await Promise.all(loadPromises);
+        return new Map(results);
     }
 
-    private load(path: string) {
-        return new Promise<string>((resolve, reject) => {
-            readFile(path, (err, data) => {
-                if (err) { return reject(err); }
-                return resolve(data.toString());
-            });
-        });
+    private async load(path: string): Promise<string> {
+        const data = await readFile(path, 'utf-8');
+        return data;
     }
 
     private async findCoverageInWorkspace(fileNames: string[]) {
-        let files = new Set<string>();
+        const files = new Set<string>();
         for (const fileName of fileNames) {
             const coverage = await this.findCoverageForFileName(fileName);
-            files = new Set([...files, ...coverage]);
+            // Efficiently add all items without creating new Set
+            coverage.forEach(file => files.add(file));
         }
         return files;
     }
@@ -88,32 +91,27 @@ export class FilesLoader {
             });
     }
 
-    private globFind(
+    private async globFind(
         workspaceFolder: WorkspaceFolder,
         fileName: string,
-    ) {
-        return new Promise<Set<string>>((resolve) => {
-            glob(`${this.configStore.coverageBaseDir}/${fileName}`,
-                {
-                    cwd: workspaceFolder.uri.fsPath,
-                    dot: true,
-                    ignore: this.configStore.ignoredPathGlobs,
-                    realpath: true,
-                    strict: false,
-                },
-                (err, files) => {
-                    if (!files || !files.length) {
-                        // Show any errors if no file was found.
-                        if (err) {
-                            window.showWarningMessage(`An error occured while looking for the coverage file ${err}`);
-                        }
-                        return resolve(new Set());
-                    }
-                    const setFiles = new Set<string>();
-                    files.forEach((file) => setFiles.add(file));
-                    return resolve(setFiles);
-                },
-            );
-        });
+    ): Promise<Set<string>> {
+        try {
+            const files = await globAsync(`${this.configStore.coverageBaseDir}/${fileName}`, {
+                cwd: workspaceFolder.uri.fsPath,
+                dot: true,
+                ignore: this.configStore.ignoredPathGlobs,
+                realpath: true,
+                strict: false,
+            });
+
+            if (!files || !files.length) {
+                return new Set();
+            }
+
+            return new Set(files);
+        } catch (err) {
+            window.showWarningMessage(`An error occured while looking for the coverage file ${err}`);
+            return new Set();
+        }
     }
 }

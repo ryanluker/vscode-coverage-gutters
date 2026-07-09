@@ -12,6 +12,12 @@ export interface ICoverageLines {
     none: Range[];
 }
 
+interface CoverageSets {
+    full: Set<number>;
+    partial: Set<number>;
+    none: Set<number>;
+}
+
 export class Renderer {
     private configStore: Config;
     private sectionFinder: SectionFinder;
@@ -33,29 +39,31 @@ export class Renderer {
         sections: Map<string, Section>,
         textEditors: readonly TextEditor[],
     ) {
-        const coverageLines: ICoverageLines = {
-            full: [],
-            none: [],
-            partial: [],
-        };
-
+        // Single-pass iteration for better performance
         textEditors.forEach((textEditor) => {
             // Remove all decorations first to prevent graphical issues
             this.removeDecorationsForEditor(textEditor);
-        });
 
-        textEditors.forEach((textEditor) => {
             // Reset lines for new editor
-            coverageLines.full = [];
-            coverageLines.none = [];
-            coverageLines.partial = [];
+            const coverageSets: CoverageSets = {
+                full: new Set<number>(),
+                none: new Set<number>(),
+                partial: new Set<number>(),
+            };
 
             // find the section(s) (or undefined) by looking relatively at each workspace
             // users can also optional use absolute instead of relative for this
             const foundSections = this.sectionFinder.findSectionsForEditor(textEditor, sections);
             if (!foundSections.length) { return; }
 
-            this.filterCoverage(foundSections, coverageLines);
+            this.filterCoverage(foundSections, coverageSets);
+
+            const coverageLines: ICoverageLines = {
+                full: this.setsToRanges(coverageSets.full),
+                none: this.setsToRanges(coverageSets.none),
+                partial: this.setsToRanges(coverageSets.partial),
+            };
+
             this.setDecorationsForEditor(textEditor, coverageLines);
         });
     }
@@ -97,60 +105,66 @@ export class Renderer {
     /**
      * Takes an array of sections and computes the coverage lines
      * @param sections sections to filter the coverage for
-     * @param coverageLines the current coverage lines as this point in time
+     * @param coverageSets the current coverage sets as this point in time
      */
     private filterCoverage(
         sections: Section[],
-        coverageLines: ICoverageLines,
+        coverageSets: CoverageSets,
     ) {
         sections.forEach((section) => {
-            this.filterLineCoverage(section, coverageLines);
-            this.filterBranchCoverage(section, coverageLines);
+            this.filterLineCoverage(section, coverageSets);
+            this.filterBranchCoverage(section, coverageSets);
         });
     }
 
     private filterLineCoverage(
         section: Section,
-        coverageLines: ICoverageLines,
+        coverageSets: CoverageSets,
     ) {
         if (!section || !section.lines) {
             return;
         }
         section.lines.details
-        .filter((detail) => detail.line > 0)
-        .forEach((detail) => {
-            const lineRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
-            if (detail.hit > 0) {
-                // Evaluates to true if at least one element in range is equal to LineRange
-                if (coverageLines.none.some((range) => range.isEqual(lineRange))) {
-                    coverageLines.none = coverageLines.none.filter((range) => !range.isEqual(lineRange))
+            .filter((detail) => detail.line > 0)
+            .forEach((detail) => {
+                const line = detail.line - 1;
+                if (detail.hit > 0) {
+                    if (coverageSets.none.has(line)) {
+                        coverageSets.none.delete(line);
+                    }
+                    coverageSets.full.add(line);
+                } else {
+                    if (!coverageSets.full.has(line)) {
+                        // only add a none coverage if no full ones exist
+                        coverageSets.none.add(line);
+                    }
                 }
-                coverageLines.full.push(lineRange);
-            } else {
-                if (!coverageLines.full.some((range) => range.isEqual(lineRange))) {
-                    // only add a none coverage if no full ones exist
-                    coverageLines.none.push(lineRange);
-                }
-            }
-        });
+            });
     }
 
     private filterBranchCoverage(
         section: Section,
-        coverageLines: ICoverageLines,
+        coverageSets: CoverageSets,
     ) {
         if (!section || !section.branches) {
             return;
         }
         section.branches.details
-        .filter((detail) => detail.taken === 0 && detail.line > 0)
-        .forEach((detail) => {
-            const partialRange = new Range(detail.line - 1, 0, detail.line - 1, 0);
-            // Evaluates to true if at least one element in range is equal to partialRange
-            if (coverageLines.full.some((range) => range.isEqual(partialRange))){
-                coverageLines.full = coverageLines.full.filter((range) => !range.isEqual(partialRange));
-                coverageLines.partial.push(partialRange);
-            }
+            .filter((detail) => detail.taken === 0 && detail.line > 0)
+            .forEach((detail) => {
+                const line = detail.line - 1;
+                if (coverageSets.full.has(line)) {
+                    coverageSets.full.delete(line);
+                    coverageSets.partial.add(line);
+                }
+            });
+    }
+
+    private setsToRanges(lines: Set<number>): Range[] {
+        const ranges: Range[] = [];
+        lines.forEach((line) => {
+            ranges.push(new Range(line, 0, line, 0));
         });
+        return ranges;
     }
 }
