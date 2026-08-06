@@ -146,7 +146,7 @@
         },
         "coverage-gutters.watchOnActivate": {
           "type": "boolean",
-          "scope":"resource",
+          "scope": "resource",
           "default": false,
           "description": "automatically watch coverage files and visible editors on extension activation (workspace open)"
         }
@@ -276,10 +276,10 @@
     "@types/sinon-chai": "^3.2.8",
     "@types/uuid": "^8.3.4",
     "@types/vscode": "1.66.0",
-    "@typescript-eslint/eslint-plugin": "^6.18.1",
-    "@typescript-eslint/parser": "^6.18.1",
+    "@typescript-eslint/eslint-plugin": "^8.66.0",
+    "@typescript-eslint/parser": "^8.66.0",
     "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2",
+    "@vscode/test-electron": "^3.1.0",
     "chai": "^4.3.6",
     "cross-env": "^7.0.3",
     "esbuild": "^0.25.0",
@@ -299,6 +299,6 @@
     "glob": "7.2.0",
     "lcov-parse": "1.0.0",
     "tslib": "2.4.0",
-    "uuid": "8.3.2"
+    "uuid": "^14.0.1"
   }
 }
