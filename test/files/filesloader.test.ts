@@ -14,7 +14,7 @@ suite("FilesLoader Tests", () => {
 
     test("loadDataFiles takes file paths and fetches their data strings @unit", async () => {
         sinon.stub(fs, "readFile").callsFake(
-            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer) => void) => {
+            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer<ArrayBuffer>) => void) => {
                 return cb(null, Buffer.from("123"));
             },
         );

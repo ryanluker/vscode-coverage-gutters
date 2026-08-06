@@ -35,7 +35,7 @@ suite("Coverage Tests", () => {
 
     test("#load: Should return a data string @unit", async () => {
         const stubReadFile = sinon.stub(fs, "readFile").callsFake(
-            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer) => void) => {
+            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer<ArrayBuffer>) => void) => {
                 return cb(undefined as any, Buffer.from("lcovhere"));
             },
         );
