@@ -28,6 +28,27 @@ suite("FilesLoader Tests", () => {
 
     });
 
+    test("loadDataFiles rejects coverage data that is not valid UTF-8 @unit", async () => {
+        sinon.stub(fs, "readFile").callsFake(
+            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer) => void) => {
+                return cb(null, Buffer.from([0xc3, 0x28]));
+            },
+        );
+
+        const filesLoader = new FilesLoader(stubConfig);
+        let error: Error | undefined;
+
+        try {
+            await filesLoader.loadDataFiles(new Set(["coverage.lcov"]));
+        } catch (caught) {
+            error = caught as Error;
+        }
+
+        expect(error?.message).to.equal(
+            'Could not read coverage file "coverage.lcov" as UTF-8.',
+        );
+    });
+
     test("findCoverageFiles returns an error if no coverage file @unit", async () => {
         stubConfig.manualCoverageFilePaths = [];
         stubConfig.coverageFileNames = ["lcov.info"];

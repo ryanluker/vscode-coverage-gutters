@@ -1,5 +1,6 @@
 import { existsSync, readFile } from "fs";
 import glob from "glob";
+import { TextDecoder } from "util";
 import { window, workspace, WorkspaceFolder } from "vscode";
 import { Config } from "../extension/config";
 
@@ -53,7 +54,14 @@ export class FilesLoader {
         return new Promise<string>((resolve, reject) => {
             readFile(path, (err, data) => {
                 if (err) { return reject(err); }
-                return resolve(data.toString());
+                try {
+                    return resolve(new TextDecoder(
+                        "utf-8",
+                        {fatal: true, ignoreBOM: true},
+                    ).decode(data));
+                } catch {
+                    return reject(new Error(`Could not read coverage file "${path}" as UTF-8.`));
+                }
             });
         });
     }
