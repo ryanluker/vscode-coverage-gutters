@@ -95,4 +95,30 @@ suite("SectionFinder Tests", function() {
         expect(sections).to.have.lengthOf(1);
         return done();
     });
+
+    test("Should handle paths outside the workspace", function (done) {
+        // No file is in the workspace.
+        (workspace as any).getWorkspaceFolder = (_uri: Uri) => undefined;
+        const sections = sectionFinder.findSectionsForEditor(
+            textEditor,
+            sectionMap,
+        );
+
+        expect(sections).to.have.lengthOf(1);
+        return done();
+    });
+
+    test("Should ignore empty paths", function (done) {
+        (workspace as any).getWorkspaceFolder =
+            createWorkspaceFolderMock(testWorkspaceFolder);
+        const map = new Map(structuredClone(sectionMap));
+        const fileEntry = map.entries().next().value;
+        expect(fileEntry).to.not.eq(undefined);
+        (fileEntry?.[1] as Section).file = "";
+
+        const sections = sectionFinder.findSectionsForEditor(textEditor, map);
+        expect(sections).to.have.lengthOf(0);
+
+        return done();
+    });
 });

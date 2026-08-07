@@ -5,6 +5,10 @@ import {OutputChannel} from "vscode";
 import {Config} from "../extension/config";
 import {isPathAbsolute, makePathSearchable, normalizeFileName} from "../helpers";
 
+type EditorData =
+    | { relativePath: string; workspaceFolder: string }
+    | { absolutePath: string };
+
 export class SectionFinder {
     private configStore: Config;
     private outputChannel: OutputChannel;
@@ -28,13 +32,14 @@ export class SectionFinder {
     ): Section[] {
         const sectionsArray = Array.from(sections.values());
         const res = this.calculateEditorData(textEditor);
-        if (!res) { return []; }
 
         // Check each section against the currently active document filename
-        const foundSections = sectionsArray.filter(
-            (section) => this.checkSection(section, res.relativePath, res.workspaceFolder),
+        const foundSections = sectionsArray.filter((section) =>
+            this.checkSection(section, res),
         );
-        if (!foundSections.length) { return []; }
+        if (!foundSections.length) {
+            return [];
+        }
 
         foundSections.forEach(this.logSection.bind(this));
         return foundSections;
@@ -62,15 +67,36 @@ export class SectionFinder {
      * @param workspaceFolderName workspace folder name
      * @returns true if this section matches (applies to) the provided editorRelativeFile
      */
-    private checkSection(section: Section, editorFileRelative: string, workspaceFolderName: string): boolean {
+    private checkSection(section: Section, data: EditorData): boolean {
         try {
+            // Ignore missing/empty file names.
+            if (!section.file) {
+                return false;
+            }
+
             // Check if we need to swap any fragments of the file path with a remote fragment
             // IE: /var/www/ -> /home/me/
             const sectionFileName = this.resolveFileName(section.file);
-            if (!isPathAbsolute(sectionFileName)) {
-                return this.checkSectionRelative(sectionFileName, editorFileRelative);
+            if ("relativePath" in data) {
+                // File inside the workspace.
+                if (!isPathAbsolute(sectionFileName)) {
+                    return this.checkSectionRelativeWorkspace(
+                        sectionFileName,
+                        data.relativePath,
+                    );
+                } else {
+                    return this.checkSectionAbsoluteWorkspace(
+                        sectionFileName,
+                        data.relativePath,
+                        data.workspaceFolder,
+                    );
+                }
             } else {
-                return this.checkSectionAbsolute(sectionFileName, editorFileRelative, workspaceFolderName);
+                // File outside the workspace.
+                return this.checkSectionAbsoluteOutside(
+                    sectionFileName,
+                    data.absolutePath,
+                );
             }
         } catch (error) {
             const checkSectionError = `[${Date.now()}][renderer]: ignoring section: error from check: ${error}`;
@@ -113,14 +139,16 @@ export class SectionFinder {
      *     returned workspaceFolder: "testProject"
      * @param textEditor Instance of TextEditor
      */
-    private calculateEditorData(textEditor: TextEditor): {relativePath: string, workspaceFolder: string} | undefined {
+    private calculateEditorData(textEditor: TextEditor): EditorData {
         // calculate normalize
         const fileName = textEditor.document.fileName;
         const editorFileUri = Uri.file(fileName);
-        const workspaceFolder = workspace.getWorkspaceFolder(editorFileUri);
-        if (!workspaceFolder) { return; } // file is not in workspace - skip it
-        const workspaceFsPath = workspaceFolder.uri.fsPath;
         const editorFileAbs = normalizeFileName(fileName);
+        const workspaceFolder = workspace.getWorkspaceFolder(editorFileUri);
+        if (!workspaceFolder) {
+            return { absolutePath: editorFileAbs };
+        }
+        const workspaceFsPath = workspaceFolder.uri.fsPath;
         const workspaceFile = normalizeFileName(workspaceFsPath);
         const editorFileRelative = editorFileAbs.substring(workspaceFile.length);
         const workspaceFolderName = normalizeFileName(basename(workspaceFsPath));
@@ -128,11 +156,11 @@ export class SectionFinder {
     }
 
     /**
-     * Returns true if relative section matches given editor file
+     * Returns true if relative section matches given editor file (inside a workspace)
      * @param sectionFileName relative section fileName
      * @param editorFileRelative normalized relative path (against workspace folder) of editor filename, starts with ###
      */
-    private checkSectionRelative(sectionFileName: string, editorFileRelative: string): boolean {
+    private checkSectionRelativeWorkspace(sectionFileName: string, editorFileRelative: string): boolean {
         // editorFileRelative must end with searchable & normalized section
         sectionFileName = makePathSearchable(sectionFileName);
         const sectionFileNormalized = normalizeFileName(sectionFileName);
@@ -140,12 +168,12 @@ export class SectionFinder {
     }
 
     /**
-     * Returns true if absolute section matches given editor file
+     * Returns true if absolute section matches given editor file (inside a workspace)
      * @param sectionFileName absolute section fileName
      * @param editorFileRelative normalized relative path (against workspace folder) of editor filename, starts with ###
      * @param workspaceFolderName workspace folder name
      */
-    private checkSectionAbsolute(
+    private checkSectionAbsoluteWorkspace(
         sectionFileName: string,
         editorFileRelative: string,
         workspaceFolderName: string,
@@ -154,5 +182,17 @@ export class SectionFinder {
         const sectionFileNormalized = normalizeFileName(sectionFileName);
         const matchPattern = `###${workspaceFolderName}${editorFileRelative}`;
         return sectionFileNormalized.endsWith(matchPattern);
+    }
+
+    /**
+     * Returns true if the section filename matches a given absolute path.
+     * @param sectionFileName absolute section filename
+     * @param absoluteEditorPath absolute normalized editor path
+     */
+    private checkSectionAbsoluteOutside(
+        sectionFileName: string,
+        absoluteEditorPath: string,
+    ): boolean {
+        return normalizeFileName(sectionFileName) === absoluteEditorPath;
     }
 }
