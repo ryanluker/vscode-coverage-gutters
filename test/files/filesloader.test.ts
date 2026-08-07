@@ -14,7 +14,7 @@ suite("FilesLoader Tests", () => {
 
     test("loadDataFiles takes file paths and fetches their data strings @unit", async () => {
         sinon.stub(fs, "readFile").callsFake(
-            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer) => void) => {
+            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer<ArrayBuffer>) => void) => {
                 return cb(null, Buffer.from("123"));
             },
         );
@@ -26,6 +26,27 @@ suite("FilesLoader Tests", () => {
         expect(mapData.size).to.equal(2);
         expect(mapData.get("file1")).to.equal("123");
 
+    });
+
+    test("loadDataFiles rejects coverage data that is not valid UTF-8 @unit", async () => {
+        sinon.stub(fs, "readFile").callsFake(
+            (_: number | PathLike, cb: (err: NodeJS.ErrnoException | null, data: Buffer<ArrayBuffer>) => void) => {
+                return cb(null, Buffer.from([0xc3, 0x28]));
+            },
+        );
+
+        const filesLoader = new FilesLoader(stubConfig);
+        let error: Error | undefined;
+
+        try {
+            await filesLoader.loadDataFiles(new Set(["coverage.lcov"]));
+        } catch (caught) {
+            error = caught as Error;
+        }
+
+        expect(error?.message).to.equal(
+            'Could not read coverage file "coverage.lcov" as UTF-8.',
+        );
     });
 
     test("findCoverageFiles returns an error if no coverage file @unit", async () => {

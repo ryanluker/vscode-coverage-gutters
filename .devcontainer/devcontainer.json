@@ -4,7 +4,7 @@
 	"name": "Node.js",
 	"build": {
 		"dockerfile": "Dockerfile",
-		"args": { "VARIANT": "16" }
+		"args": { "VARIANT": "24" }
 	},
 
 	// Set *default* container specific settings.json values on container create.

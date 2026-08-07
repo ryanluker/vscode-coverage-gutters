@@ -17,7 +17,7 @@ jobs:
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 22.x
+        node-version: 24.x
     - run: npm install
     - run: npm run build
     - run: xvfb-run -a npm test
