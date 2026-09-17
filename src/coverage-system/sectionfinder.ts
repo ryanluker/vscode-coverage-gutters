@@ -63,9 +63,10 @@ export class SectionFinder {
     /**
      * Checks for a matching section file against the a given fileName
      * @param section data section to check against filename
-     * @param editorFileRelative normalized relative path (against workspace folder) of editor filename, starts with ###
-     * @param workspaceFolderName workspace folder name
-     * @returns true if this section matches (applies to) the provided editorRelativeFile
+     * @param data either the editor file's normalized workspace relative path (starting
+     * with ###) plus its workspace folder name, or its absolute path when the file sits
+     * outside of any workspace folder
+     * @returns true if this section matches (applies to) the provided editor file
      */
     private checkSection(section: Section, data: EditorData): boolean {
         try {

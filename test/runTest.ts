@@ -1,6 +1,6 @@
 import * as path from "path";
 import { runTests } from "@vscode/test-electron";
-    
+
 let retries = 0;
 const maxRetries = 3;
 async function main() {
@@ -18,7 +18,7 @@ async function main() {
         console.info("Success!");
         process.exit(0);
     } catch (err) {
-        if (retries <= maxRetries) {
+        if (retries < maxRetries) {
             // Provide a small wait between failure runs
             console.info(`Error on run ${retries} with ${err}`);
             setTimeout(() => {
