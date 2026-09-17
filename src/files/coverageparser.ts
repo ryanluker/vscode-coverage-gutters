@@ -49,7 +49,7 @@ export class CoverageParser {
                         fileContent
                     );
                     break;
-                case CoverageType.LLVM_COV_JSON:
+                case CoverageType.LLVM:
                     await this.jsonExtractLlvmCov(
                         coverages,
                         fileName,
@@ -124,42 +124,63 @@ export class CoverageParser {
                 // Lightweight XML scan to track current filename and line conditions
                 let currentFilename: string | undefined;
                 const classOpenRegex = /<class\s+[^>]*filename="([^"]+)"[^>]*>/g;
-                // Match <line> with optional condition-coverage attribute and nested content
-                const lineRegex = new RegExp(
-                    `<line\\s+number="(\\d+)"[^>]*?` +
-                    `(?:condition-coverage="(\\d+)%\\s*\\((\\d+)/(\\d+)\\)")?` +
-                    `[^>]*>([\\s\\S]*?)<\\/line>`,
-                    'g'
-                );
+                // Match the <line> tag itself, capturing its attributes and whether it self closes.
+                // Attributes are pulled out separately so their order in the report does not matter.
+                const lineTagRegex = /<line\s+([^>]*?)(\/?)>/g;
+                const lineNumberRegex = /\bnumber="(\d+)"/;
+                const conditionCoverageRegex = /\bcondition-coverage="(\d+)%\s*\((\d+)\/(\d+)\)"/;
                 const conditionRegex = /<condition\s+number="(\d+)"\s+type="([^"]+)"\s+coverage="(\d+)%"\s*\/?>/g;
                 const branchRegex = /<branch\s+number="(\d+)"\s+type="[^"]*"\s+hits="(\d+)"/g;
 
-                // Iterate through the XML string to capture classes and their lines
-                // First pass: mark class ranges and process nested lines within
-                // For simplicity, we'll walk the XML string sequentially.
+                // Walk the XML string sequentially, always taking whichever of the next
+                // <class> or <line> comes first so every class keeps its own lines.
                 let index = 0;
                 while (index < xmlFile.length) {
-                    // Find next class or line
                     classOpenRegex.lastIndex = index;
                     const classMatch = classOpenRegex.exec(xmlFile);
-                    if (classMatch && (classMatch.index >= index)) {
+                    lineTagRegex.lastIndex = index;
+                    const lineMatch = lineTagRegex.exec(xmlFile);
+
+                    if (!classMatch && !lineMatch) { break; }
+
+                    // A class opening before the next line switches the filename context
+                    if (classMatch && (!lineMatch || classMatch.index < lineMatch.index)) {
                         currentFilename = classMatch[1];
                         if (!coberturaConditionsByFile.has(currentFilename)) {
                             coberturaConditionsByFile.set(currentFilename, {});
                         }
-                        index = classOpenRegex.lastIndex;
+                        index = classMatch.index + classMatch[0].length;
                         continue;
                     }
 
                     // Process lines using the current filename context
-                    lineRegex.lastIndex = index;
-                    const lineMatch = lineRegex.exec(xmlFile);
-                    if (lineMatch && (lineMatch.index >= index)) {
-                        const lineNumber = Number(lineMatch[1]);
-                        const covPercent = lineMatch[2] ? Number(lineMatch[2]) : 0;
-                        const edgesCovered = lineMatch[3] ? Number(lineMatch[3]) : 0;
-                        const edgesTotal = lineMatch[4] ? Number(lineMatch[4]) : 0;
-                        const lineInner = lineMatch[5] || "";
+                    if (lineMatch) {
+                        const attributes = lineMatch[1];
+                        const tagEnd = lineMatch.index + lineMatch[0].length;
+
+                        // A self closing <line ... /> has no children, otherwise take
+                        // everything up to its own closing tag as the line body
+                        let lineInner = "";
+                        let lineEnd = tagEnd;
+                        if (lineMatch[2] !== "/") {
+                            const closeIndex = xmlFile.indexOf("</line>", tagEnd);
+                            if (closeIndex !== -1) {
+                                lineInner = xmlFile.substring(tagEnd, closeIndex);
+                                lineEnd = closeIndex + "</line>".length;
+                            }
+                        }
+
+                        const numberMatch = lineNumberRegex.exec(attributes);
+                        if (!numberMatch) {
+                            index = lineEnd;
+                            continue;
+                        }
+                        const lineNumber = Number(numberMatch[1]);
+
+                        const coverageMatch = conditionCoverageRegex.exec(attributes);
+                        const covPercent = coverageMatch ? Number(coverageMatch[1]) : 0;
+                        const edgesCovered = coverageMatch ? Number(coverageMatch[2]) : 0;
+                        const edgesTotal = coverageMatch ? Number(coverageMatch[3]) : 0;
 
                         const conditions: Array<{ number: number; type: string; coveragePercent: number }> = [];
                         let condMatch: RegExpExecArray | null;
@@ -201,7 +222,7 @@ export class CoverageParser {
                             }
                         }
 
-                        index = lineRegex.lastIndex;
+                        index = lineEnd;
                         continue;
                     }
 

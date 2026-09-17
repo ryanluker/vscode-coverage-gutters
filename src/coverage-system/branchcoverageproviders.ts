@@ -22,9 +22,12 @@ export class RegionHighlighter {
      * Highlight a specific region range in the editor
      */
     public highlightRegion(editor: vscode.TextEditor, startLine: number, startCol: number, endLine: number, endCol: number) {
+        // Coverage reports are 1-based, but some llvm-cov exports emit column 0,
+        // so clamp before handing the values to Position which rejects negatives.
+        const toZeroBased = (value: number) => Math.max(0, value - 1);
         const range = new vscode.Range(
-            new vscode.Position(startLine - 1, startCol - 1),
-            new vscode.Position(endLine - 1, endCol - 1)
+            new vscode.Position(toZeroBased(startLine), toZeroBased(startCol)),
+            new vscode.Position(toZeroBased(endLine), toZeroBased(endCol))
         );
         
         editor.setDecorations(this.regionDecorationType, [range]);
@@ -147,7 +150,6 @@ export class BranchCoverageCodeLensProvider implements vscode.CodeLensProvider {
 export class BranchCoverageHoverProvider implements vscode.HoverProvider {
     private coverageData: Map<string, Section> = new Map();
     private regionHighlighter: RegionHighlighter;
-    private lastHoverPosition: { line: number; col: number } | undefined;
 
     constructor(regionHighlighter: RegionHighlighter) {
         this.regionHighlighter = regionHighlighter;

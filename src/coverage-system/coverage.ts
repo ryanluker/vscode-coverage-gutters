@@ -42,12 +42,17 @@ export class Coverage {
                 fileQuickPicks,
                 { placeHolder },
             );
+            let autoPickTimer: NodeJS.Timeout | undefined;
             const timeoutPromise = new Promise<QuickPickItem | undefined>((resolve) => {
-                setTimeout(() => resolve(undefined), autoPickTimeoutMs);
+                autoPickTimer = setTimeout(() => resolve(undefined), autoPickTimeoutMs);
             });
 
-            const item = await Promise.race([quickPickPromise, timeoutPromise]);
-            pickedFile = (item?.description) ?? filePaths[0];
+            try {
+                const item = await Promise.race([quickPickPromise, timeoutPromise]);
+                pickedFile = (item?.description) ?? filePaths[0];
+            } finally {
+                if (autoPickTimer) { clearTimeout(autoPickTimer); }
+            }
         }
         return pickedFile ? Uri.file(pickedFile) : undefined;
     }

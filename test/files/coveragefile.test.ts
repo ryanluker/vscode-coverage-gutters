@@ -25,7 +25,7 @@ suite("Coverage File Tests", function() {
         expect(coverageFile.type).to.equal(CoverageType.NONE);
     });
 
-    test("Detects LLVM_COV_JSON format @unit", function() {
+    test("Detects LLVM format @unit", function() {
         const llvmJsonContent = `{
   "version": "2.0.0",
   "type": "llvm.coverage.json.export",
@@ -46,7 +46,33 @@ suite("Coverage File Tests", function() {
   ]
 }`;
         const coverageFile = new CoverageFile(llvmJsonContent);
-        expect(coverageFile.type).to.equal(CoverageType.LLVM_COV_JSON);
+        expect(coverageFile.type).to.equal(CoverageType.LLVM);
+    });
+
+    test("Detects gcovr json format as LLVM @unit", function() {
+        const gcovrJsonContent = `{
+  "gcovr/format_version": "0.5",
+  "files": [
+    {
+      "file": "src/main.c",
+      "lines": [{"line_number": 3, "count": 1, "branches": []}]
+    }
+  ]
+}`;
+        const coverageFile = new CoverageFile(gcovrJsonContent);
+        expect(coverageFile.type).to.equal(CoverageType.LLVM);
+    });
+
+    test("Does not detect unrelated json as LLVM (#498) @unit", function() {
+        const istanbulLike = `{
+  "src/index.ts": {
+    "path": "src/index.ts",
+    "statementMap": {},
+    "s": {}
+  }
+}`;
+        const coverageFile = new CoverageFile(istanbulLike);
+        expect(coverageFile.type).to.equal(CoverageType.LCOV);
     });
 
     test("Still detects CLOVER format correctly @unit", function() {

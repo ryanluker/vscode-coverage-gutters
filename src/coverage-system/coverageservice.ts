@@ -100,6 +100,10 @@ export class CoverageService {
         if (this.branchCoverageHoverProvider) {
             this.branchCoverageHoverProvider.clearCoverageData();
         }
+        if (this.fileDecorationProvider) {
+            // Hand it an empty cache so the explorer badges go away with the gutters
+            this.fileDecorationProvider.updateCoverageData(new Map());
+        }
     }
 
     public dispose() {

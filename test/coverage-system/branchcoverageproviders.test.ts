@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import { TextDocument, Position, Range, MarkdownString } from "vscode";
+import { TextDocument, Position, Range, MarkdownString, TextEditor } from "vscode";
 import { Section } from "lcov-parse";
 import {
     BranchCoverageCodeLensProvider,
@@ -223,5 +223,19 @@ suite("Branch Coverage Providers Tests", () => {
         // After clearing, should have no hover
         hover = provider.provideHover(mockDocument, position);
         expect(hover).to.be.null;
+    });
+
+    test("RegionHighlighter clamps column 0 segments to a valid range (#498) @unit", () => {
+        const setDecorations = sinon.stub();
+        const mockEditor = { setDecorations } as unknown as TextEditor;
+
+        // Some llvm-cov exports emit column 0, which used to build a Position(-1)
+        expect(() => regionHighlighter.highlightRegion(mockEditor, 1, 0, 1, 0)).to.not.throw();
+
+        expect(setDecorations.calledOnce).to.be.true;
+        const ranges = setDecorations.firstCall.args[1] as Range[];
+        expect(ranges[0].start.line).to.equal(0);
+        expect(ranges[0].start.character).to.equal(0);
+        expect(ranges[0].end.character).to.equal(0);
     });
 });
