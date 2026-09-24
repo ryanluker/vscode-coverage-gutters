@@ -7,6 +7,8 @@ import { Config } from "../../src/extension/config";
 let showGutterCoverage: boolean;
 let highlightdark: string;
 let highlightlight: string;
+const showHitCounts: boolean = false;
+const hitCountColor: string = "rgba(255, 255, 255, 0.8)";
 
 
 suite("Config Tests", () => {
@@ -18,7 +20,13 @@ suite("Config Tests", () => {
 
     let stubCreateTextEditorDecorationType: sinon.SinonStub;
     const fakeCreateTextEditorDecorationType = (options: vscode.DecorationRenderOptions) => {
-        expect(Object.keys(options)).to.have.lengthOf(4);
+        // Check if we are looking at the hitCountDecoration
+        if (options.before) {
+            expect(Object.keys(options)).to.have.lengthOf(1);
+        // All other decorations will be in the usual 4 key format
+        } else {
+            expect(Object.keys(options)).to.have.lengthOf(4);
+        }
         return {} as vscode.TextEditorDecorationType;
     };
 
@@ -35,6 +43,10 @@ suite("Config Tests", () => {
                         return ["test.xml", "lcov.info"];
                     } else if (key === "showGutterCoverage") {
                         return showGutterCoverage;
+                    } else if (key === "showHitCounts") {
+                        return showHitCounts;
+                    } else if (key === "hitCountColor") {
+                        return hitCountColor;
                     } else if (["highlightdark", "partialHighlightDark", "noHighlightDark"].includes(key)) {
                         return highlightdark;
                     } else if (["highlightlight", "partialHighlightLight", "noHighlightLight"].includes(key)) {
@@ -83,7 +95,11 @@ suite("Config Tests", () => {
     test("Should remove gutter icons if showGutterCoverage is set to false, allows breakpoint usage @unit", () => {
         showGutterCoverage = false;
 
-        stubCreateTextEditorDecorationType.callsFake((options) => {
+        stubCreateTextEditorDecorationType.callsFake((options: vscode.DecorationRenderOptions) => {
+            // Ignore hitCount decorations
+            if (options.before) {
+                return {} as vscode.TextEditorDecorationType;
+            }
             expect(options.dark).to.not.have.any.keys("gutterIconPath");
             expect(options.light).to.not.have.any.keys("gutterIconPath");
             return {} as vscode.TextEditorDecorationType;
@@ -99,6 +115,10 @@ suite("Config Tests", () => {
 
         const preamble = /^image\/svg\+xml;base64,/;
         stubCreateTextEditorDecorationType.callsFake((options) => {
+            // Ignore hitCount decorations
+            if (options.before) {
+                return {} as vscode.TextEditorDecorationType;
+            }
             expect(((options.dark as any).gutterIconPath as any).path).to.be.a('string').and.match(preamble).and.satisfy((icn: string) => atob(icn.replace(preamble, '')).includes(highlightdark));
             expect(((options.light as any).gutterIconPath as any).path).to.be.a('string').and.match(preamble).and.satisfy((icn: string) => atob(icn.replace(preamble, '')).includes(highlightlight));
             return {} as vscode.TextEditorDecorationType;
