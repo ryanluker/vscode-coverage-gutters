@@ -3,6 +3,8 @@ import { expect } from "chai";
 import { Section } from "lcov-parse";
 import sinon from "sinon";
 import { OutputChannel } from "vscode";
+import * as fs from "fs";
+import * as path from "path";
 import { CoverageParser } from "../../src/files/coverageparser";
 
 suite("CoverageParser Tests", () => {
@@ -129,5 +131,111 @@ suite("CoverageParser Tests", () => {
         await coverageParsers.filesToSections(testFiles);
 
         expect(stubClover.calledWith("<?xml <coverage <project"));
+    });
+
+    test("parses C example Cobertura XML (gcovr) @integration", async () => {
+        const xmlPath = path.join(__dirname, "..", "..", "..", "example", "c", "coverage.xml");
+        const xmlContent = fs.readFileSync(xmlPath, "utf8");
+        const files = new Map<string, string>([[xmlPath, xmlContent]]);
+
+        const parser = new CoverageParser(fakeOutputChannel);
+        const sections = await parser.filesToSections(files);
+
+        expect(sections.size).to.be.greaterThan(0);
+        const first = Array.from(sections.values())[0];
+        expect(first.lines.found).to.be.greaterThan(0);
+        expect(first.branches?.found).to.be.greaterThan(0);
+
+        // Line 11 is `<line number="11" hits="3" branch="true" condition-coverage="50% (3/6)">`
+        const conditions = (first as Section & {
+            __coberturaConditionsByLine?: Record<number, {
+                coveragePercent: number,
+                edgesCovered: number,
+                edgesTotal: number,
+                conditions: Array<{ number: number, type: string, coveragePercent: number }>,
+            }>,
+        }).__coberturaConditionsByLine;
+        expect(conditions?.[11]).to.include({ coveragePercent: 50, edgesCovered: 3, edgesTotal: 6 });
+        expect(conditions?.[11]?.conditions).to.deep.equal([
+            { number: 0, type: "jump", coveragePercent: 50 },
+        ]);
+        // Self closing lines carry no conditions of their own
+        expect(conditions?.[12]).to.include({ edgesTotal: 0 });
+        expect(conditions?.[12]?.conditions).to.deep.equal([]);
+    });
+
+    test("applies Cobertura <source> roots to files @integration", async () => {
+        const xmlPath = path.join(__dirname, "..", "..", "..", "example", "python", "cov.xml");
+        const xmlContent = fs.readFileSync(xmlPath, "utf8");
+        const files = new Map<string, string>([[xmlPath, xmlContent]]);
+
+        const parser = new CoverageParser(fakeOutputChannel);
+        const sections = await parser.filesToSections(files);
+
+        const normalizedFiles = Array.from(sections.values()).map((section) => path.normalize(section.file));
+        // The cov.xml has <source>/workspaces/vscode-coverage-gutters/example/python</source>
+        // and files like python/foobar/tests/bar/a.py, so we should find both the relative paths
+        // (from cobertura-parse) and the source-rooted absolute paths
+        const relativePath = path.normalize(path.join("python", "foobar", "tests", "bar", "a.py"));
+        const sourceRootedPath = path.normalize(path.join(
+            "/workspaces/vscode-coverage-gutters/example/python",
+            "python",
+            "foobar",
+            "tests",
+            "bar",
+            "a.py",
+        ));
+
+        expect(normalizedFiles).to.include(relativePath);
+        expect(normalizedFiles).to.include(sourceRootedPath);
+    });
+
+    test("parses C++ LLVM JSON export @integration", async () => {
+        const jsonPath = path.join(__dirname, "..", "..", "..", "example", "cpp", "llvm-cov.json");
+        const jsonContent = fs.readFileSync(jsonPath, "utf8");
+        const files = new Map<string, string>([[jsonPath, jsonContent]]);
+
+        const parser = new CoverageParser(fakeOutputChannel);
+        const sections = await parser.filesToSections(files);
+
+        expect(sections.size).to.be.greaterThan(0);
+        const first = Array.from(sections.values())[0];
+        expect(first.lines.found).to.be.greaterThan(0);
+        expect(first.branches?.found).to.be.greaterThan(0);
+        // Ensure LLVM segments were attached for region hovers
+        expect((first as any).__llvmSegmentsByLine).to.not.be.undefined;
+    });
+
+    test("attaches Cobertura conditions to every class, not just the last (#498) @unit", async () => {
+        const classXml = (filename: string, line: number, covered: number) =>
+            `<class name="${filename}" filename="${filename}" line-rate="1.0" branch-rate="0.5">` +
+            `<methods/><lines>` +
+            `<line number="${line}" hits="1" branch="true" condition-coverage="${covered * 50}% (${covered}/2)">` +
+            `<conditions><condition number="0" type="jump" coverage="${covered * 50}%"/></conditions>` +
+            `</line></lines></class>`;
+
+        const xml = `<?xml version='1.0' encoding='UTF-8'?>` +
+            `<coverage line-rate="1.0" branch-rate="0.5" version="gcovr 4.2">` +
+            `<sources><source>.</source></sources>` +
+            `<packages><package name="src" line-rate="1.0" branch-rate="0.5"><classes>` +
+            classXml("first.c", 4, 1) +
+            classXml("second.c", 9, 2) +
+            `</classes></package></packages></coverage>`;
+
+        const parser = new CoverageParser(fakeOutputChannel);
+        const sections = await parser.filesToSections(new Map([["coverage.xml", xml]]));
+
+        type WithConditions = Section & {
+            __coberturaConditionsByLine?: Record<number, { edgesCovered: number, edgesTotal: number }>,
+        };
+        const byFile = new Map<string, WithConditions>();
+        sections.forEach((section) => byFile.set(path.basename(section.file), section as WithConditions));
+
+        // Before the fix the walker jumped straight to the next <class>, so only the
+        // final class in the report ever kept its condition metadata.
+        expect(byFile.get("first.c")?.__coberturaConditionsByLine?.[4])
+            .to.include({ edgesCovered: 1, edgesTotal: 2 });
+        expect(byFile.get("second.c")?.__coberturaConditionsByLine?.[9])
+            .to.include({ edgesCovered: 2, edgesTotal: 2 });
     });
 });

@@ -1,5 +1,11 @@
 import * as vscode from "vscode";
 import { Coverage } from "./coverage-system/coverage";
+import {
+    BranchCoverageCodeLensProvider,
+    BranchCoverageHoverProvider,
+    RegionHighlighter,
+} from "./coverage-system/branchcoverageproviders";
+import { CoverageFileDecorationProvider } from "./coverage-system/filedecorationprovider";
 import { Config } from "./extension/config";
 import { Gutters } from "./extension/gutters";
 import { StatusBarToggler } from "./extension/statusbartoggler";
@@ -15,6 +21,32 @@ export function activate(context: vscode.ExtensionContext) {
         outputChannel,
         statusBarToggler,
     );
+
+    // Create region highlighter for LLVM coverage regions
+    const regionHighlighter = new RegionHighlighter();
+
+    // Register branch coverage providers
+    const branchCodeLensProvider = new BranchCoverageCodeLensProvider();
+    const branchHoverProvider = new BranchCoverageHoverProvider(regionHighlighter);
+    const fileDecorationProvider = new CoverageFileDecorationProvider(configStore, outputChannel);
+
+    const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(
+        { scheme: "file" },
+        branchCodeLensProvider,
+    );
+
+    const hoverProviderDisposable = vscode.languages.registerHoverProvider(
+        { scheme: "file" },
+        branchHoverProvider,
+    );
+
+    const fileDecorationDisposable = vscode.window.registerFileDecorationProvider(
+        fileDecorationProvider,
+    );
+
+    // Pass providers to gutters so they can be updated when coverage changes
+    gutters.setProviders(branchCodeLensProvider, branchHoverProvider);
+    gutters.setFileDecorationProvider(fileDecorationProvider);
 
     const previewCoverageReport = vscode.commands.registerCommand(
         "coverage-gutters.previewCoverageReport",
@@ -49,6 +81,11 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(removeWatch);
     context.subscriptions.push(gutters);
     context.subscriptions.push(outputChannel);
+    context.subscriptions.push(codeLensProviderDisposable);
+    context.subscriptions.push(hoverProviderDisposable);
+    context.subscriptions.push(fileDecorationDisposable);
+    context.subscriptions.push(fileDecorationProvider);
+    context.subscriptions.push(regionHighlighter);
 
     if (configStore.watchOnActivate) {
         gutters.watchCoverageAndVisibleEditors();

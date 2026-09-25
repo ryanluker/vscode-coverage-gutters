@@ -24,4 +24,77 @@ suite("Coverage File Tests", function() {
         const coverageFile = new CoverageFile("");
         expect(coverageFile.type).to.equal(CoverageType.NONE);
     });
+
+    test("Detects LLVM format @unit", function() {
+        const llvmJsonContent = `{
+  "version": "2.0.0",
+  "type": "llvm.coverage.json.export",
+  "data": [
+    {
+      "files": [
+        {
+          "filename": "test.cpp",
+          "segments": [
+            {"line": 10, "col": 1, "count": 5, "hasCount": true, "isRegionEntry": true}
+          ],
+          "branches": [
+            {"lineNumber": 10, "count": [5, 0]}
+          ]
+        }
+      ]
+    }
+  ]
+}`;
+        const coverageFile = new CoverageFile(llvmJsonContent);
+        expect(coverageFile.type).to.equal(CoverageType.LLVM);
+    });
+
+    test("Detects gcovr json format as LLVM @unit", function() {
+        const gcovrJsonContent = `{
+  "gcovr/format_version": "0.5",
+  "files": [
+    {
+      "file": "src/main.c",
+      "lines": [{"line_number": 3, "count": 1, "branches": []}]
+    }
+  ]
+}`;
+        const coverageFile = new CoverageFile(gcovrJsonContent);
+        expect(coverageFile.type).to.equal(CoverageType.LLVM);
+    });
+
+    test("Does not detect unrelated json as LLVM (#498) @unit", function() {
+        const istanbulLike = `{
+  "src/index.ts": {
+    "path": "src/index.ts",
+    "statementMap": {},
+    "s": {}
+  }
+}`;
+        const coverageFile = new CoverageFile(istanbulLike);
+        expect(coverageFile.type).to.equal(CoverageType.LCOV);
+    });
+
+    test("Still detects CLOVER format correctly @unit", function() {
+        const cloverContent = `<?xml version="1.0" encoding="UTF-8"?>
+<coverage version="1.0">
+  <project>
+    <package>
+      <class/>
+    </package>
+  </project>
+</coverage>`;
+        const coverageFile = new CoverageFile(cloverContent);
+        expect(coverageFile.type).to.equal(CoverageType.CLOVER);
+    });
+
+    test("Still detects JACOCO format correctly @unit", function() {
+        const jacocoContent = `<?xml version="1.0" encoding="UTF-8"?>
+<report name="JACOCO">
+  <counter type="INSTRUCTION" missed="0" covered="10"/>
+</report>`;
+        const coverageFile = new CoverageFile(jacocoContent);
+        expect(coverageFile.type).to.equal(CoverageType.JACOCO);
+    });
 });
+
