@@ -42,12 +42,14 @@ export class FilesLoader {
      * @param files files that are to turned into data strings
      */
     public async loadDataFiles(files: Set<string>): Promise<Map<string, string>> {
-        // Load the files and convert into data strings
-        const dataFiles = new Map<string, string>();
-        for (const file of files) {
-            dataFiles.set(file, await this.load(file));
-        }
-        return dataFiles;
+        // Load all files in parallel for better performance
+        const loadPromises = Array.from(files).map(async (file) => {
+            const data = await this.load(file);
+            return [file, data] as const;
+        });
+
+        const results = await Promise.all(loadPromises);
+        return new Map(results);
     }
 
     private load(path: string) {
@@ -67,10 +69,11 @@ export class FilesLoader {
     }
 
     private async findCoverageInWorkspace(fileNames: string[]) {
-        let files = new Set<string>();
+        const files = new Set<string>();
         for (const fileName of fileNames) {
             const coverage = await this.findCoverageForFileName(fileName);
-            files = new Set([...files, ...coverage]);
+            // Efficiently add all items without creating new Set
+            coverage.forEach((file) => files.add(file));
         }
         return files;
     }
@@ -84,12 +87,10 @@ export class FilesLoader {
         }
         return Promise.all(actions)
             .then((coverageInWorkspaceFolders) => {
-                let totalCoverage = new Set<string>();
+                const totalCoverage = new Set<string>();
                 coverageInWorkspaceFolders.forEach(
                     (coverage) => {
-                        totalCoverage = new Set(
-                            [...totalCoverage, ...coverage],
-                        );
+                        coverage.forEach((file) => totalCoverage.add(file));
                     },
                 );
                 return totalCoverage;
