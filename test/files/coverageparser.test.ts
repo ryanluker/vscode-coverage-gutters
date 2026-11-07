@@ -130,4 +130,17 @@ suite("CoverageParser Tests", () => {
 
         expect(stubClover.calledWith("<?xml <coverage <project"));
     });
+
+    test("filesToSections resolves when an lcov file cannot be parsed @unit", async () => {
+        const testFiles = new Map();
+        testFiles.set("/valid/lcov.info", "SF:./valid.js\nDA:1,1\nend_of_record\n");
+        // No end_of_record, so lcov-parse reports a (string) parse error
+        testFiles.set("/partial/lcov.info", "SF:./partial.js\nDA:1,1\n");
+
+        const coverageParsers = new CoverageParser(fakeOutputChannel);
+        const testSections = await coverageParsers.filesToSections(testFiles);
+
+        expect(testSections.size).to.equal(1);
+        expect(testSections.has("::./valid.js")).to.equal(true);
+    });
 });

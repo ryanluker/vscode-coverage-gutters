@@ -66,7 +66,12 @@ export class CoverageParser {
 
         const results = await Promise.all(parsePromises);
         // Flatten the array of section arrays from all parsed files into a single array
-        const flattenedSections = results.reduce((acc, val) => acc.concat(val), []);
+        const flattenedSections: Section[] = [];
+        for (const sections of results) {
+            for (const section of sections) {
+                flattenedSections.push(section);
+            }
+        }
         await this.addSections(coverages, flattenedSections);
 
         return coverages;
@@ -168,10 +173,13 @@ export class CoverageParser {
         lcovFile: string
     ) {
         return new Promise<Section[]>((resolve) => {
-            const checkError = (err: Error) => {
+            const checkError = (err: Error | string) => {
                 if (err) {
-                    err.message = `filename: ${coverageFilename} ${err.message}`;
-                    this.handleError("lcov-parse", err);
+                    // lcov-parse reports failures as a plain string (e.g. "Failed to parse string"),
+                    // so wrap it to avoid throwing here and leaving this promise unresolved
+                    const error = typeof err === "string" ? new Error(err) : err;
+                    error.message = `filename: ${coverageFilename} ${error.message}`;
+                    this.handleError("lcov-parse", error);
                     return resolve([]);
                 }
             };
