@@ -2,8 +2,8 @@ name: Continuous Daily Integration
 on:
   schedule:
     # Nightly builds for Linux (cheapest)
-    - cron: '0 8 * * *'
-      timezone: 'America/Vancouver'
+    # Cron is always UTC, 16:00 UTC is 08:00 PST / 09:00 PDT in America/Vancouver
+    - cron: '0 16 * * *'
   pull_request:
   push:
     branches:
